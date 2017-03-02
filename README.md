@@ -130,7 +130,7 @@ DB.Context.From<Model.table1>()    //Model.table1类通过Dos.ORM实体生成器
             Console.WriteLine("-----------------------------");
         }
         
-   #使用实体代码生成器，简单高效完成实体类、实体数据库repository类
+   # 使用实体代码生成器，简单高效完成实体类、实体数据库repository类
    
    
    <img src="https://github.com/yswenli/WEF/blob/master/WEF.ModelGenerator/0.jpg?raw=true">
