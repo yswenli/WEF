@@ -14,28 +14,42 @@ WEF类似MEF上手简单，0学习成本。使用方便，按照sql书写习惯�
 
 支持大量Lambda表达式写法不需要像NHibernate的XML配置，不需要像MEF的各种数据库连接驱动
 
-用法实例
+<h3>用法实例</h3>
 
+db.From<Area>(tableName)    //Model.table1类通过<a href="https://github.com/yswenli/WEF/tree/master/WEF.ModelGenerator">WEF实体生成器生成</a>
 
-DB.Context.From<Model.table1>()    //Model.table1类通过Dos.ORM实体生成器生成
     .Select(d => new { d.id, d.price })
+	
         //Sql：SELECT id,price FROM table1
+		
     //.Select<table2,table3>((a,b,c) => a.id, b.name, c.sex)
+	
         //Sql：SELECT table1.id, table2.name, table3.sex
+		
     .LeftJoin<table2>((a, b) => a.id == b.id)
+	
         //Sql：LEFT JOIN Table2 ON table1.id = table2.id
-    .Where(d => (d.id != 2 && d.name.In("com","net")) || d.sex != null)    
+		
+    .Where(d => (d.id != 2 && d.name.In("com","net")) || d.sex != null)   
+	
         //Sql：WHERE (id <> 2 AND name IN('com','net')) OR sex IS NOT NULL
+		
     .GroupBy(d => new { d.name, d.sex })    //Sql：GROUP BY name,sex
+	
     .OrderBy(d => new { d.createTime, d.name })
+	
         //Sql：ORDER BY createTime,name
+		
     .Having(d => d.name != '')    //Sql：HAVING name <> ''
+	
     .Top(5)    //取前5条数据
+	
     .Page(10, 2)    //每页10条数据，取第2页
+	
     .ToList();    //默认返回List<table1>，也可自定义Map类.ToList<T>();
-    
-    
-    项目Console  
+
+
+<h3>项目Console  </h3>
 
        static void Main(string[] args)
         {
