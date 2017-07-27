@@ -40,13 +40,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WEF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\WEF.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Area.cs" />
+    <Compile Include="Models\SUser.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Programe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -56,6 +53,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Dlls\WEF.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WEF\WEF.csproj">
+      <Project>{6898486b-bd52-4add-9bb1-c397349be2fd}</Project>
+      <Name>WEF</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

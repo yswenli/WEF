@@ -303,16 +303,19 @@ namespace WEF.Models
     public partial class AreaRepository
     {
         DBContext db;
+
+        ISearch<Area> fromSection;
+
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public FromSection<Area> GetSelectContext(string tableName = "")
+        public ISearch<Area> GetSelectContext(string tableName = "")
         {
             if (string.IsNullOrEmpty(tableName))
             {
                 tableName = "Area";
             }
-            return db.From<Area>(tableName);
+            return db.Search<Area>(tableName);
         }
         /// <summary>
         /// 构造方法
@@ -320,6 +323,7 @@ namespace WEF.Models
         public AreaRepository()
         {
             db = new DBContext();
+            fromSection = db.Search<Area>();
         }
         /// <summary>
         /// 构造方法

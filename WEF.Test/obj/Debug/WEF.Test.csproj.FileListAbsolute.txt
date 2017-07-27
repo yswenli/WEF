@@ -1,0 +1,12 @@
+E:\百度云\Develop\案例\生成工具\WEF\WEF\WEF.Test\bin\Debug\WEF.Test.exe.config
+E:\百度云\Develop\案例\生成工具\WEF\WEF\WEF.Test\bin\Debug\WEF.Test.exe
+E:\百度云\Develop\案例\生成工具\WEF\WEF\WEF.Test\bin\Debug\WEF.Test.pdb
+E:\百度云\Develop\案例\生成工具\WEF\WEF\WEF.Test\bin\Debug\WEF.dll
+E:\百度云\Develop\案例\生成工具\WEF\WEF\WEF.Test\obj\Debug\WEF.Test.exe
+E:\百度云\Develop\案例\生成工具\WEF\WEF\WEF.Test\obj\Debug\WEF.Test.pdb
+E:\百度云\Develop\案例\生成工具\WEF\WEF\WEF.Test\obj\Debug\WEF.Test.csprojResolveAssemblyReference.cache
+E:\百度云\Develop\案例\生成工具\WEF\WEF\WEF.Test\bin\Debug\MySql.Data.dll
+E:\百度云\Develop\案例\生成工具\WEF\WEF\WEF.Test\bin\Debug\System.Data.SQLite.dll
+E:\百度云\Develop\案例\生成工具\WEF\WEF\WEF.Test\bin\Debug\WEF.pdb
+E:\百度云\Develop\案例\生成工具\WEF\WEF\WEF.Test\bin\Debug\WEF.xml
+E:\百度云\Develop\案例\生成工具\WEF\WEF\WEF.Test\bin\Debug\System.Data.SQLite.xml

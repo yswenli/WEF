@@ -30,87 +30,52 @@ namespace WEF.Test
 
             do
             {
-                Test();
+                Test2();
+                
                 Console.WriteLine("输入R继续,其他键退出");
                 result = Console.ReadLine();
             }
             while (result.ToUpper() == "R");
         }
-
-
-        static void Test()
+        
+        static void Test2()
         {
 
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
 
-            var fr = new AreaRepository();
 
-            var a2 = new Area() { CName = "wenli" };
+            UserRepository ur = new UserRepository();
 
-            Console.WriteLine("插入:{0}", a2.GetTableName());
+            var e = ur.Search().Where(b => b.NickName == "adsfasdfasdf").First();
 
-            fr.Insert(a2);
-
-            Console.ReadLine();
-
-            var list = fr.GetList(1, 12);
-
-            Console.WriteLine("查询:{0}", list.Count);
-            Console.ReadLine();
-
-            var sa2 = fr.GetSelectContext().Where(b => b.CName == "wenli").First();
-
-            sa2.CName = "wenli520";
-
-            fr.Update(sa2);
-
-            var sa3 = fr.ExecuteSQL("select * from [Area] where [CName]='wenli520'").ToFirst<Area>();
-
-            Console.WriteLine("更新:{0}", sa3.CName);
-
-            Console.ReadLine();
-
-            var r = fr.Delete(sa3);
-            Console.WriteLine("移除:{0}", r);
-
-            Console.ReadLine();
-
-            fr = new AreaRepository();
-            var flts = fr.GetList(2, 50);
-            foreach (Area item in flts)
+            var ut = new User()
             {
-                Console.WriteLine(string.Format("正在读取产品，code:{0},名称:{1}", item.EName, item.CName));
-            }
+                ID = Guid.NewGuid(),
+                ImUserID = "",
+                NickName = "张三三"
+            };
 
-            sw.Stop();
-            Console.WriteLine(string.Format("处理完毕,用时：{0}毫秒", sw.Elapsed.TotalMilliseconds));
-            Console.WriteLine("--------------");
+            var r = ur.Insert(ut);
 
-            Console.ReadLine();
+            var count = ur.Search().Count();
 
-            sw.Restart();
+            ut.NickName = "李四四";
 
-            var flts2 = fr.GetSelectContext().Top(500).Page(10, 49).OrderBy(b => b.EName).ToList();
-            foreach (Area item in flts2)
-            {
-                Console.WriteLine(string.Format("正在读取产品，code:{0},名称:{1}", item.CName, item.EName));
-            }
-            sw.Stop();
-            Console.WriteLine(string.Format("处理完毕,用时：{0}毫秒", sw.Elapsed.TotalMilliseconds));
+            r = ur.Update(ut);
 
-            Console.ReadLine();
+            var nut = ut.ConvertTo<User, SUser>();
 
-            sw.Restart();
-            var fn = fr.GetSelectContext().Where(b => b.ID == 10).First().CName;
-            Console.WriteLine(fn);
-            sw.Stop();
-            Console.WriteLine(string.Format("处理完毕,用时：{0}毫秒", sw.Elapsed.TotalMilliseconds));
+            var nnut = nut.ConvertTo<SUser, User>();
+            
 
-            var s = fr.ExecuteSQL("select * from [Area]").ToScalar();
+            var ults = ur.GetList(1, 1000);
 
+            r = ur.Delete(ut);
 
-            Console.WriteLine("-----------------------------");
+            
+
+            var dlts = ur.GetList(1, 10000);
+            ur.Deletes(dlts);
+
         }
     }
 }
