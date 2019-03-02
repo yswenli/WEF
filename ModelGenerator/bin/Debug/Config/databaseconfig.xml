@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<servers>
-  <server id="f9118235-dbed-42de-8401-e138459dd417" name="WENLI-PC\MSSQLSERVER2008(SQL Server2008)[all]" database="all" dbtype="SqlServer9">
-    <connectionstring><![CDATA[Data Source=WENLI-PC\MSSQLSERVER2008;Initial Catalog=master;Integrated Security=True]]></connectionstring>
-  </server>
-</servers>
