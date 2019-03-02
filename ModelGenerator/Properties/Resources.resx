@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="WEF" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WEF.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="0616152d52f214c689f01819eefb836d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\0616152d52f214c689f01819eefb836d.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="创建数据库" xml:space="preserve">
+    <value>CREATE DATABASE database-name</value>
+  </data>
+  <data name="创建新表" xml:space="preserve">
+    <value>create table tabname(col1 type1 [not null] [primary key],col2 type2 [not null],..)</value>
+  </data>
+  <data name="创建索引" xml:space="preserve">
+    <value>create [unique] index idxname on tabname(col….)</value>
+  </data>
+  <data name="创建视图" xml:space="preserve">
+    <value>create view viewname as select statement</value>
+  </data>
+  <data name="删除主键" xml:space="preserve">
+    <value>Alter table tabname drop primary key(col)</value>
+  </data>
+  <data name="删除数据库" xml:space="preserve">
+    <value>DROP DATEBASE database-name</value>
+  </data>
+  <data name="删除索引" xml:space="preserve">
+    <value>drop index idxname</value>
+  </data>
+  <data name="删除表" xml:space="preserve">
+    <value>drop table tabname</value>
+  </data>
+  <data name="删除视图" xml:space="preserve">
+    <value>drop view viewname</value>
+  </data>
+  <data name="压缩数据库" xml:space="preserve">
+    <value>dbcc shrinkdatabase(dbname)</value>
+  </data>
+  <data name="基本的sql语句" xml:space="preserve">
+    <value>选择：select * from table1 where 范围
+插入：insert into table1(field1,field2) values(value1,value2)
+删除：delete from table1 where 范围
+更新：update table1 set field1=value1 where 范围
+查找：select * from table1 where field1 like ’%value1%’ ---like的语法很精妙，查资料!
+排序：select * from table1 order by field1,field2 [desc]
+总数：select count as totalcount from table1
+求和：select sum(field1) as sumvalue from table1
+平均：select avg(field1) as avgvalue from table1
+最大：select max(field1) as maxvalue from table1
+最小：select min(field1) as minvalue from table1</value>
+  </data>
+  <data name="增加列" xml:space="preserve">
+    <value>Alter table tabname add column col type</value>
+  </data>
+  <data name="备份SqlServer" xml:space="preserve">
+    <value>--- 创建 备份数据的 device
+USE master
+EXEC sp_addumpdevice 'disk', 'testBack', 'c:\mssql7backup\MyNwind_1.dat'
+--- 开始 备份
+BACKUP DATABASE pubs TO testBack</value>
+  </data>
+  <data name="按姓氏笔画排序" xml:space="preserve">
+    <value>Select * From TableName Order By CustomerName Collate Chinese_PRC_Stroke_ci_as //从少到多</value>
+  </data>
+  <data name="收缩数据和日志" xml:space="preserve">
+    <value>DBCC SHRINKDB
+DBCC SHRINKFILE</value>
+  </data>
+  <data name="数据库加密" xml:space="preserve">
+    <value>select encrypt('原始密码')
+select pwdencrypt('原始密码')
+select pwdcompare('原始密码','加密后密码') = 1--相同；否则不相同 encrypt('原始密码')</value>
+  </data>
+  <data name="根据已有的表创建新表" xml:space="preserve">
+    <value>A：create table tab_new like tab_old (使用旧表创建新表)
+B：create table tab_new as select col1,col2… from tab_old definition only</value>
+  </data>
+  <data name="添加主键" xml:space="preserve">
+    <value>Alter table tabname add primary key(col)</value>
+  </data>
+  <data name="用户表" xml:space="preserve">
+    <value>select Name from sysobjects where xtype='u' and status&gt;=0</value>
+  </data>
+  <data name="重建索引" xml:space="preserve">
+    <value>DBCC REINDEX
+DBCC INDEXDEFRAG</value>
+  </data>
+  <data name="创建存储过程" xml:space="preserve">
+    <value>--创建名为 GetStuCou_DS 的有输入参数、输出参数和结果集的存储过程
+create procedure GetStuCou_DS
+@StuNo    nvarchar(64),
+@Height nvarchar(32) output
+as
+begin
+    if(@StuNo is not null and @StuNo &lt;&gt; '')
+    begin
+        select @Height=S_Height 
+        from Student 
+        where S_StuNo=@StuNo
+    end
+    else
+    begin
+        set @Height='185'
+    end
+
+    select s.S_Id,s.S_StuNo,s.S_Name,s.S_Sex,s.S_Height,s.S_BirthDate,c.C_Id,c.C_Name
+    from Student s
+    left join Course c on s.C_S_Id=c.C_Id
+    where S_StuNo=@StuNo
+end
+
+--执行名为 GetStuCou_DS 的有输入参数、输出参数和结果集的存储过程
+execute GetStuCou_DS '005',null</value>
+  </data>
+  <data name="游标" xml:space="preserve">
+    <value>declare @NodeId int
+  declare @NID int
+  set @NodeId=1        -- 表示选择节点的ID
+
+  declare @temp_value table
+  (
+      ID int identity(1,1),
+      value int
+  )
+
+  insert into @temp_value 
+  select D_ID from Department where D_ID=@NodeId
+  
+  declare one_curr cursor local scroll dynamic        --定义一个局部的动态游标
+  for select value from @temp_value
+
+  open one_curr
+  fetch next from one_curr into @NID
+  while(@@FETCH_STATUS=0)
+  begin
+        if exists(select D_ID from Department where D_ParentID=@NID)    --判断是否存在子节点
+        begin
+            insert into @temp_value 
+            select D_ID from Department where D_ParentID=@NID        --存在就把所有的子节点的ID插入表变量，后面循环使用
+        end
+        
+        delete from Department where D_ID=@NID        --删除相应的节点
+
+        fetch next from one_curr into @NID
+  end
+  close one_curr
+  deallocate one_curr
+
+  select * from Department</value>
+  </data>
+  <data name="查看存储过程" xml:space="preserve">
+    <value>select * from sys.objects where type='P'
+
+select * from sys.procedures
+
+select * from sysobjects where xtype='P'
+
+//查看存储过程定义sql
+select text from syscomments where id=object_id('AddUser2')</value>
+  </data>
+</root>

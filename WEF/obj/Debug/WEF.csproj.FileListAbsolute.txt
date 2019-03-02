@@ -1,0 +1,12 @@
+F:\百度云\Develop\案例\生成工具\WEF\WEF\WEF\bin\Debug\WEF.dll.config
+F:\百度云\Develop\案例\生成工具\WEF\WEF\WEF\bin\Debug\WEF.XML
+F:\百度云\Develop\案例\生成工具\WEF\WEF\WEF\bin\Debug\WEF.dll
+F:\百度云\Develop\案例\生成工具\WEF\WEF\WEF\bin\Debug\WEF.pdb
+F:\百度云\Develop\案例\生成工具\WEF\WEF\WEF\bin\Debug\MySql.Data.dll
+F:\百度云\Develop\案例\生成工具\WEF\WEF\WEF\bin\Debug\System.Data.SQLite.dll
+F:\百度云\Develop\案例\生成工具\WEF\WEF\WEF\bin\Debug\System.Data.SQLite.xml
+F:\百度云\Develop\案例\生成工具\WEF\WEF\WEF\bin\Debug\System.Data.SQLite.dll.config
+F:\百度云\Develop\案例\生成工具\WEF\WEF\WEF\obj\Debug\WEF.csproj.CoreCompileInputs.cache
+F:\百度云\Develop\案例\生成工具\WEF\WEF\WEF\obj\Debug\WEF.csproj.CopyComplete
+F:\百度云\Develop\案例\生成工具\WEF\WEF\WEF\obj\Debug\WEF.dll
+F:\百度云\Develop\案例\生成工具\WEF\WEF\WEF\obj\Debug\WEF.pdb

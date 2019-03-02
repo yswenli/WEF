@@ -10,10 +10,7 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using WEF.Expressions;
 using WEF.Models;
 
 namespace WEF.Test
@@ -28,20 +25,25 @@ namespace WEF.Test
 
             string result = string.Empty;
 
+            var entity = new Models.ArticleKind();
+
+            var entityRepository=new Models.ArticleKindRepository();
+
+
+            var pagedList= entityRepository.Search(entity).GetPagedList(1, 100, "ID", true);
+
             do
             {
                 Test2();
-                
+
                 Console.WriteLine("输入R继续,其他键退出");
                 result = Console.ReadLine();
             }
             while (result.ToUpper() == "R");
         }
-        
+
         static void Test2()
         {
-
-
 
             UserRepository ur = new UserRepository();
 
@@ -62,16 +64,41 @@ namespace WEF.Test
 
             r = ur.Update(ut);
 
+            #region search 1
+
+            Where<User> wults = new Where<User>();
+
+            wults.And(new WhereClip(ut.GetFields()[0], "", QueryOperator.Less));
+
+            wults.And(new WhereClip(ut.GetFields()[1], 2, QueryOperator.Like));
+
+            var rlts = ur.Search().Where(wults).ToList();
+
+            #endregion
+
+
+            #region search 2
+
+            var search = ur.Search().Where(b => b.NickName.Like("张*"));
+
+            search = search.Where(b => !string.IsNullOrEmpty(b.ImUserID));
+
+            rlts = search.Page(1, 20).ToList();
+
+            #endregion
+
+
+
+
             var nut = ut.ConvertTo<User, SUser>();
 
             var nnut = nut.ConvertTo<SUser, User>();
-            
 
             var ults = ur.GetList(1, 1000);
 
             r = ur.Delete(ut);
 
-            
+
 
             var dlts = ur.GetList(1, 10000);
             ur.Deletes(dlts);
