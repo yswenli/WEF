@@ -2,7 +2,7 @@
 
 WEF is database orm for C#. 
 
-WEF 是C #数据库ORM
+WEF 是C#数据库ORM
 
 [![GitHub release](https://img.shields.io/github/release/yswenli/wef.svg)](https://github.com/yswenli/wef/releases)
 
@@ -16,15 +16,17 @@ WEF类似MEF上手简单，0学习成本。使用方便，按照sql书写习惯�
 
 支持大量Lambda表达式写法不需要像NHibernate的XML配置，不需要像MEF的各种数据库连接驱动
 
-<h3>用法实例</h3>
+## 用法实例
 
-db.From<Area>(tableName)    //Model.table1类通过<a href="https://github.com/yswenli/WEF/tree/master/WEF.ModelGenerator">WEF实体生成器生成</a>
+```CSharp
+
+db.Search<Area>(tableName)    //Model.table1类通过<a href="https://github.com/yswenli/WEF/tree/master/WEF.ModelGenerator">WEF数据库工具生成</a>
 
     .Select(d => new { d.id, d.price })
 	
         //Sql：SELECT id,price FROM table1
 		
-    //.Select<table2,table3>((a,b,c) => a.id, b.name, c.sex)
+    .Select<table2,table3>((a,b,c) => a.id, b.name, c.sex)
 	
         //Sql：SELECT table1.id, table2.name, table3.sex
 		
@@ -50,106 +52,11 @@ db.From<Area>(tableName)    //Model.table1类通过<a href="https://github.com/y
 	
     .ToList();    //默认返回List<table1>，也可自定义Map类.ToList<T>();
 
+```
 
-<h3>项目Console  </h3>
+## WEF数据库工具
 
-       static void Main(string[] args)
-        {
-            Console.WriteLine("WEF测试");
-
-            Console.WriteLine("-----------------------------");
-
-            string result = string.Empty;
-
-            do
-            {
-                Test();
-                Console.WriteLine("输入R继续,其他键退出");
-                result = Console.ReadLine();
-            }
-            while (result.ToUpper() == "R");
-        }
-
-
-        static void Test()
-        {
-
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
-            var fr = new AreaRepository();
-
-            var a2 = new Area() { CName = "wenli" };
-
-            Console.WriteLine("插入:{0}", a2.GetTableName());
-
-            fr.Insert(a2);
-
-            Console.ReadLine();
-
-            var list = fr.GetList(1, 12);
-
-            Console.WriteLine("查询:{0}", list.Count);
-            Console.ReadLine();
-
-            var sa2 = fr.GetSelectContext().Where(b => b.CName == "wenli").First();
-
-            sa2.CName = "wenli520";
-
-            fr.Update(sa2);
-
-            var sa3 = fr.ExecuteSQL("select * from [Area] where [CName]='wenli520'").ToFirst<Area>();
-
-            Console.WriteLine("更新:{0}", sa3.CName);
-
-            Console.ReadLine();
-
-            var r = fr.Delete(sa3);
-            Console.WriteLine("移除:{0}", r);
-
-            Console.ReadLine();
-
-            fr = new AreaRepository();
-            var flts = fr.GetList(2, 50);
-            foreach (Area item in flts)
-            {
-                Console.WriteLine(string.Format("正在读取产品，code:{0},名称:{1}", item.EName, item.CName));
-            }
-
-            sw.Stop();
-            Console.WriteLine(string.Format("处理完毕,用时：{0}毫秒", sw.Elapsed.TotalMilliseconds));
-            Console.WriteLine("--------------");
-
-            Console.ReadLine();
-
-            sw.Restart();
-
-            var flts2 = fr.GetSelectContext().Top(500).Page(10, 49).OrderBy(b => b.EName).ToList();
-            foreach (Area item in flts2)
-            {
-                Console.WriteLine(string.Format("正在读取产品，code:{0},名称:{1}", item.CName, item.EName));
-            }
-            sw.Stop();
-            Console.WriteLine(string.Format("处理完毕,用时：{0}毫秒", sw.Elapsed.TotalMilliseconds));
-
-            Console.ReadLine();
-
-            sw.Restart();
-            var fn = fr.GetSelectContext().Where(b => b.ID == 10).First().CName;
-            Console.WriteLine(fn);
-            sw.Stop();
-            Console.WriteLine(string.Format("处理完毕,用时：{0}毫秒", sw.Elapsed.TotalMilliseconds));
-
-            var s = fr.ExecuteSQL("select * from [Area]").ToScalar();
-
-
-            Console.WriteLine("-----------------------------");
-        }
-        
-   
-<h1>WEF实体代码生成器</h1>
-
-使用实体代码生成器，简单高效完成实体类、实体数据库repository类
+WEF数据库工具是基于WEF的winform项目，可以快捷对数据库进行可视化操作的同时，高效生成基于WEF的ORM操作
    
    
    <img src="https://github.com/yswenli/WEF/blob/master/1.png?raw=true">
@@ -171,6 +78,124 @@ db.From<Area>(tableName)    //Model.table1类通过<a href="https://github.com/y
 
 
    <img src="https://github.com/yswenli/WEF/blob/master/7.png?raw=true">
+
+
+## WEF数据库工具生成代码测试
+
+```CSharp
+
+/*
+* 描述： 详细描述类能干什么
+* 创建人：wenli
+* 创建时间：2017/3/2 14:26:21
+*/
+/*
+*修改人：wenli
+*修改时间：2017/3/2 14:26:21
+*修改内容：xxxxxxx
+*/
+
+using System;
+using WEF.Expressions;
+using WEF.Models;
+
+namespace WEF.Test
+{
+    class Programe
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("WEF测试");
+
+            Console.WriteLine("-----------------------------");
+
+            string result = string.Empty;
+
+            var entity = new Models.ArticleKind();
+
+            var entityRepository=new Models.ArticleKindRepository();
+
+
+            var pagedList= entityRepository.Search(entity).GetPagedList(1, 100, "ID", true);
+
+            do
+            {
+                Test2();
+
+                Console.WriteLine("输入R继续,其他键退出");
+                result = Console.ReadLine();
+            }
+            while (result.ToUpper() == "R");
+        }
+
+        static void Test2()
+        {
+
+            UserRepository ur = new UserRepository();
+
+            var e = ur.Search().Where(b => b.NickName == "adsfasdfasdf").First();
+
+            var ut = new User()
+            {
+                ID = Guid.NewGuid(),
+                ImUserID = "",
+                NickName = "张三三"
+            };
+
+            var r = ur.Insert(ut);
+
+            var count = ur.Search().Count();
+
+            ut.NickName = "李四四";
+
+            r = ur.Update(ut);
+
+            #region search 1
+
+            Where<User> wults = new Where<User>();
+
+            wults.And(new WhereClip(ut.GetFields()[0], "", QueryOperator.Less));
+
+            wults.And(new WhereClip(ut.GetFields()[1], 2, QueryOperator.Like));
+
+            var rlts = ur.Search().Where(wults).ToList();
+
+            #endregion
+
+
+            #region search 2
+
+            var search = ur.Search().Where(b => b.NickName.Like("张*"));
+
+            search = search.Where(b => !string.IsNullOrEmpty(b.ImUserID));
+
+            rlts = search.Page(1, 20).ToList();
+
+            #endregion
+
+
+
+
+            var nut = ut.ConvertTo<User, SUser>();
+
+            var nnut = nut.ConvertTo<SUser, User>();
+
+            var ults = ur.GetList(1, 1000);
+
+            r = ur.Delete(ut);
+
+
+
+            var dlts = ur.GetList(1, 10000);
+            ur.Deletes(dlts);
+
+        }
+    }
+}
+
+
+
+```
    
 授权
 

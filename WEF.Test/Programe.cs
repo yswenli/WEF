@@ -29,7 +29,6 @@ namespace WEF.Test
 
             var entityRepository=new Models.ArticleKindRepository();
 
-
             var pagedList= entityRepository.Search(entity).GetPagedList(1, 100, "ID", true);
 
             do
