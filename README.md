@@ -1,8 +1,10 @@
 # WEF
 
-this is database orm for C#. 
+WEF is database orm for C#. 
 
-这是C #数据库ORM
+WEF 是C #数据库ORM
+
+[![GitHub release](https://img.shields.io/github/release/yswenli/wef.svg)](https://github.com/yswenli/wef/releases)
 
 WEF类似MEF上手简单，0学习成本。使用方便，按照sql书写习惯编写C#.NET代码
 
