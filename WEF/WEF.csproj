@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6898486B-BD52-4ADD-9BB1-C397349BE2FD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WEF</RootNamespace>
+    <AssemblyName>WEF</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Debug\WEF.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.6.9.9\lib\net40\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Data.SQLite, Version=1.0.104.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.104.0\lib\net40\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cache\CacheConfiguration.cs" />
+    <Compile Include="Cache\Cache.cs" />
+    <Compile Include="Cache\CacheInfo.cs" />
+    <Compile Include="Common\BaseFieldType.cs" />
+    <Compile Include="Common\ColumnInfo.cs" />
+    <Compile Include="Common\DataUtils.cs" />
+    <Compile Include="Common\DesignByContract.cs" />
+    <Compile Include="Common\CommonExpand.cs" />
+    <Compile Include="Common\DynamicCalls.cs" />
+    <Compile Include="Common\ModifyField.cs" />
+    <Compile Include="Common\Table.cs" />
+    <Compile Include="Common\EntityCache.cs" />
+    <Compile Include="Common\EntityUtils.cs" />
+    <Compile Include="Common\EnumHelper.cs" />
+    <Compile Include="Common\Field.cs" />
+    <Compile Include="Common\ILogable.cs" />
+    <Compile Include="Common\SerializationManager.cs" />
+    <Compile Include="DatabaseType.cs" />
+    <Compile Include="DbDAL\IDbObject.cs" />
+    <Compile Include="DbDAL\MySql\DbObject.cs" />
+    <Compile Include="DbDAL\OleDb\DbObject.cs" />
+    <Compile Include="DbDAL\Oracle\DbObject.cs" />
+    <Compile Include="DbDAL\SQL2000\DbObject.cs" />
+    <Compile Include="DbDAL\SQL2005\DbObject.cs" />
+    <Compile Include="DbDAL\Sqlite\DbObject.cs" />
+    <Compile Include="Db\BatchCommander.cs" />
+    <Compile Include="Db\CommandCreator.cs" />
+    <Compile Include="Db\Database.cs" />
+    <Compile Include="Db\DbBatch.cs" />
+    <Compile Include="DBContext.cs" />
+    <Compile Include="Db\DbTrans.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="Expressions\CacheEvaluator.cs" />
+    <Compile Include="Expressions\ConstantExtractor.cs" />
+    <Compile Include="Expressions\ConstructorInvoker.cs" />
+    <Compile Include="Expressions\DelegateGenerator.cs" />
+    <Compile Include="Expressions\Evaluator.cs" />
+    <Compile Include="Expressions\Expression.cs" />
+    <Compile Include="Expressions\ExpressionComparer.cs" />
+    <Compile Include="Expressions\ExpressionHasher.cs" />
+    <Compile Include="Expressions\ExpressionToClip.cs" />
+    <Compile Include="Expressions\ExpressionVisitor.cs" />
+    <Compile Include="Expressions\FastEvaluator.cs" />
+    <Compile Include="Expressions\FastPartialEvaluator.cs" />
+    <Compile Include="Expressions\FastReflection.cs" />
+    <Compile Include="Expressions\FieldAccessor.cs" />
+    <Compile Include="Expressions\GroupByClip.cs" />
+    <Compile Include="Expressions\HashedListCache.cs" />
+    <Compile Include="Expressions\IEvaluator.cs" />
+    <Compile Include="Expressions\IExpressionCache.cs" />
+    <Compile Include="Expressions\MethodInvoker.cs" />
+    <Compile Include="Expressions\OrderByClip.cs" />
+    <Compile Include="Expressions\PartialEvaluator.cs" />
+    <Compile Include="Expressions\PartialEvaluatorBase.cs" />
+    <Compile Include="Expressions\PropertyAccessor.cs" />
+    <Compile Include="Expressions\WeakTypeDelegateGenerator.cs" />
+    <Compile Include="Expressions\WhereClip.cs" />
+    <Compile Include="Expressions\WhereClipBuilder.cs" />
+    <Compile Include="ISearch.cs" />
+    <Compile Include="ISearchT.cs" />
+    <Compile Include="MvcPager\Page.cs" />
+    <Compile Include="MvcPager\PagedList.cs" />
+    <Compile Include="MvcPager\PageLinqExtensions.cs" />
+    <Compile Include="MvcPager\PagerItem.cs" />
+    <Compile Include="MvcPager\PagerOptions.cs" />
+    <Compile Include="SearchT.cs" />
+    <Compile Include="WEFExtention.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Provider\DbProvider.cs" />
+    <Compile Include="Provider\MsAccessProvider.cs" />
+    <Compile Include="Provider\MySqlProvider.cs" />
+    <Compile Include="Provider\OracleProvider.cs" />
+    <Compile Include="Provider\ProviderFactory.cs" />
+    <Compile Include="Provider\SqliteProvider.cs" />
+    <Compile Include="Provider\SqlServer9Provider.cs" />
+    <Compile Include="Provider\SqlServerProvider.cs" />
+    <Compile Include="Search.cs" />
+    <Compile Include="Section\ProcSection.cs" />
+    <Compile Include="Section\Section.cs" />
+    <Compile Include="Section\SqlSection.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.104.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.104.0\build\net40\System.Data.SQLite.Core.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.104.0\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.104.0\build\net40\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
