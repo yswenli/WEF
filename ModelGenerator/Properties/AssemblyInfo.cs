@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // 有关程序集的常规信息通过下列属性集
 // 控制。更改这些属性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("WEF.ModelGenerator")]
-[assembly: AssemblyDescription("power py wenli")]
+[assembly: AssemblyTitle("WEF数据库工具")]
+[assembly: AssemblyDescription("developed py wenli")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("wenli")]
-[assembly: AssemblyProduct("WEF.ModelGenerator")]
-[assembly: AssemblyCopyright("Copyright Em.wenli ©  2017")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("yswenli")]
+[assembly: AssemblyProduct("WEF数据库工具")]
+[assembly: AssemblyCopyright("Copyright Em.wenli ©  2019")]
+[assembly: AssemblyTrademark("WEF数据库工具")]
 [assembly: AssemblyCulture("")]
 
 // 将 ComVisible 设置为 false 使此程序集中的类型
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // 可以指定所有这些值，也可以使用“内部版本号”和“修订号”的默认值，
 // 方法是按如下所示使用“*”:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("4.0.0.0")]
-[assembly: AssemblyFileVersion("4.0.0.0")]
+[assembly: AssemblyVersion("3.1.0.0")]
+[assembly: AssemblyFileVersion("3.1.0.0")]

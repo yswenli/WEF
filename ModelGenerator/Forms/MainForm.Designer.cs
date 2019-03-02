@@ -53,6 +53,7 @@
             this.newDBConnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sQL查询ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -129,8 +130,8 @@
             // 
             this.toolStripStatusLabel1.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(191, 17);
-            this.toolStripStatusLabel1.Text = "https://github.com/yswenli/WEF";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(304, 17);
+            this.toolStripStatusLabel1.Text = "软件地址：https://github.com/yswenli/WEF/releases";
             this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             // 
             // panel1
@@ -161,7 +162,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newDBConnectToolStripMenuItem,
             this.sQL查询ToolStripMenuItem,
-            this.logsToolStripMenuItem});
+            this.logsToolStripMenuItem,
+            this.关于ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(4, 32);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1375, 25);
@@ -171,23 +173,30 @@
             // newDBConnectToolStripMenuItem
             // 
             this.newDBConnectToolStripMenuItem.Name = "newDBConnectToolStripMenuItem";
-            this.newDBConnectToolStripMenuItem.Size = new System.Drawing.Size(56, 21);
-            this.newDBConnectToolStripMenuItem.Text = "新连接";
+            this.newDBConnectToolStripMenuItem.Size = new System.Drawing.Size(74, 21);
+            this.newDBConnectToolStripMenuItem.Text = "(&N)新连接";
             this.newDBConnectToolStripMenuItem.Click += new System.EventHandler(this.newDBConnectToolStripMenuItem_Click);
             // 
             // sQL查询ToolStripMenuItem
             // 
             this.sQL查询ToolStripMenuItem.Name = "sQL查询ToolStripMenuItem";
-            this.sQL查询ToolStripMenuItem.Size = new System.Drawing.Size(67, 21);
-            this.sQL查询ToolStripMenuItem.Text = "SQL查询";
+            this.sQL查询ToolStripMenuItem.Size = new System.Drawing.Size(82, 21);
+            this.sQL查询ToolStripMenuItem.Text = "(&S)SQL查询";
             this.sQL查询ToolStripMenuItem.Click += new System.EventHandler(this.sQL查询ToolStripMenuItem_Click);
             // 
             // logsToolStripMenuItem
             // 
             this.logsToolStripMenuItem.Name = "logsToolStripMenuItem";
-            this.logsToolStripMenuItem.Size = new System.Drawing.Size(68, 21);
-            this.logsToolStripMenuItem.Text = "异常日志";
+            this.logsToolStripMenuItem.Size = new System.Drawing.Size(82, 21);
+            this.logsToolStripMenuItem.Text = "(&L)异常日志";
             this.logsToolStripMenuItem.Click += new System.EventHandler(this.logsToolStripMenuItem_Click);
+            // 
+            // 关于ToolStripMenuItem
+            // 
+            this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
+            this.关于ToolStripMenuItem.Size = new System.Drawing.Size(60, 21);
+            this.关于ToolStripMenuItem.Text = "(&A)关于";
+            this.关于ToolStripMenuItem.Click += new System.EventHandler(this.关于ToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -202,7 +211,7 @@
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
-            this.Text = "WEF Models代码生成器";
+            this.Text = "WEF 数据库工具";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.statusStrip1.ResumeLayout(false);
@@ -227,6 +236,7 @@
         private System.Windows.Forms.ToolStripMenuItem newDBConnectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem logsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sQL查询ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 关于ToolStripMenuItem;
     }
 }
 

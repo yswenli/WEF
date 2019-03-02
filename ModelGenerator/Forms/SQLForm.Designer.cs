@@ -45,7 +45,7 @@
             this.cnnTxt.Name = "cnnTxt";
             this.cnnTxt.ReadOnly = true;
             this.cnnTxt.Size = new System.Drawing.Size(848, 21);
-            this.cnnTxt.TabIndex = 8;
+            this.cnnTxt.TabIndex = 999;
             // 
             // dataGridView1
             // 

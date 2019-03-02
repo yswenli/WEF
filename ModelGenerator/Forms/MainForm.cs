@@ -101,7 +101,7 @@ namespace WEF.ModelGenerator
         {
             var node = lp.Treeview.SelectedNode;
 
-            if (node != null && node.Level == 2)
+            if (node != null && (node.Level == 2 || node.Level == 3 || node.Level == 4))
             {
                 lp.ShowSQLForm();
             }
@@ -118,9 +118,12 @@ namespace WEF.ModelGenerator
 
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/yswenli/WEF");
+            Process.Start("https://github.com/yswenli/WEF/releases");
         }
 
-        
+        private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new AboutForm().ShowDialog(this);
+        }
     }
 }

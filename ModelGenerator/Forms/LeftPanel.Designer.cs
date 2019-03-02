@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LeftPanel));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("数据库服务器");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("数据库服务器");
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
@@ -49,6 +49,7 @@
             this.执行SQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripTable = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.生成代码ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sQL查询ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.contextMenuStripTop.SuspendLayout();
             this.contextMenuStripDatabase.SuspendLayout();
@@ -87,17 +88,17 @@
             this.toolStripButton2.Text = "异常日志";
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
-            // tview
+            // Treeview
             // 
             this.Treeview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Treeview.ImageIndex = 0;
             this.Treeview.ImageList = this.imgList;
             this.Treeview.Location = new System.Drawing.Point(0, 25);
-            this.Treeview.Name = "tview";
-            treeNode1.Name = "节点0";
-            treeNode1.Text = "数据库服务器";
+            this.Treeview.Name = "Treeview";
+            treeNode2.Name = "节点0";
+            treeNode2.Text = "数据库服务器";
             this.Treeview.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode2});
             this.Treeview.SelectedImageIndex = 0;
             this.Treeview.Size = new System.Drawing.Size(173, 339);
             this.Treeview.TabIndex = 1;
@@ -200,16 +201,24 @@
             // contextMenuStripTable
             // 
             this.contextMenuStripTable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.生成代码ToolStripMenuItem});
+            this.生成代码ToolStripMenuItem,
+            this.sQL查询ToolStripMenuItem});
             this.contextMenuStripTable.Name = "contextMenuStripOneDataBase";
-            this.contextMenuStripTable.Size = new System.Drawing.Size(125, 26);
+            this.contextMenuStripTable.Size = new System.Drawing.Size(181, 70);
             // 
             // 生成代码ToolStripMenuItem
             // 
             this.生成代码ToolStripMenuItem.Name = "生成代码ToolStripMenuItem";
-            this.生成代码ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-            this.生成代码ToolStripMenuItem.Text = "查看详细";
+            this.生成代码ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.生成代码ToolStripMenuItem.Text = "查看详情";
             this.生成代码ToolStripMenuItem.Click += new System.EventHandler(this.生成代码ToolStripMenuItem_Click);
+            // 
+            // sQL查询ToolStripMenuItem
+            // 
+            this.sQL查询ToolStripMenuItem.Name = "sQL查询ToolStripMenuItem";
+            this.sQL查询ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sQL查询ToolStripMenuItem.Text = "SQL查询窗口";
+            this.sQL查询ToolStripMenuItem.Click += new System.EventHandler(this.sQL查询ToolStripMenuItem_Click);
             // 
             // LeftPanel
             // 
@@ -257,5 +266,6 @@
         private System.Windows.Forms.ToolStripMenuItem 刷新ToolStripMenuItem2;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ToolStripMenuItem 执行SQLToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sQL查询ToolStripMenuItem;
     }
 }

@@ -17,6 +17,7 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WEF.ModelGenerator.Common;
@@ -36,16 +37,20 @@ namespace WEF.ModelGenerator
             get; set;
         }
 
+        Stopwatch stopwatch = new Stopwatch();
 
         AutoTextBox autoTextBox1 = new AutoTextBox();
 
         private void SQLForm_Load(object sender, System.EventArgs e)
         {
+
             cnnTxt.Text = ConnectionModel.ConnectionString;
 
             autoTextBox1.Dock = DockStyle.Fill;
 
             autoTextBox1.KeyUp += autoTextBox1_KeyUp;
+
+            autoTextBox1.TabIndex = 0;
 
             splitContainer1.Panel1.Controls.Add(autoTextBox1);
 
@@ -62,6 +67,8 @@ namespace WEF.ModelGenerator
 
             ShortcutKeyHelper.Run(sender, e, () =>
             {
+                stopwatch.Start();
+
                 LoadForm.ShowLoading(this);
 
                 Task.Factory.StartNew(() =>
@@ -96,12 +103,14 @@ namespace WEF.ModelGenerator
                     {
                         LoadForm.HideLoading(1);
                         MessageBox.Show("不支持的数据库类型!");
+                        stopwatch.Stop();
                         return;
                     }
 
                     if (string.IsNullOrEmpty(sql))
                     {
                         MessageBox.Show("sql内容不能为空!");
+                        stopwatch.Stop();
                         return;
                     }
 
@@ -114,6 +123,7 @@ namespace WEF.ModelGenerator
                             if (string.IsNullOrEmpty(sql))
                             {
                                 MessageBox.Show("sql内容不能为空!");
+                                stopwatch.Stop();
                                 return;
                             }
                         }
@@ -147,7 +157,8 @@ namespace WEF.ModelGenerator
                                 dataGridView1.Invoke(new Action(() =>
                                 {
                                     dataGridView1.DataSource = ds.Tables[0];
-                                    lbl_execute.Text = $"当前显示{(max > count ? count : max)}行，影响数据行数：{count}";
+                                    lbl_execute.Text = $"当前显示{(max > count ? count : max)}行，影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalSeconds}秒";
+                                    stopwatch.Stop();
                                 }));
                             }
                         }
@@ -156,6 +167,7 @@ namespace WEF.ModelGenerator
                             this.Invoke(new Action(() =>
                             {
                                 MessageBox.Show(this, $"查询发生异常，ex:" + ex.Message);
+                                stopwatch.Stop();
                             }));
                         }
                     }
@@ -167,7 +179,8 @@ namespace WEF.ModelGenerator
 
                             lbl_execute.Invoke(new Action(() =>
                             {
-                                lbl_execute.Text = "影响数据行数：" + count;
+                                lbl_execute.Text = $"影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalSeconds}秒";
+                                stopwatch.Stop();
                             }));
                         }
                         catch (Exception ex)
@@ -175,10 +188,11 @@ namespace WEF.ModelGenerator
                             this.Invoke(new Action(() =>
                             {
                                 MessageBox.Show(this, $"操作发生异常，ex:" + ex.Message);
+                                stopwatch.Stop();
                             }));
                         }
                     }
-                    LoadForm.HideLoading(1);
+                    LoadForm.HideLoading();
 
                 });
             });

@@ -650,6 +650,10 @@ namespace WEF.ModelGenerator
         {
             ShowSQLForm();
         }
+        private void sQL查询ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowSQLForm();
+        }
 
         public void ShowSQLForm()
         {
@@ -657,26 +661,21 @@ namespace WEF.ModelGenerator
 
             Connection conModel = null;
 
-            try
+            switch (node.Level)
             {
-                conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
-            }
-            catch { }
-            try
-            {
-                if (conModel == null)
-                {
+                case 3:
                     conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Parent.Tag.ToString()); });
-                }
+                    break;
+                case 4:
+                    conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
+                    break;
+                default:
+                    conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
+                    break;
             }
-            catch { }
-            try
-            {
-                conModel.Database = node.Text;
+            conModel.Database = node.Text;
 
-                newsqlForm?.Invoke(conModel);
-            }
-            catch { }
+            newsqlForm?.Invoke(conModel);
         }
 
         /// <summary>
@@ -710,5 +709,7 @@ namespace WEF.ModelGenerator
                 MessageBox.Show("复制操作异常!ex:" + ex.Message);
             }
         }
+
+        
     }
 }
