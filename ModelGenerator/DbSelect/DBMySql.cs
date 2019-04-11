@@ -83,7 +83,19 @@ namespace WEF.ModelGenerator.DbSelect
                 MessageBox.Show("登陆名不能为空!");
                 return;
             }
-            WEF.DbDAL.IDbObject dbObejct = new WEF.DbDAL.MySql.DbObject(false, cbbServer.Text, txtUserName.Text, txtPassword.Text, txtport.Text);
+            WEF.DbDAL.IDbObject dbObejct;
+
+            var dataBase = cbbDatabase.Items[cbbDatabase.SelectedIndex].ToString();
+
+            if (!string.IsNullOrEmpty(dataBase) && dataBase != "全部")
+            {
+                dbObejct = new WEF.DbDAL.MySql.DbObject(false, cbbServer.Text, txtUserName.Text, txtPassword.Text, txtport.Text, dataBase);
+            }
+            else
+            {
+                dbObejct = new WEF.DbDAL.MySql.DbObject(false, cbbServer.Text, txtUserName.Text, txtPassword.Text, txtport.Text);
+            }
+
             string tempconnectionstring = dbObejct.DbConnectStr;
 
             try

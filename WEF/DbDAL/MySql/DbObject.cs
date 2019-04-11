@@ -64,21 +64,36 @@ namespace WEF.DbDAL.MySql
         /// <param name="User">用户名</param>
         /// <param name="Pass">密码</param>
         /// <param name="port">端口</param>
-        public DbObject(bool SSPI, string Ip, string User, string Pass, string port)
+        /// <param name="dataBase">dataBase</param>
+        public DbObject(bool SSPI, string Ip, string User, string Pass, string port, string dataBase = "")
         {
             connect = new MySqlConnection();
-            if (SSPI)
+
+            if (!string.IsNullOrEmpty(dataBase) && dataBase != "全部")
             {
-                //_dbconnectStr="Integrated Security=SSPI;Data Source="+Ip+";Initial Catalog=mysql";
-                _dbconnectStr = String.Format("server={0};user id={1}; password={2}; Port={3};database=; pooling=false", Ip, User, Pass, port);//database=mysql
+                if (SSPI)
+                {
+                    //_dbconnectStr="Integrated Security=SSPI;Data Source="+Ip+";Initial Catalog=mysql";
+                    _dbconnectStr = String.Format("server={0};user id={1}; password={2}; Port={3};database={4}; pooling=false", Ip, User, Pass, port, dataBase);//database=mysql
+                }
+                else
+                {
+                    _dbconnectStr = String.Format("server={0};user id={1}; password={2}; Port={3};database={4}; pooling=false", Ip, User, Pass, port, dataBase);//database=mysql
+                }
             }
             else
             {
-                _dbconnectStr = String.Format("server={0};user id={1}; password={2}; Port={3};database=; pooling=false", Ip, User, Pass, port);//database=mysql
-
+                if (SSPI)
+                {
+                    //_dbconnectStr="Integrated Security=SSPI;Data Source="+Ip+";Initial Catalog=mysql";
+                    _dbconnectStr = String.Format("server={0};user id={1}; password={2}; Port={3};database=; pooling=false", Ip, User, Pass, port);//database=mysql
+                }
+                else
+                {
+                    _dbconnectStr = String.Format("server={0};user id={1}; password={2}; Port={3};database=; pooling=false", Ip, User, Pass, port);//database=mysql
+                }
             }
             connect.ConnectionString = _dbconnectStr;
-
         }
 
 
@@ -363,8 +378,8 @@ namespace WEF.DbDAL.MySql
         public DataTable GetTablesSP(string DbName)
         {
             MySqlParameter[] parameters = {
-					new MySqlParameter("@table_name", MySqlDbType.VarChar,384),
-					new MySqlParameter("@table_owner", MySqlDbType.VarChar,384),
+                    new MySqlParameter("@table_name", MySqlDbType.VarChar,384),
+                    new MySqlParameter("@table_owner", MySqlDbType.VarChar,384),
                     new MySqlParameter("@table_qualifier", MySqlDbType.VarChar,384),
                     new MySqlParameter("@table_type", MySqlDbType.VarChar,100)
             };
@@ -419,8 +434,8 @@ namespace WEF.DbDAL.MySql
         public DataTable GetVIEWsSP(string DbName)
         {
             MySqlParameter[] parameters = {
-					new MySqlParameter("@table_name", MySqlDbType.VarChar,384),
-					new MySqlParameter("@table_owner", MySqlDbType.VarChar,384),
+                    new MySqlParameter("@table_name", MySqlDbType.VarChar,384),
+                    new MySqlParameter("@table_owner", MySqlDbType.VarChar,384),
                     new MySqlParameter("@table_qualifier", MySqlDbType.VarChar,384),
                     new MySqlParameter("@table_type", MySqlDbType.VarChar,100)
             };
@@ -857,7 +872,7 @@ namespace WEF.DbDAL.MySql
             col.ColumnName = "defaultVal";
             table.Columns.Add(col);
 
-            
+
 
             return table;
         }

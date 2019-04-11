@@ -18,12 +18,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 using System.Web.Caching;
-using WEF;
 using WEF.Common;
-using WEF.Db;
 using WEF.Expressions;
 using WEF.MvcPager;
-using WEF.Provider;
 
 namespace WEF
 {

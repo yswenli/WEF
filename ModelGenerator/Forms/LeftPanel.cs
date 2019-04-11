@@ -665,15 +665,36 @@ namespace WEF.ModelGenerator
             {
                 case 3:
                     conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Parent.Tag.ToString()); });
+                    conModel.Database = node.Parent.Text;
                     break;
                 case 4:
                     conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
+                    conModel.Database = node.Parent.Parent.Text;
+
                     break;
                 default:
                     conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
+                    conModel.Database = node.Text;
                     break;
             }
-            conModel.Database = node.Text;
+
+            #region mysql
+            var index1 = conModel.ConnectionString.IndexOf("database=");
+
+            if (index1 > 0)
+            {
+                var str1 = conModel.ConnectionString.Substring(0, index1);
+
+                var str2 = conModel.ConnectionString.Substring(index1);
+
+                var index2 = str2.IndexOf(";");
+
+                str2 = str2.Substring(index2 + 1);
+
+                conModel.ConnectionString = $"{str1}database={conModel.Database};{str2}";
+            }
+
+            #endregion
 
             newsqlForm?.Invoke(conModel);
         }
@@ -710,6 +731,6 @@ namespace WEF.ModelGenerator
             }
         }
 
-        
+
     }
 }
