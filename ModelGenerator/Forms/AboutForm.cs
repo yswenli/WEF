@@ -14,5 +14,10 @@ namespace WEF.ModelGenerator.Forms
         {
             Process.Start("https://github.com/yswenli/WEF/releases");
         }
+
+        private void AboutForm_Load(object sender, System.EventArgs e)
+        {
+            label1.Text = $"{System.Reflection.Assembly.GetExecutingAssembly().FullName}";
+        }
     }
 }

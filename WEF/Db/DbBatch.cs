@@ -13,6 +13,7 @@ using WEF.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
 
 namespace WEF.Db
 {
@@ -423,8 +424,6 @@ namespace WEF.Db
         {
             batchcmd.Process(cmdCreator.CreateInsertCommand<TEntity>(fields, values));
         }
-
-
 
         #endregion
     }

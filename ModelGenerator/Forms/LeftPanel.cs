@@ -248,14 +248,19 @@ namespace WEF.ModelGenerator
             refreshConnectionList();
             Treeview.ExpandAll();
         }
+
+
         private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string stringid = Treeview.SelectedNode.Tag.ToString();
-            UtilsHelper.DeleteConnection(stringid);
-            Connection tempconn = _ConnectList.Find(delegate (Connection conn) { return conn.ID.ToString().Equals(stringid); });
-            if (null != tempconn)
-                _ConnectList.Remove(tempconn);
-            Treeview.Nodes.Remove(Treeview.SelectedNode);
+            if (MessageBox.Show(this, "确定要移除当前配置么？", "WEF数据库工具", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            {
+                string stringid = Treeview.SelectedNode.Tag.ToString();
+                UtilsHelper.DeleteConnection(stringid);
+                Connection tempconn = _ConnectList.Find(delegate (Connection conn) { return conn.ID.ToString().Equals(stringid); });
+                if (null != tempconn)
+                    _ConnectList.Remove(tempconn);
+                Treeview.Nodes.Remove(Treeview.SelectedNode);
+            }
         }
 
         #endregion
@@ -512,31 +517,74 @@ namespace WEF.ModelGenerator
         /// <param name="views"></param>
         private void gettables(TreeNode databaseNodel, DataTable tables, DataTable views)
         {
-            TreeNode tableNode = new TreeNode("数据表", 2, 3);
-            if (null != tables && tables.Rows.Count > 0)
+            if (databaseNodel.Level == 3)
             {
-                DataRow[] tablesdrs = tables.Select("", "name asc");
-                foreach (DataRow tablesDR in tablesdrs)
+                if (databaseNodel.Text == "数据表")
                 {
-                    TreeNode tnode = new TreeNode(tablesDR[0].ToString(), 4, 4);
-                    tnode.Tag = "T";
-                    tnode.ContextMenuStrip = contextMenuStripTable;
-                    tableNode.Nodes.Add(tnode);
+                    databaseNodel.ContextMenuStrip = contextMenuStripOneDataBase;
+
+                    if (null != tables && tables.Rows.Count > 0)
+                    {
+                        DataRow[] tablesdrs = tables.Select("", "name asc");
+                        foreach (DataRow tablesDR in tablesdrs)
+                        {
+                            TreeNode tnode = new TreeNode(tablesDR[0].ToString(), 4, 4);
+                            tnode.Tag = "T";
+                            tnode.ContextMenuStrip = contextMenuStripTable;
+                            databaseNodel.Nodes.Add(tnode);
+                        }
+                    }
+                }
+
+                if (databaseNodel.Text == "视图")
+                {
+                    databaseNodel.ContextMenuStrip = contextMenuStripOneDataBase;
+
+                    DataRow[] viewsdrs = views.Select("", "name asc");
+
+                    foreach (DataRow viewsDR in viewsdrs)
+                    {
+                        TreeNode tnode = new TreeNode(viewsDR[0].ToString(), 4, 4);
+                        tnode.Tag = "V";
+                        tnode.ContextMenuStrip = contextMenuStripTable;
+                        databaseNodel.Nodes.Add(tnode);
+                    }
                 }
             }
-            databaseNodel.Nodes.Add(tableNode);
-
-            TreeNode viewNode = new TreeNode("视图", 2, 3);
-            DataRow[] viewsdrs = views.Select("", "name asc");
-
-            foreach (DataRow viewsDR in viewsdrs)
+            else
             {
-                TreeNode tnode = new TreeNode(viewsDR[0].ToString(), 4, 4);
-                tnode.Tag = "V";
-                tnode.ContextMenuStrip = contextMenuStripTable;
-                viewNode.Nodes.Add(tnode);
+                TreeNode tableNode = new TreeNode("数据表", 2, 3);
+
+                tableNode.ContextMenuStrip = contextMenuStripOneDataBase;
+
+                if (null != tables && tables.Rows.Count > 0)
+                {
+                    DataRow[] tablesdrs = tables.Select("", "name asc");
+                    foreach (DataRow tablesDR in tablesdrs)
+                    {
+                        TreeNode tnode = new TreeNode(tablesDR[0].ToString(), 4, 4);
+                        tnode.Tag = "T";
+                        tnode.ContextMenuStrip = contextMenuStripTable;
+                        tableNode.Nodes.Add(tnode);
+                    }
+                }
+                databaseNodel.Nodes.Add(tableNode);
+
+                TreeNode viewNode = new TreeNode("视图", 2, 3);
+
+                viewNode.ContextMenuStrip = contextMenuStripOneDataBase;
+
+                DataRow[] viewsdrs = views.Select("", "name asc");
+
+                foreach (DataRow viewsDR in viewsdrs)
+                {
+                    TreeNode tnode = new TreeNode(viewsDR[0].ToString(), 4, 4);
+                    tnode.Tag = "V";
+                    tnode.ContextMenuStrip = contextMenuStripTable;
+                    viewNode.Nodes.Add(tnode);
+                }
+                databaseNodel.Nodes.Add(viewNode);
             }
-            databaseNodel.Nodes.Add(viewNode);
         }
         #endregion
 

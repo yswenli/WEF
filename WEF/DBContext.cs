@@ -6,9 +6,9 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************
- * 项目名称：$projectname$
- * 命名空间：WEF.Db
- * 类名称：DbSession
+ * 项目名称：WEF
+ * 命名空间：WEF
+ * 类名称：DBContext
  * 创建时间：2017/7/26 14:34:40
  * 创建人：wenli
  * 创建说明：
@@ -21,6 +21,7 @@ using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using WEF.Cache;
 using WEF.Common;
 using WEF.Db;
@@ -124,7 +125,7 @@ namespace WEF
         public static DBContext Default = new DBContext(Database.Default);
 
         /// <summary>
-        /// Sets the default DbSession.
+        /// Sets the default DBContext.
         /// </summary>
         /// <param name="dt">The dt.</param>
         /// <param name="connStr">The conn STR.</param>
@@ -165,7 +166,6 @@ namespace WEF
                     provider = ProviderFactory.CreateDbProvider(null, typeof(MsAccessProvider).FullName, connStr, dt);
                     break;
             }
-            //2015-08-12新增
             if (provider != null)
             {
                 provider.DatabaseType = dt;
@@ -174,7 +174,7 @@ namespace WEF
         }
 
         /// <summary>
-        /// Sets the default DbSession.
+        /// Sets the default DBContext.
         /// </summary>
         /// <param name="assemblyName">Name of the assembly.</param>
         /// <param name="className">Name of the class.</param>
@@ -192,7 +192,7 @@ namespace WEF
         }
 
         /// <summary>
-        /// Sets the default DbSession.
+        /// Sets the default DBContext.
         /// </summary>
         /// <param name="connStrName">Name of the conn STR.</param>
         public static void SetDefault(string connStrName)
@@ -206,7 +206,6 @@ namespace WEF
 
             Default = new DBContext(new Database(provider));
         }
-
         #endregion
 
         #region 构造函数
@@ -219,6 +218,7 @@ namespace WEF
 
             object cacheConfig = System.Configuration.ConfigurationManager.GetSection("DosCacheConfig");
 
+
             if (null != cacheConfig)
             {
                 db.DbProvider.CacheConfig = (CacheConfiguration)cacheConfig;
@@ -226,7 +226,9 @@ namespace WEF
                 Dictionary<string, CacheInfo> entitiesCache = new Dictionary<string, CacheInfo>();
 
                 //获取缓存配制
+
                 foreach (string key in db.DbProvider.CacheConfig.Entities.AllKeys)
+
                 {
                     if (key.IndexOf('.') > 0)
                     {
@@ -235,13 +237,17 @@ namespace WEF
                         {
                             int expireSeconds = 0;
                             CacheInfo cacheInfo = new CacheInfo();
+
                             if (int.TryParse(db.DbProvider.CacheConfig.Entities[key].Value, out expireSeconds))
+
                             {
                                 cacheInfo.TimeOut = expireSeconds;
                             }
                             else
                             {
+
                                 string tempFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, db.DbProvider.CacheConfig.Entities[key].Value);
+
                                 if (File.Exists(tempFilePath))
                                 {
                                     cacheInfo.FilePath = tempFilePath;
@@ -269,7 +275,7 @@ namespace WEF
 
 
         /// <summary>
-        /// 构造函数    使用默认  DbSession.Default
+        /// 构造函数    使用默认  DBContext.Default
         /// </summary>
         public DBContext()
         {
@@ -288,6 +294,7 @@ namespace WEF
             this.db.DbProvider.ConnectionStringsName = connStrName;
             initDbSesion();
         }
+
 
         /// <summary>
         /// 构造函数
@@ -349,17 +356,7 @@ namespace WEF
         {
             return new Search<TEntity>(db, null, asName);
         }
-        /// <summary>
-        /// 查询
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <returns></returns>
-        public ISearch<TEntity> Search<TEntity>(TEntity t)
-                   where TEntity : Entity
-        {
-            var search = new Search<TEntity>(db, null);
-            return search.Where(DataUtils.GetWhere(t));
-        }
+
         /// <summary>
         /// 查询
         /// </summary>
@@ -369,6 +366,21 @@ namespace WEF
         {
             return new Search(db, tableName);
         }
+
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public ISearch<TEntity> Search<TEntity>(TEntity entity)
+           where TEntity : Entity
+        {
+            return new Search<TEntity>(db, null, entity.GetTableName());
+        }
+
+
         /// <summary>
         /// Sum
         /// </summary>
@@ -2113,15 +2125,6 @@ namespace WEF
 
         #region 执行command
 
-        /// <summary>
-        /// 执行ExecuteNonQuery
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        public int ExecuteNonQuery(string sql)
-        {
-            return db.ExecuteNonQuery(sql);
-        }
 
         /// <summary>
         /// 执行ExecuteNonQuery
@@ -2152,17 +2155,6 @@ namespace WEF
         /// <summary>
         /// 执行ExecuteScalar
         /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        public object ExecuteScalar(string sql)
-        {
-            return db.ExecuteScalar(sql);
-        }
-
-
-        /// <summary>
-        /// 执行ExecuteScalar
-        /// </summary>
         /// <param name="cmd"></param>
         /// <param name="tran"></param>
         /// <returns></returns>
@@ -2187,21 +2179,10 @@ namespace WEF
             return db.ExecuteScalar(cmd);
         }
 
-
         /// <summary>
         /// 执行ExecuteReader
         /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        public IDataReader ExecuteReader(string sql)
-        {
-            return db.ExecuteReader(sql);
-        }
-
-        /// <summary>
-        /// 执行ExecuteReader
-        /// </summary>
-        /// <param name="sql"></param>
+        /// <param name="cmd"></param>
         /// <returns></returns>
         public IDataReader ExecuteReader(DbCommand cmd)
         {
@@ -2221,26 +2202,6 @@ namespace WEF
             if (null == cmd)
                 return null;
             return db.ExecuteReader(cmd, tran);
-        }
-        /// <summary>
-        /// 执行ExecuteDataTable
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        public DataTable ExecuteDataTable(string sql)
-        {
-            var ds = db.ExecuteDataSet(sql);
-            if (ds != null && ds.Tables.Count > 0) return ds.Tables[0];
-            return null;
-        }
-        /// <summary>
-        /// 执行ExecuteDataSet
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        public DataSet ExecuteDataSet(string sql)
-        {
-            return db.ExecuteDataSet(sql);
         }
 
         /// <summary>
@@ -2338,8 +2299,28 @@ namespace WEF
             return new SqlSection(this, sql);
         }
 
-        #endregion
+        /// <summary>
+        /// 执行ExecuteDataTable
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public DataTable ExecuteDataTable(string sql)
+        {
+            var ds = db.ExecuteDataSet(sql);
+            if (ds != null && ds.Tables.Count > 0) return ds.Tables[0];
+            return null;
+        }
 
+        /// <summary>
+        /// 执行ExecuteNonQuery
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public int ExecuteNonQuery(string sql)
+        {
+            return db.ExecuteNonQuery(sql);
+        }
+        #endregion
         #region mvc 
 
         public DataTable GetMap(string tableName)
@@ -2588,6 +2569,159 @@ namespace WEF
                 return ExecuteNonQuery(sqlStr);
         }
         #endregion
+        #endregion
+
+
+
+        #region 数据导入导出
+        /// <summary>
+        /// 读取CSV文件
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static DataTable ReadFromCSV(string filePath)
+        {
+            Encoding encoding = Encoding.GetEncoding("utf-8");
+
+            DataTable dt = new DataTable();
+
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (StreamReader sr = new StreamReader(fs, encoding))
+                {
+                    //记录每次读取的一行记录
+                    string strLine = "";
+
+                    //记录每行记录中的各字段内容
+                    string[] aryLine = null;
+
+                    string[] tableHead = null;
+
+                    //标示列数
+                    int columnCount = 0;
+
+                    //标示是否是读取的第一行
+                    bool IsFirst = true;
+
+                    //逐行读取CSV中的数据
+                    while ((strLine = sr.ReadLine()) != null)
+                    {
+                        if (IsFirst == true)
+                        {
+                            tableHead = strLine.Split(',');
+
+                            IsFirst = false;
+
+                            columnCount = tableHead.Length;
+
+                            //创建列
+                            for (int i = 0; i < columnCount; i++)
+                            {
+                                DataColumn dc = new DataColumn(tableHead[i]);
+                                dt.Columns.Add(dc);
+                            }
+                        }
+                        else
+                        {
+                            if (!String.IsNullOrEmpty(strLine))
+                            {
+                                aryLine = strLine.Split(',');
+
+                                DataRow dr = dt.NewRow();
+
+                                for (int j = 0; j < columnCount; j++)
+                                {
+                                    dr[j] = aryLine[j];
+                                }
+
+                                dt.Rows.Add(dr);
+                            }
+                        }
+                    }
+                    if (aryLine != null && aryLine.Length > 0)
+                    {
+                        dt.DefaultView.Sort = tableHead[0] + " " + "asc";
+                    }
+                }
+            }
+            return dt;
+        }
+        /// <summary>
+        /// 写入CSV文件
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="filePath"></param>
+        /// <param name="titlee"></param>
+        public static void WriteToCSV(DataTable table, string filePath)
+        {
+            FileInfo fi = new FileInfo(filePath);
+            string path = fi.DirectoryName;
+            string name = fi.Name;
+            //\/:*?"<>|
+            name = name.Replace(@"\", "＼");
+            name = name.Replace(@"/", "／");
+            name = name.Replace(@":", "：");
+            name = name.Replace(@"*", "＊");
+            name = name.Replace(@"?", "？");
+            name = name.Replace(@"<", "＜");
+            name = name.Replace(@">", "＞");
+            name = name.Replace(@"|", "｜");
+            string title = "";
+
+            using (FileStream fs = new FileStream(path + "\\" + name, FileMode.Create))
+            {
+                using (StreamWriter sw = new StreamWriter(new BufferedStream(fs), System.Text.Encoding.Default))
+                {
+                    for (int i = 0; i < table.Columns.Count; i++)
+                    {
+                        title += table.Columns[i].ColumnName + ",";
+                    }
+                    title = title.Substring(0, title.Length - 1) + "\n";
+                    sw.Write(title);
+                    foreach (DataRow row in table.Rows)
+                    {
+                        if (row.RowState == DataRowState.Deleted) continue;
+                        string line = "";
+                        for (int i = 0; i < table.Columns.Count; i++)
+                        {
+                            line += row[i].ToString().Replace(",", "") + ",";
+                        }
+                        line = line.Substring(0, line.Length - 1) + "\n";
+                        sw.Write(line);
+                    }
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// 导入数据
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public int Import<TEntity>(string filePath) where TEntity : Entity
+        {
+            var dataTable = ReadFromCSV(filePath);
+
+            var list = DataUtils.DataTableToEntityList<TEntity>(dataTable);
+
+            return Insert(list);
+        }
+        /// <summary>
+        /// 导出数据
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="filePath"></param>
+        public void Export<TEntity>(string filePath) where TEntity : Entity
+        {
+            var list = Search<TEntity>().ToList();
+
+            var dataTable = DataUtils.EntityArrayToDataTable<TEntity>(list);
+
+            WriteToCSV(dataTable, filePath);
+        }
+
         #endregion
     }
 }

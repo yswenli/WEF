@@ -40,7 +40,7 @@ namespace WEF.Db
         /// <summary>
         /// 
         /// </summary>
-        private DBContext dbSession;
+        private DBContext DBContext;
 
         /// <summary>
         /// 判断是否有提交或回滚
@@ -56,14 +56,14 @@ namespace WEF.Db
         /// 构造函数
         /// </summary>
         /// <param name="trans"></param>
-        /// <param name="dbSession"></param>
-        public DbTrans(DbTransaction trans, DBContext dbSession)
+        /// <param name="DBContext"></param>
+        public DbTrans(DbTransaction trans, DBContext DBContext)
         {
             Check.Require(trans, "trans", Check.NotNull);
 
             this.trans = trans;
             this.conn = trans.Connection;
-            this.dbSession = dbSession;
+            this.DBContext = DBContext;
 
             if (this.conn.State != ConnectionState.Open)
                 this.conn.Open();
@@ -88,10 +88,7 @@ namespace WEF.Db
         /// </summary>
         public IsolationLevel IsolationLevel
         {
-            get
-            {
-                return trans.IsolationLevel;
-            }
+            get { return trans.IsolationLevel; }
         }
 
         /// <summary>
@@ -176,7 +173,7 @@ namespace WEF.Db
         /// <returns></returns>
         public SqlSection FromSql(string sql)
         {
-            return dbSession.FromSql(sql).SetDbTransaction(trans);
+            return DBContext.FromSql(sql).SetDbTransaction(trans);
         }
 
 
@@ -187,7 +184,7 @@ namespace WEF.Db
         /// <returns></returns>
         public ProcSection FromPro(string proName)
         {
-            return dbSession.FromProc(proName).SetDbTransaction(trans);
+            return DBContext.FromProc(proName).SetDbTransaction(trans);
         }
 
 
@@ -199,20 +196,20 @@ namespace WEF.Db
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        public Search<TEntity> From<TEntity>()
+        public ISearch<TEntity> From<TEntity>()
             where TEntity : Entity
         {
-            return new Search<TEntity>(dbSession.Db, trans);
+            return new Search<TEntity>(DBContext.Db, trans);
         }
         /// <summary>
         /// 查询
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        public Search<TEntity> From<TEntity>(string asName)
+        public ISearch<TEntity> From<TEntity>(string asName)
             where TEntity : Entity
         {
-            return new Search<TEntity>(dbSession.Db, trans, asName);
+            return new Search<TEntity>(DBContext.Db, trans, asName);
         }
 
         /// <summary>
@@ -220,9 +217,9 @@ namespace WEF.Db
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public Search From(string tableName)
+        public ISearch From(string tableName)
         {
-            return new Search(dbSession.Db, tableName, "", trans);
+            return new Search(DBContext.Db, tableName, "", trans);
         }
         #endregion
 
@@ -237,7 +234,7 @@ namespace WEF.Db
         public int UpdateAll<TEntity>(params TEntity[] entities)
             where TEntity : Entity
         {
-            return dbSession.UpdateAll<TEntity>(trans, entities);
+            return DBContext.UpdateAll<TEntity>(trans, entities);
         }
         /// <summary>
         /// 
@@ -247,7 +244,7 @@ namespace WEF.Db
         public int UpdateAll<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : Entity
         {
-            return dbSession.UpdateAll<TEntity>(trans, entities.ToArray());
+            return DBContext.UpdateAll<TEntity>(trans, entities.ToArray());
         }
         /// <summary>
         /// 更新全部字段  
@@ -257,7 +254,7 @@ namespace WEF.Db
         public int UpdateAll<TEntity>(TEntity entity)
             where TEntity : Entity
         {
-            return dbSession.UpdateAll<TEntity>(trans, entity);
+            return DBContext.UpdateAll<TEntity>(trans, entity);
         }
 
 
@@ -271,7 +268,7 @@ namespace WEF.Db
         public int UpdateAll<TEntity>(TEntity entity, WhereClip where)
             where TEntity : Entity
         {
-            return dbSession.UpdateAll<TEntity>(trans, entity, where);
+            return DBContext.UpdateAll<TEntity>(trans, entity, where);
         }
         /// <summary>
         /// 
@@ -283,7 +280,7 @@ namespace WEF.Db
         public int UpdateAll<TEntity>(TEntity entity, Where where)
             where TEntity : Entity
         {
-            return dbSession.UpdateAll<TEntity>(trans, entity, where);
+            return DBContext.UpdateAll<TEntity>(trans, entity, where);
         }
 
 
@@ -295,7 +292,7 @@ namespace WEF.Db
         public int Update<TEntity>(params TEntity[] entities)
             where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, entities);
+            return DBContext.Update<TEntity>(trans, entities);
         }
         /// <summary>
         /// 
@@ -305,7 +302,7 @@ namespace WEF.Db
         public int Update<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, entities.ToArray());
+            return DBContext.Update<TEntity>(trans, entities.ToArray());
         }
         /// <summary>
         /// 
@@ -315,7 +312,7 @@ namespace WEF.Db
         public int Update<TEntity>(List<TEntity> entities)
             where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, entities.ToArray());
+            return DBContext.Update<TEntity>(trans, entities.ToArray());
         }
         /// <summary>
         /// 更新  
@@ -325,7 +322,7 @@ namespace WEF.Db
         public int Update<TEntity>(TEntity entity)
             where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, entity);
+            return DBContext.Update<TEntity>(trans, entity);
         }
 
 
@@ -339,7 +336,7 @@ namespace WEF.Db
         public int Update<TEntity>(TEntity entity, WhereClip where)
             where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, entity, where);
+            return DBContext.Update<TEntity>(trans, entity, where);
         }
         /// <summary>
         /// 
@@ -351,7 +348,7 @@ namespace WEF.Db
         public int Update<TEntity>(TEntity entity, Where where)
             where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, entity, where);
+            return DBContext.Update<TEntity>(trans, entity, where);
         }
         /// <summary>
         /// 
@@ -363,7 +360,7 @@ namespace WEF.Db
         public int Update<TEntity>(TEntity entity, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, entity, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return DBContext.Update<TEntity>(trans, entity, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
         }
         /// <summary>
         /// 更新单个值
@@ -376,7 +373,7 @@ namespace WEF.Db
         public int Update<TEntity>(Field field, object value, WhereClip where)
             where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, field, value, where);
+            return DBContext.Update<TEntity>(trans, field, value, where);
         }
         /// <summary>
         /// 
@@ -389,7 +386,7 @@ namespace WEF.Db
         public int Update<TEntity>(Field field, object value, Where where)
             where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, field, value, where);
+            return DBContext.Update<TEntity>(trans, field, value, where);
         }
         /// <summary>
         /// 
@@ -402,7 +399,7 @@ namespace WEF.Db
         public int Update<TEntity>(Field field, object value, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, field, value, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return DBContext.Update<TEntity>(trans, field, value, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
         }
         /// <summary>
         /// 更新多个值
@@ -414,7 +411,7 @@ namespace WEF.Db
         public int Update<TEntity>(Dictionary<Field, object> fieldValue, WhereClip where)
               where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, fieldValue, where);
+            return DBContext.Update<TEntity>(trans, fieldValue, where);
         }
         /// <summary>
         /// 
@@ -426,7 +423,7 @@ namespace WEF.Db
         public int Update<TEntity>(Dictionary<Field, object> fieldValue, Where where)
               where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, fieldValue, where);
+            return DBContext.Update<TEntity>(trans, fieldValue, where);
         }
         /// <summary>
         /// 
@@ -438,7 +435,7 @@ namespace WEF.Db
         public int Update<TEntity>(Dictionary<Field, object> fieldValue, Expression<Func<TEntity, bool>> lambdaWhere)
               where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, fieldValue, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return DBContext.Update<TEntity>(trans, fieldValue, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
         }
         /// <summary>
         /// 更新
@@ -451,7 +448,7 @@ namespace WEF.Db
         public int Update<TEntity>(Field[] fields, object[] values, WhereClip where)
             where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, fields, values, where);
+            return DBContext.Update<TEntity>(trans, fields, values, where);
         }
         /// <summary>
         /// 
@@ -464,7 +461,7 @@ namespace WEF.Db
         public int Update<TEntity>(Field[] fields, object[] values, Where where)
             where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, fields, values, where);
+            return DBContext.Update<TEntity>(trans, fields, values, where);
         }
         /// <summary>
         /// 
@@ -477,7 +474,7 @@ namespace WEF.Db
         public int Update<TEntity>(Field[] fields, object[] values, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return dbSession.Update<TEntity>(trans, fields, values, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return DBContext.Update<TEntity>(trans, fields, values, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
         }
 
         #endregion
@@ -494,7 +491,7 @@ namespace WEF.Db
         public int Delete<TEntity>(TEntity entity)
             where TEntity : Entity
         {
-            return dbSession.Delete<TEntity>(trans, entity);
+            return DBContext.Delete<TEntity>(trans, entity);
         }
         /// <summary>
         /// 
@@ -504,7 +501,7 @@ namespace WEF.Db
         public int Delete<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : Entity
         {
-            return dbSession.Delete<TEntity>(trans, entities);
+            return DBContext.Delete<TEntity>(trans, entities);
         }
         /// <summary>
         /// 
@@ -514,7 +511,7 @@ namespace WEF.Db
         public int Delete<TEntity>(List<TEntity> entities)
             where TEntity : Entity
         {
-            return dbSession.Delete<TEntity>(trans, entities);
+            return DBContext.Delete<TEntity>(trans, entities);
         }
         ///// <summary>
         /////  删除
@@ -525,7 +522,7 @@ namespace WEF.Db
         //public int Delete<TEntity>(params object[] pkValues)
         //    where TEntity : Entity
         //{
-        //    return dbSession.DeleteByPrimaryKey<TEntity>(trans, pkValues);
+        //    return DBContext.DeleteByPrimaryKey<TEntity>(trans, pkValues);
         //}
         /// <summary>
         ///  删除
@@ -536,22 +533,22 @@ namespace WEF.Db
         public int Delete<TEntity>(params string[] pkValues)
             where TEntity : Entity
         {
-            return dbSession.DeleteByPrimaryKey<TEntity>(trans, pkValues);
+            return DBContext.DeleteByPrimaryKey<TEntity>(trans, pkValues);
         }
         public int Delete<TEntity>(params Guid[] pkValues)
             where TEntity : Entity
         {
-            return dbSession.DeleteByPrimaryKey<TEntity>(trans, pkValues);
+            return DBContext.DeleteByPrimaryKey<TEntity>(trans, pkValues);
         }
         public int Delete<TEntity>(params long[] pkValues)
             where TEntity : Entity
         {
-            return dbSession.DeleteByPrimaryKey<TEntity>(trans, pkValues);
+            return DBContext.DeleteByPrimaryKey<TEntity>(trans, pkValues);
         }
         public int Delete<TEntity>(params int[] pkValues)
             where TEntity : Entity
         {
-            return dbSession.DeleteByPrimaryKey<TEntity>(trans, pkValues);
+            return DBContext.DeleteByPrimaryKey<TEntity>(trans, pkValues);
         }
         /// <summary>
         ///  删除
@@ -562,7 +559,7 @@ namespace WEF.Db
         public int Delete<TEntity>(WhereClip where)
             where TEntity : Entity
         {
-            return dbSession.Delete<TEntity>(trans, where);
+            return DBContext.Delete<TEntity>(trans, where);
         }
         /// <summary>
         /// 
@@ -573,7 +570,7 @@ namespace WEF.Db
         public int Delete<TEntity>(Where where)
             where TEntity : Entity
         {
-            return dbSession.Delete<TEntity>(trans, where.ToWhereClip());
+            return DBContext.Delete<TEntity>(trans, where.ToWhereClip());
         }
         /// <summary>
         /// 
@@ -584,7 +581,7 @@ namespace WEF.Db
         public int Delete<TEntity>(Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return dbSession.Delete<TEntity>(trans, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return DBContext.Delete<TEntity>(trans, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
         }
         #endregion
 
@@ -600,7 +597,7 @@ namespace WEF.Db
         public int Insert<TEntity>(params TEntity[] entities)
             where TEntity : Entity
         {
-            return dbSession.Insert<TEntity>(trans, entities);
+            return DBContext.Insert<TEntity>(trans, entities);
         }
         /// <summary>
         /// 
@@ -610,7 +607,7 @@ namespace WEF.Db
         public int Insert<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : Entity
         {
-            return dbSession.Insert<TEntity>(trans, entities);
+            return DBContext.Insert<TEntity>(trans, entities);
         }
         /// <summary>
         /// 
@@ -620,7 +617,7 @@ namespace WEF.Db
         public int Insert<TEntity>(List<TEntity> entities)
             where TEntity : Entity
         {
-            return dbSession.Insert<TEntity>(trans, entities);
+            return DBContext.Insert<TEntity>(trans, entities);
         }
         /// <summary>
         /// 添加
@@ -631,7 +628,7 @@ namespace WEF.Db
         public int Insert<TEntity>(TEntity entity)
             where TEntity : Entity
         {
-            return dbSession.Insert<TEntity>(trans, entity);
+            return DBContext.Insert<TEntity>(trans, entity);
         }
 
         /// <summary>
@@ -644,11 +641,8 @@ namespace WEF.Db
         public int Insert<TEntity>(Field[] fields, object[] values)
             where TEntity : Entity
         {
-            return dbSession.Insert<TEntity>(trans, fields, values);
+            return DBContext.Insert<TEntity>(trans, fields, values);
         }
-
-
-
         #endregion
     }
 }

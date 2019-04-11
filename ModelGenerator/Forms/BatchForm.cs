@@ -50,7 +50,14 @@ namespace WEF.ModelGenerator
             sysconfigModel = UtilsHelper.GetSysconfigModel();
             txtNamaspace.Text = sysconfigModel.Namespace;
 
-            llServer.Text = connectionModel.Name.Substring(0, connectionModel.Name.IndexOf("["));
+            var index = connectionModel.Name.IndexOf("[");
+
+            if (index < 0)
+            {
+                index = connectionModel.Name.IndexOf("(");
+            }
+
+            llServer.Text = connectionModel.Name.Substring(0, index);
             llDatabaseName.Text = DatabaseName;
             txtPath.Text = sysconfigModel.BatchDirectoryPath;
 

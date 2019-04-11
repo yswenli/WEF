@@ -56,7 +56,7 @@ namespace WEF.ModelGenerator.Forms
             _dic.Add("游标", Resources.游标);
             _dic.Add("重建索引", Resources.重建索引);
             _dic.Add("查看存储过程", Resources.查看存储过程);
-
+            _dic.Add("分页", Resources.分页);
 
             comboBox1.Items.AddRange(_dic.Keys.ToArray());
 

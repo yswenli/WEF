@@ -24,7 +24,7 @@ namespace WEF.DbDAL.MySql
             set { _dbconnectStr = value; }
             get { return _dbconnectStr; }
         }
-        MySqlConnection connect = new MySqlConnection();
+        MySqlConnection _connect = new MySqlConnection();
 
         #endregion
 
@@ -41,7 +41,7 @@ namespace WEF.DbDAL.MySql
         public DbObject(string DbConnectStr)
         {
             _dbconnectStr = DbConnectStr;
-            connect.ConnectionString = DbConnectStr;
+            _connect.ConnectionString = DbConnectStr;
         }
         /// <summary>
         /// 构造一个连接字符串
@@ -67,7 +67,7 @@ namespace WEF.DbDAL.MySql
         /// <param name="dataBase">dataBase</param>
         public DbObject(bool SSPI, string Ip, string User, string Pass, string port, string dataBase = "")
         {
-            connect = new MySqlConnection();
+            _connect = new MySqlConnection();
 
             if (!string.IsNullOrEmpty(dataBase) && dataBase != "全部")
             {
@@ -93,7 +93,7 @@ namespace WEF.DbDAL.MySql
                     _dbconnectStr = String.Format("server={0};user id={1}; password={2}; Port={3};database=; pooling=false", Ip, User, Pass, port);//database=mysql
                 }
             }
-            connect.ConnectionString = _dbconnectStr;
+            _connect.ConnectionString = _dbconnectStr;
         }
 
 
@@ -131,20 +131,20 @@ namespace WEF.DbDAL.MySql
         {
             try
             {
-                if (connect.ConnectionString == "")
+                if (_connect.ConnectionString == "")
                 {
-                    connect.ConnectionString = _dbconnectStr;
+                    _connect.ConnectionString = _dbconnectStr;
                 }
-                if (connect.ConnectionString != _dbconnectStr)
+                if (_connect.ConnectionString != _dbconnectStr)
                 {
-                    connect.Close();
-                    connect.ConnectionString = _dbconnectStr;
+                    _connect.Close();
+                    _connect.ConnectionString = _dbconnectStr;
                 }
                 MySqlCommand dbCommand = new MySqlCommand();
-                dbCommand.Connection = connect;
-                if (connect.State == System.Data.ConnectionState.Closed)
+                dbCommand.Connection = _connect;
+                if (_connect.State == System.Data.ConnectionState.Closed)
                 {
-                    connect.Open();
+                    _connect.Open();
                 }
                 dbCommand.CommandText = "use " + DbName + "";
                 dbCommand.ExecuteNonQuery();
@@ -175,7 +175,7 @@ namespace WEF.DbDAL.MySql
             try
             {
                 OpenDB(DbName);
-                MySqlDataAdapter command = new MySqlDataAdapter(SQLString, connect);
+                MySqlDataAdapter command = new MySqlDataAdapter(SQLString, _connect);
                 command.Fill(ds, "ds");
             }
             catch (MySqlException ex)
@@ -189,7 +189,7 @@ namespace WEF.DbDAL.MySql
             try
             {
                 OpenDB(DbName);
-                MySqlCommand cmd = new MySqlCommand(strSQL, connect);
+                MySqlCommand cmd = new MySqlCommand(strSQL, _connect);
                 MySqlDataReader myReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 return myReader;
             }
@@ -232,7 +232,7 @@ namespace WEF.DbDAL.MySql
             OpenDB(DbName);
             DataSet dataSet = new DataSet();
             MySqlDataAdapter sqlDA = new MySqlDataAdapter();
-            sqlDA.SelectCommand = BuildQueryCommand(connect, storedProcName, parameters);
+            sqlDA.SelectCommand = BuildQueryCommand(_connect, storedProcName, parameters);
             sqlDA.Fill(dataSet, tableName);
 
             return dataSet;

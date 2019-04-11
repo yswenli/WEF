@@ -37,16 +37,16 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(68, 61);
+            this.label1.Location = new System.Drawing.Point(15, 52);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(119, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "WEF Version:3.2.3.1";
+            this.label1.Text = "WEF Version:3.2.3.5";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(70, 89);
+            this.label2.Location = new System.Drawing.Point(17, 80);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(125, 12);
             this.label2.TabIndex = 1;
@@ -55,7 +55,7 @@
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(70, 121);
+            this.linkLabel1.Location = new System.Drawing.Point(17, 112);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(299, 12);
             this.linkLabel1.TabIndex = 2;
@@ -67,15 +67,16 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(403, 180);
+            this.ClientSize = new System.Drawing.Size(442, 157);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "AboutForm";
             this.Text = "关于WEF数据库工具";
+            this.Load += new System.EventHandler(this.AboutForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

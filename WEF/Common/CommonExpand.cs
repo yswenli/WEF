@@ -6,18 +6,16 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************
- * 项目名称：$projectname$
+ * 项目名称：WEF
  * 命名空间：WEF.Common
- * 类名称：DosORMCommonExpand
+ * 类名称：CommonExpand
  * 创建时间：2017/7/26 14:25:47
  * 创建人：wenli
  * 创建说明：
  *****************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace WEF.Common
 {
@@ -34,19 +32,16 @@ namespace WEF.Common
         /// <returns></returns>
         public static TAttribute[] GetCustomAttributes<TAttribute>(this MemberInfo member, Boolean inherit)
         {
-            if (member == null)
-                return new TAttribute[0];
+            if (member == null) return new TAttribute[0];
 
             // 根据是否可继承，分属两个缓存集合
             var cache = inherit ? _micache1 : _micache2;
 
             Object obj = null;
-            if (cache.TryGetValue(member, out obj))
-                return (TAttribute[])obj;
+            if (cache.TryGetValue(member, out obj)) return (TAttribute[])obj;
             lock (cache)
             {
-                if (cache.TryGetValue(member, out obj))
-                    return (TAttribute[])obj;
+                if (cache.TryGetValue(member, out obj)) return (TAttribute[])obj;
 
                 var atts = member.GetCustomAttributes(typeof(TAttribute), inherit) as TAttribute[];
                 var att = atts == null ? new TAttribute[0] : atts;
@@ -62,8 +57,7 @@ namespace WEF.Common
         public static TAttribute GetCustomAttribute<TAttribute>(this MemberInfo member, Boolean inherit)
         {
             var atts = member.GetCustomAttributes<TAttribute>(inherit);
-            if (atts == null || atts.Length < 1)
-                return default(TAttribute);
+            if (atts == null || atts.Length < 1) return default(TAttribute);
             return atts[0];
         }
     }

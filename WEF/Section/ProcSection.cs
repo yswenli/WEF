@@ -8,15 +8,17 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
-using WEF.Common;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using WEF.Common;
 using WEF.Provider;
-using WEF.Db;
 
 namespace WEF.Section
 {
+    /// <summary>
+    /// 执行存储过程
+    /// </summary>
     /// <summary>
     /// 执行存储过程
     /// </summary>

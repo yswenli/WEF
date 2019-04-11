@@ -81,6 +81,42 @@ namespace WEF.ModelGenerator.Properties {
         }
         
         /// <summary>
+        ///   查找类似 oracle 分页
+        ///
+        ///SELECT * FROM  
+        ///(  
+        ///SELECT A.*, ROWNUM RN  
+        ///FROM (SELECT * FROM TABLE_NAME) A  
+        ///)  
+        ///WHERE RN BETWEEN 21 AND 40 
+        ///
+        ///oracle取前面n条
+        ///
+        ///select * FROM        /// TB_AUTHKEY where ROWNUM&lt;20
+        ///
+        ///sqlserver分页
+        ///
+        ///select * from 
+        ///(select *, ROW_NUMBER() OVER(Order by ArtistId ) AS RowId from ArtistModels) as b  
+        ///where RowId between 10 and 20
+        ///
+        ///select * from ArtistModels  order by ArtistId offset 4 rows fetch next 5 rows only
+        ///
+        ///sqlserver 取前面n条
+        ///
+        ///select top 20 * from TB_USER
+        ///
+        ///mysql分页
+        ///
+        ///select * from orders_h [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        /// </summary>
+        internal static string 分页 {
+            get {
+                return ResourceManager.GetString("分页", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 --创建名为 GetStuCou_DS 的有输入参数、输出参数和结果集的存储过程
         ///create procedure GetStuCou_DS
         ///@StuNo    nvarchar(64),

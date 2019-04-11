@@ -17,9 +17,6 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Linq.Expressions;
 
 namespace WEF.Expressions
@@ -36,8 +33,7 @@ namespace WEF.Expressions
 
         public CacheEvaluator()
             : this(s_cache)
-        {
-        }
+        { }
 
         public CacheEvaluator(IExpressionCache<Delegate> cache)
         {

@@ -8,20 +8,19 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
-using WEF;
-using WEF.Common;
-using WEF.Expressions;
-using WEF.Provider;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
+using WEF.Common;
+using WEF.Expressions;
+using WEF.Provider;
 
 namespace WEF.Db
 {
     /// <summary>
-    /// 根据实体T的Fileds来生成对应SQL并封装成Command
+    /// Command Creator
     /// </summary>
     public class CommandCreator
     {
@@ -53,22 +52,42 @@ namespace WEF.Db
         public DbCommand CreateUpdateCommand<TEntity>(TEntity entity, WhereClip where)
             where TEntity : Entity
         {
-            var fs = entity.GetModifyFieldsStr();
-            if (null == fs || fs.Count == 0)
-                return null;
-            var fields = new Field[fs.Count];
-            var values = new object[fs.Count];
-            var i = 0;
-            var fields2 = entity.GetFields().ToList();
-            var values2 = entity.GetValues();
-            foreach (string f in fs)
+            var v11056 = entity.V1_10_5_6_Plus();
+            if (v11056)
             {
-                var index = fields2.FindIndex(d => d.Name == f);
-                fields[i] = fields2[index];
-                values[i] = values2[index];
-                i++;
+                var fs = entity.GetModifyFieldsStr();
+                if (null == fs || fs.Count == 0)
+                    return null;
+                var fields = new Field[fs.Count];
+                var values = new object[fs.Count];
+                var i = 0;
+                var fields2 = entity.GetFields().ToList();
+                var values2 = entity.GetValues();
+                foreach (string f in fs)
+                {
+                    var index = fields2.FindIndex(d => d.Name == f);
+                    fields[i] = fields2[index];
+                    values[i] = values2[index];
+                    i++;
+                }
+                return CreateUpdateCommand<TEntity>(fields, values, where);
             }
-            return CreateUpdateCommand<TEntity>(fields, values, where);
+            else
+            {
+                var mfields = entity.GetModifyFields();
+                if (null == mfields || mfields.Count == 0)
+                    return null;
+                var fields = new Field[mfields.Count];
+                var values = new object[mfields.Count];
+                var i = 0;
+                foreach (ModifyField mf in mfields)
+                {
+                    fields[i] = mf.Field;
+                    values[i] = mf.NewValue;
+                    i++;
+                }
+                return CreateUpdateCommand<TEntity>(fields, values, where);
+            }
         }
 
         /// <summary>
@@ -108,63 +127,41 @@ namespace WEF.Db
                 if (identityExist)
                 {
                     //标识列  排除
-                    try
-                    {
-
-                        if (fields[i].PropertyName.Equals(identityField.PropertyName))
-                        {
-                            continue;
-                        }
-                    }
-                    catch
-                    {
+                    if (fields[i].PropertyName.Equals(identityField.PropertyName))
                         continue;
-                    }
                 }
 
-                if (!Field.IsNullOrEmpty(fields[i]))
+                colums.Append(",");
+                colums.Append(fields[i].FieldName);
+                colums.Append("=");
+
+                if (values[i] is Expression)
                 {
-                    colums.Append(",");
-                    colums.Append(fields[i].FieldName);
-                    colums.Append("=");
-
-                    if (values[i] is Expression)
-                    {
-                        var expression = (Expression)values[i];
-                        colums.Append(expression);
-                        list.AddRange(expression.Parameters);
-                    }
-                    else if (values[i] is Field)
-                    {
-                        var fieldValue = (Field)values[i];
-                        colums.Append(fieldValue.TableFieldName);
-                    }
-                    else
-                    {
-                        var pname = DataUtils.MakeUniqueKey(fields[i]);
-                        //var pname = string.Concat("@", fields[i].Name, i);
-                        colums.Append(pname);
-                        var p = new Parameter(pname, values[i], fields[i].ParameterDbType, fields[i].ParameterSize);
-                        list.Add(p);
-                    }
+                    var expression = (Expression)values[i];
+                    colums.Append(expression);
+                    list.AddRange(expression.Parameters);
+                }
+                else if (values[i] is Field)
+                {
+                    var fieldValue = (Field)values[i];
+                    colums.Append(fieldValue.TableFieldName);
+                }
+                else
+                {
+                    var pname = DataUtils.MakeUniqueKey(fields[i]);
+                    //var pname = string.Concat("@", fields[i].Name, i);
+                    colums.Append(pname);
+                    var p = new Parameter(pname, values[i], fields[i].ParameterDbType, fields[i].ParameterSize);
+                    list.Add(p);
                 }
             }
-            if (!string.IsNullOrEmpty(colums.ToString()))
-            {
-                sql.Append(colums.ToString().Substring(1));
-                sql.Append(where.WhereString);
-            }
-            else
-            {
-
-            }
-
+            sql.Append(colums.ToString().Substring(1));
+            sql.Append(where.WhereString);
             list.AddRange(where.Parameters);
 
             var cmd = db.GetSqlStringCommand(sql.ToString());
 
             db.AddCommandParameter(cmd, list.ToArray());
-
             return cmd;
         }
 
@@ -297,23 +294,48 @@ namespace WEF.Db
         {
             if (null == entity)
                 return null;
-            var fs = entity.GetModifyFieldsStr();
-            if (null == fs || fs.Count == 0)
-                return CreateInsertCommand<TEntity>(entity.GetFields(), entity.GetValues());
-
-            var fields = new Field[fs.Count];
-            var values = new object[fs.Count];
-            var i = 0;
-            var fields2 = entity.GetFields().ToList();
-            var values2 = entity.GetValues();
-            foreach (string f in fs)
+            var v11056 = entity.V1_10_5_6_Plus();
+            if (v11056)
             {
-                var index = fields2.FindIndex(d => d.Name == f);
-                fields[i] = fields2[index];
-                values[i] = values2[index];
-                i++;
+                var fs = entity.GetModifyFieldsStr();
+                if (null == fs || fs.Count == 0)
+                    return CreateInsertCommand<TEntity>(entity.GetFields(), entity.GetValues());
+
+                var fields = new Field[fs.Count];
+                var values = new object[fs.Count];
+                var i = 0;
+                var fields2 = entity.GetFields().ToList();
+                var values2 = entity.GetValues();
+                foreach (string f in fs)
+                {
+                    var index = fields2.FindIndex(d => d.Name == f);
+                    fields[i] = fields2[index];
+                    values[i] = values2[index];
+                    i++;
+                }
+                return CreateInsertCommand<TEntity>(fields, values);
             }
-            return CreateInsertCommand<TEntity>(fields, values);
+            else
+            {
+                var mfields = entity.GetModifyFields();
+
+                if (null == mfields || mfields.Count == 0)
+                {
+                    return CreateInsertCommand<TEntity>(entity.GetFields(), entity.GetValues());
+                }
+                else
+                {
+                    List<Field> fields = new List<Field>();
+                    List<object> values = new List<object>();
+                    foreach (ModifyField m in mfields)
+                    {
+                        fields.Add(m.Field);
+                        values.Add(m.NewValue);
+                    }
+
+                    return CreateInsertCommand<TEntity>(fields.ToArray(), values.ToArray());
+                }
+            }
         }
 
         #endregion

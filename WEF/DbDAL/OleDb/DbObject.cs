@@ -8,26 +8,26 @@ namespace WEF.DbDAL.OleDb
     public class DbObject : IDbObject
     {
         private string _dbconnectStr;
-        private OleDbConnection connect;
+        private OleDbConnection _connect;
 
         public DbObject()
         {
-            this.connect = new OleDbConnection();
+            this._connect = new OleDbConnection();
         }
 
         public DbObject(string DbConnectStr)
         {
-            this.connect = new OleDbConnection();
+            this._connect = new OleDbConnection();
             this._dbconnectStr = DbConnectStr;
-            this.connect.ConnectionString = DbConnectStr;
+            this._connect.ConnectionString = DbConnectStr;
         }
 
         public DbObject(bool SSPI, string server, string User, string Pass)
         {
-            this.connect = new OleDbConnection();
-            this.connect = new OleDbConnection();
+            this._connect = new OleDbConnection();
+            this._connect = new OleDbConnection();
             this._dbconnectStr = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + server + ";Persist Security Info=False";
-            this.connect.ConnectionString = this._dbconnectStr;
+            this._connect.ConnectionString = this._dbconnectStr;
         }
 
         public bool DeleteTable(string DbName, string TableName)
@@ -50,7 +50,7 @@ namespace WEF.DbDAL.OleDb
             try
             {
                 this.OpenDB();
-                reader2 = new OleDbCommand(strSQL, this.connect).ExecuteReader();
+                reader2 = new OleDbCommand(strSQL, this._connect).ExecuteReader();
             }
             catch (OleDbException exception)
             {
@@ -62,7 +62,7 @@ namespace WEF.DbDAL.OleDb
         public int ExecuteSql(string DbName, string SQLString)
         {
             this.OpenDB();
-            OleDbCommand command = new OleDbCommand(SQLString, this.connect);
+            OleDbCommand command = new OleDbCommand(SQLString, this._connect);
             command.CommandText = SQLString;
             return command.ExecuteNonQuery();
         }
@@ -72,7 +72,7 @@ namespace WEF.DbDAL.OleDb
             this.OpenDB();
             object[] restrictions = new object[4];
             restrictions[2] = TableName;
-            DataTable oleDbSchemaTable = this.connect.GetOleDbSchemaTable(OleDbSchemaGuid.Columns, restrictions);
+            DataTable oleDbSchemaTable = this._connect.GetOleDbSchemaTable(OleDbSchemaGuid.Columns, restrictions);
             DataTable dt = this.Tab2Colum(oleDbSchemaTable);
             DataTable primarykeydt = this.GetKeyName(DbName, TableName);
             if (null != primarykeydt && primarykeydt.Rows.Count > 0)
@@ -104,7 +104,7 @@ namespace WEF.DbDAL.OleDb
             this.OpenDB();
             object[] restrictions = new object[4];
             restrictions[2] = TableName;
-            DataTable oleDbSchemaTable = this.connect.GetOleDbSchemaTable(OleDbSchemaGuid.Columns, restrictions);
+            DataTable oleDbSchemaTable = this._connect.GetOleDbSchemaTable(OleDbSchemaGuid.Columns, restrictions);
             return this.Tab2Colum(oleDbSchemaTable);
         }
 
@@ -118,7 +118,7 @@ namespace WEF.DbDAL.OleDb
             try
             {
                 this.OpenDB();
-                DataTable oleDbSchemaTable = this.connect.GetOleDbSchemaTable(OleDbSchemaGuid.Key_Column_Usage, new object[4]);
+                DataTable oleDbSchemaTable = this._connect.GetOleDbSchemaTable(OleDbSchemaGuid.Key_Column_Usage, new object[4]);
                 return this.Key2Colum(oleDbSchemaTable, TableName);
             }
             catch (Exception exception)
@@ -148,7 +148,7 @@ namespace WEF.DbDAL.OleDb
             try
             {
                 this.OpenDB();
-                object objA = new OleDbCommand(SQLString, this.connect).ExecuteScalar();
+                object objA = new OleDbCommand(SQLString, this._connect).ExecuteScalar();
                 if (object.Equals(objA, null) || object.Equals(objA, DBNull.Value))
                 {
                     return null;
@@ -175,7 +175,7 @@ namespace WEF.DbDAL.OleDb
             this.OpenDB();
             object[] restrictions = new object[4];
             restrictions[3] = "TABLE";
-            DataTable oleDbSchemaTable = this.connect.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, restrictions);
+            DataTable oleDbSchemaTable = this._connect.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, restrictions);
             return this.Tab2Tab(oleDbSchemaTable);
         }
 
@@ -184,21 +184,21 @@ namespace WEF.DbDAL.OleDb
             this.OpenDB();
             object[] restrictions = new object[4];
             restrictions[3] = "TABLE";
-            DataTable oleDbSchemaTable = this.connect.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, restrictions);
+            DataTable oleDbSchemaTable = this._connect.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, restrictions);
             return this.Tab2Tab(oleDbSchemaTable);
         }
 
         public DataTable GetTabViews(string DbName)
         {
             this.OpenDB();
-            DataTable oleDbSchemaTable = this.connect.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+            DataTable oleDbSchemaTable = this._connect.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
             return this.Tab2Tab(oleDbSchemaTable);
         }
 
         public DataTable GetTabViewsInfo(string DbName)
         {
             this.OpenDB();
-            DataTable oleDbSchemaTable = this.connect.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+            DataTable oleDbSchemaTable = this._connect.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
             return this.Tab2Tab(oleDbSchemaTable);
         }
 
@@ -212,7 +212,7 @@ namespace WEF.DbDAL.OleDb
             this.OpenDB();
             object[] restrictions = new object[4];
             restrictions[3] = "VIEW";
-            DataTable oleDbSchemaTable = this.connect.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, restrictions);
+            DataTable oleDbSchemaTable = this._connect.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, restrictions);
             return this.Tab2Tab(oleDbSchemaTable);
         }
 
@@ -221,7 +221,7 @@ namespace WEF.DbDAL.OleDb
             this.OpenDB();
             object[] restrictions = new object[4];
             restrictions[3] = "VIEW";
-            DataTable oleDbSchemaTable = this.connect.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, restrictions);
+            DataTable oleDbSchemaTable = this._connect.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, restrictions);
             return this.Tab2Tab(oleDbSchemaTable);
         }
 
@@ -256,18 +256,18 @@ namespace WEF.DbDAL.OleDb
         {
             try
             {
-                if (this.connect.ConnectionString == "")
+                if (this._connect.ConnectionString == "")
                 {
-                    this.connect.ConnectionString = this._dbconnectStr;
+                    this._connect.ConnectionString = this._dbconnectStr;
                 }
-                if (this.connect.ConnectionString != this._dbconnectStr)
+                if (this._connect.ConnectionString != this._dbconnectStr)
                 {
-                    this.connect.Close();
-                    this.connect.ConnectionString = this._dbconnectStr;
+                    this._connect.Close();
+                    this._connect.ConnectionString = this._dbconnectStr;
                 }
-                if (this.connect.State == ConnectionState.Closed)
+                if (this._connect.State == ConnectionState.Closed)
                 {
-                    this.connect.Open();
+                    this._connect.Open();
                 }
             }
             catch
@@ -281,7 +281,7 @@ namespace WEF.DbDAL.OleDb
             try
             {
                 this.OpenDB();
-                new OleDbDataAdapter(SQLString, this.connect).Fill(dataSet, "ds");
+                new OleDbDataAdapter(SQLString, this._connect).Fill(dataSet, "ds");
             }
             catch (OleDbException exception)
             {

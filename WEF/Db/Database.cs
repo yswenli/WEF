@@ -163,25 +163,6 @@ namespace WEF.Db
 
             }
         }
-
-        private DataTable DoLoadMap(DbCommand command, string tableName)
-        {
-            Check.Require(tableName != null && tableName.Length > 0, "tableNames could not be null or empty.");
-
-            DataTable data = new DataTable();
-
-            using (DbDataAdapter adapter = GetDataAdapter())
-            {
-                adapter.SelectCommand = command;
-                adapter.FillSchema(data, SchemaType.Mapped);
-                data.AcceptChanges();
-                command.Parameters.Clear();
-                command.Connection.Close();
-            }
-            return data;
-        }
-
-
         private object DoExecuteScalar(DbCommand command)
         {
 
@@ -623,21 +604,16 @@ namespace WEF.Db
         }
 
         /// <summary>
-        /// 获取表结构
+        /// <para>Executes the <paramref name="command"/> and returns the results in a new <see cref="DataSet"/>.</para>
         /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
-        public DataTable GetMap(string tableName)
+        /// <param name="command"><para>The <see cref="DbCommand"/> to execute.</para></param>
+        /// <returns>A <see cref="DataSet"/> with the results of the <paramref name="command"/>.</returns>        
+        public DataSet ExecuteDataSet(DbCommand command)
         {
-            Check.Require(tableName, "tableName", Check.NotNullOrEmpty);
-            using (DbConnection connection = GetConnection(true))
-            {                
-                using (DbCommand command = CreateCommandByCommandType(CommandType.Text, "select * from [" + tableName + "]"))
-                {
-                    PrepareCommand(command, connection);
-                    return DoLoadMap(command, "Table");
-                }
-            }
+            DataSet dataSet = new DataSet();
+            dataSet.Locale = CultureInfo.InvariantCulture;
+            LoadDataSet(command, dataSet, "Table");
+            return dataSet;
         }
 
         /// <summary>
@@ -660,20 +636,6 @@ namespace WEF.Db
                 }
             }
         }
-
-        /// <summary>
-        /// <para>Executes the <paramref name="command"/> and returns the results in a new <see cref="DataSet"/>.</para>
-        /// </summary>
-        /// <param name="command"><para>The <see cref="DbCommand"/> to execute.</para></param>
-        /// <returns>A <see cref="DataSet"/> with the results of the <paramref name="command"/>.</returns>        
-        public DataSet ExecuteDataSet(DbCommand command)
-        {
-            DataSet dataSet = new DataSet();
-            dataSet.Locale = CultureInfo.InvariantCulture;
-            LoadDataSet(command, dataSet, "Table");
-            return dataSet;
-        }
-       
 
         /// <summary>
         /// <para>Executes the <paramref name="command"/> as part of the <paramref name="transaction" /> and returns the results in a new <see cref="DataSet"/>.</para>
@@ -792,23 +754,6 @@ namespace WEF.Db
                 return ExecuteScalar(command);
             }
         }
-        /// <summary>
-        /// sql
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        public object ExecuteScalar(string sql)
-        {
-            Check.Require(sql, "sql", Check.NotNullOrEmpty);
-            using (DbConnection connection = GetConnection(true))
-            {
-                using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
-                {
-                    PrepareCommand(command, connection);
-                    return ExecuteScalar(command);
-                }
-            }
-        }
 
         /// <summary>
         /// <para>Executes the <paramref name="commandText"/> interpreted as specified by the <paramref name="commandType" /> 
@@ -834,31 +779,6 @@ namespace WEF.Db
                 return ExecuteScalar(command, transaction);
             }
         }
-        /// <summary>
-        /// 执行sql
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        public int ExecuteNonQuery(string sql)
-        {
-            Check.Require(sql, "sql", Check.NotNullOrEmpty);
-            using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
-            {
-                if (IsBatchConnection)
-                {
-                    PrepareCommand(command, GetConnection(true));
-                    return DoExecuteNonQuery(command);
-                }
-                else
-                {
-                    using (DbConnection connection = GetConnection(true))
-                    {
-                        PrepareCommand(command, connection);
-                        return DoExecuteNonQuery(command);
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// <para>Executes the <paramref name="command"/> and returns the number of rows affected.</para>
@@ -881,6 +801,33 @@ namespace WEF.Db
                 {
                     PrepareCommand(command, connection);
                     return DoExecuteNonQuery(command);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public int ExecuteNonQuery(string sql)
+        {
+            Check.Require(sql, "sql", Check.NotNullOrEmpty);
+            using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
+            {
+                if (IsBatchConnection)
+                {
+                    PrepareCommand(command, GetConnection(true));
+                    return DoExecuteNonQuery(command);
+                }
+                else
+                {
+                    using (DbConnection connection = GetConnection(true))
+                    {
+                        PrepareCommand(command, connection);
+                        return DoExecuteNonQuery(command);
+                    }
                 }
             }
         }
@@ -947,28 +894,20 @@ namespace WEF.Db
         }
 
         /// <summary>
-        /// sql
+        /// <para>Executes the <paramref name="command"/> and returns an <see cref="IDataReader"></see> through which the result can be read.
+        /// It is the responsibility of the caller to close the connection and reader when finished.</para>
         /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        public IDataReader ExecuteReader(string sql)
-        {
-            Check.Require(sql, "sql", Check.NotNullOrEmpty);
-            using (DbConnection connection = GetConnection(true))
-            {
-                using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
-                {
-                    PrepareCommand(command, connection);
-                    return ExecuteReader(command);
-                }
-            }
-        }
-
-
+        /// <param name="command">
+        /// <para>The command that contains the query to execute.</para>
+        /// </param>
+        /// <returns>
+        /// <para>An <see cref="IDataReader"/> object.</para>
+        /// </returns>        
         public IDataReader ExecuteReader(DbCommand command)
         {
             DbConnection connection = GetConnection(true);
             PrepareCommand(command, connection);
+
             try
             {
                 return DoExecuteReader(command, CommandBehavior.CloseConnection);
@@ -1286,6 +1225,43 @@ namespace WEF.Db
             batchCommander.ExecuteBatch();
         }
 
+        #endregion
+
+
+        #region Extiond
+        private DataTable DoLoadMap(DbCommand command, string tableName)
+        {
+            Check.Require(tableName != null && tableName.Length > 0, "tableNames could not be null or empty.");
+
+            DataTable data = new DataTable();
+
+            using (DbDataAdapter adapter = GetDataAdapter())
+            {
+                adapter.SelectCommand = command;
+                adapter.FillSchema(data, SchemaType.Mapped);
+                data.AcceptChanges();
+                command.Parameters.Clear();
+                command.Connection.Close();
+            }
+            return data;
+        }
+        /// <summary>
+        /// 获取表结构
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public DataTable GetMap(string tableName)
+        {
+            Check.Require(tableName, "tableName", Check.NotNullOrEmpty);
+            using (DbConnection connection = GetConnection(true))
+            {
+                using (DbCommand command = CreateCommandByCommandType(CommandType.Text, "select * from [" + tableName + "]"))
+                {
+                    PrepareCommand(command, connection);
+                    return DoLoadMap(command, "Table");
+                }
+            }
+        }
         #endregion
     }
 }

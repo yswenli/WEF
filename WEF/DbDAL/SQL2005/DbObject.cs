@@ -8,25 +8,25 @@ namespace WEF.DbDAL.SQL2005
     public class DbObject : IDbObject
     {
         private string _dbconnectStr;
-        private SqlConnection connect;
+        private SqlConnection _connect;
         private bool isdbosp = false;
 
         public DbObject()
         {
-            this.connect = new SqlConnection();
+            this._connect = new SqlConnection();
             this.IsDboSp();
         }
 
         public DbObject(string DbConnectStr)
         {
-            this.connect = new SqlConnection();
+            this._connect = new SqlConnection();
             this._dbconnectStr = DbConnectStr;
-            this.connect.ConnectionString = DbConnectStr;
+            this._connect.ConnectionString = DbConnectStr;
         }
 
         public DbObject(bool SSPI, string Ip, string User, string Pass)
         {
-            this.connect = new SqlConnection();
+            this._connect = new SqlConnection();
             if (SSPI)
             {
                 this._dbconnectStr = "Integrated Security=SSPI;Data Source=" + Ip + ";Initial Catalog=master";
@@ -39,7 +39,7 @@ namespace WEF.DbDAL.SQL2005
             {
                 this._dbconnectStr = "user id=" + User + ";password=" + Pass + ";initial catalog=master;data source=" + Ip + ";Connect Timeout=30";
             }
-            this.connect.ConnectionString = this._dbconnectStr;
+            this._connect.ConnectionString = this._dbconnectStr;
         }
 
         private SqlCommand BuildQueryCommand(SqlConnection connection, string storedProcName, IDataParameter[] parameters)
@@ -553,20 +553,20 @@ namespace WEF.DbDAL.SQL2005
         {
             try
             {
-                if (this.connect.ConnectionString == "")
+                if (this._connect.ConnectionString == "")
                 {
-                    this.connect.ConnectionString = this._dbconnectStr;
+                    this._connect.ConnectionString = this._dbconnectStr;
                 }
-                if (this.connect.ConnectionString != this._dbconnectStr)
+                if (this._connect.ConnectionString != this._dbconnectStr)
                 {
-                    this.connect.Close();
-                    this.connect.ConnectionString = this._dbconnectStr;
+                    this._connect.Close();
+                    this._connect.ConnectionString = this._dbconnectStr;
                 }
                 SqlCommand command = new SqlCommand();
-                command.Connection = this.connect;
-                if (this.connect.State == ConnectionState.Closed)
+                command.Connection = this._connect;
+                if (this._connect.State == ConnectionState.Closed)
                 {
-                    this.connect.Open();
+                    this._connect.Open();
                 }
                 command.CommandText = "use [" + DbName + "]";
                 command.ExecuteNonQuery();
@@ -585,7 +585,7 @@ namespace WEF.DbDAL.SQL2005
             try
             {
                 this.OpenDB(DbName);
-                new SqlDataAdapter(SQLString, this.connect).Fill(dataSet, "ds");
+                new SqlDataAdapter(SQLString, this._connect).Fill(dataSet, "ds");
             }
             catch (SqlException exception)
             {                
@@ -614,7 +614,7 @@ namespace WEF.DbDAL.SQL2005
             this.OpenDB(DbName);
             DataSet dataSet = new DataSet();
             SqlDataAdapter adapter = new SqlDataAdapter();
-            adapter.SelectCommand = this.BuildQueryCommand(this.connect, storedProcName, parameters);
+            adapter.SelectCommand = this.BuildQueryCommand(this._connect, storedProcName, parameters);
             adapter.Fill(dataSet, tableName);
             return dataSet;
         }

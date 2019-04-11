@@ -16,7 +16,6 @@
  * 创建人：Wenli
  * 创建说明：
  *****************************************************************************************************/
-using WEF.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -33,8 +32,9 @@ namespace WEF.Expressions
     }
 
     /// <summary>
-    /// Where条件拼接，同WhereClipBuilder
+    /// Where条件拼接
     /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class Where<T> : WhereClipBuilder
         where T : Entity
     {
@@ -111,7 +111,6 @@ namespace WEF.Expressions
     /// <summary>
     /// Where条件拼接，同Where类
     /// </summary>
-    [Obsolete("建议使用Where类替代WhereClip类。使用示例：var W = new Where<T>(); W.And(d=>d.ID == 1);")]
     public class WhereClipBuilder<T> : WhereClipBuilder
         where T : Entity
     {
@@ -136,7 +135,6 @@ namespace WEF.Expressions
     /// <summary>
     /// WhereClipBuilder
     /// </summary>
-    [Obsolete("建议使用Where类替代WhereClip类。使用示例：var W = new Where(); W.And(d=>d.ID == 1);")]
     public class WhereClipBuilder
     {
         /// <summary>
@@ -153,8 +151,7 @@ namespace WEF.Expressions
         /// 构造函数
         /// </summary>
         public WhereClipBuilder()
-        {
-        }
+        { }
 
         /// <summary>
         /// 构造函数
@@ -167,9 +164,6 @@ namespace WEF.Expressions
             parameters.AddRange(where.Parameters);
 
         }
-
-
-
         /// <summary>
         /// AND
         /// </summary>

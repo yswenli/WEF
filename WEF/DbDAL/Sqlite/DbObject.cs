@@ -11,29 +11,29 @@ namespace WEF.DbDAL.SQLite
         private string _dbconnectStr;
         //private INIFile cfgfile;
         private string cmcfgfile;
-        private SQLiteConnection connect;
+        private SQLiteConnection _connect;
         private bool isdbosp = false;
 
         public DbObject()
         {
             //this.cmcfgfile = Application.StartupPath + @"\cmcfg.ini";
-            this.connect = new SQLiteConnection();
+            this._connect = new SQLiteConnection();
             this.IsDboSp();
         }
 
         public DbObject(string DbConnectStr)
         {
             //this.cmcfgfile = Application.StartupPath + @"\cmcfg.ini";
-            this.connect = new SQLiteConnection();
+            this._connect = new SQLiteConnection();
             this._dbconnectStr = DbConnectStr;
-            this.connect.ConnectionString = DbConnectStr;
+            this._connect.ConnectionString = DbConnectStr;
         }
 
         public DbObject(bool SSPI, string Ip, string User, string Pass)
         {
             //this.cmcfgfile = Application.StartupPath + @"\cmcfg.ini";
-            this.connect = new SQLiteConnection();
-            this.connect = new SQLiteConnection();
+            this._connect = new SQLiteConnection();
+            this._connect = new SQLiteConnection();
             if (SSPI)
             {
                 this._dbconnectStr = string.Format("Data Source={0}; Password={1}", Ip, Pass);
@@ -42,7 +42,7 @@ namespace WEF.DbDAL.SQLite
             {
                 this._dbconnectStr = string.Format("Data Source={0};Password={1}", Ip, Pass);
             }
-            this.connect.ConnectionString = this._dbconnectStr;
+            this._connect.ConnectionString = this._dbconnectStr;
         }
 
         private SQLiteCommand BuildQueryCommand(SQLiteConnection connection, string storedProcName, IDataParameter[] parameters)
@@ -151,7 +151,7 @@ namespace WEF.DbDAL.SQLite
             try
             {
                 this.OpenDB(DbName);
-                reader2 = new SQLiteCommand(strSQL, this.connect).ExecuteReader(CommandBehavior.CloseConnection);
+                reader2 = new SQLiteCommand(strSQL, this._connect).ExecuteReader(CommandBehavior.CloseConnection);
             }
             catch (SQLiteException exception)
             {
@@ -171,7 +171,7 @@ namespace WEF.DbDAL.SQLite
         {
             DataTable table = CreateColumnTable();
             this.OpenDB(DbName);
-            DataRow[] columns = connect.GetSchema("COLUMNS").Select("TABLE_NAME='" + TableName + "'");
+            DataRow[] columns = _connect.GetSchema("COLUMNS").Select("TABLE_NAME='" + TableName + "'");
 
             foreach (DataRow dr in columns)
             {
@@ -426,20 +426,20 @@ namespace WEF.DbDAL.SQLite
         {
             try
             {
-                if (this.connect.ConnectionString == "")
+                if (this._connect.ConnectionString == "")
                 {
-                    this.connect.ConnectionString = this._dbconnectStr;
+                    this._connect.ConnectionString = this._dbconnectStr;
                 }
-                if (this.connect.ConnectionString != this._dbconnectStr)
+                if (this._connect.ConnectionString != this._dbconnectStr)
                 {
-                    this.connect.Close();
-                    this.connect.ConnectionString = this._dbconnectStr;
+                    this._connect.Close();
+                    this._connect.ConnectionString = this._dbconnectStr;
                 }
                 SQLiteCommand command = new SQLiteCommand();
-                command.Connection = (this.connect);
-                if (this.connect.State == ConnectionState.Closed)
+                command.Connection = (this._connect);
+                if (this._connect.State == ConnectionState.Closed)
                 {
-                    this.connect.Open();
+                    this._connect.Open();
                 }
                 return command;
             }
@@ -456,7 +456,7 @@ namespace WEF.DbDAL.SQLite
             try
             {
                 this.OpenDB(DbName);
-                new SQLiteDataAdapter(SQLString, this.connect).Fill(dataSet, "ds");
+                new SQLiteDataAdapter(SQLString, this._connect).Fill(dataSet, "ds");
             }
             catch (SQLiteException exception)
             {
@@ -485,7 +485,7 @@ namespace WEF.DbDAL.SQLite
             this.OpenDB(DbName);
             DataSet dataSet = new DataSet();
             SQLiteDataAdapter adapter = new SQLiteDataAdapter();
-            adapter.SelectCommand = (this.BuildQueryCommand(this.connect, storedProcName, parameters));
+            adapter.SelectCommand = (this.BuildQueryCommand(this._connect, storedProcName, parameters));
             adapter.Fill(dataSet, tableName);
             return dataSet;
         }

@@ -9,15 +9,15 @@ namespace WEF.DbDAL.Oracle
     public class DbObject : IDbObject
     {
         private string _dbconnectStr;
-        private OracleConnection connect;
+        private OracleConnection _connect;
 
-        private DBContext dbContext;
+        private DBContext _dbContext;
 
 
         public DbObject(string connectStr)
         {
             this._dbconnectStr = connectStr;
-            dbContext = new DBContext(DatabaseType.Oracle, connectStr);
+            _dbContext = new DBContext(DatabaseType.Oracle, connectStr);
 
         }
 
@@ -29,7 +29,7 @@ namespace WEF.DbDAL.Oracle
 
             this._dbconnectStr = connectStr;
 
-            dbContext = new DBContext(DatabaseType.Oracle, connectStr);
+            _dbContext = new DBContext(DatabaseType.Oracle, connectStr);
         }
 
         public bool DeleteTable(string DbName, string TableName)
@@ -157,12 +157,12 @@ namespace WEF.DbDAL.Oracle
 
         public object GetSingle(string DbName, string SQLString)
         {
-            return dbContext.FromSql(SQLString).ToScalar();
+            return _dbContext.FromSql(SQLString).ToScalar();
         }
 
         public DataTable GetTabData(string DbName, string TableName, int TopNum)
         {
-            return dbContext.Search(TableName).Top(TopNum).ToDataTable();
+            return _dbContext.Search(TableName).Top(TopNum).ToDataTable();
         }
 
         public DataTable GetTables(string DbName)

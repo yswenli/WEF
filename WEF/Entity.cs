@@ -15,6 +15,7 @@
  *****************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web.Script.Serialization;
 using System.Xml.Serialization;
@@ -57,19 +58,25 @@ namespace WEF
         [NonSerialized]
         [ScriptIgnore]
         public object All;
-        ///// <summary>
-        ///// 参数计数器  2015-07-30
-        ///// </summary>
-        //public int paramCount = 0;
+
         /// <summary>
         /// 修改的字段集合
         /// </summary>
         private List<ModifyField> _modifyFields = new List<ModifyField>();
+
         /// <summary>
         /// 修改的字段集合 v1.10.5.6及以上版本可使用。
         /// </summary>
         private List<string> _modifyFieldsStr = new List<string>();
 
+
+        /// <summary>
+        /// 是否是v1.10.5.6及以上版本实体。
+        /// </summary>
+        public virtual bool V1_10_5_6_Plus()
+        {
+            return false;
+        }
         #region 构造函数
 
         /// <summary>
@@ -82,6 +89,7 @@ namespace WEF
             _userName = tbl != null ? tbl.GetUserName() : "";
             _isAttached = true;
         }
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -131,7 +139,14 @@ namespace WEF
                 {
                     continue;
                 }
-                _modifyFields.Add(new ModifyField(fs[i], values[i], values[i]));
+                if (V1_10_5_6_Plus())
+                {
+                    _modifyFieldsStr.Add(fs[i].Name);
+                }
+                else
+                {
+                    _modifyFields.Add(new ModifyField(fs[i], values[i], values[i]));
+                }
             }
         }
 
@@ -210,26 +225,17 @@ namespace WEF
         /// GetFields
         /// </summary>
         /// <returns></returns>
-        public virtual Field[] GetFields()
-        {
-            return null;
-        }
+        public virtual Field[] GetFields() { return null; }
         /// <summary>
         /// GetValues
         /// </summary>
         /// <returns></returns>
-        public virtual object[] GetValues()
-        {
-            return null;
-        }
+        public virtual object[] GetValues() { return null; }
         /// <summary>
         /// GetPrimaryKeyFields
         /// </summary>
         /// <returns></returns>
-        public virtual Field[] GetPrimaryKeyFields()
-        {
-            return null;
-        }
+        public virtual Field[] GetPrimaryKeyFields() { return null; }
         /// <summary>
         /// 标识列
         /// </summary>
@@ -251,7 +257,11 @@ namespace WEF
         /// <returns></returns>
         public bool IsModify()
         {
-            return _modifyFieldsStr.Count > 0;
+            if (V1_10_5_6_Plus())
+            {
+                return _modifyFieldsStr.Count > 0;
+            }
+            return _modifyFields.Count > 0;
         }
 
         /// <summary>

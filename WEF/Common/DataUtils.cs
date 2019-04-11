@@ -9,21 +9,24 @@
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
 
-using WEF;
-using WEF.Expressions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
-using System.Threading;
-using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Threading;
+using WEF.Expressions;
 
 namespace WEF.Common
 {
+    /// <summary>
+    /// 帮助类
+    /// </summary>
     public class DataUtils
     {
         /// <summary>
@@ -320,8 +323,41 @@ namespace WEF.Common
             where TEntity : Entity
         {
             DataTable dt = new DataTable();
-            if (entities == null || entities.Length == 0)
-                return dt;
+            if (entities == null || entities.Length == 0) return dt;
+
+            Field[] fields = entities[0].GetFields();
+            int fieldLength = fields.Length;
+            foreach (Field field in fields)
+            {
+                dt.Columns.Add(field.Name);
+            }
+
+            foreach (TEntity entity in entities)
+            {
+                DataRow dtRow = dt.NewRow();
+                object[] values = entity.GetValues();
+
+                for (int i = 0; i < fieldLength; i++)
+                {
+                    dtRow[fields[i].Name] = values[i];
+                }
+                dt.Rows.Add(dtRow);
+            }
+            return dt;
+        }
+
+        /// <summary>
+        /// 从Entity数组转换成DataTable
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public static DataTable EntityArrayToDataTable<TEntity>(List<TEntity> entities)
+            where TEntity : Entity
+        {
+            DataTable dt = new DataTable();
+
+            if (entities == null || !entities.Any()) return dt;
 
             Field[] fields = entities[0].GetFields();
             int fieldLength = fields.Length;
@@ -353,12 +389,6 @@ namespace WEF.Common
         /// <returns></returns>
         public static TEntity DataRowToEntity<TEntity>(DataRow row) where TEntity : Entity
         {
-            //2015-08-10注释
-            //TEntity entity = Create<TEntity>();
-            //entity.SetPropertyValues(row);
-            //return entity;
-
-            //2015-08-10恢复注释
             TEntity local2;
             try
             {
@@ -449,35 +479,6 @@ namespace WEF.Common
             return string.Concat("@", field.Name, GetNewParamCount());
         }
 
-        /// <summary>
-        /// 生成where
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        internal static WhereClip GetWhere(Entity entity)
-        {
-            WhereClip where = new WhereClip();
-
-            var allfields = entity.GetFields();
-            var allValues = entity.GetValues();
-            var fieldlength = allfields.Length;
-
-            foreach (var pkField in allfields)
-            {
-                for (int i = 0; i < fieldlength; i++)
-                {
-                    if (string.Compare(allfields[i].PropertyName, pkField.PropertyName, StringComparison.OrdinalIgnoreCase) == 0)
-                    {
-                        if (allValues[i] != null && (allValues[i] is int && (int)allValues[i] != 0))
-                            where = where.And(new WhereClip(pkField, allValues[i], QueryOperator.Equal));
-                        break;
-                    }
-                }
-
-            }
-            return where;
-        }
-
 
         /// <summary>
         /// 生成主键条件
@@ -492,8 +493,7 @@ namespace WEF.Common
             var allfields = entity.GetFields();
             var allValues = entity.GetValues();
             var fieldlength = allfields.Length;
-            if (keyfields == null)
-                throw new Exception("当前表找不到主键！");
+            if (keyfields == null) return where;
             foreach (var pkField in keyfields)
             {
                 for (int i = 0; i < fieldlength; i++)
@@ -514,14 +514,14 @@ namespace WEF.Common
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="pkValues"></param>
         /// <returns></returns>
-        internal static WhereClip GetPrimaryKeyWhere<TEntity>(Array pkValues)
+        internal static WhereClip GetPrimaryKeyWhere<TEntity>(Array pkValues)//params object[] pkValues  2015-08-20
             where TEntity : Entity
         {
             WhereClip where = new WhereClip();
             Field[] keyfields = EntityCache.GetPrimaryKeyFields<TEntity>();
 
             if (keyfields == null)
-                throw new Exception("当前表找不到主键！");
+                return where;
 
             Check.Require(keyfields.Length == pkValues.Length, "主键列与主键值无法对应!");
 
@@ -529,6 +529,9 @@ namespace WEF.Common
             for (int i = 0; i < index; i++)
             {
                 where = where.And(new WhereClip(keyfields[i], pkValues.GetValue(i), QueryOperator.Equal));
+                //2015-08-20注释
+                //where = where.And(new WhereClip(keyfields[i], pkValues[i], QueryOperator.Equal)); 
+                //where = where.And(keyfields[i].In(pkValues));//2015-06-09
             }
             return where;
         }
@@ -1047,29 +1050,24 @@ namespace WEF.Common
         {
             return (T)obj;
         }
+
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("此方法仅供内部使用", false)]
         public static char ReadChar(object value)
         {
-            if (value == null || value is DBNull)
-                throw new ArgumentNullException("value");
+            if (value == null || value is DBNull) throw new ArgumentNullException("value");
             string s = value as string;
-            if (s == null || s.Length != 1)
-                throw new ArgumentException("A single-character was expected", "value");
+            if (s == null || s.Length != 1) throw new ArgumentException("A single-character was expected", "value");
             return s[0];
         }
         /// <summary>
         /// Internal use only
         /// </summary>
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method is for internal usage only", false)]
         public static char? ReadNullableChar(object value)
         {
-            if (value == null || value is DBNull)
-                return null;
+            if (value == null || value is DBNull) return null;
             string s = value as string;
-            if (s == null || s.Length != 1)
-                throw new ArgumentException("A single-character was expected", "value");
+            if (s == null || s.Length != 1) throw new ArgumentException("A single-character was expected", "value");
             return s[0];
         }
         /// <summary>
@@ -1100,6 +1098,7 @@ namespace WEF.Common
             }
         }
 
+        #region Extiond
         public static string ReplaceSqlKey(string text, int maxlength)
         {
             text = text.ToLower().Trim();
@@ -1113,5 +1112,6 @@ namespace WEF.Common
             text = Regex.Replace(text, ";", "");
             return text;
         }
+        #endregion
     }
 }

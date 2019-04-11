@@ -98,11 +98,25 @@ namespace WEF.ModelGenerator.DbSelect
                 return;
             }
 
+            var serviceName = cbbService.Text;
+
+            if (string.IsNullOrEmpty(serviceName))
+            {
+                var index1 = dbObject.DbConnectStr.IndexOf("SERVICE_NAME", StringComparison.OrdinalIgnoreCase);
+                var str1 = dbObject.DbConnectStr.Substring(0, index1);
+                var str2 = dbObject.DbConnectStr.Substring(index1);
+                var index2 = str2.IndexOf("=");
+                var str3 = str2.Substring(index2 + 1);
+                var index3 = str3.IndexOf(")");
+                var str4 = str3.Substring(0, index3);
+                serviceName = str4;
+            }
+
 
             Connection connectionModel = new Connection();
-            connectionModel.Database = cbbService.Text;
+            connectionModel.Database = serviceName;
             connectionModel.ID = Guid.NewGuid();
-            connectionModel.Name = cbbService.Text + "(Oracle)";
+            connectionModel.Name = serviceName + "(Oracle)";
             connectionModel.ConnectionString = dbObject.DbConnectStr;
             connectionModel.DbType = DatabaseType.Oracle.ToString();
             UtilsHelper.AddConnection(connectionModel);

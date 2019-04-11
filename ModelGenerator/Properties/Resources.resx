@@ -276,4 +276,34 @@ select * from sysobjects where xtype='P'
 //查看存储过程定义sql
 select text from syscomments where id=object_id('AddUser2')</value>
   </data>
+  <data name="分页" xml:space="preserve">
+    <value>oracle 分页
+
+SELECT * FROM  
+(  
+SELECT A.*, ROWNUM RN  
+FROM (SELECT * FROM TABLE_NAME) A  
+)  
+WHERE RN BETWEEN 21 AND 40 
+
+oracle取前面n条
+
+select * FROM TB_AUTHKEY where ROWNUM&lt;20
+
+sqlserver分页
+
+select * from 
+(select *, ROW_NUMBER() OVER(Order by ArtistId ) AS RowId from ArtistModels) as b  
+where RowId between 10 and 20
+
+select * from ArtistModels  order by ArtistId offset 4 rows fetch next 5 rows only
+
+sqlserver 取前面n条
+
+select top 20 * from TB_USER
+
+mysql分页
+
+select * from orders_history where type=8 order by id limit 10000,10;</value>
+  </data>
 </root>

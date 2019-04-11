@@ -54,6 +54,8 @@ namespace WEF.ModelGenerator.DbSelect
                 cbbDatabase.SelectedIndex = 0;
                 MessageBox.Show("连接成功!");
 
+                button2.Enabled = true;
+
             }
             catch (Exception ex)
             {

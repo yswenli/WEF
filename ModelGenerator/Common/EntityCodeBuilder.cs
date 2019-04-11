@@ -413,6 +413,9 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, "/// <param name=\"id\">id</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
             plus.AppendSpaceLine(2, "public int Delete(int id)");
+
+            plus.AppendSpaceLine(2, $"public int Delete({})");
+
             plus.AppendSpaceLine(2, "{");
             plus.AppendSpaceLine(3, "var obj = Search().Where(b => b.ID == id).First();");
             plus.AppendSpaceLine(3, "return db.Delete(obj);");

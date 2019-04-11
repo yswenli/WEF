@@ -10,15 +10,9 @@
  *****************************************************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Web.Script.Serialization;
-using System.Xml.Serialization;
 
 namespace WEF.Common
-{    
+{
     /// <summary>
     /// 标记实体类表名
     /// </summary>
@@ -63,5 +57,5 @@ namespace WEF.Common
         {
             return _userName;
         }
-    }    
+    }
 }

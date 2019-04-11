@@ -11,15 +11,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Data;
 using System.Data.Common;
-using WEF;
-using WEF.Common;
 using WEF.Cache;
+using WEF.Common;
 using WEF.Expressions;
-using WEF.Section;
-using WEF.Db;
 
 namespace WEF.Provider
 {

@@ -14,9 +14,6 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace WEF.Common
 {
@@ -33,43 +30,17 @@ namespace WEF.Common
         /// <summary>
         /// 字段
         /// </summary>
-        public Field Field
-        {
-            get
-            {
-                return field;
-            }
-        }
+        public Field Field { get { return field; } }
 
         /// <summary>
         /// 原始值
         /// </summary>
-        public object OldValue
-        {
-            get
-            {
-                return oldValue;
-            }
-            set
-            {
-                oldValue = value;
-            }
-        }
+        public object OldValue { get { return oldValue; } set { oldValue = value; } }
 
         /// <summary>
         /// 新值
         /// </summary>
-        public object NewValue
-        {
-            get
-            {
-                return newValue;
-            }
-            set
-            {
-                newValue = value;
-            }
-        }
+        public object NewValue { get { return newValue; } set { newValue = value; } }
 
 
         /// <summary>

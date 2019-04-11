@@ -16,8 +16,8 @@
  * 创建人：Wenli
  * 创建说明：
  *****************************************************************************************************/
-using WEF.Common;
 using System;
+using WEF.Common;
 using WEF.Section;
 
 namespace WEF.Expressions
@@ -37,9 +37,7 @@ namespace WEF.Expressions
         /// <summary>
         /// 
         /// </summary>
-        public WhereClip()
-        {
-        }
+        public WhereClip() { }
 
         /// <summary>
         /// 
