@@ -35,18 +35,20 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.cbbServer = new System.Windows.Forms.ComboBox();
+            this.cbbService = new System.Windows.Forms.ComboBox();
             this.txtUserName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.chbConnectString = new System.Windows.Forms.CheckBox();
             this.txtConnectString = new System.Windows.Forms.TextBox();
             this.panelServer = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cbbServer = new System.Windows.Forms.ComboBox();
             this.panelServer.SuspendLayout();
             this.SuspendLayout();
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(304, 280);
+            this.button3.Location = new System.Drawing.Point(304, 295);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 32);
             this.button3.TabIndex = 8;
@@ -56,7 +58,8 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(185, 280);
+            this.button2.Enabled = false;
+            this.button2.Location = new System.Drawing.Point(223, 295);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 32);
             this.button2.TabIndex = 7;
@@ -66,7 +69,7 @@
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(79, 116);
+            this.txtPassword.Location = new System.Drawing.Point(79, 142);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(214, 21);
             this.txtPassword.TabIndex = 3;
@@ -74,7 +77,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(11, 119);
+            this.label5.Location = new System.Drawing.Point(11, 145);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(47, 12);
             this.label5.TabIndex = 24;
@@ -83,7 +86,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(11, 71);
+            this.label4.Location = new System.Drawing.Point(11, 101);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(47, 12);
             this.label4.TabIndex = 23;
@@ -91,7 +94,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(34, 280);
+            this.button1.Location = new System.Drawing.Point(113, 295);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(104, 32);
             this.button1.TabIndex = 6;
@@ -99,17 +102,17 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // cbbServer
+            // cbbService
             // 
-            this.cbbServer.FormattingEnabled = true;
-            this.cbbServer.Location = new System.Drawing.Point(79, 23);
-            this.cbbServer.Name = "cbbServer";
-            this.cbbServer.Size = new System.Drawing.Size(214, 20);
-            this.cbbServer.TabIndex = 1;
+            this.cbbService.FormattingEnabled = true;
+            this.cbbService.Location = new System.Drawing.Point(79, 53);
+            this.cbbService.Name = "cbbService";
+            this.cbbService.Size = new System.Drawing.Size(214, 20);
+            this.cbbService.TabIndex = 1;
             // 
             // txtUserName
             // 
-            this.txtUserName.Location = new System.Drawing.Point(79, 68);
+            this.txtUserName.Location = new System.Drawing.Point(79, 98);
             this.txtUserName.Name = "txtUserName";
             this.txtUserName.Size = new System.Drawing.Size(214, 21);
             this.txtUserName.TabIndex = 2;
@@ -117,16 +120,16 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 26);
+            this.label1.Location = new System.Drawing.Point(11, 56);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(47, 12);
             this.label1.TabIndex = 15;
-            this.label1.Text = "服  务:";
+            this.label1.Text = "服务名:";
             // 
             // chbConnectString
             // 
             this.chbConnectString.AutoSize = true;
-            this.chbConnectString.Location = new System.Drawing.Point(73, 199);
+            this.chbConnectString.Location = new System.Drawing.Point(73, 232);
             this.chbConnectString.Name = "chbConnectString";
             this.chbConnectString.Size = new System.Drawing.Size(84, 16);
             this.chbConnectString.TabIndex = 4;
@@ -137,7 +140,7 @@
             // txtConnectString
             // 
             this.txtConnectString.Enabled = false;
-            this.txtConnectString.Location = new System.Drawing.Point(73, 232);
+            this.txtConnectString.Location = new System.Drawing.Point(73, 254);
             this.txtConnectString.Name = "txtConnectString";
             this.txtConnectString.Size = new System.Drawing.Size(280, 21);
             this.txtConnectString.TabIndex = 5;
@@ -145,7 +148,9 @@
             // panelServer
             // 
             this.panelServer.Controls.Add(this.cbbServer);
+            this.panelServer.Controls.Add(this.cbbService);
             this.panelServer.Controls.Add(this.txtUserName);
+            this.panelServer.Controls.Add(this.label2);
             this.panelServer.Controls.Add(this.txtPassword);
             this.panelServer.Controls.Add(this.label1);
             this.panelServer.Controls.Add(this.label5);
@@ -154,8 +159,26 @@
             this.panelServer.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.panelServer.Location = new System.Drawing.Point(60, 37);
             this.panelServer.Name = "panelServer";
-            this.panelServer.Size = new System.Drawing.Size(319, 158);
+            this.panelServer.Size = new System.Drawing.Size(319, 173);
             this.panelServer.TabIndex = 32;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(11, 17);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(47, 12);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "服务器:";
+            // 
+            // cbbServer
+            // 
+            this.cbbServer.FormattingEnabled = true;
+            this.cbbServer.Location = new System.Drawing.Point(79, 14);
+            this.cbbServer.Name = "cbbServer";
+            this.cbbServer.Size = new System.Drawing.Size(214, 20);
+            this.cbbServer.TabIndex = 1;
+            this.cbbServer.Text = "127.0.0.1:1521";
             // 
             // DBOracle
             // 
@@ -188,11 +211,13 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ComboBox cbbServer;
+        private System.Windows.Forms.ComboBox cbbService;
         private System.Windows.Forms.TextBox txtUserName;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chbConnectString;
         private System.Windows.Forms.TextBox txtConnectString;
         private System.Windows.Forms.Panel panelServer;
+        private System.Windows.Forms.ComboBox cbbServer;
+        private System.Windows.Forms.Label label2;
     }
 }

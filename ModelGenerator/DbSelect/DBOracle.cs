@@ -40,7 +40,7 @@ namespace WEF.ModelGenerator.DbSelect
             }
             else
             {
-                if (string.IsNullOrEmpty(cbbServer.Text))
+                if (string.IsNullOrEmpty(cbbService.Text))
                 {
                     MessageBox.Show("请填写服务!");
                     return;
@@ -52,7 +52,7 @@ namespace WEF.ModelGenerator.DbSelect
                     return;
                 }
 
-                dbObject = new WEF.DbDAL.Oracle.DbObject(false, cbbServer.Text, txtUserName.Text, txtPassword.Text);
+                dbObject = new WEF.DbDAL.Oracle.DbObject(false, cbbServer.Text, cbbService.Text, txtUserName.Text, txtPassword.Text);
             }
 
             try
@@ -66,7 +66,10 @@ namespace WEF.ModelGenerator.DbSelect
 
 
                 MessageBox.Show("连接成功!");
+
                 isConnection = true;
+
+                button2.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -97,9 +100,9 @@ namespace WEF.ModelGenerator.DbSelect
 
 
             Connection connectionModel = new Connection();
-            connectionModel.Database = cbbServer.Text;
+            connectionModel.Database = cbbService.Text;
             connectionModel.ID = Guid.NewGuid();
-            connectionModel.Name = cbbServer.Text+"(Oracle)";
+            connectionModel.Name = cbbService.Text + "(Oracle)";
             connectionModel.ConnectionString = dbObject.DbConnectStr;
             connectionModel.DbType = DatabaseType.Oracle.ToString();
             UtilsHelper.AddConnection(connectionModel);

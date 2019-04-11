@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.OracleClient;
 using System.Text;
 
@@ -13,32 +14,29 @@ namespace WEF.DbDAL.Oracle
         private DBContext dbContext;
 
 
-        public DbObject(string DbConnectStr)
+        public DbObject(string connectStr)
         {
-            this._dbconnectStr = DbConnectStr;
-
-            //this.connect = new OracleConnection();
-            //this.connect.ConnectionString = _dbconnectStr;
-
-            dbContext = new DBContext(DatabaseType.Oracle, DbConnectStr);
+            this._dbconnectStr = connectStr;
+            dbContext = new DBContext(DatabaseType.Oracle, connectStr);
 
         }
 
-        public DbObject(bool SSPI, string server, string User, string Pass)
-            : this("Data Source=" + server + ";User Id=" + User + ";Password=" + Pass + ";Integrated Security=no;Min Pool Size=1;Max Pool Size=10")
+        public DbObject(bool SSPI, string server, string serviceName, string User, string Pass)
         {
+            var ipPort = server.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
 
+            var connectStr = $"Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST={ipPort[0]})(PORT={ipPort[1]})))(CONNECT_DATA =(SERVICE_NAME = {serviceName})));User Id={User};Password={Pass};";
+
+            this._dbconnectStr = connectStr;
+
+            dbContext = new DBContext(DatabaseType.Oracle, connectStr);
         }
 
         public bool DeleteTable(string DbName, string TableName)
         {
-
-
             try
             {
                 ExecuteSql(DbName, "DROP TABLE " + TableName);
-                //dbSession.FromSql("DROP TABLE " + TableName).ExecuteNonQuery();
-
                 return true;
             }
             catch
@@ -46,8 +44,6 @@ namespace WEF.DbDAL.Oracle
                 return false;
             }
         }
-
-
 
         public int ExecuteSql(string DbName, string SQLString)
         {
