@@ -35,7 +35,7 @@ namespace WEF.Section
             : base(dbSession)
         {
             Check.Require(procName, "procName", Check.NotNullOrEmpty);
-            this.cmd = dbSession.Db.GetStoredProcCommand(procName);
+            this._dbCommand = dbSession.Db.GetStoredProcCommand(procName);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace WEF.Section
         /// <returns></returns>
         public ProcSection SetDbTransaction(DbTransaction tran)
         {
-            this.tran = tran;
+            this._dbTransaction = tran;
             return this;
         }
 
@@ -61,9 +61,9 @@ namespace WEF.Section
         {
             get
             {
-                return !(dbSession.Db.DbProvider is SqlServerProvider
-                           || dbSession.Db.DbProvider is SqlServer9Provider
-                           || dbSession.Db.DbProvider is MsAccessProvider);
+                return !(_dbContext.Db.DbProvider is SqlServerProvider
+                           || _dbContext.Db.DbProvider is SqlServer9Provider
+                           || _dbContext.Db.DbProvider is MsAccessProvider);
             }
         }
 
@@ -78,11 +78,11 @@ namespace WEF.Section
 
             if (!isParameterSpecial)
             {
-                return dbSession.Db.DbProvider.BuildParameterName(parameterName);
+                return _dbContext.Db.DbProvider.BuildParameterName(parameterName);
             }
             else
             {
-                return parameterName.TrimStart(dbSession.Db.DbProvider.ParamPrefix);
+                return parameterName.TrimStart(_dbContext.Db.DbProvider.ParamPrefix);
             }
 
 
@@ -96,7 +96,7 @@ namespace WEF.Section
             Dictionary<string, object> returnValues = new Dictionary<string, object>();
             foreach (string outParameter in outParameters)
             {
-                returnValues.Add(outParameter, cmd.Parameters[getParameterName(outParameter)].Value);
+                returnValues.Add(outParameter, _dbCommand.Parameters[getParameterName(outParameter)].Value);
             }
             return returnValues;
         }
@@ -109,7 +109,7 @@ namespace WEF.Section
         /// </summary>
         public ProcSection AddParameter(params DbParameter[] parameters)
         {
-            dbSession.Db.AddParameter(this.cmd, parameters);
+            _dbContext.Db.AddParameter(this._dbCommand, parameters);
             return this;
         }
 
@@ -138,7 +138,7 @@ namespace WEF.Section
             Check.Require(parameterName, "parameterName", Check.NotNullOrEmpty);
             Check.Require(dbType, "dbType", Check.NotNullOrEmpty);
 
-            dbSession.Db.AddInParameter(this.cmd, parameterName, dbType, size, value);
+            _dbContext.Db.AddInParameter(this._dbCommand, parameterName, dbType, size, value);
             return this;
         }
 
@@ -165,7 +165,7 @@ namespace WEF.Section
             Check.Require(parameterName, "parameterName", Check.NotNullOrEmpty);
             Check.Require(dbType, "dbType", Check.NotNullOrEmpty);
 
-            dbSession.Db.AddOutParameter(this.cmd, parameterName, dbType, size);
+            _dbContext.Db.AddOutParameter(this._dbCommand, parameterName, dbType, size);
             outParameters.Add(parameterName);
             return this;
         }
@@ -197,7 +197,7 @@ namespace WEF.Section
             Check.Require(parameterName, "parameterName", Check.NotNullOrEmpty);
             Check.Require(dbType, "dbType", Check.NotNullOrEmpty);
 
-            dbSession.Db.AddInputOutputParameter(this.cmd, parameterName, dbType, size, value);
+            _dbContext.Db.AddInputOutputParameter(this._dbCommand, parameterName, dbType, size, value);
 
             outParameters.Add(parameterName);
 
@@ -227,7 +227,7 @@ namespace WEF.Section
             Check.Require(parameterName, "parameterName", Check.NotNullOrEmpty);
             Check.Require(dbType, "dbType", Check.NotNullOrEmpty);
 
-            dbSession.Db.AddReturnValueParameter(this.cmd, parameterName, dbType, size);
+            _dbContext.Db.AddReturnValueParameter(this._dbCommand, parameterName, dbType, size);
             outParameters.Add(parameterName);
             return this;
         }
@@ -244,13 +244,13 @@ namespace WEF.Section
         {
             if (isParameterSpecial)
             {
-                if (cmd.Parameters != null && cmd.Parameters.Count > 0)
+                if (_dbCommand.Parameters != null && _dbCommand.Parameters.Count > 0)
                 {
-                    foreach (DbParameter dbpara in cmd.Parameters)
+                    foreach (DbParameter dbpara in _dbCommand.Parameters)
                     {
                         if (!string.IsNullOrEmpty(dbpara.ParameterName))
                         {
-                            dbpara.ParameterName = dbpara.ParameterName.TrimStart(dbSession.Db.DbProvider.ParamPrefix);
+                            dbpara.ParameterName = dbpara.ParameterName.TrimStart(_dbContext.Db.DbProvider.ParamPrefix);
                         }
                     }
                 }

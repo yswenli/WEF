@@ -68,11 +68,19 @@ namespace WEF
         }
 
         #region 连接  Join
-
+        public Search<T> InnerJoin(Search fs)
+        {
+            return Join(EntityCache.GetTableName<T>(), EntityCache.GetUserName<T>(), where, JoinType.InnerJoin);
+        }
         /// <summary>
         /// Inner Join。Lambda写法：.InnerJoin&lt;Model2>((a, b) => a.ID == b.ID)
         /// </summary>
-        public ISearch<T> InnerJoin<TEntity>(WhereClip where, string asName = "", string asName2 = "")
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="where"></param>
+        /// <param name="asName"></param>
+        /// <param name="asName2"></param>
+        /// <returns></returns>
+        public Search<T> InnerJoin<TEntity>(WhereClip where, string asName = "", string asName2 = "")
              where TEntity : Entity
         {
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, JoinType.InnerJoin);
@@ -80,12 +88,14 @@ namespace WEF
         /// <summary>
         /// Inner Join。Lambda写法：.InnerJoin&lt;Model2>((a, b) => a.ID == b.ID)
         /// </summary>
-        public ISearch<T> InnerJoin<TEntity>(Expression<Func<T, TEntity, bool>> lambdaWhere, string asName = "")
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="lambdaWhere"></param>
+        /// <param name="asName"></param>
+        /// <returns></returns>
+        public Search<T> InnerJoin<TEntity>(Expression<Func<T, TEntity, bool>> lambdaWhere, string asName = "")
              where TEntity : Entity
         {
-            //this.asNames.Add(EntityCache.GetTableName<TEntity>() + "|" +asName);
-            //this.asNames.Add(EntityCache.GetTableName<TEntity>() + "|" + asName2);
-            return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), ExpressionToClip<T>.ToJoinWhere(lambdaWhere), JoinType.InnerJoin);//EntityCache.GetTableName<TEntity>() + "|" + asName
+            return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), ExpressionToClip<T>.ToJoinWhere(lambdaWhere), JoinType.InnerJoin);
         }
         /// <summary>
         /// Cross Join
@@ -93,7 +103,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        public ISearch<T> CrossJoin<TEntity>(WhereClip where)
+        public Search<T> CrossJoin<TEntity>(WhereClip where)
             where TEntity : Entity
         {
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, JoinType.CrossJoin);
@@ -104,7 +114,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        public ISearch<T> RightJoin<TEntity>(WhereClip where)
+        public Search<T> RightJoin<TEntity>(WhereClip where)
             where TEntity : Entity
         {
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, JoinType.RightJoin);
@@ -116,7 +126,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        public ISearch<T> LeftJoin<TEntity>(WhereClip where)
+        public Search<T> LeftJoin<TEntity>(WhereClip where)
              where TEntity : Entity
         {
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, JoinType.LeftJoin);
@@ -127,7 +137,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="lambdaWhere"></param>
         /// <returns></returns>
-        public ISearch<T> LeftJoin<TEntity>(Expression<Func<T, TEntity, bool>> lambdaWhere)
+        public Search<T> LeftJoin<TEntity>(Expression<Func<T, TEntity, bool>> lambdaWhere)
              where TEntity : Entity
         {
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), ExpressionToClip<T>.ToJoinWhere(lambdaWhere), JoinType.LeftJoin);
@@ -138,7 +148,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        public ISearch<T> FullJoin<TEntity>(WhereClip where)
+        public Search<T> FullJoin<TEntity>(WhereClip where)
             where TEntity : Entity
         {
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, JoinType.FullJoin);
@@ -152,9 +162,9 @@ namespace WEF
         /// <param name="where"></param>
         /// <param name="joinType"></param>
         /// <returns></returns>
-        private ISearch<T> Join(string tableName, string userName, WhereClip where, JoinType joinType)
+        private Search<T> Join(string tableName, string userName, WhereClip where, JoinType joinType)
         {
-            return (ISearch<T>)base.join(tableName, userName, where, joinType);
+            return (Search<T>)base.join(tableName, userName, where, joinType);
         }
 
         #endregion
@@ -192,52 +202,52 @@ namespace WEF
         /// <summary>
         /// Having 
         /// </summary>
-        public new ISearch<T> Having(WhereClip havingWhere)
+        public new Search<T> Having(WhereClip havingWhere)
         {
-            return (ISearch<T>)base.Having(havingWhere);
+            return (Search<T>)base.Having(havingWhere);
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public ISearch<T> Having(Where where)
+        public Search<T> Having(Where where)
         {
-            return (ISearch<T>)base.Having(where.ToWhereClip());
+            return (Search<T>)base.Having(where.ToWhereClip());
         }
-        public ISearch<T> Having(Expression<Func<T, bool>> lambdaHaving)
+        public Search<T> Having(Expression<Func<T, bool>> lambdaHaving)
         {
-            return (ISearch<T>)base.Having(ExpressionToClip<T>.ToWhereClip(lambdaHaving));
+            return (Search<T>)base.Having(ExpressionToClip<T>.ToWhereClip(lambdaHaving));
         }
         /// <summary>
         /// whereclip
         /// </summary>
-        public new ISearch<T> Where(WhereClip where)
+        public new Search<T> Where(WhereClip where)
         {
-            return (ISearch<T>)base.Where(where);
+            return (Search<T>)base.Where(where);
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="whereParam"></param>
         /// <returns></returns>
-        public ISearch<T> Where(Where<T> whereParam)
+        public Search<T> Where(Where<T> whereParam)
         {
-            return (ISearch<T>)base.Where(whereParam.ToWhereClip());
+            return (Search<T>)base.Where(whereParam.ToWhereClip());
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="whereParam"></param>
         /// <returns></returns>
-        public ISearch<T> Where(Where whereParam)
+        public Search<T> Where(Where whereParam)
         {
-            return (ISearch<T>)base.Where(whereParam.ToWhereClip());
+            return (Search<T>)base.Where(whereParam.ToWhereClip());
         }
         /// <summary>
         /// 
         /// </summary>
-        public ISearch<T> Where(Expression<Func<T, bool>> lambdaWhere)
+        public Search<T> Where(Expression<Func<T, bool>> lambdaWhere)
         {
             return Where(ExpressionToClip<T>.ToWhereClip(lambdaWhere));
         }
@@ -247,7 +257,7 @@ namespace WEF
         /// <typeparam name="T2"></typeparam>
         /// <param name="lambdaWhere"></param>
         /// <returns></returns>
-        public ISearch<T> Where<T2>(Expression<Func<T, T2, bool>> lambdaWhere)
+        public Search<T> Where<T2>(Expression<Func<T, T2, bool>> lambdaWhere)
         {
             return Where(ExpressionToClip<T>.ToWhereClip(lambdaWhere));
         }
@@ -258,7 +268,7 @@ namespace WEF
         /// <typeparam name="T3"></typeparam>
         /// <param name="lambdaWhere"></param>
         /// <returns></returns>
-        public ISearch<T> Where<T2, T3>(Expression<Func<T, T2, T3, bool>> lambdaWhere)
+        public Search<T> Where<T2, T3>(Expression<Func<T, T2, T3, bool>> lambdaWhere)
         {
             return Where(ExpressionToClip<T>.ToWhereClip(lambdaWhere));
         }
@@ -270,14 +280,14 @@ namespace WEF
         /// <typeparam name="T4"></typeparam>
         /// <param name="lambdaWhere"></param>
         /// <returns></returns>
-        public ISearch<T> Where<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> lambdaWhere)
+        public Search<T> Where<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> lambdaWhere)
         {
             return Where(ExpressionToClip<T>.ToWhereClip(lambdaWhere));
         }
         /// <summary>
         /// 
         /// </summary>
-        public ISearch<T> Where<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> lambdaWhere)
+        public Search<T> Where<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> lambdaWhere)
         {
             return Where(ExpressionToClip<T>.ToWhereClip(lambdaWhere));
         }
@@ -291,7 +301,7 @@ namespace WEF
         /// <typeparam name="T6"></typeparam>
         /// <param name="lambdaWhere"></param>
         /// <returns></returns>
-        public ISearch<T> Where<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> lambdaWhere)
+        public Search<T> Where<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> lambdaWhere)
         {
             return Where(ExpressionToClip<T>.ToWhereClip(lambdaWhere));
         }
@@ -302,7 +312,7 @@ namespace WEF
         /// <param name="lambdaWhere"></param>
         /// <typeparam name="T2"></typeparam>
         /// <returns></returns>
-        public ISearch<T> Select<T2>(Expression<Func<T, T2, bool>> lambdaWhere)
+        public Search<T> Select<T2>(Expression<Func<T, T2, bool>> lambdaWhere)
         {
             return Where(ExpressionToClip<T>.ToWhereClip(lambdaWhere));
         }
@@ -313,7 +323,7 @@ namespace WEF
         /// <typeparam name="T2"></typeparam>
         /// <typeparam name="T3"></typeparam>
         /// <returns></returns>
-        public ISearch<T> Select<T2, T3>(Expression<Func<T, T2, T3, bool>> lambdaWhere)
+        public Search<T> Select<T2, T3>(Expression<Func<T, T2, T3, bool>> lambdaWhere)
         {
             return Where(ExpressionToClip<T>.ToWhereClip(lambdaWhere));
         }
@@ -325,11 +335,11 @@ namespace WEF
         /// <typeparam name="T3"></typeparam>
         /// <typeparam name="T4"></typeparam>
         /// <returns></returns>
-        public ISearch<T> Select<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> lambdaWhere)
+        public Search<T> Select<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> lambdaWhere)
         {
             return Where(ExpressionToClip<T>.ToWhereClip(lambdaWhere));
         }
-        public ISearch<T> Select<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> lambdaWhere)
+        public Search<T> Select<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> lambdaWhere)
         {
             return Where(ExpressionToClip<T>.ToWhereClip(lambdaWhere));
         }
@@ -343,27 +353,27 @@ namespace WEF
         /// <typeparam name="T5"></typeparam>
         /// <typeparam name="T6"></typeparam>
         /// <returns></returns>
-        public ISearch<T> Select<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> lambdaWhere)
+        public Search<T> Select<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> lambdaWhere)
         {
             return Where(ExpressionToClip<T>.ToWhereClip(lambdaWhere));
         }
         /// <summary>
         /// groupby
         /// </summary>
-        public new ISearch<T> GroupBy(GroupByClip groupBy)
+        public new Search<T> GroupBy(GroupByClip groupBy)
         {
-            return (ISearch<T>)base.GroupBy(groupBy);
+            return (Search<T>)base.GroupBy(groupBy);
         }
         /// <summary>
         /// groupby
         /// </summary>
-        public new ISearch<T> GroupBy(params Field[] fields)
+        public new Search<T> GroupBy(params Field[] fields)
         {
-            return (ISearch<T>)base.GroupBy(fields);
+            return (Search<T>)base.GroupBy(fields);
         }
-        public new ISearch<T> GroupBy(Expression<Func<T, object>> lambdaGroupBy)
+        public Search<T> GroupBy(Expression<Func<T, object>> lambdaGroupBy)//new 
         {
-            return (ISearch<T>)base.GroupBy(ExpressionToClip<T>.ToGroupByClip(lambdaGroupBy));
+            return (Search<T>)base.GroupBy(ExpressionToClip<T>.ToGroupByClip(lambdaGroupBy));
         }
         #region 2015-09-08新增
         /// <summary>
@@ -371,20 +381,20 @@ namespace WEF
         /// </summary>
         /// <param name="f"></param>
         /// <returns></returns>
-        public ISearch<T> OrderBy(params Field[] f)
+        public Search<T> OrderBy(params Field[] f)
         {
             var gb = f.Aggregate(OrderByClip.None, (current, field) => current && field.Asc);
-            return (ISearch<T>)base.OrderBy(gb);
+            return (Search<T>)base.OrderBy(gb);
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="f"></param>
         /// <returns></returns>
-        public ISearch<T> OrderByDescending(params Field[] f)
+        public Search<T> OrderByDescending(params Field[] f)
         {
             var gb = f.Aggregate(OrderByClip.None, (current, field) => current && field.Desc);
-            return (ISearch<T>)base.OrderBy(gb);
+            return (Search<T>)base.OrderBy(gb);
         }
         #endregion
         /// <summary>
@@ -392,50 +402,50 @@ namespace WEF
         /// </summary>
         /// <param name="orderBy"></param>
         /// <returns></returns>
-        public new ISearch<T> OrderBy(OrderByClip orderBy)
+        public new Search<T> OrderBy(OrderByClip orderBy)
         {
-            return (ISearch<T>)base.OrderBy(orderBy);
+            return (Search<T>)base.OrderBy(orderBy);
         }
         /// <summary>
         /// orderby
         /// </summary>
-        public new ISearch<T> OrderBy(Expression<Func<T, object>> lambdaOrderBy)
+        public Search<T> OrderBy(Expression<Func<T, object>> lambdaOrderBy)//new 
         {
-            return (ISearch<T>)base.OrderBy(ExpressionToClip<T>.ToOrderByClip(lambdaOrderBy));
+            return (Search<T>)base.OrderBy(ExpressionToClip<T>.ToOrderByClip(lambdaOrderBy));
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="lambdaOrderBy"></param>
         /// <returns></returns>
-        public ISearch<T> OrderByDescending(Expression<Func<T, object>> lambdaOrderBy)
+        public Search<T> OrderByDescending(Expression<Func<T, object>> lambdaOrderBy)
         {
-            return (ISearch<T>)base.OrderBy(ExpressionToClip<T>.ToOrderByDescendingClip(lambdaOrderBy));
+            return (Search<T>)base.OrderBy(ExpressionToClip<T>.ToOrderByDescendingClip(lambdaOrderBy));
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="orderBys"></param>
         /// <returns></returns>
-        public new ISearch<T> OrderBy(params OrderByClip[] orderBys)
+        public new Search<T> OrderBy(params OrderByClip[] orderBys)
         {
-            return (ISearch<T>)base.OrderBy(orderBys);
+            return (Search<T>)base.OrderBy(orderBys);
         }
         /// <summary>
         /// select field
         /// </summary>
-        public new ISearch<T> Select(params Field[] fields)
+        public new Search<T> Select(params Field[] fields)
         {
-            return (ISearch<T>)base.Select(fields);
+            return (Search<T>)base.Select(fields);
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="lambdaSelect"></param>
         /// <returns></returns>
-        public ISearch<T> Select(Expression<Func<T, object>> lambdaSelect)
+        public Search<T> Select(Expression<Func<T, object>> lambdaSelect)
         {
-            return (ISearch<T>)base.Select(ExpressionToClip<T>.ToSelect(lambdaSelect));
+            return (Search<T>)base.Select(ExpressionToClip<T>.ToSelect(lambdaSelect));
         }
         /// <summary>
         /// 
@@ -443,9 +453,9 @@ namespace WEF
         /// <typeparam name="T2"></typeparam>
         /// <param name="lambdaSelect"></param>
         /// <returns></returns>
-        public ISearch<T> Select<T2>(Expression<Func<T, T2, object>> lambdaSelect)
+        public Search<T> Select<T2>(Expression<Func<T, T2, object>> lambdaSelect)
         {
-            return (ISearch<T>)base.Select(ExpressionToClip<T>.ToSelect(lambdaSelect));
+            return (Search<T>)base.Select(ExpressionToClip<T>.ToSelect(lambdaSelect));
         }
         /// <summary>
         /// 
@@ -454,9 +464,9 @@ namespace WEF
         /// <typeparam name="T3"></typeparam>
         /// <param name="lambdaSelect"></param>
         /// <returns></returns>
-        public ISearch<T> Select<T2, T3>(Expression<Func<T, T2, T3, object>> lambdaSelect)
+        public Search<T> Select<T2, T3>(Expression<Func<T, T2, T3, object>> lambdaSelect)
         {
-            return (ISearch<T>)base.Select(ExpressionToClip<T>.ToSelect(lambdaSelect));
+            return (Search<T>)base.Select(ExpressionToClip<T>.ToSelect(lambdaSelect));
         }
         /// <summary>
         /// 
@@ -466,9 +476,9 @@ namespace WEF
         /// <typeparam name="T4"></typeparam>
         /// <param name="lambdaSelect"></param>
         /// <returns></returns>
-        public ISearch<T> Select<T2, T3, T4>(Expression<Func<T, T2, T3, T4, object>> lambdaSelect)
+        public Search<T> Select<T2, T3, T4>(Expression<Func<T, T2, T3, T4, object>> lambdaSelect)
         {
-            return (ISearch<T>)base.Select(ExpressionToClip<T>.ToSelect(lambdaSelect));
+            return (Search<T>)base.Select(ExpressionToClip<T>.ToSelect(lambdaSelect));
         }
         /// <summary>
         /// 
@@ -479,9 +489,9 @@ namespace WEF
         /// <typeparam name="T5"></typeparam>
         /// <param name="lambdaSelect"></param>
         /// <returns></returns>
-        public ISearch<T> Select<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, object>> lambdaSelect)
+        public Search<T> Select<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, object>> lambdaSelect)
         {
-            return (ISearch<T>)base.Select(ExpressionToClip<T>.ToSelect(lambdaSelect));
+            return (Search<T>)base.Select(ExpressionToClip<T>.ToSelect(lambdaSelect));
         }
         /// <summary>
         /// 
@@ -493,26 +503,26 @@ namespace WEF
         /// <typeparam name="T6"></typeparam>
         /// <param name="lambdaSelect"></param>
         /// <returns></returns>
-        public ISearch<T> Select<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, object>> lambdaSelect)
+        public Search<T> Select<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, object>> lambdaSelect)
         {
-            return (ISearch<T>)base.Select(ExpressionToClip<T>.ToSelect(lambdaSelect));
+            return (Search<T>)base.Select(ExpressionToClip<T>.ToSelect(lambdaSelect));
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="lambdaSelect"></param>
         /// <returns></returns>
-        public ISearch<T> Select(Expression<Func<T, bool>> lambdaSelect)
+        public Search<T> Select(Expression<Func<T, bool>> lambdaSelect)
         {
-            return (ISearch<T>)base.Select(ExpressionToClip<T>.ToSelect(lambdaSelect));
+            return (Search<T>)base.Select(ExpressionToClip<T>.ToSelect(lambdaSelect));
         }
         /// <summary>
         /// Distinct
         /// </summary>
         /// <returns></returns>
-        public new ISearch<T> Distinct()
+        public new Search<T> Distinct()
         {
-            return (ISearch<T>)base.Distinct();
+            return (Search<T>)base.Distinct();
         }
 
         /// <summary>
@@ -520,7 +530,7 @@ namespace WEF
         /// </summary>
         /// <param name="topCount"></param>
         /// <returns></returns>
-        public new ISearch<T> Top(int topCount)
+        public new Search<T> Top(int topCount)
         {
             return From(1, topCount);
         }
@@ -529,29 +539,12 @@ namespace WEF
         /// <summary>
         /// Page
         /// </summary>
-        /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
+        /// <param name="pageIndex"></param>
         /// <returns></returns>
-        public new ISearch<T> Page(int pageIndex, int pageSize)
+        public new Search<T> Page(int pageSize, int pageIndex)
         {
             return From(pageSize * (pageIndex - 1) + 1, pageIndex * pageSize);
-        }
-
-        /// <summary>
-        /// 获取分页
-        /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="order"></param>
-        /// <param name="asc"></param>
-        /// <returns></returns>
-        public PagedList<T> GetPagedList(int pageIndex, int pageSize, string order, bool asc)
-        {
-            var total = this.Count();
-            var list = this.OrderBy(new OrderByClip(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
-            var pagedlist = new PagedList<T>(pageIndex,pageSize,total);
-            pagedlist.AddRange(list);
-            return pagedlist;
         }
 
 
@@ -560,8 +553,7 @@ namespace WEF
         /// </summary>
         private void SetDefaultOrderby()
         {
-            if (!OrderByClip.IsNullOrEmpty(this.OrderByClip))
-                return;
+            if (!OrderByClip.IsNullOrEmpty(this.OrderByClip)) return;
             if (fields.Count > 0)
             {
                 if (fields.Any(f => f.PropertyName.Trim().Equals("*")))
@@ -582,13 +574,13 @@ namespace WEF
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
         /// <returns></returns>
-        public new ISearch<T> From(int startIndex, int endIndex)
+        public new Search<T> From(int startIndex, int endIndex)
         {
             if (startIndex > 1)
             {
                 SetDefaultOrderby();
             }
-            return (ISearch<T>)base.From(startIndex, endIndex);
+            return (Search<T>)base.From(startIndex, endIndex);
         }
 
 
@@ -597,7 +589,7 @@ namespace WEF
         /// </summary>
         /// <param name="timeout"></param>
         /// <returns></returns>
-        public new ISearch<T> SetCacheTimeOut(int timeout)
+        public new Search<T> SetCacheTimeOut(int timeout)
         {
             this.timeout = timeout;
             return this;
@@ -608,18 +600,17 @@ namespace WEF
         /// </summary>
         /// <param name="dep"></param>
         /// <returns></returns>
-        public new ISearch<T> SetCacheDependency(CacheDependency dep)
+        public new Search<T> SetCacheDependency(CacheDependency dep)
         {
             this.cacheDep = dep;
             return this;
         }
 
-
         /// <summary>
         /// 重新加载
         /// </summary>
         /// <returns></returns>
-        public new ISearch<T> Refresh()
+        public new Search<T> Refresh()
         {
             isRefresh = true;
             return this;
@@ -631,7 +622,7 @@ namespace WEF
         /// </summary>
         /// <param name="fromSection"></param>
         /// <returns></returns>
-        public new ISearch<T> AddSelect(ISearch fromSection)
+        public new Search<T> AddSelect(Search fromSection)
         {
             return AddSelect(fromSection, null);
         }
@@ -642,9 +633,9 @@ namespace WEF
         /// <param name="fromSection"></param>
         /// <param name="aliasName">别名</param>
         /// <returns></returns>
-        public new ISearch<T> AddSelect(ISearch fromSection, string aliasName)
+        public new Search<T> AddSelect(Search fromSection, string aliasName)
         {
-            return (ISearch<T>)base.AddSelect(fromSection, aliasName);
+            return (Search<T>)base.AddSelect(fromSection, aliasName);
         }
 
         #endregion
@@ -771,17 +762,6 @@ namespace WEF
                 t = DataUtils.Create<T>();
             return t;
         }
-        /// <summary>
-        /// 返回第一个实体  如果为null，则默认实例化一个
-        /// </summary>
-        /// <returns></returns>
-        public T FirstDefault()
-        {
-            T t = this.ToFirst();
-            if (t == null)
-                t = DataUtils.Create<T>();
-            return t;
-        }
 
         /// <summary>
         /// 返回第一个实体，同ToFirst()。无数据返回Null。
@@ -810,8 +790,8 @@ namespace WEF
             {
                 return ToFirst() as TResult;
             }
-            ISearch from = this.Top(1).GetPagedFromSection();
-            //string cacheKey = string.Concat(dbProvider.ConnectionStringsName, "FirstT", "|", formatSql(from.SqlString, from));
+            Search from = this.Top(1).GetPagedFromSection();
+
             string cacheKey = string.Format("{0}FirstT|{1}", dbProvider.ConnectionStringsName, formatSql(from.SqlString, from));
             object cacheValue = getCache(cacheKey);
 
@@ -840,8 +820,9 @@ namespace WEF
         /// <returns></returns>
         public T ToFirst()
         {
-            ISearch from = this.Top(1).GetPagedFromSection();
-            string cacheKey = string.Format("{0}FirstT|{1}", dbProvider.ConnectionStringsName, formatSql(from.SqlString, from));
+            Search search = this.Top(1).GetPagedFromSection();
+
+            string cacheKey = string.Format("{0}FirstT|{1}", dbProvider.ConnectionStringsName, formatSql(search.SqlString, search));
             object cacheValue = getCache(cacheKey);
 
             if (null != cacheValue)
@@ -851,7 +832,7 @@ namespace WEF
 
 
             T t = null;
-            using (IDataReader reader = ToDataReader(from))
+            using (IDataReader reader = ToDataReader(search))
             {
                 var result = EntityUtils.ReaderToEnumerable<T>(reader).ToArray();
                 if (result.Any())
@@ -861,7 +842,7 @@ namespace WEF
             }
 
             setCache<T>(t, cacheKey);
-            //2015-09-08
+
             if (t != null)
             {
                 t.ClearModifyFields();
@@ -878,7 +859,7 @@ namespace WEF
         /// </summary>
         /// <param name="fromSection"></param>
         /// <returns></returns>
-        public new ISearch<T> Union(ISearch fromSection)
+        public new Search<T> Union(Search fromSection)
         {
             StringBuilder tname = new StringBuilder();
 
@@ -898,8 +879,8 @@ namespace WEF
 
 
             Search<T> tmpfromSection = new Search<T>(this.database);
-
             tmpfromSection.tableName = tname.ToString();
+
             tmpfromSection.parameters.AddRange(this.Parameters);
             tmpfromSection.parameters.AddRange(fromSection.Parameters);
 
@@ -911,7 +892,7 @@ namespace WEF
         /// </summary>        
         /// <param name="fromSection"></param>
         /// <returns></returns>
-        public new ISearch<T> UnionAll(ISearch fromSection)
+        public new Search<T> UnionAll(Search fromSection)
         {
             StringBuilder tname = new StringBuilder();
 
@@ -939,6 +920,24 @@ namespace WEF
         }
 
         #endregion
+
+
+        /// <summary>
+        /// 获取分页
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="order"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public PagedList<T> GetPagedList(int pageIndex, int pageSize, string order, bool asc)
+        {
+            var total = this.Count();
+            var list = this.OrderBy(new OrderByClip(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
+            var pagedlist = new PagedList<T>(pageIndex, pageSize, total);
+            pagedlist.AddRange(list);
+            return pagedlist;
+        }
 
     }
 }

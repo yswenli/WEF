@@ -29,7 +29,8 @@ namespace WEF.Cache
         /// <summary>
         /// cache
         /// </summary>
-        private static volatile System.Web.Caching.Cache hxjCache = System.Web.HttpRuntime.Cache;
+        private static volatile System.Web.Caching.Cache cache = System.Web.HttpRuntime.Cache;
+
 
         /// <summary>
         /// timeout 600秒
@@ -41,9 +42,7 @@ namespace WEF.Cache
         /// <summary>
         /// 
         /// </summary>
-        public Cache()
-        {
-        }
+        public Cache() { }
 
         /// <summary>
         /// 设置过期时间
@@ -69,14 +68,8 @@ namespace WEF.Cache
         /// </summary>
         public int TimeOut
         {
-            set
-            {
-                _timeOut = value;
-            }
-            get
-            {
-                return _timeOut;
-            }
+            set { _timeOut = value; }
+            get { return _timeOut; }
         }
 
 
@@ -98,7 +91,7 @@ namespace WEF.Cache
         /// <param name="timeout">绝对有效期（单位: 秒）</param>
         public void AddCache(string cacheKey, object cacheValue, int timeout)
         {
-
+            
             if (string.IsNullOrEmpty(cacheKey))
             {
                 return;
@@ -114,13 +107,14 @@ namespace WEF.Cache
 
             if (timeout <= 0)
             {
-                hxjCache.Insert(cacheKey, cacheValue, null, DateTime.MaxValue, TimeSpan.Zero, System.Web.Caching.CacheItemPriority.High, callBack);
+                cache.Insert(cacheKey, cacheValue, null, DateTime.MaxValue, TimeSpan.Zero, System.Web.Caching.CacheItemPriority.High, callBack);
             }
             else
             {
-                hxjCache.Insert(cacheKey, cacheValue, null, DateTime.Now.AddSeconds(timeout), System.Web.Caching.Cache.NoSlidingExpiration, System.Web.Caching.CacheItemPriority.High, callBack);
+                cache.Insert(cacheKey, cacheValue, null, DateTime.Now.AddSeconds(timeout), System.Web.Caching.Cache.NoSlidingExpiration, System.Web.Caching.CacheItemPriority.High, callBack);
             }
         }
+
 
         /// <summary>
         /// 添加缓存 (相对有效期)
@@ -155,14 +149,13 @@ namespace WEF.Cache
 
             if (timeout <= 0)
             {
-                hxjCache.Insert(cacheKey, cacheValue, null, DateTime.MaxValue, TimeSpan.Zero, System.Web.Caching.CacheItemPriority.High, callBack);
+                cache.Insert(cacheKey, cacheValue, null, DateTime.MaxValue, TimeSpan.Zero, System.Web.Caching.CacheItemPriority.High, callBack);
             }
             else
             {
-                hxjCache.Insert(cacheKey, cacheValue, null, System.Web.Caching.Cache.NoAbsoluteExpiration, TimeSpan.FromSeconds(timeout), System.Web.Caching.CacheItemPriority.High, callBack);
+                cache.Insert(cacheKey, cacheValue, null, System.Web.Caching.Cache.NoAbsoluteExpiration, TimeSpan.FromSeconds(timeout), System.Web.Caching.CacheItemPriority.High, callBack);
             }
         }
-
 
         /// <summary>
         /// 添加缓存 (文件依赖)
@@ -171,12 +164,11 @@ namespace WEF.Cache
         /// <param name="cacheValue">缓存内容</param>
         /// <param name="filenames">缓存依赖的文件或目录</param>
         public void AddCacheFilesDependency(string cacheKey, object cacheValue, params string[] filenames)
-        {
+        {            
             CacheDependency dep = new CacheDependency(filenames, DateTime.Now);
 
             AddCacheDependency(cacheKey, cacheValue, TimeOut, dep);
         }
-
         /// <summary>
         /// 添加缓存 (文件依赖)
         /// </summary>
@@ -201,15 +193,13 @@ namespace WEF.Cache
 
             if (timeout <= 0)
             {
-                hxjCache.Insert(cacheKey, cacheValue, dep, DateTime.MaxValue, TimeSpan.Zero, System.Web.Caching.CacheItemPriority.High, callBack);
+                cache.Insert(cacheKey, cacheValue, dep, DateTime.MaxValue, TimeSpan.Zero, System.Web.Caching.CacheItemPriority.High, callBack);
             }
             else
             {
-                hxjCache.Insert(cacheKey, cacheValue, dep, System.DateTime.Now.AddSeconds(timeout), System.Web.Caching.Cache.NoSlidingExpiration, System.Web.Caching.CacheItemPriority.High, callBack);
+                cache.Insert(cacheKey, cacheValue, dep, System.DateTime.Now.AddSeconds(timeout), System.Web.Caching.Cache.NoSlidingExpiration, System.Web.Caching.CacheItemPriority.High, callBack);
             }
         }
-
-
         /// <summary>
         /// 添加缓存 (一组键值依赖)
         /// </summary>
@@ -223,6 +213,9 @@ namespace WEF.Cache
 
             AddCacheDependency(cacheKey, cacheValue, TimeOut, dep);
         }
+
+
+
 
 
 
@@ -248,7 +241,6 @@ namespace WEF.Cache
             //}
 
             //do something: write log  ext.
-
         }
 
 
@@ -259,7 +251,10 @@ namespace WEF.Cache
         public void RemoveCache(string cacheKey)
         {
             if (!string.IsNullOrEmpty(cacheKey))
-                hxjCache.Remove(cacheKey);
+            {
+                cache.Remove(cacheKey);
+
+            }
         }
 
 
@@ -274,7 +269,7 @@ namespace WEF.Cache
             {
                 return null;
             }
-            return hxjCache.Get(cacheKey);
+            return cache.Get(cacheKey);
         }
 
 
@@ -284,9 +279,8 @@ namespace WEF.Cache
         /// <returns></returns>
         public int GetCount()
         {
-            return hxjCache.Count;
+            return cache.Count;
         }
-
 
         /// <summary>
         /// 返回缓存键值列表
@@ -295,7 +289,7 @@ namespace WEF.Cache
         public List<string> GetCacheKeys()
         {
             List<string> cacheKeys = new List<string>();
-            IDictionaryEnumerator cacheEnum = hxjCache.GetEnumerator();
+            IDictionaryEnumerator cacheEnum = cache.GetEnumerator();
             while (cacheEnum.MoveNext())
             {
                 cacheKeys.Add(cacheEnum.Key.ToString());

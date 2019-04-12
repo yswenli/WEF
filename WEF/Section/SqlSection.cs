@@ -8,10 +8,9 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
-using WEF.Common;
 using System.Data;
 using System.Data.Common;
-using WEF.Db;
+using WEF.Common;
 
 namespace WEF.Section
 {
@@ -25,15 +24,15 @@ namespace WEF.Section
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="dbSession"></param>
+        /// <param name="dbContext"></param>
         /// <param name="sql"></param>
-        public SqlSection(DBContext dbSession, string sql)
-            : base(dbSession)
+        public SqlSection(DBContext dbContext, string sql)
+            : base(dbContext)
         {
 
             Check.Require(sql, "sql", Check.NotNullOrEmpty);
 
-            this.cmd = dbSession.Db.GetSqlStringCommand(sql);
+            this._dbCommand = dbContext.Db.GetSqlStringCommand(sql);
         }
 
         /// <summary>
@@ -43,7 +42,7 @@ namespace WEF.Section
         /// <returns></returns>
         public SqlSection SetDbTransaction(DbTransaction tran)
         {
-            this.tran = tran;
+            this._dbTransaction = tran;
             return this;
         }
 
@@ -59,7 +58,7 @@ namespace WEF.Section
         /// <returns></returns>
         public SqlSection AddParameter(params DbParameter[] parameters)
         {
-            dbSession.Db.AddParameter(this.cmd, parameters);
+            _dbContext.Db.AddParameter(this._dbCommand, parameters);
             return this;
         }
 
@@ -84,7 +83,7 @@ namespace WEF.Section
             Check.Require(parameterName, "parameterName", Check.NotNullOrEmpty);
             Check.Require(dbType, "dbType", Check.NotNullOrEmpty);
 
-            dbSession.Db.AddInParameter(this.cmd, parameterName, dbType, size, value);
+            _dbContext.Db.AddInParameter(this._dbCommand, parameterName, dbType, size, value);
             return this;
         }
 

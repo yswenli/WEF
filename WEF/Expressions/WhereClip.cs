@@ -18,7 +18,6 @@
  *****************************************************************************************************/
 using System;
 using WEF.Common;
-using WEF.Section;
 
 namespace WEF.Expressions
 {

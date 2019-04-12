@@ -10,120 +10,49 @@ namespace WEF
 {
     public interface ISearch
     {
-        string ColumnsString
-        {
-            get;
-        }
-        string CountSqlString
-        {
-            get;
-        }
-        Database Database
-        {
-            get;
-        }
-        DbProvider DbProvider
-        {
-            get;
-        }
-        List<Field> Fields
-        {
-            get;
-        }
-        GroupByClip GroupByClip
-        {
-            get;
-        }
-        string GroupByString
-        {
-            get;
-        }
-        string LimitString
-        {
-            get;
-            set;
-        }
-        OrderByClip OrderByClip
-        {
-            get;
-        }
-        string OrderByString
-        {
-            get;
-        }
-        List<Parameter> Parameters
-        {
-            get;
-        }
-        string SqlString
-        {
-            get;
-        }
-        string TableName
-        {
-            get;
-        }
+        string ColumnsString { get; }
+        string CountSqlString { get; }
+        Database Database { get; }
+        DbProvider DbProvider { get; }
+        List<Field> Fields { get; }
+        GroupByClip GroupByClip { get; }
+        string GroupByString { get; }
+        string LimitString { get; set; }
+        OrderByClip OrderByClip { get; }
+        string OrderByString { get; }
+        List<Parameter> Parameters { get; }
+        string SqlString { get; }
+        string TableName { get; }
 
-        string SqlNoneOrderbyString
-        {
-            get;
-        }
-
-        string TypeTableName
-        {
-            get;
-            set;
-        }
-
-        int? Timeout
-        {
-            get;
-            set;
-        }
-
-        CacheDependency CacheDep
-        {
-            get;
-            set;
-        }
-
-        bool IsRefresh
-        {
-            get;
-            set;
-        }
-
-        ISearch AddSelect(ISearch fromSection);
-        ISearch AddSelect(ISearch fromSection, string aliasName);
+        Search AddSelect(Search Search);
+        Search AddSelect(Search Search, string aliasName);
         int Count();
-        ISearch CrossJoin(string tableName, WhereClip where, string userName = null);
-        ISearch Distinct();
-        ISearch From(int startIndex, int endIndex);
-        ISearch FullJoin(string tableName, WhereClip where, string userName = null);
-        ISearch GetPagedFromSection();
+        Search CrossJoin(string tableName, WhereClip where, string userName = null);
+        Search Distinct();
+        Search From(int startIndex, int endIndex);
+        Search FullJoin(string tableName, WhereClip where, string userName = null);
         WhereClip GetWhereClip();
-        ISearch GroupBy(params Field[] fields);
-        ISearch GroupBy(GroupByClip groupBy);
-        ISearch Having(WhereClip havingWhere);
-        ISearch InnerJoin(string tableName, WhereClip where, string userName = null);
-        ISearch LeftJoin(string tableName, WhereClip where, string userName = null);
-        ISearch OrderBy(params OrderByClip[] orderBys);
-        ISearch OrderBy(OrderByClip orderBy);
-        ISearch Page(int pageIndex, int pageSize);
-        ISearch Refresh();
-        ISearch RightJoin(string tableName, WhereClip where, string userName = null);
-        ISearch Select(params Field[] fields);
-        ISearch SetCacheDependency(CacheDependency dep);
-        ISearch SetCacheTimeOut(int timeout);
+        Search GroupBy(GroupByClip groupBy);
+        Search GroupBy(params Field[] fields);
+        Search Having(WhereClip havingWhere);
+        Search InnerJoin(string tableName, WhereClip where, string userName = null);
+        Search LeftJoin(string tableName, WhereClip where, string userName = null);
+        Search OrderBy(OrderByClip orderBy);
+        Search OrderBy(params OrderByClip[] orderBys);
+        Search Page(int pageSize, int pageIndex);
+        Search Refresh();
+        Search RightJoin(string tableName, WhereClip where, string userName = null);
+        Search Select(params Field[] fields);
+        Search SetCacheDependency(CacheDependency dep);
+        Search SetCacheTimeOut(int timeout);
         IDataReader ToDataReader();
-        IDataReader ToDataReader(ISearch from);
         DataSet ToDataSet();
         DataTable ToDataTable();
-        ISearch Top(int topCount);
+        Search Top(int topCount);
         object ToScalar();
         TResult ToScalar<TResult>();
-        ISearch Union(ISearch fromSection);
-        ISearch UnionAll(ISearch fromSection);
-        ISearch Where(WhereClip where);
+        Search Union(Search Search);
+        Search UnionAll(Search Search);
+        Search Where(WhereClip where);
     }
 }

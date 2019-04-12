@@ -8,7 +8,7 @@
  *****************************************************************************************************
  * 项目名称：$projectname$
  * 命名空间：WEF.Section
- * 类名称：FromSection
+ * 类名称：Search
  * 创建时间：2017/7/26 15:31:40
  * 创建人：wenli
  * 创建说明：
@@ -57,13 +57,8 @@ namespace WEF
         ///// 
         ///// </summary>
         protected string asName;
-        /// <summary>
-        /// 
-        /// </summary>
-        //public List<string> asNames = new List<string>();//2016-05-10新增
-        /// <summary>
-        /// 
-        /// </summary>
+
+
         protected List<Parameter> parameters = new List<Parameter>();
         /// <summary>
         /// 
@@ -137,34 +132,23 @@ namespace WEF
         /// <summary>
         /// 
         /// </summary>
-        protected int Identity
-        {
-            get; set;
-        }
+        protected int Identity { get; set; }
         #endregion
 
         #region 属性
-        //2015-08-12恢复注释
         /// <summary>
         /// DbProvider。
         /// </summary>
         public DbProvider DbProvider
         {
-            get
-            {
-                return dbProvider;
-            }
+            get { return dbProvider; }
         }
-        //2015-08-12新增
         /// <summary>
         /// DbProvider。
         /// </summary>
         public Database Database
         {
-            get
-            {
-                return database;
-            }
+            get { return database; }
         }
         /// <summary>
         /// 设置 distinct
@@ -200,10 +184,7 @@ namespace WEF
             {
                 _limitString = value;
             }
-            get
-            {
-                return _limitString;
-            }
+            get { return _limitString; }
         }
 
         /// <summary>
@@ -241,7 +222,7 @@ namespace WEF
         /// <summary>
         /// 没有没有排序字段
         /// </summary>
-        public string SqlNoneOrderbyString
+        internal string SqlNoneOrderbyString
         {
             get
             {
@@ -418,7 +399,9 @@ namespace WEF
                 if (OrderByClip.IsNullOrEmpty(orderBy))
                     return string.Empty;
 
-                if (tableName.IndexOf('(') >= 0 || tableName.IndexOf(')') >= 0 || tableName.IndexOf(" FROM ", StringComparison.OrdinalIgnoreCase) >= 0 || tableName.IndexOf(" AS ", StringComparison.OrdinalIgnoreCase) >= 0)
+                if ((tableName.IndexOf('(') >= 0 || tableName.IndexOf(')') >= 0 || tableName.IndexOf(" FROM ", StringComparison.OrdinalIgnoreCase) >= 0 || tableName.IndexOf(" AS ", StringComparison.OrdinalIgnoreCase) >= 0)
+                    && !FromString.Contains(" LEFT OUTER JOIN ") //2018-04-09 新增一个&&条件
+                    )
                     return orderBy.RemovePrefixTableName().OrderByString;
                 return orderBy.OrderByString;
             }
@@ -523,58 +506,6 @@ namespace WEF
             }
         }
 
-        public string TypeTableName
-        {
-            get
-            {
-                return typeTableName;
-            }
-
-            set
-            {
-                this.typeTableName = value;
-            }
-        }
-
-        public int? Timeout
-        {
-            get
-            {
-                return timeout;
-            }
-
-            set
-            {
-                this.timeout = value;
-            }
-        }
-
-        public CacheDependency CacheDep
-        {
-            get
-            {
-                return cacheDep;
-            }
-
-            set
-            {
-                this.cacheDep = value;
-            }
-        }
-
-        public bool IsRefresh
-        {
-            get
-            {
-                return isRefresh;
-            }
-
-            set
-            {
-                this.isRefresh = value;
-            }
-        }
-
         #endregion
 
         #region 构造函数
@@ -615,8 +546,7 @@ namespace WEF
             this.database = database;
             this.tableName = tableName;
             this.asName = asName;
-            //asNames.Add(tableName + "|" +asName);
-            this.TypeTableName = tableName.Trim(dbProvider.LeftToken, dbProvider.RightToken);
+            this.typeTableName = tableName.Trim(dbProvider.LeftToken, dbProvider.RightToken);
         }
 
         #endregion
@@ -643,7 +573,7 @@ namespace WEF
         /// <returns></returns>
         protected bool isCustomerCache()
         {
-            return (Timeout.HasValue || null != CacheDep);
+            return (timeout.HasValue || null != cacheDep);
         }
 
 
@@ -652,9 +582,9 @@ namespace WEF
         /// </summary>
         /// <param name="timeout"></param>
         /// <returns></returns>
-        public ISearch SetCacheTimeOut(int timeout)
+        public Search SetCacheTimeOut(int timeout)
         {
-            this.Timeout = timeout;
+            this.timeout = timeout;
             return this;
         }
 
@@ -663,9 +593,9 @@ namespace WEF
         /// </summary>
         /// <param name="dep"></param>
         /// <returns></returns>
-        public ISearch SetCacheDependency(CacheDependency dep)
+        public Search SetCacheDependency(CacheDependency dep)
         {
-            this.CacheDep = dep;
+            this.cacheDep = dep;
             return this;
         }
 
@@ -674,9 +604,9 @@ namespace WEF
         /// 重新加载
         /// </summary>
         /// <returns></returns>
-        public ISearch Refresh()
+        public Search Refresh()
         {
-            IsRefresh = true;
+            isRefresh = true;
             return this;
         }
 
@@ -686,7 +616,7 @@ namespace WEF
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public ISearch Where(WhereClip where)
+        public Search Where(WhereClip where)
         {
             this.where = where;
             return this;
@@ -698,7 +628,7 @@ namespace WEF
         /// </summary>
         /// <param name="groupBy"></param>
         /// <returns></returns>
-        public ISearch GroupBy(GroupByClip groupBy)
+        public Search GroupBy(GroupByClip groupBy)
         {
             this.groupBy = groupBy;
             return this;
@@ -710,7 +640,7 @@ namespace WEF
         /// </summary>
         /// <param name="havingWhere"></param>
         /// <returns></returns>
-        public ISearch Having(WhereClip havingWhere)
+        public Search Having(WhereClip havingWhere)
         {
             this.havingWhere = havingWhere;
             return this;
@@ -721,12 +651,13 @@ namespace WEF
         /// </summary>
         /// <param name="fields"></param>
         /// <returns></returns>
-        public ISearch GroupBy(params Field[] fields)
+        public Search GroupBy(params Field[] fields)
         {
-            if (null == fields || fields.Length <= 0)
-                return this;
+            if (null == fields || fields.Length <= 0) return this;
             var tempgroupby = fields.Aggregate(GroupByClip.None, (current, f) => current && f.GroupBy);
+            //2015-09-08修改
             this.groupBy = tempgroupby;
+            //this.groupBy = this.groupBy && tempgroupby;
             return this;
         }
 
@@ -735,7 +666,7 @@ namespace WEF
         /// </summary>
         /// <param name="orderBy"></param>
         /// <returns></returns>
-        public ISearch OrderBy(OrderByClip orderBy)
+        public Search OrderBy(OrderByClip orderBy)
         {
             this.orderBy = orderBy;
             return this;
@@ -747,10 +678,9 @@ namespace WEF
         /// </summary>
         /// <param name="orderBys"></param>
         /// <returns></returns>
-        public ISearch OrderBy(params OrderByClip[] orderBys)
+        public Search OrderBy(params OrderByClip[] orderBys)
         {
-            if (null == orderBys || orderBys.Length <= 0)
-                return this;
+            if (null == orderBys || orderBys.Length <= 0) return this;
             var temporderby = orderBys.Aggregate(OrderByClip.None, (current, ob) => current && ob);
             this.orderBy = temporderby;
             return this;
@@ -762,7 +692,7 @@ namespace WEF
         /// </summary>
         /// <param name="fields"></param>
         /// <returns></returns>
-        public ISearch Select(params Field[] fields)
+        public Search Select(params Field[] fields)
         {
             this.fields.Clear();
             return AddSelect(fields);
@@ -772,29 +702,29 @@ namespace WEF
         /// <summary>
         /// select sql
         /// </summary>
-        /// <param name="fromSection"></param>
+        /// <param name="Search"></param>
         /// <returns></returns>
-        public ISearch AddSelect(ISearch fromSection)
+        public Search AddSelect(Search Search)
         {
-            return AddSelect(fromSection, null);
+            return AddSelect(Search, null);
         }
 
         /// <summary>
         /// select sql
         /// </summary>
-        /// <param name="fromSection"></param>
+        /// <param name="Search"></param>
         /// <param name="aliasName">别名</param>
         /// <returns></returns>
-        public ISearch AddSelect(ISearch fromSection, string aliasName)
+        public Search AddSelect(Search Search, string aliasName)
         {
-            if (null == fromSection)
+            if (null == Search)
                 return this;
 
-            Check.Require(fromSection.Fields.Count == 1 && !fromSection.Fields[0].PropertyName.Equals("*"), "fromSection's fields must be only one!");
+            Check.Require(Search.Fields.Count == 1 && !Search.Fields[0].PropertyName.Equals("*"), "Search's fields must be only one!");
 
-            this.fields.Add(new Field(string.Concat("(", fromSection.SqlString, ")")).As(aliasName));
+            this.fields.Add(new Field(string.Concat("(", Search.SqlString, ")")).As(aliasName));
 
-            this.parameters.AddRange(fromSection.Parameters);
+            this.parameters.AddRange(Search.Parameters);
 
             return this;
         }
@@ -805,12 +735,13 @@ namespace WEF
         /// </summary>
         /// <param name="fields"></param>
         /// <returns></returns>
-        internal ISearch AddSelect(params Field[] fields)
+        internal Search AddSelect(params Field[] fields)
         {
             if (null != fields && fields.Length > 0)
             {
                 foreach (Field field in fields)
                 {
+                    //2015-09-25修改
                     Field f = this.fields.Find(fi => fi.Name.Equals(field.Name) && fi.TableName.Equals(field.TableName));
                     if (Field.IsNullOrEmpty(f))
                         this.fields.Add(field);
@@ -823,7 +754,7 @@ namespace WEF
         /// Distinct
         /// </summary>
         /// <returns></returns>
-        public ISearch Distinct()
+        public Search Distinct()
         {
             this.distinctString = " DISTINCT ";
             return this;
@@ -834,7 +765,7 @@ namespace WEF
         /// </summary>
         /// <param name="topCount"></param>
         /// <returns></returns>
-        public ISearch Top(int topCount)
+        public Search Top(int topCount)
         {
             return From(1, topCount);
         }
@@ -846,7 +777,7 @@ namespace WEF
         /// <param name="pageSize">每页数</param>
         /// <param name="pageIndex">第几页</param>
         /// <returns></returns>
-        public ISearch Page(int pageSize, int pageIndex)
+        public Search Page(int pageSize, int pageIndex)
         {
             return From(pageSize * (pageIndex - 1) + 1, pageIndex * pageSize);
         }
@@ -858,10 +789,9 @@ namespace WEF
         /// <param name="startIndex">开始记录数</param>
         /// <param name="endIndex">结束记录数</param>
         /// <returns></returns>
-        public ISearch From(int startIndex, int endIndex)
+        public Search From(int startIndex, int endIndex)
         {
             this.startIndex = startIndex;
-
             this.endIndex = endIndex;
 
             isPageFromSection = false;
@@ -876,9 +806,9 @@ namespace WEF
         /// <param name="sql"></param>
         /// <param name="from"></param>
         /// <returns></returns>
-        protected string formatSql(string sql, ISearch from)
+        protected string formatSql(string sql, Search from)
         {
-            string tempSql = DataUtils.FormatSQL(sql, from.DbProvider.LeftToken, from.DbProvider.RightToken);
+            string tempSql = DataUtils.FormatSQL(sql, from.dbProvider.LeftToken, from.dbProvider.RightToken);
             List<Parameter> listPara = from.Parameters;
             foreach (Parameter p in listPara)
             {
@@ -906,9 +836,8 @@ namespace WEF
         /// </summary>
         /// <param name="from"></param>
         /// <returns></returns>
-        internal int Count(ISearch from)
+        internal int Count(Search from)
         {
-            //string cacheKey = string.Concat(dbProvider.ConnectionStringsName, "COUNT", "|", formatSql(from.CountSqlString, from));
             string cacheKey = string.Format("{0}COUNT|{1}", dbProvider.ConnectionStringsName, formatSql(from.CountSqlString, from));
             object cacheValue = getCache(cacheKey);
             if (null != cacheValue)
@@ -937,10 +866,10 @@ namespace WEF
         /// <returns></returns>
         protected object getCache(string cacheKey)
         {
-            if (IsRefresh)
+            if (isRefresh)
                 return null;
 
-            object cacheValue = WEF.Cache.Cache.Default.GetCache(cacheKey);
+            object cacheValue = Cache.Cache.Default.GetCache(cacheKey);
 
             return cacheValue;
         }
@@ -953,22 +882,22 @@ namespace WEF
         protected void setCache<T>(T value, string cacheKey)
         {
             if (isCustomerCache())
-                WEF.Cache.Cache.Default.AddCacheDependency(cacheKey, value, Timeout.HasValue ? Timeout.Value : 0, CacheDep);
+                Cache.Cache.Default.AddCacheDependency(cacheKey, value, timeout.HasValue ? timeout.Value : 0, cacheDep);
             else
             {
                 if (isTurnonCache())
                 {
-                    string entityCacheKey = string.Concat(dbProvider.ConnectionStringsName, TypeTableName);
+                    string entityCacheKey = string.Concat(dbProvider.ConnectionStringsName, typeTableName);
                     if (dbProvider.EntitiesCache.ContainsKey(entityCacheKey))
                     {
                         int? temptimeOut = dbProvider.EntitiesCache[entityCacheKey].TimeOut;
                         if (temptimeOut.HasValue)
                         {
-                            WEF.Cache.Cache.Default.AddCacheSlidingExpiration(cacheKey, value, temptimeOut.Value);
+                            Cache.Cache.Default.AddCacheSlidingExpiration(cacheKey, value, temptimeOut.Value);
                         }
                         else
                         {
-                            WEF.Cache.Cache.Default.AddCacheDependency(cacheKey, value, 0, new CacheDependency(dbProvider.EntitiesCache[entityCacheKey].FilePath));
+                            Cache.Cache.Default.AddCacheDependency(cacheKey, value, 0, new CacheDependency(dbProvider.EntitiesCache[entityCacheKey].FilePath));
                         }
                     }
                 }
@@ -982,7 +911,8 @@ namespace WEF
         /// <returns></returns>
         public DataSet ToDataSet()
         {
-            ISearch from = GetPagedFromSection();
+            Search from = GetPagedFromSection();
+
             string cacheKey = string.Format("{0}DataSet|{1}", dbProvider.ConnectionStringsName, formatSql(from.SqlString, from));
             object cacheValue = getCache(cacheKey);
             if (null != cacheValue)
@@ -1005,7 +935,7 @@ namespace WEF
         /// 获取分页过的FromSection
         /// </summary>
         /// <returns></returns>
-        public ISearch GetPagedFromSection()
+        internal Search GetPagedFromSection()
         {
             if (startIndex > 0 && endIndex > 0 && !isPageFromSection)
             {
@@ -1019,7 +949,7 @@ namespace WEF
         /// 创建  查询的DbCommand
         /// </summary>
         /// <returns></returns>
-        protected DbCommand CreateDbCommand(ISearch from)
+        protected DbCommand CreateDbCommand(Search from)
         {
             var dbCommand = database.GetSqlStringCommand(from.SqlString);
             database.AddCommandParameter(dbCommand, from.Parameters.ToArray());
@@ -1040,7 +970,7 @@ namespace WEF
         /// </summary>
         /// <param name="from"></param>
         /// <returns></returns>
-        public IDataReader ToDataReader(ISearch from)
+        protected IDataReader ToDataReader(Search from)
         {
             return trans == null
                 ? database.ExecuteReader(CreateDbCommand(@from))
@@ -1065,7 +995,8 @@ namespace WEF
             Check.Require(this.fields.Count == 1, "fields must be one!");
             Check.Require(!this.fields[0].PropertyName.Trim().Equals("*"), "fields cound not be * !");
 
-            ISearch from = GetPagedFromSection();
+            Search from = GetPagedFromSection();
+
             string cacheKey = string.Format("{0}Scalar|{1}", dbProvider.ConnectionStringsName, formatSql(from.SqlString, from));
             object cacheValue = getCache(cacheKey);
             if (null != cacheValue)
@@ -1110,14 +1041,13 @@ namespace WEF
         /// <param name="where"></param>
         /// <param name="joinType"></param>
         /// <returns></returns>
-        protected ISearch join(string tableName, string userName, WhereClip where, JoinType joinType)
+        protected Search join(string tableName, string userName, WhereClip where, JoinType joinType)
         {
             if (string.IsNullOrEmpty(tableName) || WhereClip.IsNullOrEmpty(where))
                 return this;
 
             tableName = dbProvider.BuildTableName(tableName, userName);
 
-            if (!joins.ContainsKey(tableName))
             {
                 string joinString = string.Empty;
                 switch (joinType)
@@ -1142,6 +1072,15 @@ namespace WEF
                         break;
                 }
 
+                if (joins.ContainsKey(tableName))
+                {
+                    var index = (joins.Keys.Count(d => d.StartsWith(tableName)) + 1).ToString();
+                    var realTableName = tableName.Substring(1, tableName.Length - 2);
+                    tableName += " as " + tableName.Insert(tableName.Length - 1, index);
+                    where.expressionString = where.expressionString.Replace(realTableName, realTableName + index);
+                }
+
+
                 joins.Add(tableName, new KeyValuePair<string, WhereClip>(joinString, where));
 
                 if (where.Parameters.Count > 0)
@@ -1159,7 +1098,7 @@ namespace WEF
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public ISearch InnerJoin(string tableName, WhereClip where, string userName = null)
+        public Search InnerJoin(string tableName, WhereClip where, string userName = null)
         {
             return join(tableName, userName, where, JoinType.InnerJoin);
         }
@@ -1173,7 +1112,7 @@ namespace WEF
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public ISearch LeftJoin(string tableName, WhereClip where, string userName = null)
+        public Search LeftJoin(string tableName, WhereClip where, string userName = null)
         {
             return join(tableName, userName, where, JoinType.LeftJoin);
         }
@@ -1187,7 +1126,7 @@ namespace WEF
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public ISearch RightJoin(string tableName, WhereClip where, string userName = null)
+        public Search RightJoin(string tableName, WhereClip where, string userName = null)
         {
             return join(tableName, userName, where, JoinType.RightJoin);
         }
@@ -1200,7 +1139,7 @@ namespace WEF
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public ISearch CrossJoin(string tableName, WhereClip where, string userName = null)
+        public Search CrossJoin(string tableName, WhereClip where, string userName = null)
         {
             return join(tableName, userName, where, JoinType.CrossJoin);
         }
@@ -1214,7 +1153,7 @@ namespace WEF
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public ISearch FullJoin(string tableName, WhereClip where, string userName = null)
+        public Search FullJoin(string tableName, WhereClip where, string userName = null)
         {
             return join(tableName, userName, where, JoinType.FullJoin);
         }
@@ -1226,9 +1165,9 @@ namespace WEF
         /// <summary>
         /// Union
         /// </summary>
-        /// <param name="fromSection"></param>
+        /// <param name="Search"></param>
         /// <returns></returns>
-        public ISearch Union(ISearch fromSection)
+        public Search Union(Search Search)
         {
             StringBuilder tname = new StringBuilder();
 
@@ -1238,26 +1177,29 @@ namespace WEF
 
             tname.Append(" UNION ");
 
-            tname.Append(fromSection.SqlNoneOrderbyString);
+            tname.Append(Search.SqlNoneOrderbyString);
 
             tname.Append(") tempuniontable ");
 
-            ISearch tmpfromSection = new Search(this.database, tname.ToString());
-            tmpfromSection.TypeTableName = this.TypeTableName;
-            tmpfromSection.Timeout = this.Timeout;
-            tmpfromSection.CacheDep = this.CacheDep;
-            tmpfromSection.IsRefresh = this.IsRefresh;
-            tmpfromSection.Parameters.AddRange(this.Parameters);
-            tmpfromSection.Parameters.AddRange(fromSection.Parameters);
-            return tmpfromSection;
+            Search tmpSearch = new Search(this.database, tname.ToString());
+            tmpSearch.typeTableName = this.typeTableName;
+            tmpSearch.timeout = this.timeout;
+            tmpSearch.cacheDep = this.cacheDep;
+            tmpSearch.isRefresh = this.isRefresh;
+
+
+            tmpSearch.parameters.AddRange(this.Parameters);
+            tmpSearch.parameters.AddRange(Search.Parameters);
+
+            return tmpSearch;
         }
 
         /// <summary>
         /// Union All
         /// </summary>
-        /// <param name="fromSection"></param>
+        /// <param name="Search"></param>
         /// <returns></returns>
-        public ISearch UnionAll(ISearch fromSection)
+        public Search UnionAll(Search Search)
         {
             StringBuilder tname = new StringBuilder();
 
@@ -1267,18 +1209,20 @@ namespace WEF
 
             tname.Append(" UNION ALL ");
 
-            tname.Append(fromSection.SqlNoneOrderbyString);
+            tname.Append(Search.SqlNoneOrderbyString);
 
             tname.Append(") tempuniontable ");
 
-            ISearch tmpfromSection = new Search(this.database, tname.ToString());
-            tmpfromSection.TypeTableName = this.TypeTableName;
-            tmpfromSection.Timeout = this.Timeout;
-            tmpfromSection.CacheDep = this.CacheDep;
-            tmpfromSection.IsRefresh = this.IsRefresh;
-            tmpfromSection.Parameters.AddRange(this.Parameters);
-            tmpfromSection.Parameters.AddRange(fromSection.Parameters);
-            return tmpfromSection;
+            Search tmpSearch = new Search(this.database, tname.ToString());
+            tmpSearch.typeTableName = this.typeTableName;
+            tmpSearch.timeout = this.timeout;
+            tmpSearch.cacheDep = this.cacheDep;
+            tmpSearch.isRefresh = this.isRefresh;
+
+            tmpSearch.parameters.AddRange(this.Parameters);
+            tmpSearch.parameters.AddRange(Search.Parameters);
+
+            return tmpSearch;
         }
 
         #endregion

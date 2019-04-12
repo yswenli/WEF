@@ -87,6 +87,12 @@ namespace WEF.Test
             #endregion
 
 
+            var batch = ur.DBContext.BeginBatchConnection();
+
+            batch.Insert<User>(ut);
+
+            batch.Execute();
+
 
 
             var nut = ut.ConvertTo<User, SUser>();

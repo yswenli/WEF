@@ -180,8 +180,6 @@ namespace WEF.Db
         {
             if (WhereClip.IsNullOrEmpty(where))
                 throw new Exception("请传入删除条件，删除整表数据请使用.DeleteAll<T>()方法。");
-            //where = WhereClip.All; //2015-08-08
-
             StringBuilder sql = new StringBuilder();
             sql.Append("DELETE FROM ");
             sql.Append(db.DbProvider.BuildTableName(tableName, userName));

@@ -8,12 +8,11 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
-using WEF.Common;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using WEF.Db;
+using WEF.Common;
 
 namespace WEF.Section
 {
@@ -23,14 +22,14 @@ namespace WEF.Section
     /// </summary>
     public abstract class Section
     {
-        protected DBContext dbSession;
-        protected DbCommand cmd;
-        protected DbTransaction tran = null;
+        protected DBContext _dbContext;
+        protected DbCommand _dbCommand;
+        protected DbTransaction _dbTransaction = null;
 
-        public Section(DBContext dbSession)
+        public Section(DBContext dbContext)
         {
-            Check.Require(dbSession, "dbSession", Check.NotNullOrEmpty);
-            this.dbSession = dbSession;
+            Check.Require(dbContext, "dbContext", Check.NotNullOrEmpty);
+            this._dbContext = dbContext;
         }
 
         #region 执行
@@ -41,7 +40,7 @@ namespace WEF.Section
         /// <returns></returns>
         public virtual object ToScalar()
         {
-            return (tran == null ? this.dbSession.ExecuteScalar(cmd) : this.dbSession.ExecuteScalar(cmd, tran));
+            return (_dbTransaction == null ? this._dbContext.ExecuteScalar(_dbCommand) : this._dbContext.ExecuteScalar(_dbCommand, _dbTransaction));
         }
 
 
@@ -72,23 +71,11 @@ namespace WEF.Section
             TEntity t = default(TEntity);
             using (IDataReader reader = ToDataReader())
             {
-                //var tempt = EntityUtils.Mapper.Map<TEntity>(reader);
-                //if (tempt.Any())
-                //{
-                //    t = tempt.First();
-                //}
                 var result = EntityUtils.ReaderToEnumerable<TEntity>(reader).ToArray();
                 if (result.Any())
                 {
                     t = result.First();
                 }
-                #region 2015-08-10注释
-                //if (reader.Read())
-                //{
-                //    t = DataUtils.Create<TEntity>();
-                //    t.SetPropertyValues(reader);
-                //}
-                #endregion
             }
             return t;
         }
@@ -115,14 +102,10 @@ namespace WEF.Section
         /// <returns></returns>
         public List<TEntity> ToList<TEntity>()
         {
-            //List<TEntity> listT = new List<TEntity>();
             using (IDataReader reader = ToDataReader())
             {
-                //listT = EntityUtils.Mapper.Map<TEntity>(reader);
-                //reader.Close();
                 return EntityUtils.ReaderToEnumerable<TEntity>(reader).ToList();
             }
-            //return listT;
         }
         /// <summary>
         /// 返回懒加载数据
@@ -152,7 +135,7 @@ namespace WEF.Section
         /// <returns></returns>
         public virtual IDataReader ToDataReader()
         {
-            return (tran == null ? this.dbSession.ExecuteReader(cmd) : this.dbSession.ExecuteReader(cmd, tran));
+            return (_dbTransaction == null ? this._dbContext.ExecuteReader(_dbCommand) : this._dbContext.ExecuteReader(_dbCommand, _dbTransaction));
         }
 
         /// <summary>
@@ -161,7 +144,7 @@ namespace WEF.Section
         /// <returns></returns>
         public virtual DataSet ToDataSet()
         {
-            return (tran == null ? this.dbSession.ExecuteDataSet(cmd) : this.dbSession.ExecuteDataSet(cmd, tran));
+            return (_dbTransaction == null ? this._dbContext.ExecuteDataSet(_dbCommand) : this._dbContext.ExecuteDataSet(_dbCommand, _dbTransaction));
         }
 
 
@@ -180,7 +163,7 @@ namespace WEF.Section
         /// <returns></returns>
         public virtual int ExecuteNonQuery()
         {
-            return (tran == null ? this.dbSession.ExecuteNonQuery(cmd) : this.dbSession.ExecuteNonQuery(cmd, tran));
+            return (_dbTransaction == null ? this._dbContext.ExecuteNonQuery(_dbCommand) : this._dbContext.ExecuteNonQuery(_dbCommand, _dbTransaction));
         }
 
 

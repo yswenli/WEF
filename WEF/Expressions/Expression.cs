@@ -237,7 +237,7 @@ namespace WEF.Expressions
         /// <summary>
         /// 
         /// </summary>
-        protected string expressionString = string.Empty;
+        public string expressionString = string.Empty;
 
 
         /// <summary>
@@ -316,7 +316,6 @@ namespace WEF.Expressions
                 else
                 {
                     valuestring = DataUtils.MakeUniqueKey(field);
-                    //valuestring = field.tableName + field.Name;
                     var p = new Parameter(valuestring, value, field.ParameterDbType, field.ParameterSize);
                     parameters.Add(p);
                 }

@@ -23,14 +23,8 @@ namespace WEF.Cache
         /// </summary>
         public int? TimeOut
         {
-            get
-            {
-                return timeout;
-            }
-            set
-            {
-                timeout = value;
-            }
+            get { return timeout; }
+            set { timeout = value; }
         }
 
 
@@ -44,14 +38,8 @@ namespace WEF.Cache
         /// </summary>
         public string FilePath
         {
-            get
-            {
-                return filePath;
-            }
-            set
-            {
-                filePath = value;
-            }
+            get { return filePath; }
+            set { filePath = value; }
         }
 
 

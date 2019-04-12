@@ -18,14 +18,7 @@
  *****************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Data;
-using System.Data.Common;
-using WEF.ModelGenerator.Model;
-using System.Xml;
-using System.Windows.Forms;
 using WEF.Common;
-using WEF.Cache;
 
 namespace WEF.ModelGenerator.Common
 {
@@ -350,14 +343,16 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(3, "}");
             plus.AppendSpaceLine(2, "}");
 
+            ColumnInfo identityColumn = Columns.Find(delegate (ColumnInfo col) { return col.IsPrimaryKey; });
+
             plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 获取实体");
             plus.AppendSpaceLine(2, "/// <param name=\"pageIndex\">分页第几页</param>");
             plus.AppendSpaceLine(2, "/// <param name=\"pageSize\">分页一页取值</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public " + ClassName + " Get"+ ClassName + "(int id)");
+            plus.AppendSpaceLine(2, "public " + ClassName + " Get"+ ClassName + $"({identityColumn.DataTypeName} {identityColumn.Name})");
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return Search().Where(b => b.ID == id).First();");
+            plus.AppendSpaceLine(3, $"return Search().Where(b => b.{identityColumn.Name} == {identityColumn.Name}).First();");
             plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");
@@ -399,6 +394,7 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(3, "return db.Update(obj);");
             plus.AppendSpaceLine(2, "}");
 
+
             plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 删除实体");
             plus.AppendSpaceLine(2, "/// <param name=\"obj\">传进的实体</param>");
@@ -406,18 +402,16 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, "public int Delete(" + ClassName + " obj)");
             plus.AppendSpaceLine(2, "{");
             plus.AppendSpaceLine(3, "return db.Delete(obj);");
-            plus.AppendSpaceLine(2, "}");
+            plus.AppendSpaceLine(2, "}");            
 
             plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 删除实体");
-            plus.AppendSpaceLine(2, "/// <param name=\"id\">id</param>");
+            plus.AppendSpaceLine(2, $"/// <param name=\"{identityColumn.Name}\">{identityColumn.Name}</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public int Delete(int id)");
-
-            plus.AppendSpaceLine(2, $"public int Delete({})");
+            plus.AppendSpaceLine(2, $"public int Delete({identityColumn.DataTypeName} {identityColumn.Name})");
 
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "var obj = Search().Where(b => b.ID == id).First();");
+            plus.AppendSpaceLine(3, $"var obj = Search().Where(b => b.{identityColumn.Name} == {identityColumn.Name}).First();");
             plus.AppendSpaceLine(3, "return db.Delete(obj);");
             plus.AppendSpaceLine(2, "}");
 
