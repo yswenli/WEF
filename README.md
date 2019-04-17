@@ -1,8 +1,8 @@
 # WEF
 
-WEF is database orm for C#. 
+WEF is based on the c # data entity framework supports MSQSqlServer, MySql, Orcalce, etc of conventional database and fast development, which integrates a large amount of data set under the development experience of tools, such as the Lambada without SQL query expression, add and delete, entity cloning, bulk and the parameters of the table, transaction, round of entities or stored procedures, SQL entities, etc.
 
-WEF 是C#数据库ORM
+WEF 是基于C#的数据实体框架，支持MSQSqlServer、MySql、Orcalce等等常规的数据库的快捷开发，其中集成了大量数据开发经验下的工具类集合，比如Lambada表达式查询、无sql的增删改查、实体克隆、批量、多表、事务、参数、SQL转实体或存储过程转实体等。
 
 [![GitHub release](https://img.shields.io/github/release/yswenli/wef.svg)](https://github.com/yswenli/wef/releases)
 
