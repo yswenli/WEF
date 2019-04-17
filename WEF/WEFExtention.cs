@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2017
+ * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2019
  *****************************************************************************************************
  * CLR版本：4.0.30319.42000
  * 唯一标识：c7fbd6e7-f64f-4258-b6e8-af04f278e907
@@ -14,6 +14,7 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
+using WEF.Common;
 using System.Collections.Generic;
 
 namespace WEF
@@ -122,7 +123,7 @@ namespace WEF
 
 
         /// <summary>
-        /// 深复制当前对象到另外的实体
+        /// 深复制当前对象到另外的实体,
         /// 可触发source的属性修改
         /// </summary>
         /// <typeparam name="Source"></typeparam>
@@ -133,9 +134,30 @@ namespace WEF
             where Source : class, new()
             where Target : class, new()
         {
-            var xml = JsonSerialize(source);
+            var json = JsonSerialize(source);
 
-            return JsonDeserialize<Target>(xml);
+            return JsonDeserialize<Target>(json);
+
+            //return source.ConvertTo<Target>();
+        }
+
+        /// <summary>
+        /// 深复制当前对象到另外的实体,
+        /// 可触发source的属性修改
+        /// </summary>
+        /// <typeparam name="Source"></typeparam>
+        /// <typeparam name="Target"></typeparam>
+        /// <param name="sources"></param>
+        /// <returns></returns>
+        public static List<Target> ConvertTo<Source, Target>(this List<Source> sources)
+            where Source : class, new()
+            where Target : class, new()
+        {
+            var json = JsonSerialize(sources);
+
+            return JsonDeserialize<List<Target>>(json);
+
+            //return sources.ConvertTo<List<Target>>();
         }
 
         /// <summary>

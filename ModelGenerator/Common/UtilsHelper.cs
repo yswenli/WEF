@@ -1,8 +1,8 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2016
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
  *****************************************************************************************************
  * 所属域：WENLI-PC
- * 登录用户：Administrator
+ * 登录用户：yswenli
  * CLR版本：4.0.30319.17929
  * 唯一标识：1e7ab7e0-8733-46b2-a556-1fbb0ad96298
  * 机器名称：WENLI-PC
@@ -287,7 +287,14 @@ namespace WEF.ModelGenerator.Common
                 item.DataTypeName = str3;
                 item.IsIdentity = str4 == "√";
                 item.IsPrimaryKey = str5 == "√";
-                item.MaxLength =int.Parse(str6);
+
+                var maxLen = 0;
+
+                if (int.TryParse(str6, out maxLen))
+                {
+                    item.MaxLength = maxLen;
+                }
+
                 item.Preci = str7;
                 item.Scale = str8;
                 item.AllowDBNull = (str9 == "√") || (string.Compare(str9, "Y", true) == 0);

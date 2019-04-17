@@ -13,7 +13,7 @@ namespace WEF.MvcPager
                 int pageSize
             )
         {
-            var totalItemCount = allItems.Count();
+            var totalItemCount = Enumerable.Count(allItems);
 
             if (pageIndex < 1 || (totalItemCount / pageSize) < (pageIndex - 1))
                 pageIndex = 1;
@@ -29,7 +29,7 @@ namespace WEF.MvcPager
                 int pageSize
             )
         {
-            var totalItemCount = allItems.Count();
+            var totalItemCount = Enumerable.Count(allItems);
 
             if (pageIndex < 1 || (totalItemCount / pageSize) < (pageIndex - 1))
                 pageIndex = 1;
@@ -46,7 +46,7 @@ namespace WEF.MvcPager
                int pageSize
            )
         {
-            var totalItemCount = allItems.Count();
+            var totalItemCount = Enumerable.Count(allItems);
 
             if (pageIndex < 1 || (totalItemCount / pageSize) < (pageIndex - 1))
                 pageIndex = 1;
@@ -108,7 +108,7 @@ namespace WEF.MvcPager
             }
             int count = (pageIndex - 1) * pageSize;
             IEnumerable<T> items = allItems.Skip<T>(count).Take<T>(pageSize);
-            return new PagedList<T>(items.ToList(), pageIndex, pageSize, System.Linq.Enumerable.Count(allItems));
+            return new PagedList<T>(items.ToList(), pageIndex, pageSize, Enumerable.Count(allItems));
         }
 
         /// <summary>

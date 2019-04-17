@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2017
+ * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2019
  *****************************************************************************************************
  * CLR版本：4.0.30319.42000
  * 唯一标识：fc1c123f-4e25-4cad-b5f8-10298585554f
@@ -56,6 +56,7 @@ namespace WEF
         /// </summary>
         [XmlIgnore]
         [NonSerialized]
+
         [ScriptIgnore]
         public object All;
 
@@ -89,7 +90,6 @@ namespace WEF
             _userName = tbl != null ? tbl.GetUserName() : "";
             _isAttached = true;
         }
-
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -221,6 +221,7 @@ namespace WEF
             _modifyFields.Clear();
             _modifyFieldsStr.Clear();
         }
+
         /// <summary>
         /// GetFields
         /// </summary>

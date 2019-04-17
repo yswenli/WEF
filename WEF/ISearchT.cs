@@ -34,7 +34,7 @@ namespace WEF
         Search<T> OrderBy(params OrderByClip[] orderBys);
         Search<T> OrderByDescending(Expression<Func<T, object>> lambdaOrderBy);
         Search<T> OrderByDescending(params Field[] f);
-        Search<T> Page(int pageSize, int pageIndex);
+        Search<T> Page(int pageIndex, int pageSize);
         Search<T> Refresh();
         Search<T> RightJoin<TEntity>(WhereClip where) where TEntity : Entity;
         Search<T> Select(Expression<Func<T, bool>> lambdaSelect);

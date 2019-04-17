@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("Wenli Entities FrameWork")]
+[assembly: AssemblyTitle("WEF.ORM")]
 [assembly: AssemblyDescription("this is a dborm for oracle、mysql、sqlserver etc")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("wenli")]
-[assembly: AssemblyProduct("WEF")]
-[assembly: AssemblyCopyright("Copyright wenli ©  2019")]
+[assembly: AssemblyCompany("yswenli")]
+[assembly: AssemblyProduct("WEF.ORM")]
+[assembly: AssemblyCopyright("Copyright yswenli ©  2019")]
 [assembly: AssemblyTrademark("WEF")]
 [assembly: AssemblyCulture("")]
 

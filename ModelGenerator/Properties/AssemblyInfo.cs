@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // 控制。更改这些属性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("WEF数据库工具")]
-[assembly: AssemblyDescription("developed py wenli")]
+[assembly: AssemblyDescription("developed by yswenli")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("yswenli")]
 [assembly: AssemblyProduct("WEF数据库工具")]
-[assembly: AssemblyCopyright("Copyright Em.wenli ©  2019")]
+[assembly: AssemblyCopyright("Copyright yswenli ©  2019")]
 [assembly: AssemblyTrademark("WEF数据库工具")]
 [assembly: AssemblyCulture("")]
 

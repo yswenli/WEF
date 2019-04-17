@@ -246,6 +246,7 @@
   <ItemGroup>
     <Content Include="Config\databaseconfig.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Config\dbtype.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

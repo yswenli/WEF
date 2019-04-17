@@ -1,8 +1,8 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2016
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
  *****************************************************************************************************
  * 所属域：WENLI-PC
- * 登录用户：Administrator
+ * 登录用户：yswenli
  * CLR版本：4.0.30319.17929
  * 唯一标识：fc2b3c60-82bd-4265-bf8c-051e512a1035
  * 机器名称：WENLI-PC
@@ -22,7 +22,7 @@ namespace WEF.Section
     {
 
         /// <summary>
-        /// 
+        /// 执行sql语句
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="sql"></param>
@@ -47,27 +47,15 @@ namespace WEF.Section
         }
 
         #region 添加参数
-
-
-        /// <summary>
-        /// 添加参数
-        /// </summary>
-        /// <param name="parameterName"></param>
-        /// <param name="value"
-        /// <param name="dbType"></param>
-        /// <returns></returns>
-        public SqlSection AddParameter(params DbParameter[] parameters)
-        {
-            _dbContext.Db.AddParameter(this._dbCommand, parameters);
-            return this;
-        }
-
+        
 
         /// <summary>
         /// 添加参数
         /// </summary>
         public SqlSection AddInParameter(string parameterName, DbType dbType, object value)
         {
+            Check.Require(parameterName, "parameterName", Check.NotNullOrEmpty);
+            Check.Require(dbType, "dbType", Check.NotNullOrEmpty);
             return AddInParameter(parameterName, dbType, 0, value);
         }
 

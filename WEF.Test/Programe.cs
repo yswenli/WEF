@@ -23,13 +23,42 @@ namespace WEF.Test
 
             Console.WriteLine("-----------------------------");
 
+
+
+
+            #region mysql
+
+            DBTaskRepository repository = new DBTaskRepository();
+
+            var task = repository.GetList(1, 10);
+
+            var taskModel = task.ConvertTo<DBTask, TaskModel>();
+
+            #endregion
+
+
+            #region 无实体sql操作，自定义参数
+
+            DBContext dbContext = new DBContext();
+
+            var dt1 = dbContext.FromSql("select * from tb_task where taskid=@taskID").AddInParameter("@taskID", System.Data.DbType.String, 200, "10B676E5BC852464DE0533C5610ACC53").ToFirst<DBTask>();
+
+            dbContext.Search<DBTask>().Sum();
+
+            //dbContext.ExecuteNonQuery("");            
+
+            //dbContext.FromSql("").ToList<DBTask>();
+
+            #endregion
+
+
             string result = string.Empty;
 
             var entity = new Models.ArticleKind();
 
-            var entityRepository=new Models.ArticleKindRepository();
+            var entityRepository = new Models.ArticleKindRepository();
 
-            var pagedList= entityRepository.Search(entity).GetPagedList(1, 100, "ID", true);
+            var pagedList = entityRepository.Search(entity).GetPagedList(1, 100, "ID", true);
 
             do
             {
@@ -61,28 +90,17 @@ namespace WEF.Test
 
             ut.NickName = "李四四";
 
+            //ut.ConvertTo
+
             r = ur.Update(ut);
 
-            #region search 1
-
-            Where<User> wults = new Where<User>();
-
-            wults.And(new WhereClip(ut.GetFields()[0], "", QueryOperator.Less));
-
-            wults.And(new WhereClip(ut.GetFields()[1], 2, QueryOperator.Like));
-
-            var rlts = ur.Search().Where(wults).ToList();
-
-            #endregion
-
-
-            #region search 2
+            #region search 
 
             var search = ur.Search().Where(b => b.NickName.Like("张*"));
 
             search = search.Where(b => !string.IsNullOrEmpty(b.ImUserID));
 
-            rlts = search.Page(1, 20).ToList();
+            var rlts = search.Page(1, 20).ToList();
 
             #endregion
 
@@ -97,6 +115,8 @@ namespace WEF.Test
 
             var nut = ut.ConvertTo<User, SUser>();
 
+            var nut1 = ut.ConvertTo<User, SUser>();
+
             var nnut = nut.ConvertTo<SUser, User>();
 
             var ults = ur.GetList(1, 1000);
@@ -104,6 +124,22 @@ namespace WEF.Test
             r = ur.Delete(ut);
 
 
+
+            #region tran
+
+            var tran = ur.DBContext.BeginTransaction();
+
+            tran.Insert<User>(ut);
+
+            var tb1 = new DBTaskRepository().GetList(1, 10);
+
+            //todo tb1
+
+            tran.Update<DBTask>(tb1);
+
+            ur.DBContext.CloseTransaction(tran);
+
+            #endregion
 
             var dlts = ur.GetList(1, 10000);
             ur.Deletes(dlts);

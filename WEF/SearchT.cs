@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2017
+ * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2019
  *****************************************************************************************************
  * CLR版本：4.0.30319.42000
  * 唯一标识：c9935cdf-7d39-434f-a3f9-b3b3fb92bf68
@@ -539,10 +539,10 @@ namespace WEF
         /// <summary>
         /// Page
         /// </summary>
-        /// <param name="pageSize"></param>
         /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
         /// <returns></returns>
-        public new Search<T> Page(int pageSize, int pageIndex)
+        public new Search<T> Page(int pageIndex, int pageSize)
         {
             return From(pageSize * (pageIndex - 1) + 1, pageIndex * pageSize);
         }
