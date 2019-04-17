@@ -16,7 +16,7 @@ WEF类似MEF上手简单，0学习成本。使用方便，按照sql书写习惯�
 
 支持大量Lambda表达式写法不需要像NHibernate的XML配置，不需要像MEF的各种数据库连接驱动
 
-## 用法实例
+## 查询简例
 
 ```CSharp
 
@@ -80,10 +80,9 @@ WEF数据库工具是基于WEF的winform项目，可以快捷对数据库进行�
    <img src="https://github.com/yswenli/WEF/blob/master/7.png?raw=true">
 
 
-## WEF数据库工具生成代码测试
+## WEF使用实例
 
 ```CSharp
-
 /*
 * 描述： 详细描述类能干什么
 * 创建人：wenli
@@ -105,18 +104,44 @@ namespace WEF.Test
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("WEF测试");
+            Console.WriteLine("WEF使用实例");
 
             Console.WriteLine("-----------------------------");
+
+
+            #region mysql
+
+            DBTaskRepository repository = new DBTaskRepository();
+
+            var task = repository.GetList(1, 10);
+
+            var taskModel = task.ConvertTo<DBTask, TaskModel>();
+
+            #endregion
+
+
+            #region 无实体sql操作，自定义参数
+
+            DBContext dbContext = new DBContext();
+
+            var dt1 = dbContext.FromSql("select * from tb_task where taskid=@taskID").AddInParameter("@taskID", System.Data.DbType.String, 200, "10B676E5BC852464DE0533C5610ACC53").ToFirst<DBTask>();
+
+            dbContext.Search<DBTask>().Sum();
+
+            //dbContext.ExecuteNonQuery("");            
+
+            //dbContext.FromSql("").ToList<DBTask>();
+
+            #endregion
+
 
             string result = string.Empty;
 
             var entity = new Models.ArticleKind();
 
-            var entityRepository=new Models.ArticleKindRepository();
+            var entityRepository = new Models.ArticleKindRepository();
 
-
-            var pagedList= entityRepository.Search(entity).GetPagedList(1, 100, "ID", true);
+            var pagedList = entityRepository.Search(entity).GetPagedList(1, 100, "ID", true);
 
             do
             {
@@ -148,35 +173,32 @@ namespace WEF.Test
 
             ut.NickName = "李四四";
 
+            //ut.ConvertTo
+
             r = ur.Update(ut);
 
-            #region search 1
-
-            Where<User> wults = new Where<User>();
-
-            wults.And(new WhereClip(ut.GetFields()[0], "", QueryOperator.Less));
-
-            wults.And(new WhereClip(ut.GetFields()[1], 2, QueryOperator.Like));
-
-            var rlts = ur.Search().Where(wults).ToList();
-
-            #endregion
-
-
-            #region search 2
+            #region search 
 
             var search = ur.Search().Where(b => b.NickName.Like("张*"));
 
             search = search.Where(b => !string.IsNullOrEmpty(b.ImUserID));
 
-            rlts = search.Page(1, 20).ToList();
+            var rlts = search.Page(1, 20).ToList();
 
             #endregion
 
 
+            var batch = ur.DBContext.BeginBatchConnection();
+
+            batch.Insert<User>(ut);
+
+            batch.Execute();
+
 
 
             var nut = ut.ConvertTo<User, SUser>();
+
+            var nut1 = ut.ConvertTo<User, SUser>();
 
             var nnut = nut.ConvertTo<SUser, User>();
 
@@ -186,13 +208,28 @@ namespace WEF.Test
 
 
 
+            #region tran
+
+            var tran = ur.DBContext.BeginTransaction();
+
+            tran.Insert<User>(ut);
+
+            var tb1 = new DBTaskRepository().GetList(1, 10);
+
+            //todo tb1
+
+            tran.Update<DBTask>(tb1);
+
+            ur.DBContext.CloseTransaction(tran);
+
+            #endregion
+
             var dlts = ur.GetList(1, 10000);
             ur.Deletes(dlts);
 
         }
     }
 }
-
 
 
 ```

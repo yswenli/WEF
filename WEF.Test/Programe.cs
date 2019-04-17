@@ -19,7 +19,7 @@ namespace WEF.Test
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("WEF测试");
+            Console.WriteLine("WEF使用实例");
 
             Console.WriteLine("-----------------------------");
 
