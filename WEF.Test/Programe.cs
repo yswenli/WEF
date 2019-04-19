@@ -23,8 +23,16 @@ namespace WEF.Test
 
             Console.WriteLine("-----------------------------");
 
+            DBUserPointRepository tb_UserpointRepository = new DBUserPointRepository();
+
+            var upWhere = tb_UserpointRepository.Search();
+
+            upWhere = upWhere.Where(b => b.Uid == "sss");
+
+            var up = upWhere.First();
 
 
+            var plist = tb_UserpointRepository.GetList(1,100);
 
             #region mysql
 

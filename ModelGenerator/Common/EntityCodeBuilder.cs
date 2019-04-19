@@ -131,7 +131,7 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(1, "/// <summary>");
             plus.AppendSpaceLine(1, "/// 实体类" + ClassName + "");
             plus.AppendSpaceLine(1, "/// </summary>");
-            plus.AppendSpaceLine(1, "[Serializable, DataContract]");
+            plus.AppendSpaceLine(1, $"[Serializable, DataContract, Table(\"{TableName}\")]");
             plus.AppendSpaceLine(1, "public partial class " + ClassName + " : Entity ");
             plus.AppendSpaceLine(1, "{");
             plus.AppendSpaceLine(2, "private static string m_tableName;");
@@ -195,7 +195,7 @@ namespace WEF.ModelGenerator.Common
                 plus.AppendSpaceLine(2, "}");
             }
 
-            ColumnInfo identityColumn = Columns.Find(delegate(ColumnInfo col) { return col.IsIdentity; });
+            ColumnInfo identityColumn = Columns.Find(delegate (ColumnInfo col) { return col.IsIdentity; });
             if (null != identityColumn)
             {
                 plus.AppendSpaceLine(2, "/// <summary>");
@@ -207,7 +207,7 @@ namespace WEF.ModelGenerator.Common
                 plus.AppendSpaceLine(2, "}");
             }
 
-            List<ColumnInfo> primarykeyColumns = Columns.FindAll(delegate(ColumnInfo col) { return col.IsPrimaryKey; });
+            List<ColumnInfo> primarykeyColumns = Columns.FindAll(delegate (ColumnInfo col) { return col.IsPrimaryKey; });
             if (null != primarykeyColumns && primarykeyColumns.Count > 0)
             {
                 plus.AppendSpaceLine(2, "/// <summary>");
@@ -310,7 +310,7 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 当前实体查询上下文");
             plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public ISearch<" + ClassName + "> Search("+ ClassName + " entity)");
+            plus.AppendSpaceLine(2, "public ISearch<" + ClassName + "> Search(" + ClassName + " entity)");
             plus.AppendSpaceLine(2, "{");
             plus.AppendSpaceLine(4, "return db.Search<" + ClassName + ">(entity);");
             plus.AppendSpaceLine(2, "}");
@@ -350,7 +350,7 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, "/// <param name=\"pageIndex\">分页第几页</param>");
             plus.AppendSpaceLine(2, "/// <param name=\"pageSize\">分页一页取值</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public " + ClassName + " Get"+ ClassName + $"({identityColumn.DataTypeName} {identityColumn.Name})");
+            plus.AppendSpaceLine(2, "public " + ClassName + " Get" + ClassName + $"({identityColumn.DataTypeName} {identityColumn.Name})");
             plus.AppendSpaceLine(2, "{");
             plus.AppendSpaceLine(3, $"return Search().Where(b => b.{identityColumn.Name} == {identityColumn.Name}).First();");
             plus.AppendSpaceLine(2, "}");
@@ -402,7 +402,7 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, "public int Delete(" + ClassName + " obj)");
             plus.AppendSpaceLine(2, "{");
             plus.AppendSpaceLine(3, "return db.Delete(obj);");
-            plus.AppendSpaceLine(2, "}");            
+            plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 删除实体");

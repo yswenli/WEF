@@ -12,7 +12,7 @@
  * 类名称：ExpressionToClip<T>
  * 文件名：ExpressionToClip<T>
  * 创建年份：2015
- * 创建时间：2015-09-29 16:35:12
+ * 创建时间：2019-04-17 16:35:12
  * 创建人：Wenli
  * 创建说明：
  *****************************************************************************************************/
@@ -153,8 +153,7 @@ namespace WEF.Expressions
         /// <returns></returns>
         private static bool IsBoolFieldOrProperty(System.Linq.Expressions.Expression e)
         {
-            if (!(e is MemberExpression))
-                return false;
+            if (!(e is MemberExpression)) return false;
             var member = ((MemberExpression)e);
             if (member.Member.MemberType != MemberTypes.Field && member.Member.MemberType != MemberTypes.Property)
                 return false;
@@ -380,7 +379,7 @@ namespace WEF.Expressions
                 expRight = ((UnaryExpression)be.Right).Operand;
             }
             var isAgain = false;
-            Again:
+        Again:
             if (expLeft.NodeType == ExpressionType.Constant
                 || (expLeft.NodeType == ExpressionType.MemberAccess && ((MemberExpression)expLeft).Expression == null) || isAgain)
             {
@@ -802,6 +801,7 @@ namespace WEF.Expressions
         private static string GetTableName(Type type)
         {
             var tbl = type.GetCustomAttribute<Table>(false);
+
             return tbl != null ? tbl.GetTableName() : type.Name;
         }/// <summary>
          /// 

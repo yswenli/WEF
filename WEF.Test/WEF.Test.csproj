@@ -47,6 +47,7 @@
     <Compile Include="Models\SUser.cs" />
     <Compile Include="Models\TaskModel.cs" />
     <Compile Include="Models\TB_Task.cs" />
+    <Compile Include="Models\DBUserPoint.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Programe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
