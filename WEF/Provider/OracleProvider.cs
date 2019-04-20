@@ -68,19 +68,19 @@ namespace WEF.Provider
 
             fromSection.Select(new Field("tmpi_table.*"));
             fromSection.AddSelect(new Field("rownum AS rn"));
-            fromSection.OrderBy(OrderByClip.None);
+            fromSection.OrderBy(OrderByOperation.None);
             fromSection.DistinctString = string.Empty;
             fromSection.PrefixString = string.Empty;
-            fromSection.GroupBy(GroupByClip.None);
+            fromSection.GroupBy(GroupByOperation.None);
             fromSection.Parameters = fromSection.Parameters;
-            fromSection.Where(new WhereClip("rownum <=" + endIndex.ToString()));
+            fromSection.Where(new WhereOperation("rownum <=" + endIndex.ToString()));
 
 
             if (startIndex > 1)
             {
                 fromSection.TableName = string.Concat("(", fromSection.SqlString, ")");
                 fromSection.Select(Field.All);
-                fromSection.Where(new WhereClip(string.Concat("rn>=", startIndex.ToString())));
+                fromSection.Where(new WhereOperation(string.Concat("rn>=", startIndex.ToString())));
             }
 
 

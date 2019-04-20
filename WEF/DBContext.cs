@@ -32,7 +32,7 @@ using WEF.Section;
 namespace WEF
 {
     /// <summary>
-    /// 数据操作上下文
+    /// WEF核心类，数据操作上下文
     /// </summary>
     public sealed class DBContext
     {
@@ -388,7 +388,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public object Sum<TEntity>(Field field, WhereClip where)
+        public object Sum<TEntity>(Field field, WhereOperation where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Sum()).Where(where).ToScalar();
@@ -424,7 +424,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public object Max<TEntity>(Field field, WhereClip where)
+        public object Max<TEntity>(Field field, WhereOperation where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Max()).Where(where).ToScalar();
@@ -460,7 +460,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public object Min<TEntity>(Field field, WhereClip where)
+        public object Min<TEntity>(Field field, WhereOperation where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Min()).Where(where).ToScalar();
@@ -496,7 +496,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public object Avg<TEntity>(Field field, WhereClip where)
+        public object Avg<TEntity>(Field field, WhereOperation where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Avg()).Where(where).ToScalar();
@@ -533,7 +533,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public TResult Sum<TEntity, TResult>(Field field, WhereClip where)
+        public TResult Sum<TEntity, TResult>(Field field, WhereOperation where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Sum()).Where(where).ToScalar<TResult>();
@@ -572,7 +572,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public TResult Max<TEntity, TResult>(Field field, WhereClip where)
+        public TResult Max<TEntity, TResult>(Field field, WhereOperation where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Max()).Where(where).ToScalar<TResult>();
@@ -611,7 +611,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public TResult Min<TEntity, TResult>(Field field, WhereClip where)
+        public TResult Min<TEntity, TResult>(Field field, WhereOperation where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Min()).Where(where).ToScalar<TResult>();
@@ -650,7 +650,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public TResult Avg<TEntity, TResult>(Field field, WhereClip where)
+        public TResult Avg<TEntity, TResult>(Field field, WhereOperation where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Avg()).Where(where).ToScalar<TResult>();
@@ -687,7 +687,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        public bool Exists<TEntity>(WhereClip where)
+        public bool Exists<TEntity>(WhereOperation where)
             where TEntity : Entity
         {
             using (IDataReader dataReader = Search<TEntity>().Where(where).Top(1).Select(EntityCache.GetFirstField<TEntity>()).ToDataReader())
@@ -713,7 +713,7 @@ namespace WEF
         public bool Exists<TEntity>(Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Exists<TEntity>(ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return Exists<TEntity>(ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 判断是否存在记录
@@ -733,7 +733,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Count<TEntity>(Field field, WhereClip where)
+        public int Count<TEntity>(Field field, WhereOperation where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Count()).Where(where).ToScalar<int>();
@@ -760,7 +760,7 @@ namespace WEF
         public int Count<TEntity>(Field field, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Search<TEntity>().Select(field.Count()).Where(ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere)).ToScalar<int>();
+            return Search<TEntity>().Select(field.Count()).Where(ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere)).ToScalar<int>();
         }
         /// <summary>
         /// Count
@@ -768,7 +768,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Count<TEntity>(WhereClip where)
+        public int Count<TEntity>(WhereOperation where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(Field.All.Count()).Where(where).ToScalar<int>();
@@ -793,7 +793,7 @@ namespace WEF
         public int Count<TEntity>(Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Search<TEntity>().Select(Field.All.Count()).Where(ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere)).ToScalar<int>();
+            return Search<TEntity>().Select(Field.All.Count()).Where(ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere)).ToScalar<int>();
         }
         #endregion
 
@@ -882,9 +882,9 @@ namespace WEF
         public int UpdateAll<TEntity>(TEntity entity)
             where TEntity : Entity
         {
-            WhereClip where = DataUtils.GetPrimaryKeyWhere(entity);
+            WhereOperation where = DataUtils.GetPrimaryKeyWhere(entity);
 
-            Check.Require(!WhereClip.IsNullOrEmpty(where), "entity must have the primarykey!");
+            Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
 
             return UpdateAll<TEntity>(entity, where);
         }
@@ -939,7 +939,7 @@ namespace WEF
         /// <param name="entity"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int UpdateAll<TEntity>(TEntity entity, WhereClip where)
+        public int UpdateAll<TEntity>(TEntity entity, WhereOperation where)
             where TEntity : Entity
         {
             if (entity == null)
@@ -960,9 +960,9 @@ namespace WEF
             if (entity == null)
                 return 0;
 
-            WhereClip where = DataUtils.GetPrimaryKeyWhere(entity);
+            WhereOperation where = DataUtils.GetPrimaryKeyWhere(entity);
 
-            Check.Require(!WhereClip.IsNullOrEmpty(where), "entity must have the primarykey!");
+            Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
 
             return UpdateAll<TEntity>(tran, entity, where);
         }
@@ -974,7 +974,7 @@ namespace WEF
         /// <param name="tran"></param>
         /// <param name="where"></param>
         /// <param name="entity"></param>
-        public int UpdateAll<TEntity>(DbTransaction tran, TEntity entity, WhereClip where)
+        public int UpdateAll<TEntity>(DbTransaction tran, TEntity entity, WhereOperation where)
             where TEntity : Entity
         {
             if (entity == null)
@@ -1007,9 +1007,9 @@ namespace WEF
             if (!entity.IsModify())
                 return 0;
 
-            WhereClip where = DataUtils.GetPrimaryKeyWhere(entity);
+            WhereOperation where = DataUtils.GetPrimaryKeyWhere(entity);
 
-            Check.Require(!WhereClip.IsNullOrEmpty(where), "entity must have the primarykey!");
+            Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
 
             return Update<TEntity>(entity, where);
         }
@@ -1058,7 +1058,7 @@ namespace WEF
         /// <param name="entity"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(TEntity entity, WhereClip where)
+        public int Update<TEntity>(TEntity entity, WhereOperation where)
             where TEntity : Entity
         {
             return !entity.IsModify()
@@ -1072,7 +1072,7 @@ namespace WEF
         public int Update<TEntity>(TEntity entity, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(entity, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return Update<TEntity>(entity, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 
@@ -1094,9 +1094,9 @@ namespace WEF
             if (!entity.IsModify())
                 return 0;
 
-            WhereClip where = DataUtils.GetPrimaryKeyWhere(entity);
+            WhereOperation where = DataUtils.GetPrimaryKeyWhere(entity);
 
-            Check.Require(!WhereClip.IsNullOrEmpty(where), "entity must have the primarykey!");
+            Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
 
             return Update<TEntity>(tran, entity, where);
         }
@@ -1148,7 +1148,7 @@ namespace WEF
         /// <summary>
         /// 更新
         /// </summary>
-        public int Update<TEntity>(DbTransaction tran, TEntity entity, WhereClip where)
+        public int Update<TEntity>(DbTransaction tran, TEntity entity, WhereOperation where)
             where TEntity : Entity
         {
             if (!entity.IsModify())
@@ -1161,7 +1161,7 @@ namespace WEF
         public int Update<TEntity>(DbTransaction tran, TEntity entity, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, entity, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return Update<TEntity>(tran, entity, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 
@@ -1179,7 +1179,7 @@ namespace WEF
         /// <param name="value"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Field field, object value, WhereClip where)
+        public int Update<TEntity>(Field field, object value, WhereOperation where)
             where TEntity : Entity
         {
             if (Field.IsNullOrEmpty(field))
@@ -1193,7 +1193,7 @@ namespace WEF
         public int Update<TEntity>(Field field, object value, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(field, value, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return Update<TEntity>(field, value, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 
@@ -1212,7 +1212,7 @@ namespace WEF
         /// <param name="where"></param>
         /// <param name="tran"></param>
         /// <returns></returns>
-        public int Update<TEntity>(DbTransaction tran, Field field, object value, WhereClip where)
+        public int Update<TEntity>(DbTransaction tran, Field field, object value, WhereOperation where)
             where TEntity : Entity
         {
             if (Field.IsNullOrEmpty(field))
@@ -1226,7 +1226,7 @@ namespace WEF
         public int Update<TEntity>(DbTransaction tran, Field field, object value, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, field, value, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return Update<TEntity>(tran, field, value, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 
@@ -1244,7 +1244,7 @@ namespace WEF
         /// <param name="fieldValue"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Dictionary<Field, object> fieldValue, WhereClip where)
+        public int Update<TEntity>(Dictionary<Field, object> fieldValue, WhereOperation where)
               where TEntity : Entity
         {
             if (null == fieldValue || fieldValue.Count == 0)
@@ -1267,7 +1267,7 @@ namespace WEF
         public int Update<TEntity>(Dictionary<Field, object> fieldValue, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(fieldValue, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return Update<TEntity>(fieldValue, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 
@@ -1285,7 +1285,7 @@ namespace WEF
         /// <param name="where"></param>
         /// <param name="tran"></param>
         /// <returns></returns>
-        public int Update<TEntity>(DbTransaction tran, Dictionary<Field, object> fieldValue, WhereClip where)
+        public int Update<TEntity>(DbTransaction tran, Dictionary<Field, object> fieldValue, WhereOperation where)
               where TEntity : Entity
         {
             if (null == fieldValue || fieldValue.Count == 0)
@@ -1312,7 +1312,7 @@ namespace WEF
         public int Update<TEntity>(DbTransaction tran, Dictionary<Field, object> fieldValue, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, fieldValue, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return Update<TEntity>(tran, fieldValue, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 
@@ -1330,7 +1330,7 @@ namespace WEF
         /// <param name="values"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Field[] fields, object[] values, WhereClip where)
+        public int Update<TEntity>(Field[] fields, object[] values, WhereOperation where)
             where TEntity : Entity
         {
 
@@ -1344,7 +1344,7 @@ namespace WEF
         public int Update<TEntity>(Field[] fields, object[] values, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(fields, values, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return Update<TEntity>(fields, values, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 
@@ -1363,7 +1363,7 @@ namespace WEF
         /// <param name="where"></param>
         /// <param name="tran"></param>
         /// <returns></returns>
-        public int Update<TEntity>(DbTransaction tran, Field[] fields, object[] values, WhereClip where)
+        public int Update<TEntity>(DbTransaction tran, Field[] fields, object[] values, WhereOperation where)
             where TEntity : Entity
         {
             if (null == fields || fields.Length == 0)
@@ -1377,7 +1377,7 @@ namespace WEF
         public int Update<TEntity>(DbTransaction tran, Field[] fields, object[] values, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, fields, values, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return Update<TEntity>(tran, fields, values, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 
@@ -1403,9 +1403,9 @@ namespace WEF
         {
             Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
 
-            WhereClip where = DataUtils.GetPrimaryKeyWhere(entity);
+            WhereOperation where = DataUtils.GetPrimaryKeyWhere(entity);
 
-            Check.Require(!WhereClip.IsNullOrEmpty(where), "entity must have the primarykey!");
+            Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
 
             return Delete<TEntity>(where);
         }
@@ -1682,7 +1682,7 @@ namespace WEF
         /// <summary>
         ///  删除
         /// </summary>
-        public int Delete<TEntity>(DbTransaction tran, WhereClip where)
+        public int Delete<TEntity>(DbTransaction tran, WhereOperation where)
             where TEntity : Entity
         {
             Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
@@ -1704,7 +1704,7 @@ namespace WEF
         public int Delete<TEntity>(Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Delete<TEntity>(ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return Delete<TEntity>(ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         ///  删除
@@ -1712,12 +1712,12 @@ namespace WEF
         public int Delete<TEntity>(DbTransaction tran, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Delete<TEntity>(tran, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return Delete<TEntity>(tran, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         ///  删除
         /// </summary>
-        public int Delete<TEntity>(WhereClip where)
+        public int Delete<TEntity>(WhereOperation where)
             where TEntity : Entity
         {
             Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));

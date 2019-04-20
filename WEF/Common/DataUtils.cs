@@ -485,9 +485,9 @@ namespace WEF.Common
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        internal static WhereClip GetPrimaryKeyWhere(Entity entity)
+        internal static WhereOperation GetPrimaryKeyWhere(Entity entity)
         {
-            WhereClip where = new WhereClip();
+            WhereOperation where = new WhereOperation();
 
             var keyfields = entity.GetPrimaryKeyFields();
             var allfields = entity.GetFields();
@@ -500,7 +500,7 @@ namespace WEF.Common
                 {
                     if (string.Compare(allfields[i].PropertyName, pkField.PropertyName, StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        where = where.And(new WhereClip(pkField, allValues[i], QueryOperator.Equal));
+                        where = where.And(new WhereOperation(pkField, allValues[i], QueryOperator.Equal));
                         break;
                     }
                 }
@@ -514,10 +514,10 @@ namespace WEF.Common
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="pkValues"></param>
         /// <returns></returns>
-        internal static WhereClip GetPrimaryKeyWhere<TEntity>(Array pkValues)//params object[] pkValues  2015-08-20
+        internal static WhereOperation GetPrimaryKeyWhere<TEntity>(Array pkValues)//params object[] pkValues  2015-08-20
             where TEntity : Entity
         {
-            WhereClip where = new WhereClip();
+            WhereOperation where = new WhereOperation();
             Field[] keyfields = EntityCache.GetPrimaryKeyFields<TEntity>();
 
             if (keyfields == null)
@@ -528,7 +528,7 @@ namespace WEF.Common
             int index = keyfields.Length;
             for (int i = 0; i < index; i++)
             {
-                where = where.And(new WhereClip(keyfields[i], pkValues.GetValue(i), QueryOperator.Equal));
+                where = where.And(new WhereOperation(keyfields[i], pkValues.GetValue(i), QueryOperator.Equal));
                 //2015-08-20注释
                 //where = where.And(new WhereClip(keyfields[i], pkValues[i], QueryOperator.Equal)); 
                 //where = where.And(keyfields[i].In(pkValues));//2015-06-09

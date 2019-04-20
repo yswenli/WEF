@@ -9,8 +9,8 @@
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************
  * 命名空间：WEF.Expressions
- * 类名称：GroupByClip
- * 文件名：GroupByClip
+ * 类名称：GroupByOperation
+ * 文件名：GroupByOperation
  * 创建年份：2015
  * 创建时间：2015-09-29 16:35:12
  * 创建人：Wenli
@@ -26,18 +26,18 @@ namespace WEF.Expressions
     /// 分组
     /// </summary>
     [Serializable]
-    public class GroupByClip
+    public class GroupByOperation
     {
         private string groupByClip;
 
-        public readonly static GroupByClip None = new GroupByClip((string)null);
+        public readonly static GroupByOperation None = new GroupByOperation((string)null);
 
-        public GroupByClip(string groupByClip)
+        public GroupByOperation(string groupByClip)
         {
             this.groupByClip = groupByClip;
         }
 
-        public GroupByClip(Field field)
+        public GroupByOperation(Field field)
         {
             this.groupByClip = field.TableFieldName;
         }
@@ -47,7 +47,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="groupByClip"></param>
         /// <returns></returns>
-        public static bool IsNullOrEmpty(GroupByClip groupByClip)
+        public static bool IsNullOrEmpty(GroupByOperation groupByClip)
         {
             if ((null == groupByClip) || string.IsNullOrEmpty(groupByClip.ToString()))
                 return true;
@@ -61,7 +61,7 @@ namespace WEF.Expressions
         /// <param name="leftGroupByClip"></param>
         /// <param name="rightGroupByClip"></param>
         /// <returns></returns>
-        public static GroupByClip operator &(GroupByClip leftGroupByClip, GroupByClip rightGroupByClip)
+        public static GroupByOperation operator &(GroupByOperation leftGroupByClip, GroupByOperation rightGroupByClip)
         {
             if (IsNullOrEmpty(leftGroupByClip) && IsNullOrEmpty(rightGroupByClip))
                 return None;
@@ -71,7 +71,7 @@ namespace WEF.Expressions
             if (IsNullOrEmpty(rightGroupByClip))
                 return leftGroupByClip;
 
-            return new GroupByClip(string.Concat(leftGroupByClip.ToString(), ",", rightGroupByClip.ToString()));
+            return new GroupByOperation(string.Concat(leftGroupByClip.ToString(), ",", rightGroupByClip.ToString()));
 
         }
 
@@ -80,9 +80,9 @@ namespace WEF.Expressions
         /// 去掉的表前缀
         /// </summary>
         /// <returns></returns>
-        public GroupByClip RemovePrefixTableName()
+        public GroupByOperation RemovePrefixTableName()
         {
-            GroupByClip groupc = new GroupByClip(this.groupByClip);
+            GroupByOperation groupc = new GroupByOperation(this.groupByClip);
 
             if (string.IsNullOrEmpty(groupc.groupByClip))
                 return groupc;
@@ -148,7 +148,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static bool operator true(GroupByClip right)
+        public static bool operator true(GroupByOperation right)
         {
             return false;
         }
@@ -158,7 +158,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static bool operator false(GroupByClip right)
+        public static bool operator false(GroupByOperation right)
         {
             return false;
         }
@@ -168,7 +168,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="groupByClip"></param>
         /// <returns></returns>
-        public bool Equals(GroupByClip groupByClip)
+        public bool Equals(GroupByOperation groupByClip)
         {
             if (null == groupByClip)
                 return false;

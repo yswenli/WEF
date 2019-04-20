@@ -14,11 +14,13 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
-using WEF.Common;
 using System.Collections.Generic;
 
 namespace WEF
 {
+    /// <summary>
+    /// WEF lambda相关检测扩展
+    /// </summary>
     public static class WEFExtention
     {
         /// <summary>
@@ -26,13 +28,6 @@ namespace WEF
         /// </summary>
         private const string Tips = "该方法({0})只能用于WEF lambda表达式！";
 
-        ///// <summary>
-        ///// *
-        ///// </summary>
-        //public static object All(this Entity key)
-        //{
-        //    throw new Exception(string.Format(Tips, "*"));
-        //}
 
         /// <summary>
         /// like '%value%' 模糊查询，同Contains。

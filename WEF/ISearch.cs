@@ -15,10 +15,10 @@ namespace WEF
         Database Database { get; }
         DbProvider DbProvider { get; }
         List<Field> Fields { get; }
-        GroupByClip GroupByClip { get; }
+        GroupByOperation GroupByClip { get; }
         string GroupByString { get; }
         string LimitString { get; set; }
-        OrderByClip OrderByClip { get; }
+        OrderByOperation OrderByClip { get; }
         string OrderByString { get; }
         List<Parameter> Parameters { get; }
         string SqlString { get; }
@@ -27,21 +27,21 @@ namespace WEF
         Search AddSelect(Search Search);
         Search AddSelect(Search Search, string aliasName);
         int Count();
-        Search CrossJoin(string tableName, WhereClip where, string userName = null);
+        Search CrossJoin(string tableName, WhereOperation where, string userName = null);
         Search Distinct();
         Search From(int startIndex, int endIndex);
-        Search FullJoin(string tableName, WhereClip where, string userName = null);
-        WhereClip GetWhereClip();
-        Search GroupBy(GroupByClip groupBy);
+        Search FullJoin(string tableName, WhereOperation where, string userName = null);
+        WhereOperation GetWhereClip();
+        Search GroupBy(GroupByOperation groupBy);
         Search GroupBy(params Field[] fields);
-        Search Having(WhereClip havingWhere);
-        Search InnerJoin(string tableName, WhereClip where, string userName = null);
-        Search LeftJoin(string tableName, WhereClip where, string userName = null);
-        Search OrderBy(OrderByClip orderBy);
-        Search OrderBy(params OrderByClip[] orderBys);
+        Search Having(WhereOperation havingWhere);
+        Search InnerJoin(string tableName, WhereOperation where, string userName = null);
+        Search LeftJoin(string tableName, WhereOperation where, string userName = null);
+        Search OrderBy(OrderByOperation orderBy);
+        Search OrderBy(params OrderByOperation[] orderBys);
         Search Page(int pageSize, int pageIndex);
         Search Refresh();
-        Search RightJoin(string tableName, WhereClip where, string userName = null);
+        Search RightJoin(string tableName, WhereOperation where, string userName = null);
         Search Select(params Field[] fields);
         Search SetCacheDependency(CacheDependency dep);
         Search SetCacheTimeOut(int timeout);
@@ -53,6 +53,6 @@ namespace WEF
         TResult ToScalar<TResult>();
         Search Union(Search Search);
         Search UnionAll(Search Search);
-        Search Where(WhereClip where);
+        Search Where(WhereOperation where);
     }
 }

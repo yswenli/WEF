@@ -320,11 +320,11 @@ namespace WEF.Common
         /// <summary>
         /// 倒叙
         /// </summary>
-        public OrderByClip Desc
+        public OrderByOperation Desc
         {
             get
             {
-                return new OrderByClip(this, OrderByOperater.DESC);
+                return new OrderByOperation(this, OrderByOperater.DESC);
             }
         }
 
@@ -332,11 +332,11 @@ namespace WEF.Common
         /// <summary>
         /// 正序
         /// </summary>
-        public OrderByClip Asc
+        public OrderByOperation Asc
         {
             get
             {
-                return new OrderByClip(this, OrderByOperater.ASC);
+                return new OrderByOperation(this, OrderByOperater.ASC);
             }
         }
 
@@ -344,11 +344,11 @@ namespace WEF.Common
         /// <summary>
         /// 分组
         /// </summary>
-        public GroupByClip GroupBy
+        public GroupByOperation GroupBy
         {
             get
             {
-                return new GroupByClip(this);
+                return new GroupByOperation(this);
             }
         }
 
@@ -581,12 +581,12 @@ namespace WEF.Common
         /// <param name="rightField"></param>
         /// <param name="oper"></param>
         /// <returns></returns>
-        private static WhereClip createWhereClip(Field leftField, Field rightField, QueryOperator oper)
+        private static WhereOperation createWhereClip(Field leftField, Field rightField, QueryOperator oper)
         {
             if (IsNullOrEmpty(leftField) || IsNullOrEmpty(rightField))
                 return null;
 
-            return new WhereClip(leftField.TableFieldName + DataUtils.ToString(oper) + rightField.TableFieldName);
+            return new WhereOperation(leftField.TableFieldName + DataUtils.ToString(oper) + rightField.TableFieldName);
         }
 
         /// <summary>
@@ -667,16 +667,16 @@ namespace WEF.Common
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public WhereClip Contain(object value)
+        public WhereOperation Contain(object value)
         {
-            return new WhereClip(this, string.Concat(likeString, value, likeString), QueryOperator.Like);
+            return new WhereOperation(this, string.Concat(likeString, value, likeString), QueryOperator.Like);
         }
         /// <summary>
         /// like '%value%' 模糊查询，同  Contain
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public WhereClip Like(object value)
+        public WhereOperation Like(object value)
         {
             return Contain(value);
         }
@@ -685,9 +685,9 @@ namespace WEF.Common
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public WhereClip BeginWith(object value)
+        public WhereOperation BeginWith(object value)
         {
-            return new WhereClip(this, string.Concat(value, likeString), QueryOperator.Like);
+            return new WhereOperation(this, string.Concat(value, likeString), QueryOperator.Like);
         }
 
         /// <summary>
@@ -695,9 +695,9 @@ namespace WEF.Common
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public WhereClip EndWith(object value)
+        public WhereOperation EndWith(object value)
         {
-            return new WhereClip(this, string.Concat(likeString, value), QueryOperator.Like);
+            return new WhereOperation(this, string.Concat(likeString, value), QueryOperator.Like);
         }
 
         /// <summary>
@@ -722,7 +722,7 @@ namespace WEF.Common
         /// <param name="join"></param>
         /// <param name="values"></param>
         /// <returns></returns>
-        private WhereClip selectInOrNotIn<T>(Field field, string join, params T[] values)
+        private WhereOperation selectInOrNotIn<T>(Field field, string join, params T[] values)
         {
             return selectInOrNotIn<T>(field, join, true, values);
         }
@@ -736,15 +736,15 @@ namespace WEF.Common
         /// <param name="isParameter">是否参数化</param>
         /// <param name="values"></param>
         /// <returns></returns>
-        private WhereClip selectInOrNotIn<T>(Field field, string join, bool isParameter, params T[] values)
+        private WhereOperation selectInOrNotIn<T>(Field field, string join, bool isParameter, params T[] values)
         {
             if (values.Length == 0)
             {
                 if (join == selectNotInString)//2017-02-28 新增
                 {
-                    return WhereClip.All;
+                    return WhereOperation.All;
                 }
-                return new WhereClip("1=2");
+                return new WhereOperation("1=2");
                 //2015-09-22注释
                 //return WhereClip.All;
             }
@@ -789,7 +789,7 @@ namespace WEF.Common
             whereString.Append(inWhere.ToString().Substring(1));
             whereString.Append(")");
 
-            return new WhereClip(whereString.ToString(), ps.ToArray());
+            return new WhereOperation(whereString.ToString(), ps.ToArray());
         }
 
 
@@ -799,7 +799,7 @@ namespace WEF.Common
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public WhereClip SelectIn(params object[] values)
+        public WhereOperation SelectIn(params object[] values)
         {
             return selectInOrNotIn<object>(this, selectInString, values);
         }
@@ -808,7 +808,7 @@ namespace WEF.Common
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public WhereClip In(params object[] values)
+        public WhereOperation In(params object[] values)
         {
             return SelectIn(values);
         }
@@ -821,7 +821,7 @@ namespace WEF.Common
         /// <param name="values"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public WhereClip SelectIn<T>(params T[] values)
+        public WhereOperation SelectIn<T>(params T[] values)
         {
             if (typeof(T) == typeof(int))
             {
@@ -836,7 +836,7 @@ namespace WEF.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="values"></param>
         /// <returns></returns>
-        public WhereClip In<T>(params T[] values)
+        public WhereOperation In<T>(params T[] values)
         {
             return SelectIn(values);
         }
@@ -846,7 +846,7 @@ namespace WEF.Common
         /// <param name="values"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public WhereClip SelectIn<T>(List<T> values)
+        public WhereOperation SelectIn<T>(List<T> values)
         {
             return SelectIn(values.ToArray());
         }
@@ -856,7 +856,7 @@ namespace WEF.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="values"></param>
         /// <returns></returns>
-        public WhereClip In<T>(List<T> values)
+        public WhereOperation In<T>(List<T> values)
         {
             return SelectIn(values.ToArray());
         }
@@ -866,7 +866,7 @@ namespace WEF.Common
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public WhereClip SelectNotIn(params object[] values)
+        public WhereOperation SelectNotIn(params object[] values)
         {
             return selectInOrNotIn<object>(this, selectNotInString, values);
         }
@@ -875,7 +875,7 @@ namespace WEF.Common
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public WhereClip NotIn(params object[] values)
+        public WhereOperation NotIn(params object[] values)
         {
             return SelectNotIn(values);
         }
@@ -886,7 +886,7 @@ namespace WEF.Common
         /// <param name="values"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public WhereClip SelectNotIn<T>(params T[] values)
+        public WhereOperation SelectNotIn<T>(params T[] values)
         {
 
             if (typeof(T) == typeof(int))
@@ -902,7 +902,7 @@ namespace WEF.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="values"></param>
         /// <returns></returns>
-        public WhereClip NotIn<T>(params T[] values)
+        public WhereOperation NotIn<T>(params T[] values)
         {
             return SelectNotIn(values);
         }
@@ -912,7 +912,7 @@ namespace WEF.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="values"></param>
         /// <returns></returns>
-        public WhereClip SelectNotIn<T>(List<T> values)
+        public WhereOperation SelectNotIn<T>(List<T> values)
         {
             return SelectNotIn(values.ToArray());
         }
@@ -922,7 +922,7 @@ namespace WEF.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="values"></param>
         /// <returns></returns>
-        public WhereClip NotIn<T>(List<T> values)
+        public WhereOperation NotIn<T>(List<T> values)
         {
             return SelectNotIn(values.ToArray());
         }
@@ -931,7 +931,7 @@ namespace WEF.Common
         /// </summary>
         /// <param name="from"></param>
         /// <returns></returns>
-        public WhereClip SubQueryIn(Search from)
+        public WhereOperation SubQueryIn(Search from)
         {
             return subQuery(this, from, selectInString);
         }
@@ -941,7 +941,7 @@ namespace WEF.Common
         /// </summary>
         /// <param name="from"></param>
         /// <returns></returns>
-        public WhereClip SubQueryNotIn(Search from)
+        public WhereOperation SubQueryNotIn(Search from)
         {
             return subQuery(this, from, selectNotInString);
         }
@@ -953,7 +953,7 @@ namespace WEF.Common
         /// <param name="from"></param>
         /// <param name="oper"></param>
         /// <returns></returns>
-        private WhereClip subQuery(Field field, Search from, QueryOperator oper)
+        private WhereOperation subQuery(Field field, Search from, QueryOperator oper)
         {
             return subQuery(field, from, DataUtils.ToString(oper));
         }
@@ -965,15 +965,15 @@ namespace WEF.Common
         /// <param name="from"></param>
         /// <param name="join"></param>
         /// <returns></returns>
-        private WhereClip subQuery(Field field, Search from, string join)
+        private WhereOperation subQuery(Field field, Search from, string join)
         {
             if (Field.IsNullOrEmpty(field))
                 return null;
             if (from.DbProvider.DatabaseType == DatabaseType.MySql)
             {
-                return new WhereClip(string.Concat(field.TableFieldName, join, "(SELECT * FROM (", from.GetPagedFromSection().SqlString, ") AS TEMP" + DataUtils.GetNewParamCount() + ")"), from.Parameters.ToArray());
+                return new WhereOperation(string.Concat(field.TableFieldName, join, "(SELECT * FROM (", from.GetPagedFromSection().SqlString, ") AS TEMP" + DataUtils.GetNewParamCount() + ")"), from.Parameters.ToArray());
             }
-            return new WhereClip(string.Concat(field.TableFieldName, join, "(", from.GetPagedFromSection().SqlString, ")"), from.Parameters.ToArray());
+            return new WhereOperation(string.Concat(field.TableFieldName, join, "(", from.GetPagedFromSection().SqlString, ")"), from.Parameters.ToArray());
         }
 
         /// <summary>
@@ -981,7 +981,7 @@ namespace WEF.Common
         /// </summary>
         /// <param name="from"></param>
         /// <returns></returns>
-        public WhereClip SubQueryEqual(Search from)
+        public WhereOperation SubQueryEqual(Search from)
         {
             return subQuery(this, from, QueryOperator.Equal);
         }
@@ -991,7 +991,7 @@ namespace WEF.Common
         /// </summary>
         /// <param name="from"></param>
         /// <returns></returns>
-        public WhereClip SubQueryNotEqual(Search from)
+        public WhereOperation SubQueryNotEqual(Search from)
         {
             return subQuery(this, from, QueryOperator.NotEqual);
         }
@@ -1001,7 +1001,7 @@ namespace WEF.Common
         /// </summary>
         /// <param name="from"></param>
         /// <returns></returns>
-        public WhereClip SubQueryLess(Search from)
+        public WhereOperation SubQueryLess(Search from)
         {
             return subQuery(this, from, QueryOperator.Less);
         }
@@ -1011,7 +1011,7 @@ namespace WEF.Common
         /// </summary>
         /// <param name="from"></param>
         /// <returns></returns>
-        public WhereClip SubQueryLessOrEqual(Search from)
+        public WhereOperation SubQueryLessOrEqual(Search from)
         {
             return subQuery(this, from, QueryOperator.LessOrEqual);
         }
@@ -1021,7 +1021,7 @@ namespace WEF.Common
         /// </summary>
         /// <param name="from"></param>
         /// <returns></returns>
-        public WhereClip SubQueryGreater(Search from)
+        public WhereOperation SubQueryGreater(Search from)
         {
             return subQuery(this, from, QueryOperator.Greater);
         }
@@ -1031,7 +1031,7 @@ namespace WEF.Common
         /// </summary>
         /// <param name="from"></param>
         /// <returns></returns>
-        public WhereClip SubQueryGreaterOrEqual(Search from)
+        public WhereOperation SubQueryGreaterOrEqual(Search from)
         {
             return subQuery(this, from, QueryOperator.GreaterOrEqual);
         }
@@ -1041,17 +1041,17 @@ namespace WEF.Common
         /// 字段 为null <example>field is null</example>
         /// </summary>
         /// <returns></returns>
-        public WhereClip IsNull()
+        public WhereOperation IsNull()
         {
-            return new WhereClip(string.Concat(this.TableFieldName, " is null "));
+            return new WhereOperation(string.Concat(this.TableFieldName, " is null "));
         }
         /// <summary>
         /// 字段 为null <example>field is not null</example>
         /// </summary>
         /// <returns></returns>
-        public WhereClip IsNotNull()
+        public WhereOperation IsNotNull()
         {
-            return new WhereClip(string.Concat(this.TableFieldName, " is not null "));
+            return new WhereOperation(string.Concat(this.TableFieldName, " is not null "));
         }
 
         /// <summary>
@@ -1063,7 +1063,7 @@ namespace WEF.Common
         /// <param name="leftValue"></param>
         /// <param name="rightValue"></param>
         /// <returns></returns>
-        public WhereClip Between(object leftValue, object rightValue)
+        public WhereOperation Between(object leftValue, object rightValue)
         {
             return this >= leftValue && this <= rightValue;
         }
@@ -1078,7 +1078,7 @@ namespace WEF.Common
         /// <param name="leftField"></param>
         /// <param name="rightField"></param>
         /// <returns></returns>
-        public static WhereClip operator ==(Field leftField, Field rightField)
+        public static WhereOperation operator ==(Field leftField, Field rightField)
         {
             return createWhereClip(leftField, rightField, QueryOperator.Equal);
         }
@@ -1088,7 +1088,7 @@ namespace WEF.Common
         /// <param name="leftField"></param>
         /// <param name="rightField"></param>
         /// <returns></returns>
-        public static WhereClip operator !=(Field leftField, Field rightField)
+        public static WhereOperation operator !=(Field leftField, Field rightField)
         {
             return createWhereClip(leftField, rightField, QueryOperator.NotEqual);
         }
@@ -1098,7 +1098,7 @@ namespace WEF.Common
         /// <param name="leftField"></param>
         /// <param name="rightField"></param>
         /// <returns></returns>
-        public static WhereClip operator >(Field leftField, Field rightField)
+        public static WhereOperation operator >(Field leftField, Field rightField)
         {
             return createWhereClip(leftField, rightField, QueryOperator.Greater);
         }
@@ -1108,7 +1108,7 @@ namespace WEF.Common
         /// <param name="leftField"></param>
         /// <param name="rightField"></param>
         /// <returns></returns>
-        public static WhereClip operator >=(Field leftField, Field rightField)
+        public static WhereOperation operator >=(Field leftField, Field rightField)
         {
             return createWhereClip(leftField, rightField, QueryOperator.GreaterOrEqual);
         }
@@ -1118,7 +1118,7 @@ namespace WEF.Common
         /// <param name="leftField"></param>
         /// <param name="rightField"></param>
         /// <returns></returns>
-        public static WhereClip operator <(Field leftField, Field rightField)
+        public static WhereOperation operator <(Field leftField, Field rightField)
         {
             return createWhereClip(leftField, rightField, QueryOperator.Less);
         }
@@ -1128,7 +1128,7 @@ namespace WEF.Common
         /// <param name="leftField"></param>
         /// <param name="rightField"></param>
         /// <returns></returns>
-        public static WhereClip operator <=(Field leftField, Field rightField)
+        public static WhereOperation operator <=(Field leftField, Field rightField)
         {
             return createWhereClip(leftField, rightField, QueryOperator.LessOrEqual);
         }
@@ -1139,9 +1139,9 @@ namespace WEF.Common
         /// <param name="field"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static WhereClip operator ==(Field field, object value)
+        public static WhereOperation operator ==(Field field, object value)
         {
-            return new WhereClip(field, value, QueryOperator.Equal);
+            return new WhereOperation(field, value, QueryOperator.Equal);
         }
         /// <summary>
         /// 
@@ -1149,9 +1149,9 @@ namespace WEF.Common
         /// <param name="value"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        public static WhereClip operator ==(object value, Field field)
+        public static WhereOperation operator ==(object value, Field field)
         {
-            return new WhereClip(field, value, QueryOperator.Equal);
+            return new WhereOperation(field, value, QueryOperator.Equal);
         }
         /// <summary>
         /// 
@@ -1159,9 +1159,9 @@ namespace WEF.Common
         /// <param name="field"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static WhereClip operator !=(Field field, object value)
+        public static WhereOperation operator !=(Field field, object value)
         {
-            return new WhereClip(field, value, QueryOperator.NotEqual);
+            return new WhereOperation(field, value, QueryOperator.NotEqual);
         }
         /// <summary>
         /// 
@@ -1169,9 +1169,9 @@ namespace WEF.Common
         /// <param name="value"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        public static WhereClip operator !=(object value, Field field)
+        public static WhereOperation operator !=(object value, Field field)
         {
-            return new WhereClip(field, value, QueryOperator.NotEqual);
+            return new WhereOperation(field, value, QueryOperator.NotEqual);
         }
         /// <summary>
         /// 
@@ -1179,9 +1179,9 @@ namespace WEF.Common
         /// <param name="field"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static WhereClip operator >(Field field, object value)
+        public static WhereOperation operator >(Field field, object value)
         {
-            return new WhereClip(field, value, QueryOperator.Greater);
+            return new WhereOperation(field, value, QueryOperator.Greater);
         }
         /// <summary>
         /// 
@@ -1189,50 +1189,9 @@ namespace WEF.Common
         /// <param name="value"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        public static WhereClip operator >(object value, Field field)
+        public static WhereOperation operator >(object value, Field field)
         {
-            return new WhereClip(field, value, QueryOperator.Less);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="field"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static WhereClip operator >=(Field field, object value)
-        {
-            return new WhereClip(field, value, QueryOperator.GreaterOrEqual);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="field"></param>
-        /// <returns></returns>
-        public static WhereClip operator >=(object value, Field field)
-        {
-            return new WhereClip(field, value, QueryOperator.LessOrEqual);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="field"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static WhereClip operator <(Field field, object value)
-        {
-            return new WhereClip(field, value, QueryOperator.Less);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="field"></param>
-        /// <returns></returns>
-        public static WhereClip operator <(object value, Field field)
-        {
-            return new WhereClip(field, value, QueryOperator.Greater);
+            return new WhereOperation(field, value, QueryOperator.Less);
         }
 
         /// <summary>
@@ -1241,9 +1200,9 @@ namespace WEF.Common
         /// <param name="field"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static WhereClip operator <=(Field field, object value)
+        public static WhereOperation operator >=(Field field, object value)
         {
-            return new WhereClip(field, value, QueryOperator.LessOrEqual);
+            return new WhereOperation(field, value, QueryOperator.GreaterOrEqual);
         }
         /// <summary>
         /// 
@@ -1251,9 +1210,50 @@ namespace WEF.Common
         /// <param name="value"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        public static WhereClip operator <=(object value, Field field)
+        public static WhereOperation operator >=(object value, Field field)
         {
-            return new WhereClip(field, value, QueryOperator.GreaterOrEqual);
+            return new WhereOperation(field, value, QueryOperator.LessOrEqual);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static WhereOperation operator <(Field field, object value)
+        {
+            return new WhereOperation(field, value, QueryOperator.Less);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        public static WhereOperation operator <(object value, Field field)
+        {
+            return new WhereOperation(field, value, QueryOperator.Greater);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static WhereOperation operator <=(Field field, object value)
+        {
+            return new WhereOperation(field, value, QueryOperator.LessOrEqual);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        public static WhereOperation operator <=(object value, Field field)
+        {
+            return new WhereOperation(field, value, QueryOperator.GreaterOrEqual);
         }
 
         #endregion

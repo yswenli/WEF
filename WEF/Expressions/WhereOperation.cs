@@ -25,24 +25,24 @@ namespace WEF.Expressions
     /// 条件
     /// </summary>
     [Serializable]
-    public class WhereClip : Expression
+    public class WhereOperation : Expression
     {
         /// <summary>
         /// All
         /// </summary>
-        public readonly static WhereClip All = new WhereClip();
+        public readonly static WhereOperation All = new WhereOperation();
 
         #region 构造函数
         /// <summary>
         /// 
         /// </summary>
-        public WhereClip() { }
+        public WhereOperation() { }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="where"></param>
-        public WhereClip(string where)
+        public WhereOperation(string where)
             : base(where)
         {
 
@@ -53,7 +53,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="customWhereString"></param>
         /// <param name="parameters"></param>
-        public WhereClip(string customWhereString, params Parameter[] parameters)
+        public WhereOperation(string customWhereString, params Parameter[] parameters)
             : base(customWhereString, parameters)
         {
 
@@ -65,7 +65,7 @@ namespace WEF.Expressions
         /// <param name="field"></param>
         /// <param name="value"></param>
         /// <param name="oper"></param>
-        public WhereClip(Field field, object value, QueryOperator oper)
+        public WhereOperation(Field field, object value, QueryOperator oper)
             : base(field, value, oper)
         {
 
@@ -117,9 +117,9 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="whereString"></param>
         /// <returns></returns>
-        public static implicit operator WhereClip(string whereString)
+        public static implicit operator WhereOperation(string whereString)
         {
-            return new WhereClip(whereString);
+            return new WhereOperation(whereString);
         }
 
 
@@ -129,7 +129,7 @@ namespace WEF.Expressions
         /// <param name="leftWhere"></param>
         /// <param name="rightWhere"></param>
         /// <returns></returns>
-        public static bool Equals(WhereClip leftWhere, WhereClip rightWhere)
+        public static bool Equals(WhereOperation leftWhere, WhereOperation rightWhere)
         {
             string leftWhereString = leftWhere.ToString();
             string rightWhereString = rightWhere.ToString();
@@ -155,7 +155,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="whereClip"></param>
         /// <returns></returns>
-        public static bool IsNullOrEmpty(WhereClip whereClip)
+        public static bool IsNullOrEmpty(WhereOperation whereClip)
         {
             if ((null == whereClip) || string.IsNullOrEmpty(whereClip.expressionString))
                 return true;
@@ -176,7 +176,7 @@ namespace WEF.Expressions
         {
             if (null == obj)
                 return false;
-            else if (obj is WhereClip)
+            else if (obj is WhereOperation)
             {
                 return obj.ToString().Equals(this.ToString());
             }
@@ -194,19 +194,19 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public WhereClip And(WhereClip where)
+        public WhereOperation And(WhereOperation where)
         {
-            if (WhereClip.IsNullOrEmpty(this) && WhereClip.IsNullOrEmpty(where))
+            if (WhereOperation.IsNullOrEmpty(this) && WhereOperation.IsNullOrEmpty(where))
                 return All;
 
-            if (WhereClip.IsNullOrEmpty(where))
+            if (WhereOperation.IsNullOrEmpty(where))
                 return this;
-            if (WhereClip.IsNullOrEmpty(this))
+            if (WhereOperation.IsNullOrEmpty(this))
                 return where;
 
 
 
-            WhereClip andwhere = new WhereClip(string.Concat(this.Where, " AND ", where.Where));
+            WhereOperation andwhere = new WhereOperation(string.Concat(this.Where, " AND ", where.Where));
             andwhere.parameters.AddRange(this.Parameters);
             andwhere.parameters.AddRange(where.Parameters);
 
@@ -219,17 +219,17 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public WhereClip Or(WhereClip where)
+        public WhereOperation Or(WhereOperation where)
         {
-            if (WhereClip.IsNullOrEmpty(this) && WhereClip.IsNullOrEmpty(where))
+            if (WhereOperation.IsNullOrEmpty(this) && WhereOperation.IsNullOrEmpty(where))
                 return All;
 
-            if (WhereClip.IsNullOrEmpty(where))
+            if (WhereOperation.IsNullOrEmpty(where))
                 return this;
-            if (WhereClip.IsNullOrEmpty(this))
+            if (WhereOperation.IsNullOrEmpty(this))
                 return where;
 
-            WhereClip orwhere = new WhereClip(string.Concat(this.Where, " OR ", where.Where));
+            WhereOperation orwhere = new WhereOperation(string.Concat(this.Where, " OR ", where.Where));
             orwhere.parameters.AddRange(this.Parameters);
             orwhere.parameters.AddRange(where.Parameters);
 
@@ -246,7 +246,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static bool operator true(WhereClip right)
+        public static bool operator true(WhereOperation right)
         {
             return false;
         }
@@ -256,7 +256,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static bool operator false(WhereClip right)
+        public static bool operator false(WhereOperation right)
         {
             return false;
         }
@@ -269,9 +269,9 @@ namespace WEF.Expressions
         /// <param name="leftWhere"></param>
         /// <param name="rightWhere"></param>
         /// <returns></returns>
-        public static WhereClip operator &(WhereClip leftWhere, WhereClip rightWhere)
+        public static WhereOperation operator &(WhereOperation leftWhere, WhereOperation rightWhere)
         {
-            if (WhereClip.IsNullOrEmpty(leftWhere))
+            if (WhereOperation.IsNullOrEmpty(leftWhere))
                 return rightWhere;
 
             return leftWhere.And(rightWhere);
@@ -283,9 +283,9 @@ namespace WEF.Expressions
         /// <param name="leftWhere"></param>
         /// <param name="rightWhere"></param>
         /// <returns></returns>
-        public static WhereClip operator |(WhereClip leftWhere, WhereClip rightWhere)
+        public static WhereOperation operator |(WhereOperation leftWhere, WhereOperation rightWhere)
         {
-            if (WhereClip.IsNullOrEmpty(leftWhere))
+            if (WhereOperation.IsNullOrEmpty(leftWhere))
                 return rightWhere;
 
             return leftWhere.Or(rightWhere);
@@ -296,13 +296,13 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public static WhereClip operator !(WhereClip where)
+        public static WhereOperation operator !(WhereOperation where)
         {
             if (IsNullOrEmpty(where))
             {
                 return All;
             }
-            return new WhereClip(string.Concat(" NOT ", where.expressionString), where.parameters.ToArray());
+            return new WhereOperation(string.Concat(" NOT ", where.expressionString), where.parameters.ToArray());
         }
 
 
@@ -311,9 +311,9 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="fromSection"></param>
         /// <returns></returns>
-        public static WhereClip Exists(Search fromSection)
+        public static WhereOperation Exists(Search fromSection)
         {
-            return new WhereClip(string.Concat(" EXISTS (", fromSection.SqlString, ") "), fromSection.Parameters.ToArray());
+            return new WhereOperation(string.Concat(" EXISTS (", fromSection.SqlString, ") "), fromSection.Parameters.ToArray());
         }
 
         #endregion

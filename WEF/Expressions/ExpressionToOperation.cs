@@ -9,8 +9,8 @@
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************
  * 命名空间：WEF.Expressions
- * 类名称：ExpressionToClip<T>
- * 文件名：ExpressionToClip<T>
+ * 类名称：ExpressionToOperation<T>
+ * 文件名：ExpressionToOperation<T>
  * 创建年份：2015
  * 创建时间：2019-04-17 16:35:12
  * 创建人：Wenli
@@ -26,7 +26,11 @@ using System.Linq;
 
 namespace WEF.Expressions
 {
-    public static class ExpressionToClip<T>
+    /// <summary>
+    /// 将表达式转换成操作
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public static class ExpressionToOperation<T>
     {
         private static Evaluator evaluator = new Evaluator();
         private static CacheEvaluator cacheEvaluator = new CacheEvaluator();
@@ -37,18 +41,18 @@ namespace WEF.Expressions
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="e"></param>
         /// <returns></returns>
-        public static WhereClip ToJoinWhere<TEntity>(Expression<Func<T, TEntity, bool>> e)
+        public static WhereOperation ToJoinWhere<TEntity>(Expression<Func<T, TEntity, bool>> e)
         {
-            return ToWhereClipChild(e.Body, WhereType.JoinWhere);
+            return ToWhereOperationChild(e.Body, WhereType.JoinWhere);
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        public static WhereClip ToWhereClip(Expression<Func<T, bool>> e)
+        public static WhereOperation ToWhereOperation(Expression<Func<T, bool>> e)
         {
-            return ToWhereClipChild(e.Body);
+            return ToWhereOperationChild(e.Body);
         }
         /// <summary>
         /// 
@@ -56,9 +60,9 @@ namespace WEF.Expressions
         /// <typeparam name="T2"></typeparam>
         /// <param name="e"></param>
         /// <returns></returns>
-        public static WhereClip ToWhereClip<T2>(Expression<Func<T, T2, bool>> e)
+        public static WhereOperation ToWhereOperation<T2>(Expression<Func<T, T2, bool>> e)
         {
-            return ToWhereClipChild(e.Body);
+            return ToWhereOperationChild(e.Body);
         }
         /// <summary>
         /// 
@@ -67,9 +71,9 @@ namespace WEF.Expressions
         /// <typeparam name="T3"></typeparam>
         /// <param name="e"></param>
         /// <returns></returns>
-        public static WhereClip ToWhereClip<T2, T3>(Expression<Func<T, T2, T3, bool>> e)
+        public static WhereOperation ToWhereOperation<T2, T3>(Expression<Func<T, T2, T3, bool>> e)
         {
-            return ToWhereClipChild(e.Body);
+            return ToWhereOperationChild(e.Body);
         }
         /// <summary>
         /// 
@@ -79,9 +83,9 @@ namespace WEF.Expressions
         /// <typeparam name="T4"></typeparam>
         /// <param name="e"></param>
         /// <returns></returns>
-        public static WhereClip ToWhereClip<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> e)
+        public static WhereOperation ToWhereOperation<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> e)
         {
-            return ToWhereClipChild(e.Body);
+            return ToWhereOperationChild(e.Body);
         }
         /// <summary>
         /// 
@@ -92,9 +96,9 @@ namespace WEF.Expressions
         /// <typeparam name="T5"></typeparam>
         /// <param name="e"></param>
         /// <returns></returns>
-        public static WhereClip ToWhereClip<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> e)
+        public static WhereOperation ToWhereOperation<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> e)
         {
-            return ToWhereClipChild(e.Body);
+            return ToWhereOperationChild(e.Body);
         }
         /// <summary>
         /// 
@@ -106,9 +110,9 @@ namespace WEF.Expressions
         /// <typeparam name="T6"></typeparam>
         /// <param name="e"></param>
         /// <returns></returns>
-        public static WhereClip ToWhereClip<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> e)
+        public static WhereOperation ToWhereOperation<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> e)
         {
-            return ToWhereClipChild(e.Body);
+            return ToWhereOperationChild(e.Body);
         }
         /// <summary>
         /// 
@@ -116,7 +120,7 @@ namespace WEF.Expressions
         /// <param name="e"></param>
         /// <param name="wt"></param>
         /// <returns></returns>
-        private static WhereClip ToWhereClipChild(System.Linq.Expressions.Expression e, WhereType wt = WhereType.Where)
+        private static WhereOperation ToWhereOperationChild(System.Linq.Expressions.Expression e, WhereType wt = WhereType.Where)
         {
             if (e is BinaryExpression)
             {
@@ -133,16 +137,16 @@ namespace WEF.Expressions
             if (IsBoolFieldOrProperty(e))
             {
                 var key = ((MemberExpression)e).Member.Name;
-                return new WhereClip();
+                return new WhereOperation();
             }
             if (e is ConstantExpression)
             {
                 var key = ((ConstantExpression)e).Value;
                 if (DataUtils.ConvertValue<bool>(key))
                 {
-                    return new WhereClip(" 1=1 ");
+                    return new WhereOperation(" 1=1 ");
                 }
-                return new WhereClip(" 1=2 ");
+                return new WhereOperation(" 1=2 ");
             }
             throw new Exception("暂时不支持的Where条件Lambda表达式写法！请使用经典写法！");
         }
@@ -165,12 +169,12 @@ namespace WEF.Expressions
         /// <param name="ue"></param>
         /// <param name="wtype"></param>
         /// <returns></returns>
-        private static WhereClip ConvertUnary(UnaryExpression ue, WhereType wtype = WhereType.Where)
+        private static WhereOperation ConvertUnary(UnaryExpression ue, WhereType wtype = WhereType.Where)
         {
             switch (ue.NodeType)
             {
                 case ExpressionType.Not:
-                    return !ToWhereClipChild(ue.Operand, wtype);
+                    return !ToWhereOperationChild(ue.Operand, wtype);
             }
             throw new Exception("暂时不支持的NodeType(" + ue.NodeType + ") lambda写法！请使用经典写法！");
         }
@@ -180,7 +184,7 @@ namespace WEF.Expressions
         /// <param name="be"></param>
         /// <param name="wt"></param>
         /// <returns></returns>
-        private static WhereClip ConvertBinary(BinaryExpression be, WhereType wt = WhereType.Where)
+        private static WhereOperation ConvertBinary(BinaryExpression be, WhereType wt = WhereType.Where)
         {
             switch (be.NodeType)
             {
@@ -197,9 +201,9 @@ namespace WEF.Expressions
                 case ExpressionType.NotEqual:
                     return LeftAndRight(be, QueryOperator.NotEqual, wt);
                 case ExpressionType.AndAlso:
-                    return ToWhereClipChild(be.Left, wt) && ToWhereClipChild(be.Right, wt);
+                    return ToWhereOperationChild(be.Left, wt) && ToWhereOperationChild(be.Right, wt);
                 case ExpressionType.OrElse:
-                    return ToWhereClipChild(be.Left, wt) || ToWhereClipChild(be.Right, wt);
+                    return ToWhereOperationChild(be.Left, wt) || ToWhereOperationChild(be.Right, wt);
                 default:
                     throw new Exception("暂时不支持的Where条件(" + be.NodeType + ")Lambda表达式写法！请使用经典写法！");
             }
@@ -209,7 +213,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="mce"></param>
         /// <returns></returns>
-        private static WhereClip ConvertMethodCall(MethodCallExpression mce)
+        private static WhereOperation ConvertMethodCall(MethodCallExpression mce)
         {
             switch (mce.Method.Name)
             {
@@ -242,7 +246,7 @@ namespace WEF.Expressions
         /// <param name="mce"></param>
         /// <param name="isNull"></param>
         /// <returns></returns>
-        private static WhereClip ConvertNull(MethodCallExpression mce, bool isNull = false)
+        private static WhereOperation ConvertNull(MethodCallExpression mce, bool isNull = false)
         {
             ColumnFunction function;
             MemberExpression member;
@@ -256,7 +260,7 @@ namespace WEF.Expressions
         /// <param name="mce"></param>
         /// <param name="isLike"></param>
         /// <returns></returns>
-        private static WhereClip ConvertEqualsCall(MethodCallExpression mce, bool isLike = false)
+        private static WhereOperation ConvertEqualsCall(MethodCallExpression mce, bool isLike = false)
         {
             ColumnFunction function;
             MemberExpression member;
@@ -264,7 +268,7 @@ namespace WEF.Expressions
             var value = GetValue(mce.Arguments[0]);
             if (value != null)
             {
-                return new WhereClip(CreateField(key, member.Expression.Type),
+                return new WhereOperation(CreateField(key, member.Expression.Type),
                     string.Concat(value), QueryOperator.Equal);
             }
             throw new Exception("'Like'仅支持一个参数，参数应为字符串且不允许为空");
@@ -275,7 +279,7 @@ namespace WEF.Expressions
         /// <param name="mce"></param>
         /// <param name="notIn"></param>
         /// <returns></returns>
-        private static WhereClip ConvertInCall(MethodCallExpression mce, bool notIn = false)
+        private static WhereOperation ConvertInCall(MethodCallExpression mce, bool notIn = false)
         {
             ColumnFunction function;
             MemberExpression member;
@@ -301,7 +305,7 @@ namespace WEF.Expressions
         /// <param name="right"></param>
         /// <param name="isLike"></param>
         /// <returns></returns>
-        private static WhereClip ConvertLikeCall(MethodCallExpression mce, string left, string right, bool isLike = false)
+        private static WhereOperation ConvertLikeCall(MethodCallExpression mce, string left, string right, bool isLike = false)
         {
             ColumnFunction function;
             MemberExpression member;
@@ -311,7 +315,7 @@ namespace WEF.Expressions
                 var value = GetValue(isLike ? mce.Arguments[1] : mce.Arguments[0]);
                 if (value != null && value is string)
                 {
-                    return new WhereClip(CreateField(key, member.Expression.Type),
+                    return new WhereOperation(CreateField(key, member.Expression.Type),
                         string.Concat(left, value, right), QueryOperator.Like);
                 }
             }
@@ -362,7 +366,7 @@ namespace WEF.Expressions
         /// <param name="co"></param>
         /// <param name="wtype"></param>
         /// <returns></returns>
-        private static WhereClip LeftAndRight(BinaryExpression be, QueryOperator co, WhereType wtype = WhereType.Where)
+        private static WhereOperation LeftAndRight(BinaryExpression be, QueryOperator co, WhereType wtype = WhereType.Where)
         {
             ColumnFunction leftFunction;
             ColumnFunction rightFunction;
@@ -387,8 +391,8 @@ namespace WEF.Expressions
                     (expRight.NodeType == ExpressionType.MemberAccess && ((MemberExpression)expRight).Expression == null))
                 {
                     return DataUtils.ConvertValue<bool>(fastEvaluator.Eval(be))
-                        ? new WhereClip(" 1=2 ")
-                        : new WhereClip(" 1=1 ");
+                        ? new WhereOperation(" 1=2 ")
+                        : new WhereOperation(" 1=1 ");
                 }
                 else
                 {
@@ -403,11 +407,11 @@ namespace WEF.Expressions
                             var keyLeft = GetMemberName(expLeft, out functionLeft, out left);
                             if (keyRightName[0].Contains("$"))
                             {
-                                return new WhereClip(CreateField(keyLeft, left.Expression.Type), GetValue(expRight), co);
+                                return new WhereOperation(CreateField(keyLeft, left.Expression.Type), GetValue(expRight), co);
                             }
                             else
                             {
-                                return new WhereClip(CreateField(keyRightName, rightMe.Expression.Type), CreateField(keyLeft, left.Expression.Type), co);
+                                return new WhereOperation(CreateField(keyRightName, rightMe.Expression.Type), CreateField(keyLeft, left.Expression.Type), co);
                             }
                         }
                     }
@@ -416,12 +420,12 @@ namespace WEF.Expressions
                     {
                         if (DataUtils.ConvertValue<bool>(fastEvaluator.Eval(be)))
                         {
-                            return new WhereClip(" 1=2 ");
+                            return new WhereOperation(" 1=2 ");
                         }
-                        return new WhereClip(" 1=1 ");
+                        return new WhereOperation(" 1=1 ");
                     }
                     if (value != null)
-                        return new WhereClip(CreateField(keyRightName, rightMe.Expression.Type), value, co);
+                        return new WhereOperation(CreateField(keyRightName, rightMe.Expression.Type), value, co);
                     switch (co)
                     {
                         case QueryOperator.Equal:
@@ -456,7 +460,7 @@ namespace WEF.Expressions
                     {
                         ColumnFunction functionRight;
                         var keyRight = GetMemberName(expRight, out functionRight, out right);
-                        return new WhereClip(
+                        return new WhereOperation(
                             CreateField(key, leftMe.Expression.Type),
                             CreateField(keyRight, right.Expression.Type)
                             , co);
@@ -475,7 +479,7 @@ namespace WEF.Expressions
                     }
                     throw new Exception("null值只支持等于或不等于！");
                 }
-                return new WhereClip(CreateField(key, leftMe.Expression.Type), value, co);
+                return new WhereOperation(CreateField(key, leftMe.Expression.Type), value, co);
             }
         }
         /// <summary>
@@ -492,7 +496,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="expr"></param>
         /// <returns></returns>
-        public static GroupByClip ToGroupByClip(Expression<Func<T, object>> expr)
+        public static GroupByOperation ToGroupByClip(Expression<Func<T, object>> expr)
         {
             return ToGroupByClipChild(expr.Body);
         }
@@ -501,20 +505,20 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="exprBody"></param>
         /// <returns></returns>
-        private static GroupByClip ToGroupByClipChild(System.Linq.Expressions.Expression exprBody)
+        private static GroupByOperation ToGroupByClipChild(System.Linq.Expressions.Expression exprBody)
         {
             if (exprBody is MemberExpression)
             {
                 var e = (MemberExpression)exprBody;
                 var filedProp = GetFieldName(e.Member);
-                return new GroupByClip(CreateField(filedProp, e.Expression.Type));
+                return new GroupByOperation(CreateField(filedProp, e.Expression.Type));
             }
             if (exprBody is NewExpression)
             {
                 var exNew = (NewExpression)exprBody;
                 var type = exNew.Constructor.DeclaringType;
                 var list = new List<string>(exNew.Arguments.Count);
-                return exNew.Arguments.Cast<MemberExpression>().Aggregate(GroupByClip.None, (current, member)
+                return exNew.Arguments.Cast<MemberExpression>().Aggregate(GroupByOperation.None, (current, member)
                     => current && CreateField(GetFieldName(member.Member), member.Expression.Type).GroupBy);
             }
             if (exprBody is UnaryExpression)
@@ -530,7 +534,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="expr"></param>
         /// <returns></returns>
-        public static OrderByClip ToOrderByClip(Expression<Func<T, object>> expr)
+        public static OrderByOperation ToOrderByClip(Expression<Func<T, object>> expr)
         {
             return ToOrderByClipChild(expr.Body, OrderByOperater.ASC);
         }
@@ -539,7 +543,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="expr"></param>
         /// <returns></returns>
-        public static OrderByClip ToOrderByDescendingClip(Expression<Func<T, object>> expr)
+        public static OrderByOperation ToOrderByDescendingClip(Expression<Func<T, object>> expr)
         {
             return ToOrderByClipChild(expr.Body, OrderByOperater.DESC);
         }/// <summary>
@@ -548,12 +552,12 @@ namespace WEF.Expressions
          /// <param name="exprBody"></param>
          /// <param name="orderBy"></param>
          /// <returns></returns>
-        private static OrderByClip ToOrderByClipChild(System.Linq.Expressions.Expression exprBody, OrderByOperater orderBy)
+        private static OrderByOperation ToOrderByClipChild(System.Linq.Expressions.Expression exprBody, OrderByOperater orderBy)
         {
             if (exprBody is MemberExpression)
             {
                 var e = (MemberExpression)exprBody;
-                OrderByClip gb = OrderByClip.None;
+                OrderByOperation gb = OrderByOperation.None;
                 var filedProp = GetFieldName(e.Member);
                 if (orderBy == OrderByOperater.DESC)
                 {
@@ -570,7 +574,7 @@ namespace WEF.Expressions
                 var exNew = (NewExpression)exprBody;
                 var type = exNew.Constructor.DeclaringType;
                 var list = new List<string>(exNew.Arguments.Count);
-                OrderByClip gb = OrderByClip.None;
+                OrderByOperation gb = OrderByOperation.None;
                 foreach (MemberExpression member in exNew.Arguments)
                 {
                     var filedProp = GetFieldName(member.Member);
@@ -767,9 +771,6 @@ namespace WEF.Expressions
                     return new[] { f.Len() };
                 case "Count":
                     return new[] { f.Count() };
-                //TODO 需要测试下这里，2017-01-05
-                //case "As":
-                //    return new[] { f.As() };
                 default:
                     throw new Exception("暂时不支持的Lambda表达式写法(" + e.Method.Name + ")！请使用经典写法！");
             }
@@ -813,12 +814,13 @@ namespace WEF.Expressions
             var tbl = type.GetCustomAttribute<FieldAttribute>(false);
             return new string[] { tbl != null ? tbl.Field : type.Name, type.Name };
             //return tbl != null ? tbl.Field : type.Name;
-        }/// <summary>
-         /// 
-         /// </summary>
-         /// <param name="mi"></param>
-         /// <param name="t"></param>
-         /// <returns></returns>
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mi"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
         private static Field CreateField(MemberInfo mi, Type t)
         {
             var filedProp = GetFieldName(mi);
@@ -837,13 +839,14 @@ namespace WEF.Expressions
             }
             return new Field(filedProp[0], GetTableName(t));
             //return new Field(filedProp[0], GetTableName(t), null, null, null, filedProp[1] == filedProp[0] ? null : filedProp[1]);
-        }/// <summary>
-         /// 
-         /// </summary>
-         /// <param name="filedProp"></param>
-         /// <param name="t"></param>
-         /// <param name="asName"></param>
-         /// <returns></returns>
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filedProp"></param>
+        /// <param name="t"></param>
+        /// <param name="asName"></param>
+        /// <returns></returns>
         private static Field CreateField(string[] filedProp, Type t, string asName)
         {
             return new Field(filedProp[0], GetTableName(t), null, null, null, asName);

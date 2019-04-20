@@ -121,9 +121,9 @@ namespace WEF.Db
             if (entity == null)
                 return;
 
-            WhereClip where = DataUtils.GetPrimaryKeyWhere(entity);
+            WhereOperation where = DataUtils.GetPrimaryKeyWhere(entity);
 
-            Check.Require(!WhereClip.IsNullOrEmpty(where), "entity must have the primarykey!");
+            Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
 
             UpdateAll<TEntity>(entity, where);
         }
@@ -137,7 +137,7 @@ namespace WEF.Db
         /// <param name="entity"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public void UpdateAll<TEntity>(TEntity entity, WhereClip where)
+        public void UpdateAll<TEntity>(TEntity entity, WhereOperation where)
             where TEntity : Entity
         {
             if (entity == null)
@@ -179,7 +179,7 @@ namespace WEF.Db
 
             var where = DataUtils.GetPrimaryKeyWhere(entity);
 
-            Check.Require(!WhereClip.IsNullOrEmpty(where), "entity must have the primarykey!");
+            Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
 
             Update<TEntity>(entity, where);
         }
@@ -192,7 +192,7 @@ namespace WEF.Db
         /// <param name="entity"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public void Update<TEntity>(TEntity entity, WhereClip where)
+        public void Update<TEntity>(TEntity entity, WhereOperation where)
             where TEntity : Entity
         {
             if (!entity.IsModify())
@@ -210,7 +210,7 @@ namespace WEF.Db
         /// <param name="value"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public void Update<TEntity>(Field field, object value, WhereClip where)
+        public void Update<TEntity>(Field field, object value, WhereOperation where)
             where TEntity : Entity
         {
             if (Field.IsNullOrEmpty(field))
@@ -229,7 +229,7 @@ namespace WEF.Db
         /// <param name="fieldValue"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public void Update<TEntity>(Dictionary<Field, object> fieldValue, WhereClip where)
+        public void Update<TEntity>(Dictionary<Field, object> fieldValue, WhereOperation where)
               where TEntity : Entity
         {
             if (null == fieldValue || fieldValue.Count == 0)
@@ -260,7 +260,7 @@ namespace WEF.Db
         /// <param name="values"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public void Update<TEntity>(Field[] fields, object[] values, WhereClip where)
+        public void Update<TEntity>(Field[] fields, object[] values, WhereOperation where)
             where TEntity : Entity
         {
             if (null == fields || fields.Length == 0)
@@ -287,9 +287,9 @@ namespace WEF.Db
         {
             Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
 
-            WhereClip where = DataUtils.GetPrimaryKeyWhere(entity);
+            WhereOperation where = DataUtils.GetPrimaryKeyWhere(entity);
 
-            Check.Require(!WhereClip.IsNullOrEmpty(where), "entity must have the primarykey!");
+            Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
             Delete<TEntity>(where);
             //2015-08-20注释
             //Delete<TEntity>(entity, where);
@@ -369,7 +369,7 @@ namespace WEF.Db
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        public void Delete<TEntity>(WhereClip where)
+        public void Delete<TEntity>(WhereOperation where)
             where TEntity : Entity
         {
             Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));

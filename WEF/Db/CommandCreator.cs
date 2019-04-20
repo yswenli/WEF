@@ -49,7 +49,7 @@ namespace WEF.Db
         /// <param name="entity"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public DbCommand CreateUpdateCommand<TEntity>(TEntity entity, WhereClip where)
+        public DbCommand CreateUpdateCommand<TEntity>(TEntity entity, WhereOperation where)
             where TEntity : Entity
         {
             var v11056 = entity.V1_10_5_6_Plus();
@@ -98,7 +98,7 @@ namespace WEF.Db
         /// <param name="values"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public DbCommand CreateUpdateCommand<TEntity>(Field[] fields, object[] values, WhereClip where)
+        public DbCommand CreateUpdateCommand<TEntity>(Field[] fields, object[] values, WhereOperation where)
             where TEntity : Entity
         {
             Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
@@ -110,8 +110,8 @@ namespace WEF.Db
 
             var length = fields.Length;
 
-            if (WhereClip.IsNullOrEmpty(where))
-                where = WhereClip.All;
+            if (WhereOperation.IsNullOrEmpty(where))
+                where = WhereOperation.All;
 
             var sql = new StringBuilder();
             sql.Append("UPDATE ");
@@ -176,9 +176,9 @@ namespace WEF.Db
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public DbCommand CreateDeleteCommand(string tableName, string userName, WhereClip where)
+        public DbCommand CreateDeleteCommand(string tableName, string userName, WhereOperation where)
         {
-            if (WhereClip.IsNullOrEmpty(where))
+            if (WhereOperation.IsNullOrEmpty(where))
                 throw new Exception("请传入删除条件，删除整表数据请使用.DeleteAll<T>()方法。");
             StringBuilder sql = new StringBuilder();
             sql.Append("DELETE FROM ");
@@ -195,7 +195,7 @@ namespace WEF.Db
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public DbCommand CreateDeleteCommand<TEntity>(WhereClip where)
+        public DbCommand CreateDeleteCommand<TEntity>(WhereOperation where)
              where TEntity : Entity
         {
             return CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where);

@@ -50,7 +50,7 @@ namespace WEF.Provider
             }
 
 
-            if (OrderByClip.IsNullOrEmpty(fromSection.OrderByClip))
+            if (OrderByOperation.IsNullOrEmpty(fromSection.OrderByClip))
             {
                 foreach (Field f in fromSection.Fields)
                 {
@@ -62,7 +62,7 @@ namespace WEF.Provider
                 }
             }
 
-            Check.Require(!OrderByClip.IsNullOrEmpty(fromSection.OrderByClip), "query.OrderByClip could not be null or empty!");
+            Check.Require(!OrderByOperation.IsNullOrEmpty(fromSection.OrderByClip), "query.OrderByClip could not be null or empty!");
 
             if (fromSection.Fields.Count == 0)
             {
@@ -71,15 +71,15 @@ namespace WEF.Provider
 
             fromSection.AddSelect(new Field(string.Concat("row_number() over(", fromSection.OrderByString, ") AS tmp_rowid")));
             //OrderByClip tempOrderBy = fromSection.OrderByClip;
-            fromSection.OrderBy(OrderByClip.None);
+            fromSection.OrderBy(OrderByOperation.None);
             fromSection.TableName = string.Concat("(", fromSection.SqlString, ") AS tmp_table");
             fromSection.Parameters = fromSection.Parameters;
             fromSection.DistinctString = string.Empty;
             fromSection.PrefixString = string.Empty;
-            fromSection.GroupBy(GroupByClip.None);
+            fromSection.GroupBy(GroupByOperation.None);
             fromSection.Select(Field.All);
             //fromSection.OrderBy(tempOrderBy);
-            fromSection.Where(new WhereClip(string.Concat("tmp_rowid BETWEEN ", startIndex.ToString(), " AND ", endIndex.ToString())));
+            fromSection.Where(new WhereOperation(string.Concat("tmp_rowid BETWEEN ", startIndex.ToString(), " AND ", endIndex.ToString())));
 
             return fromSection;
         }

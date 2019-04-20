@@ -9,8 +9,8 @@
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************
  * 命名空间：WEF.Expressions
- * 类名称：OrderByClip
- * 文件名：OrderByClip
+ * 类名称：OrderByOperation
+ * 文件名：OrderByOperation
  * 创建年份：2015
  * 创建时间：2015-09-29 16:35:12
  * 创建人：Wenli
@@ -36,33 +36,33 @@ namespace WEF.Expressions
     /// 排序
     /// </summary>
     [Serializable]
-    public class OrderByClip
+    public class OrderByOperation
     {
 
 
-        private Dictionary<string, OrderByOperater> orderByClip = new Dictionary<string, OrderByOperater>();
+        private Dictionary<string, OrderByOperater> orderByOperation = new Dictionary<string, OrderByOperater>();
 
         /// <summary>
         /// null
         /// </summary>
-        public readonly static OrderByClip None = new OrderByClip();
+        public readonly static OrderByOperation None = new OrderByOperation();
 
-        private OrderByClip()
+        private OrderByOperation()
         {
         }
 
-        public OrderByClip(string fieldName, OrderByOperater orderBy)
+        public OrderByOperation(string fieldName, OrderByOperater orderBy)
         {
-            orderByClip.Add(fieldName, orderBy);
+            orderByOperation.Add(fieldName, orderBy);
         }
 
-        public OrderByClip(Field field)
+        public OrderByOperation(Field field)
             : this(field.TableFieldName, OrderByOperater.ASC)
         {
 
         }
 
-        public OrderByClip(Field field, OrderByOperater orderBy)
+        public OrderByOperation(Field field, OrderByOperater orderBy)
             : this(field.TableFieldName, orderBy)
         {
 
@@ -72,7 +72,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="orderByClip"></param>
         /// <returns></returns>
-        public static bool IsNullOrEmpty(OrderByClip orderByClip)
+        public static bool IsNullOrEmpty(OrderByOperation orderByClip)
         {
             if ((null == orderByClip) || string.IsNullOrEmpty(orderByClip.ToString()))
                 return true;
@@ -82,41 +82,41 @@ namespace WEF.Expressions
         /// <summary>
         /// 两个OrderByClip相加
         /// </summary>
-        /// <param name="leftOrderByClip"></param>
-        /// <param name="rightOrderByClip"></param>
+        /// <param name="leftOrderByOpt"></param>
+        /// <param name="rightOrderByOpt"></param>
         /// <returns></returns>
-        public static OrderByClip operator &(OrderByClip leftOrderByClip, OrderByClip rightOrderByClip)
+        public static OrderByOperation operator &(OrderByOperation leftOrderByOpt, OrderByOperation rightOrderByOpt)
         {
-            if (IsNullOrEmpty(leftOrderByClip) && IsNullOrEmpty(rightOrderByClip))
+            if (IsNullOrEmpty(leftOrderByOpt) && IsNullOrEmpty(rightOrderByOpt))
                 return None;
 
-            if (IsNullOrEmpty(leftOrderByClip))
-                return rightOrderByClip;
-            if (IsNullOrEmpty(rightOrderByClip))
-                return leftOrderByClip;
+            if (IsNullOrEmpty(leftOrderByOpt))
+                return rightOrderByOpt;
+            if (IsNullOrEmpty(rightOrderByOpt))
+                return leftOrderByOpt;
 
 
-            OrderByClip orderby = new OrderByClip();
-            foreach (KeyValuePair<string, OrderByOperater> kv in leftOrderByClip.orderByClip)
+            OrderByOperation orderby = new OrderByOperation();
+            foreach (KeyValuePair<string, OrderByOperater> kv in leftOrderByOpt.orderByOperation)
             {
-                orderby.orderByClip.Add(kv.Key, kv.Value);
+                orderby.orderByOperation.Add(kv.Key, kv.Value);
             }
 
-            foreach (KeyValuePair<string, OrderByOperater> kv in rightOrderByClip.orderByClip)
+            foreach (KeyValuePair<string, OrderByOperater> kv in rightOrderByOpt.orderByOperation)
             {
-                if (!orderby.orderByClip.ContainsKey(kv.Key))
-                    orderby.orderByClip.Add(kv.Key, kv.Value);
+                if (!orderby.orderByOperation.ContainsKey(kv.Key))
+                    orderby.orderByOperation.Add(kv.Key, kv.Value);
             }
 
             return orderby;
         }
 
-        public static bool operator true(OrderByClip right)
+        public static bool operator true(OrderByOperation right)
         {
             return false;
         }
 
-        public static bool operator false(OrderByClip right)
+        public static bool operator false(OrderByOperation right)
         {
             return false;
         }
@@ -126,17 +126,17 @@ namespace WEF.Expressions
         /// 去掉的表前缀
         /// </summary>
         /// <returns></returns>
-        public OrderByClip RemovePrefixTableName()
+        public OrderByOperation RemovePrefixTableName()
         {
-            OrderByClip tempOrderByClip = new OrderByClip();
+            OrderByOperation tempOrderByClip = new OrderByOperation();
 
-            foreach (KeyValuePair<string, OrderByOperater> kv in this.orderByClip)
+            foreach (KeyValuePair<string, OrderByOperater> kv in this.orderByOperation)
             {
                 string keyName = kv.Key;
                 if (kv.Key.IndexOf('.') > 0)
                     keyName = keyName.Substring(keyName.IndexOf('.') + 1);
 
-                tempOrderByClip.orderByClip.Add(keyName, kv.Value);
+                tempOrderByClip.orderByOperation.Add(keyName, kv.Value);
             }
 
             return tempOrderByClip;
@@ -149,7 +149,7 @@ namespace WEF.Expressions
         public override string ToString()
         {
             StringBuilder orderBy = new StringBuilder();
-            foreach (KeyValuePair<string, OrderByOperater> kv in this.orderByClip)
+            foreach (KeyValuePair<string, OrderByOperater> kv in this.orderByOperation)
             {
                 orderBy.Append(",");
                 orderBy.Append(kv.Key);
@@ -164,18 +164,18 @@ namespace WEF.Expressions
         /// <summary>
         /// 倒叙
         /// </summary>
-        public OrderByClip ReverseOrderByClip
+        public OrderByOperation ReverseOrderByOperation
         {
             get
             {
-                OrderByClip tempOrderByClip = new OrderByClip();
+                OrderByOperation tempOrderByOpt = new OrderByOperation();
 
-                foreach (KeyValuePair<string, OrderByOperater> kv in this.orderByClip)
+                foreach (KeyValuePair<string, OrderByOperater> kv in this.orderByOperation)
                 {
-                    tempOrderByClip.orderByClip.Add(kv.Key, kv.Value == OrderByOperater.ASC ? OrderByOperater.DESC : OrderByOperater.ASC);
+                    tempOrderByOpt.orderByOperation.Add(kv.Key, kv.Value == OrderByOperater.ASC ? OrderByOperater.DESC : OrderByOperater.ASC);
                 }
 
-                return tempOrderByClip;
+                return tempOrderByOpt;
 
             }
         }
@@ -195,7 +195,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="orderByClip"></param>
         /// <returns></returns>
-        public bool Equals(OrderByClip orderByClip)
+        public bool Equals(OrderByOperation orderByClip)
         {
             if (null == orderByClip)
                 return false;
@@ -213,7 +213,7 @@ namespace WEF.Expressions
         {
             get
             {
-                if (this.orderByClip.Count == 0)
+                if (this.orderByOperation.Count == 0)
                     return string.Empty;
 
                 return string.Concat(" ORDER BY ", this.ToString());

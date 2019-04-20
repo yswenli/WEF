@@ -36,19 +36,19 @@ namespace WEF
         /// <summary>
         /// 
         /// </summary>
-        protected WhereClip where = WhereClip.All;
+        protected WhereOperation where = WhereOperation.All;
         /// <summary>
         /// 
         /// </summary>
-        protected WhereClip havingWhere = WhereClip.All;
+        protected WhereOperation havingWhere = WhereOperation.All;
         /// <summary>
         /// 
         /// </summary>
-        protected OrderByClip orderBy = OrderByClip.None;
+        protected OrderByOperation orderBy = OrderByOperation.None;
         /// <summary>
         /// 
         /// </summary>
-        protected GroupByClip groupBy = GroupByClip.None;
+        protected GroupByOperation groupBy = GroupByOperation.None;
         /// <summary>
         /// 
         /// </summary>
@@ -71,7 +71,7 @@ namespace WEF
         /// <summary>
         /// 
         /// </summary>
-        protected Dictionary<string, KeyValuePair<string, WhereClip>> joins = new Dictionary<string, KeyValuePair<string, WhereClip>>();
+        protected Dictionary<string, KeyValuePair<string, WhereOperation>> joins = new Dictionary<string, KeyValuePair<string, WhereOperation>>();
         /// <summary>
         /// 
         /// </summary>
@@ -196,11 +196,11 @@ namespace WEF
             {
                 StringBuilder sql = new StringBuilder();
 
-                if (GroupByClip.IsNullOrEmpty(groupBy) && string.IsNullOrEmpty(distinctString))
+                if (GroupByOperation.IsNullOrEmpty(groupBy) && string.IsNullOrEmpty(distinctString))
                 {
                     sql.Append(" SELECT count(*) as r_cnt FROM ");
                     sql.Append(FromString);
-                    if (!WhereClip.IsNullOrEmpty(where))
+                    if (!WhereOperation.IsNullOrEmpty(where))
                     {
                         sql.Append(where.WhereString);
                     }
@@ -238,14 +238,14 @@ namespace WEF
                 sql.Append(FromString);
                 sql.Append(" ");
 
-                if (!WhereClip.IsNullOrEmpty(where))
+                if (!WhereOperation.IsNullOrEmpty(where))
                 {
                     sql.Append(where.WhereString);
                 }
-                if (!GroupByClip.IsNullOrEmpty(groupBy))
+                if (!GroupByOperation.IsNullOrEmpty(groupBy))
                 {
                     sql.Append(GroupByString);
-                    if (!WhereClip.IsNullOrEmpty(havingWhere))
+                    if (!WhereOperation.IsNullOrEmpty(havingWhere))
                     {
                         sql.Append(" HAVING ");
                         sql.Append(havingWhere.ToString());
@@ -270,7 +270,7 @@ namespace WEF
                 {
                     fromstring.Append('(', joins.Count);
                     fromstring.Append(tableName);
-                    foreach (KeyValuePair<string, KeyValuePair<string, WhereClip>> kv in joins)
+                    foreach (KeyValuePair<string, KeyValuePair<string, WhereOperation>> kv in joins)
                     {
                         fromstring.Append(" ");
                         fromstring.Append(kv.Value.Key);
@@ -285,7 +285,7 @@ namespace WEF
                 else
                 {
                     fromstring.Append(tableName);
-                    foreach (KeyValuePair<string, KeyValuePair<string, WhereClip>> kv in joins)
+                    foreach (KeyValuePair<string, KeyValuePair<string, WhereOperation>> kv in joins)
                     {
                         fromstring.Append(" ");
                         fromstring.Append(kv.Value.Key);
@@ -304,7 +304,7 @@ namespace WEF
         /// <summary>
         /// 连接信息
         /// </summary>
-        internal Dictionary<string, KeyValuePair<string, WhereClip>> Joins
+        internal Dictionary<string, KeyValuePair<string, WhereOperation>> Joins
         {
             get
             {
@@ -335,14 +335,14 @@ namespace WEF
                 sql.Append(FromString);
                 sql.Append(" ");
 
-                if (!WhereClip.IsNullOrEmpty(where))
+                if (!WhereOperation.IsNullOrEmpty(where))
                 {
                     sql.Append(where.WhereString);
                 }
-                if (!GroupByClip.IsNullOrEmpty(groupBy))
+                if (!GroupByOperation.IsNullOrEmpty(groupBy))
                 {
                     sql.Append(GroupByString);
-                    if (!WhereClip.IsNullOrEmpty(havingWhere))
+                    if (!WhereOperation.IsNullOrEmpty(havingWhere))
                     {
                         sql.Append(" HAVING ");
                         sql.Append(havingWhere.ToString());
@@ -369,7 +369,7 @@ namespace WEF
             {
                 tableName = value;
 
-                this.joins = new Dictionary<string, KeyValuePair<string, WhereClip>>();
+                this.joins = new Dictionary<string, KeyValuePair<string, WhereOperation>>();
             }
         }
 
@@ -377,7 +377,7 @@ namespace WEF
         /// <summary>
         /// 返回  排序
         /// </summary>
-        public OrderByClip OrderByClip
+        public OrderByOperation OrderByClip
         {
             get
             {
@@ -396,7 +396,7 @@ namespace WEF
         {
             get
             {
-                if (OrderByClip.IsNullOrEmpty(orderBy))
+                if (OrderByOperation.IsNullOrEmpty(orderBy))
                     return string.Empty;
 
                 if ((tableName.IndexOf('(') >= 0 || tableName.IndexOf(')') >= 0 || tableName.IndexOf(" FROM ", StringComparison.OrdinalIgnoreCase) >= 0 || tableName.IndexOf(" AS ", StringComparison.OrdinalIgnoreCase) >= 0)
@@ -410,7 +410,7 @@ namespace WEF
         /// <summary>
         /// 返回 分组
         /// </summary>
-        public GroupByClip GroupByClip
+        public GroupByOperation GroupByClip
         {
             get
             {
@@ -429,7 +429,7 @@ namespace WEF
         {
             get
             {
-                if (GroupByClip.IsNullOrEmpty(groupBy))
+                if (GroupByOperation.IsNullOrEmpty(groupBy))
                     return string.Empty;
                 if (tableName.IndexOf('(') >= 0 || tableName.IndexOf(')') >= 0 || tableName.IndexOf(" FROM ", StringComparison.OrdinalIgnoreCase) >= 0 || tableName.IndexOf(" AS ", StringComparison.OrdinalIgnoreCase) >= 0)
                     return groupBy.RemovePrefixTableName().GroupByString;
@@ -440,7 +440,7 @@ namespace WEF
         /// <summary>
         /// 返回 条件
         /// </summary>
-        public WhereClip GetWhereClip()
+        public WhereOperation GetWhereClip()
         {
             return where;
         }
@@ -454,11 +454,11 @@ namespace WEF
             {
                 List<Parameter> ps = new List<Parameter>();
 
-                if (!WhereClip.IsNullOrEmpty(where))
+                if (!WhereOperation.IsNullOrEmpty(where))
                     ps.AddRange(where.Parameters);
 
                 //处理groupby的having
-                if (!GroupByClip.IsNullOrEmpty(groupBy) && !WhereClip.IsNullOrEmpty(havingWhere))
+                if (!GroupByOperation.IsNullOrEmpty(groupBy) && !WhereOperation.IsNullOrEmpty(havingWhere))
                     ps.AddRange(havingWhere.Parameters);
 
                 ps.AddRange(parameters);
@@ -616,7 +616,7 @@ namespace WEF
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search Where(WhereClip where)
+        public Search Where(WhereOperation where)
         {
             this.where = where;
             return this;
@@ -628,7 +628,7 @@ namespace WEF
         /// </summary>
         /// <param name="groupBy"></param>
         /// <returns></returns>
-        public Search GroupBy(GroupByClip groupBy)
+        public Search GroupBy(GroupByOperation groupBy)
         {
             this.groupBy = groupBy;
             return this;
@@ -640,7 +640,7 @@ namespace WEF
         /// </summary>
         /// <param name="havingWhere"></param>
         /// <returns></returns>
-        public Search Having(WhereClip havingWhere)
+        public Search Having(WhereOperation havingWhere)
         {
             this.havingWhere = havingWhere;
             return this;
@@ -654,7 +654,7 @@ namespace WEF
         public Search GroupBy(params Field[] fields)
         {
             if (null == fields || fields.Length <= 0) return this;
-            var tempgroupby = fields.Aggregate(GroupByClip.None, (current, f) => current && f.GroupBy);
+            var tempgroupby = fields.Aggregate(GroupByOperation.None, (current, f) => current && f.GroupBy);
             //2015-09-08修改
             this.groupBy = tempgroupby;
             //this.groupBy = this.groupBy && tempgroupby;
@@ -666,7 +666,7 @@ namespace WEF
         /// </summary>
         /// <param name="orderBy"></param>
         /// <returns></returns>
-        public Search OrderBy(OrderByClip orderBy)
+        public Search OrderBy(OrderByOperation orderBy)
         {
             this.orderBy = orderBy;
             return this;
@@ -678,10 +678,10 @@ namespace WEF
         /// </summary>
         /// <param name="orderBys"></param>
         /// <returns></returns>
-        public Search OrderBy(params OrderByClip[] orderBys)
+        public Search OrderBy(params OrderByOperation[] orderBys)
         {
             if (null == orderBys || orderBys.Length <= 0) return this;
-            var temporderby = orderBys.Aggregate(OrderByClip.None, (current, ob) => current && ob);
+            var temporderby = orderBys.Aggregate(OrderByOperation.None, (current, ob) => current && ob);
             this.orderBy = temporderby;
             return this;
         }
@@ -1041,9 +1041,9 @@ namespace WEF
         /// <param name="where"></param>
         /// <param name="joinType"></param>
         /// <returns></returns>
-        protected Search join(string tableName, string userName, WhereClip where, JoinType joinType)
+        protected Search join(string tableName, string userName, WhereOperation where, JoinType joinType)
         {
-            if (string.IsNullOrEmpty(tableName) || WhereClip.IsNullOrEmpty(where))
+            if (string.IsNullOrEmpty(tableName) || WhereOperation.IsNullOrEmpty(where))
                 return this;
 
             tableName = dbProvider.BuildTableName(tableName, userName);
@@ -1081,7 +1081,7 @@ namespace WEF
                 }
 
 
-                joins.Add(tableName, new KeyValuePair<string, WhereClip>(joinString, where));
+                joins.Add(tableName, new KeyValuePair<string, WhereOperation>(joinString, where));
 
                 if (where.Parameters.Count > 0)
                     parameters.AddRange(where.Parameters);
@@ -1098,7 +1098,7 @@ namespace WEF
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search InnerJoin(string tableName, WhereClip where, string userName = null)
+        public Search InnerJoin(string tableName, WhereOperation where, string userName = null)
         {
             return join(tableName, userName, where, JoinType.InnerJoin);
         }
@@ -1112,7 +1112,7 @@ namespace WEF
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search LeftJoin(string tableName, WhereClip where, string userName = null)
+        public Search LeftJoin(string tableName, WhereOperation where, string userName = null)
         {
             return join(tableName, userName, where, JoinType.LeftJoin);
         }
@@ -1126,7 +1126,7 @@ namespace WEF
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search RightJoin(string tableName, WhereClip where, string userName = null)
+        public Search RightJoin(string tableName, WhereOperation where, string userName = null)
         {
             return join(tableName, userName, where, JoinType.RightJoin);
         }
@@ -1139,7 +1139,7 @@ namespace WEF
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search CrossJoin(string tableName, WhereClip where, string userName = null)
+        public Search CrossJoin(string tableName, WhereOperation where, string userName = null)
         {
             return join(tableName, userName, where, JoinType.CrossJoin);
         }
@@ -1153,7 +1153,7 @@ namespace WEF
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search FullJoin(string tableName, WhereClip where, string userName = null)
+        public Search FullJoin(string tableName, WhereOperation where, string userName = null)
         {
             return join(tableName, userName, where, JoinType.FullJoin);
         }

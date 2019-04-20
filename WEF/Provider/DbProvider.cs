@@ -324,7 +324,7 @@ namespace WEF.Provider
             else
             {
 
-                if (OrderByClip.IsNullOrEmpty(fromSection.OrderByClip))
+                if (OrderByOperation.IsNullOrEmpty(fromSection.OrderByClip))
                 {
                     foreach (Field f in fromSection.Fields)
                     {
@@ -336,7 +336,7 @@ namespace WEF.Provider
                     }
                 }
 
-                Check.Require(!OrderByClip.IsNullOrEmpty(fromSection.OrderByClip), "query.OrderByClip could not be null or empty!");
+                Check.Require(!OrderByOperation.IsNullOrEmpty(fromSection.OrderByClip), "query.OrderByClip could not be null or empty!");
 
                 int count = fromSection.Count(fromSection);
 
@@ -350,7 +350,7 @@ namespace WEF.Provider
 
                     fromSection.PrefixString = string.Concat(" TOP ", lastnumber.ToString());
 
-                    fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByClip);
+                    fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByOperation);
 
                     //
 
@@ -360,13 +360,13 @@ namespace WEF.Provider
 
                     fromSection.DistinctString = string.Empty;
 
-                    fromSection.GroupBy(GroupByClip.None);
+                    fromSection.GroupBy(GroupByOperation.None);
 
                     fromSection.Select(Field.All);
 
-                    fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByClip);
+                    fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByOperation);
 
-                    fromSection.Where(WhereClip.All);
+                    fromSection.Where(WhereOperation.All);
 
                 }
                 else
@@ -383,13 +383,13 @@ namespace WEF.Provider
 
                         fromSection.DistinctString = string.Empty;
 
-                        fromSection.GroupBy(GroupByClip.None);
+                        fromSection.GroupBy(GroupByOperation.None);
 
                         fromSection.Select(Field.All);
 
-                        fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByClip);
+                        fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByOperation);
 
-                        fromSection.Where(WhereClip.All);
+                        fromSection.Where(WhereOperation.All);
 
                         //
 
@@ -397,13 +397,13 @@ namespace WEF.Provider
 
                         fromSection.PrefixString = string.Empty;
 
-                        fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByClip);
+                        fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByOperation);
                     }
                     else
                     {
                         fromSection.PrefixString = string.Concat(" TOP ", (count - startIndex + 1).ToString());
 
-                        fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByClip);
+                        fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByOperation);
 
                         fromSection.TableName = string.Concat(" (", fromSection.SqlString, ") AS tempIntable ");
 
@@ -411,13 +411,13 @@ namespace WEF.Provider
 
                         fromSection.DistinctString = string.Empty;
 
-                        fromSection.GroupBy(GroupByClip.None);
+                        fromSection.GroupBy(GroupByOperation.None);
 
                         fromSection.Select(Field.All);
 
-                        fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByClip);
+                        fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByOperation);
 
-                        fromSection.Where(WhereClip.All);
+                        fromSection.Where(WhereOperation.All);
                     }
 
                 }

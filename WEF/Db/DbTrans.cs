@@ -265,7 +265,7 @@ namespace WEF.Db
         /// <param name="entity"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int UpdateAll<TEntity>(TEntity entity, WhereClip where)
+        public int UpdateAll<TEntity>(TEntity entity, WhereOperation where)
             where TEntity : Entity
         {
             return DBContext.UpdateAll<TEntity>(trans, entity, where);
@@ -333,7 +333,7 @@ namespace WEF.Db
         /// <param name="entity"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(TEntity entity, WhereClip where)
+        public int Update<TEntity>(TEntity entity, WhereOperation where)
             where TEntity : Entity
         {
             return DBContext.Update<TEntity>(trans, entity, where);
@@ -360,7 +360,7 @@ namespace WEF.Db
         public int Update<TEntity>(TEntity entity, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return DBContext.Update<TEntity>(trans, entity, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return DBContext.Update<TEntity>(trans, entity, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 更新单个值
@@ -370,7 +370,7 @@ namespace WEF.Db
         /// <param name="value"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Field field, object value, WhereClip where)
+        public int Update<TEntity>(Field field, object value, WhereOperation where)
             where TEntity : Entity
         {
             return DBContext.Update<TEntity>(trans, field, value, where);
@@ -399,7 +399,7 @@ namespace WEF.Db
         public int Update<TEntity>(Field field, object value, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return DBContext.Update<TEntity>(trans, field, value, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return DBContext.Update<TEntity>(trans, field, value, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 更新多个值
@@ -408,7 +408,7 @@ namespace WEF.Db
         /// <param name="fieldValue"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Dictionary<Field, object> fieldValue, WhereClip where)
+        public int Update<TEntity>(Dictionary<Field, object> fieldValue, WhereOperation where)
               where TEntity : Entity
         {
             return DBContext.Update<TEntity>(trans, fieldValue, where);
@@ -435,7 +435,7 @@ namespace WEF.Db
         public int Update<TEntity>(Dictionary<Field, object> fieldValue, Expression<Func<TEntity, bool>> lambdaWhere)
               where TEntity : Entity
         {
-            return DBContext.Update<TEntity>(trans, fieldValue, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return DBContext.Update<TEntity>(trans, fieldValue, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 更新
@@ -445,7 +445,7 @@ namespace WEF.Db
         /// <param name="values"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Field[] fields, object[] values, WhereClip where)
+        public int Update<TEntity>(Field[] fields, object[] values, WhereOperation where)
             where TEntity : Entity
         {
             return DBContext.Update<TEntity>(trans, fields, values, where);
@@ -474,7 +474,7 @@ namespace WEF.Db
         public int Update<TEntity>(Field[] fields, object[] values, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return DBContext.Update<TEntity>(trans, fields, values, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return DBContext.Update<TEntity>(trans, fields, values, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
 
         #endregion
@@ -556,7 +556,7 @@ namespace WEF.Db
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Delete<TEntity>(WhereClip where)
+        public int Delete<TEntity>(WhereOperation where)
             where TEntity : Entity
         {
             return DBContext.Delete<TEntity>(trans, where);
@@ -581,7 +581,7 @@ namespace WEF.Db
         public int Delete<TEntity>(Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return DBContext.Delete<TEntity>(trans, ExpressionToClip<TEntity>.ToWhereClip(lambdaWhere));
+            return DBContext.Delete<TEntity>(trans, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         #endregion
 
