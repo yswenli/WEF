@@ -19,6 +19,19 @@ namespace WEF.Test
     {
         static void Main(string[] args)
         {
+
+            var aa = new TestA()
+            {
+                aa = DateTime.Now,
+                Age = 10,
+                Created = "2019-04-22 22:53",
+                id = "100001"
+            };
+
+            var bb = aa.ConvertTo<TestB>();
+
+            var cc = bb.ConvertTo<TestA>();
+
             Console.WriteLine("WEF使用实例");
 
             Console.WriteLine("-----------------------------");
@@ -32,7 +45,7 @@ namespace WEF.Test
             var up = upWhere.First();
 
 
-            var plist = tb_UserpointRepository.GetList(1,100);
+            var plist = tb_UserpointRepository.GetList(1, 100);
 
             #region mysql
 
@@ -40,7 +53,7 @@ namespace WEF.Test
 
             var task = repository.GetList(1, 10);
 
-            var taskModel = task.ConvertTo<DBTask, TaskModel>();
+            var taskModel = task.ConvertTo<TaskModel>();
 
             #endregion
 
@@ -121,11 +134,11 @@ namespace WEF.Test
 
 
 
-            var nut = ut.ConvertTo<User, SUser>();
+            var nut = ut.ConvertTo<SUser>();
 
-            var nut1 = ut.ConvertTo<User, SUser>();
+            var nut1 = ut.ConvertTo<SUser>();
 
-            var nnut = nut.ConvertTo<SUser, User>();
+            var nnut = nut.ConvertTo<User>();
 
             var ults = ur.GetList(1, 1000);
 
@@ -152,6 +165,47 @@ namespace WEF.Test
             var dlts = ur.GetList(1, 10000);
             ur.Deletes(dlts);
 
+        }
+
+
+        class TestA
+        {
+            public DateTime aa { get; set; }
+
+            public string id
+            {
+                get; set;
+            }
+
+            public int? Age
+            {
+                get; set;
+            }
+
+            public string Created
+            {
+                get; set;
+            }
+        }
+
+        class TestB
+        {
+            public int ID
+            {
+                get; set;
+            }
+
+            public string age
+            {
+                get; set;
+            }
+
+            public DateTime? created
+            {
+                get; set;
+            }
+
+            public int bb { get; set; }
         }
     }
 }
