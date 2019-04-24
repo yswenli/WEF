@@ -20,12 +20,40 @@ namespace WEF.Test
         static void Main(string[] args)
         {
 
+            var taskModel = new TaskModel()
+            {
+                Crc32 = 123,
+                TaskID = Guid.NewGuid().ToString("N"),
+                BeginTime = DateTime.Now,
+                BusinID = "asdfead24545",
+                CompanyId = "54",
+                CreateTime = DateTime.Now,
+                DayLimit = 10,
+                DayTimes = 100,
+                Description = "adsfevadsfasdfsadf",
+                EndTime = DateTime.Now,
+                FlowType = "5687653",
+                IsDel = false,
+                IsEnabled = true,
+                Name = "afeadfad545646546",
+                Operator = "5435635321",
+                PlatformID = "8423416534635",
+                Point = 2,
+                TaskMaxPoint = 100,
+                TaskType = 3
+            };
+
+            var tn = taskModel.ConvertTo<DBTask>();
+
+            var taa= taskModel.ConvertTo<TestA>();
+
             var aa = new TestA()
             {
                 aa = DateTime.Now,
                 Age = 10,
                 Created = "2019-04-22 22:53",
-                id = "100001"
+                id = "100001",
+                Num=10.235M 
             };
 
             var bb = aa.ConvertTo<TestB>();
@@ -53,7 +81,7 @@ namespace WEF.Test
 
             var task = repository.GetList(1, 10);
 
-            var taskModel = task.ConvertTo<TaskModel>();
+            //var taskModel = task.ConvertTo<TaskModel>();
 
             #endregion
 
@@ -186,6 +214,11 @@ namespace WEF.Test
             {
                 get; set;
             }
+
+            public decimal? Num
+            {
+                get;set;
+            }
         }
 
         class TestB
@@ -206,6 +239,11 @@ namespace WEF.Test
             }
 
             public int bb { get; set; }
+
+            public int? Num
+            {
+                get; set;
+            }
         }
     }
 }
