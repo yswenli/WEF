@@ -64,7 +64,6 @@
     <Compile Include="Common\DesignByContract.cs" />
     <Compile Include="Common\CommonExpand.cs" />
     <Compile Include="Common\DynamicCalls.cs" />
-    <Compile Include="Common\ModelCloneHelper.cs" />
     <Compile Include="Common\ModifyField.cs" />
     <Compile Include="Common\Table.cs" />
     <Compile Include="Common\EntityCache.cs" />

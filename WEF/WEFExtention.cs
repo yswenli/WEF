@@ -159,7 +159,7 @@ namespace WEF
 
                 foreach (var targetProperty in targetProperties)
                 {
-                    var sourceProperty = sourceProperties.Where(b => b.Name.IndexOf(targetProperty.Name, StringComparison.InvariantCultureIgnoreCase) > -1).FirstOrDefault();
+                    var sourceProperty = sourceProperties.Where(b => b.Name.ToLower() == targetProperty.Name.ToLower()).FirstOrDefault();
 
                     if (sourceProperty != null)
                     {
@@ -876,7 +876,7 @@ namespace WEF
                                 if (targetProperty.PropertyType == typeof(string))
                                 {
                                     targetProperty.SetValue(target, val.ToString(), null);
-                                }                                
+                                }
                                 else if (targetProperty.PropertyType == typeof(byte) || targetProperty.PropertyType == typeof(Nullable<byte>))
                                 {
                                     targetProperty.SetValue(target, (byte)val, null);
@@ -992,7 +992,7 @@ namespace WEF
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static List<T> ConverToList<T>(this object source) where T : class
+        public static List<T> ConvertToList<T>(this object source) where T : class
         {
             if (source != null)
             {
