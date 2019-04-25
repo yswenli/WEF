@@ -9,6 +9,11 @@ namespace WEF.NoSql.Model
     public interface IOperator<T, TKey> : IQueryable<T>
         where T : IMongoEntity<TKey>
     {
+        string ConnectionString
+        {
+            get;
+        }
+
         MongoCollection<T> Collection
         {
             get;
@@ -36,5 +41,26 @@ namespace WEF.NoSql.Model
         long Count();
 
         bool Exists(Expression<Func<T, bool>> predicate);
+
+
+        IEnumerable<string> CollectionNames
+        {
+            get;
+        }
+
+        string DataBaseName
+        {
+            get;
+        }
+
+        IEnumerable<string> DataBaseNames
+        {
+            get;
+        }
+
+        string ServerInfo
+        {
+            get;
+        }
     }
 }

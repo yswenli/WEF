@@ -44,6 +44,10 @@ namespace WEF
         /// <summary>
         /// MySql
         /// </summary>
-        MySql = 5
+        MySql = 5,
+        /// <summary>
+        /// MongoDB
+        /// </summary>
+        MongoDB=6
     }
 }

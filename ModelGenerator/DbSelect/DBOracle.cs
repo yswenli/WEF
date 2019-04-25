@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.Data.OracleClient;
-using WEF;
+using System.Windows.Forms;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Model;
 

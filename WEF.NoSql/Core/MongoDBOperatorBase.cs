@@ -22,6 +22,14 @@ namespace WEF.NoSql.Core
     {
         protected internal MongoCollection<T> collection;
 
+        protected string _connStr = string.Empty;
+
+
+        public string ConnectionString
+        {
+            get { return _connStr; }
+        }
+
         public MongoDBOperatorBase()
             : this(Extentions<TKey>.GetDefaultConnectionString())
         {
@@ -31,20 +39,23 @@ namespace WEF.NoSql.Core
         /// 若设置过MongoServerAddress 、MongReplicaSetName则已cluster优先
         /// 否则默认为最后一个ConnectionString设置
         /// </summary>
-        /// <param name="inputStr"></param>
-        public MongoDBOperatorBase(string inputStr)
+        /// <param name="connectionString"></param>
+        public MongoDBOperatorBase(string connectionString)
         {
+            _connStr = connectionString;
+
             if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["MongReplicaSetName"]) &&
                 !string.IsNullOrEmpty(ConfigurationManager.AppSettings["MongoServerAddress"]))
             {
-                this.collection = Extentions<TKey>.GetCollectionFromCluster<T>(inputStr);
+                this.collection = Extentions<TKey>.GetCollectionFromCluster<T>(connectionString);
             }
             else
-                this.collection = Extentions<TKey>.GetCollectionFromConnectionString<T>(inputStr);
+                this.collection = Extentions<TKey>.GetCollectionFromConnectionString<T>(connectionString);
         }
 
         public MongoDBOperatorBase(string connectionString, string collectionName)
         {
+            _connStr = connectionString;
             this.collection = Extentions<TKey>.GetCollectionFromConnectionString<T>(connectionString, collectionName);
         }
 
@@ -66,11 +77,63 @@ namespace WEF.NoSql.Core
             }
         }
 
+
         public string CollectionName
         {
             get
             {
                 return this.collection.Name;
+            }
+        }
+
+        public string ServerInfo
+        {
+            get
+            {
+                var cs = this.collection;
+
+                if (cs != null)
+                {
+                    return cs.Database.Server.ToString();
+                }
+                return null;
+            }
+        }
+
+        public string DataBaseName
+        {
+            get
+            {
+                var cs = this.collection;
+
+                if (cs != null)
+                {
+                    return cs.Database.Name;
+                }
+                return null;
+            }
+        }
+
+        public IEnumerable<string> DataBaseNames
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_connStr))
+                    return new MongoClient(new MongoUrl(_connStr)).GetServer().GetDatabaseNames();
+
+                return null;
+            }
+        }
+
+
+        public IEnumerable<string> CollectionNames
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_connStr))
+                    return new MongoClient(new MongoUrl(_connStr)).GetServer().GetDatabase(DataBaseName).GetCollectionNames();
+
+                return null;
             }
         }
 

@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WEF.ModelGenerator</RootNamespace>
     <AssemblyName>WEF数据库工具</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -22,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>favourite.ico</ApplicationIcon>
@@ -78,6 +81,12 @@
     </Compile>
     <Compile Include="Controls\AutoTextBox.Designer.cs">
       <DependentUpon>AutoTextBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DbSelect\DBMongo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DbSelect\DBMongo.Designer.cs">
+      <DependentUpon>DBMongo.cs</DependentUpon>
     </Compile>
     <Compile Include="DbSelect\DBMsAccess.cs">
       <SubType>Form</SubType>
@@ -176,6 +185,9 @@
     <EmbeddedResource Include="Controls\AutoTextBox.resx">
       <DependentUpon>AutoTextBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DbSelect\DBMongo.resx">
+      <DependentUpon>DBMongo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DbSelect\DBMsAccess.resx">
       <DependentUpon>DBMsAccess.cs</DependentUpon>
     </EmbeddedResource>
@@ -264,6 +276,10 @@
     <None Include="Resources\WEF.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WEF.NoSql\WEF.NoSql.csproj">
+      <Project>{2b45a9ed-d323-4dd7-95da-34066c226aff}</Project>
+      <Name>WEF.NoSql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WEF\WEF.csproj">
       <Project>{6898486b-bd52-4add-9bb1-c397349be2fd}</Project>
       <Name>WEF</Name>

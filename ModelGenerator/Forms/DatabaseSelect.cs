@@ -1,10 +1,4 @@
-﻿using WEF;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+﻿using System;
 using System.Windows.Forms;
 namespace WEF.ModelGenerator
 {
@@ -51,6 +45,10 @@ namespace WEF.ModelGenerator
             else if (rbMariaDB.Checked)
             {
                 databaseType = DatabaseType.MySql;
+            }
+            else if (rbMongoDB.Checked)
+            {
+                databaseType = DatabaseType.MongoDB;
             }
             this.Close();
         }

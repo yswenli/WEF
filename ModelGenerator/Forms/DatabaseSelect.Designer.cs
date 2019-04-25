@@ -38,12 +38,13 @@
             this.button2 = new System.Windows.Forms.Button();
             this.rbMariaDB = new System.Windows.Forms.RadioButton();
             this.rbPostgreSql = new System.Windows.Forms.RadioButton();
+            this.rbMongoDB = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // rbSqlServer
             // 
             this.rbSqlServer.AutoSize = true;
-            this.rbSqlServer.Location = new System.Drawing.Point(169, 80);
+            this.rbSqlServer.Location = new System.Drawing.Point(169, 60);
             this.rbSqlServer.Name = "rbSqlServer";
             this.rbSqlServer.Size = new System.Drawing.Size(83, 16);
             this.rbSqlServer.TabIndex = 0;
@@ -54,7 +55,7 @@
             // 
             this.rbOracle.AutoSize = true;
             this.rbOracle.Checked = true;
-            this.rbOracle.Location = new System.Drawing.Point(56, 80);
+            this.rbOracle.Location = new System.Drawing.Point(56, 60);
             this.rbOracle.Name = "rbOracle";
             this.rbOracle.Size = new System.Drawing.Size(59, 16);
             this.rbOracle.TabIndex = 1;
@@ -65,7 +66,7 @@
             // rbOledb
             // 
             this.rbOledb.AutoSize = true;
-            this.rbOledb.Location = new System.Drawing.Point(169, 130);
+            this.rbOledb.Location = new System.Drawing.Point(169, 110);
             this.rbOledb.Name = "rbOledb";
             this.rbOledb.Size = new System.Drawing.Size(71, 16);
             this.rbOledb.TabIndex = 2;
@@ -75,7 +76,7 @@
             // rbMySql
             // 
             this.rbMySql.AutoSize = true;
-            this.rbMySql.Location = new System.Drawing.Point(315, 80);
+            this.rbMySql.Location = new System.Drawing.Point(315, 60);
             this.rbMySql.Name = "rbMySql";
             this.rbMySql.Size = new System.Drawing.Size(53, 16);
             this.rbMySql.TabIndex = 3;
@@ -85,7 +86,7 @@
             // rbSQLite
             // 
             this.rbSQLite.AutoSize = true;
-            this.rbSQLite.Location = new System.Drawing.Point(56, 130);
+            this.rbSQLite.Location = new System.Drawing.Point(56, 110);
             this.rbSQLite.Name = "rbSQLite";
             this.rbSQLite.Size = new System.Drawing.Size(59, 16);
             this.rbSQLite.TabIndex = 4;
@@ -115,13 +116,12 @@
             // rbMariaDB
             // 
             this.rbMariaDB.AutoSize = true;
-            this.rbMariaDB.Location = new System.Drawing.Point(35, 190);
+            this.rbMariaDB.Location = new System.Drawing.Point(315, 110);
             this.rbMariaDB.Name = "rbMariaDB";
             this.rbMariaDB.Size = new System.Drawing.Size(65, 16);
             this.rbMariaDB.TabIndex = 7;
             this.rbMariaDB.Text = "MariaDB";
             this.rbMariaDB.UseVisualStyleBackColor = true;
-            this.rbMariaDB.Visible = false;
             // 
             // rbPostgreSql
             // 
@@ -135,12 +135,23 @@
             this.rbPostgreSql.UseVisualStyleBackColor = true;
             this.rbPostgreSql.Visible = false;
             // 
+            // rbMongoDB
+            // 
+            this.rbMongoDB.AutoSize = true;
+            this.rbMongoDB.Location = new System.Drawing.Point(56, 159);
+            this.rbMongoDB.Name = "rbMongoDB";
+            this.rbMongoDB.Size = new System.Drawing.Size(65, 16);
+            this.rbMongoDB.TabIndex = 7;
+            this.rbMongoDB.Text = "MongoDB";
+            this.rbMongoDB.UseVisualStyleBackColor = true;
+            // 
             // DatabaseSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(429, 251);
             this.Controls.Add(this.rbPostgreSql);
+            this.Controls.Add(this.rbMongoDB);
             this.Controls.Add(this.rbMariaDB);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -173,5 +184,6 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.RadioButton rbMariaDB;
         private System.Windows.Forms.RadioButton rbPostgreSql;
+        private System.Windows.Forms.RadioButton rbMongoDB;
     }
 }

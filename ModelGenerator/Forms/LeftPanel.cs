@@ -100,6 +100,10 @@ namespace WEF.ModelGenerator
                         DbSelect.DBMySql dbMySql = new WEF.ModelGenerator.DbSelect.DBMySql();
                         dia = dbMySql.ShowDialog();
                         break;
+                    case DatabaseType.MongoDB:
+                        DbSelect.DBMongo dbMongo = new WEF.ModelGenerator.DbSelect.DBMongo();
+                        dia = dbMongo.ShowDialog();
+                        break;
                     default:
                         break;
                 }
