@@ -45,15 +45,16 @@ namespace WEF.Test
 
             var tn = taskModel.ConvertTo<DBTask>();
 
-            var taa= taskModel.ConvertTo<TestA>();
+            var taa = taskModel.ConvertTo<TestA>();
 
             var aa = new TestA()
             {
                 aa = DateTime.Now,
                 Age = 10,
-                Created = "2019-04-22 22:53",
+                //Created = "2019-04-22 22:53",
                 id = "100001",
-                Num=10.235M 
+                Num = 10.235M,
+                Num1 = 100
             };
 
             var bb = aa.ConvertTo<TestB>();
@@ -217,7 +218,12 @@ namespace WEF.Test
 
             public decimal? Num
             {
-                get;set;
+                get; set;
+            }
+
+            public int Num1
+            {
+                get; set;
             }
         }
 
@@ -241,6 +247,11 @@ namespace WEF.Test
             public int bb { get; set; }
 
             public int? Num
+            {
+                get; set;
+            }
+
+            public decimal? Num1
             {
                 get; set;
             }

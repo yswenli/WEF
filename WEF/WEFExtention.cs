@@ -328,14 +328,13 @@ namespace WEF
                                     }
                                     else if (targetProperty.PropertyType == typeof(DateTime) || targetProperty.PropertyType == typeof(Nullable<DateTime>))
                                     {
-                                        DateTime num = new DateTime();
-
                                         if (!string.IsNullOrWhiteSpace(str))
                                         {
-                                            DateTime.TryParse(str, out num);
+                                            if(DateTime.TryParse(str, out DateTime dt))
+                                            {
+                                                targetProperty.SetValue(target, dt, null);
+                                            }
                                         }
-
-                                        targetProperty.SetValue(target, num, null);
                                     }
                                 }
 
@@ -361,27 +360,27 @@ namespace WEF
                                     }
                                     else if (targetProperty.PropertyType == typeof(bool) || targetProperty.PropertyType == typeof(Nullable<bool>))
                                     {
-                                        targetProperty.SetValue(target, ((byte)val) != 0, null);
+                                        targetProperty.SetValue(target, (Convert.ToByte(val)) != 0, null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(short) || targetProperty.PropertyType == typeof(Nullable<short>))
                                     {
-                                        targetProperty.SetValue(target, (short)val, null);
+                                        targetProperty.SetValue(target, Convert.ToInt16(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(int) || targetProperty.PropertyType == typeof(Nullable<int>))
                                     {
-                                        targetProperty.SetValue(target, (int)val, null);
+                                        targetProperty.SetValue(target, Convert.ToInt32(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(decimal) || targetProperty.PropertyType == typeof(Nullable<decimal>))
                                     {
-                                        targetProperty.SetValue(target, (decimal)val, null);
+                                        targetProperty.SetValue(target, Convert.ToDecimal(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(float) || targetProperty.PropertyType == typeof(Nullable<float>))
                                     {
-                                        targetProperty.SetValue(target, (float)val, null);
+                                        targetProperty.SetValue(target, Convert.ToSingle(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(double) || targetProperty.PropertyType == typeof(Nullable<double>))
                                     {
-                                        targetProperty.SetValue(target, (double)val, null);
+                                        targetProperty.SetValue(target, Convert.ToDouble(val), null);
                                     }
                                 }
                                 else if (sourceProperty.PropertyType == typeof(Nullable<byte>))
@@ -408,19 +407,19 @@ namespace WEF
                                             }
                                             else if (targetProperty.PropertyType == typeof(bool) || targetProperty.PropertyType == typeof(Nullable<bool>))
                                             {
-                                                targetProperty.SetValue(target, ((byte)nVal.Value) != 0, null);
+                                                targetProperty.SetValue(target, (Convert.ToByte(nVal.Value)) != 0, null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(short) || targetProperty.PropertyType == typeof(Nullable<short>))
                                             {
-                                                targetProperty.SetValue(target, (short)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToInt16(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(int) || targetProperty.PropertyType == typeof(Nullable<int>))
                                             {
-                                                targetProperty.SetValue(target, (int)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToInt32(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(decimal) || targetProperty.PropertyType == typeof(Nullable<decimal>))
                                             {
-                                                targetProperty.SetValue(target, (decimal)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToDecimal(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(long) || targetProperty.PropertyType == typeof(Nullable<long>))
                                             {
@@ -432,7 +431,7 @@ namespace WEF
                                             }
                                             else if (targetProperty.PropertyType == typeof(double) || targetProperty.PropertyType == typeof(Nullable<double>))
                                             {
-                                                targetProperty.SetValue(target, (double)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToDouble(nVal.Value), null);
                                             }
                                         }
                                     }
@@ -456,27 +455,27 @@ namespace WEF
                                     }
                                     else if (targetProperty.PropertyType == typeof(bool) || targetProperty.PropertyType == typeof(Nullable<bool>))
                                     {
-                                        targetProperty.SetValue(target, ((short)val) != 0, null);
+                                        targetProperty.SetValue(target, (Convert.ToInt16(val)) != 0, null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(byte) || targetProperty.PropertyType == typeof(Nullable<byte>))
                                     {
-                                        targetProperty.SetValue(target, (byte)val, null);
+                                        targetProperty.SetValue(target, Convert.ToByte(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(int) || targetProperty.PropertyType == typeof(Nullable<int>))
                                     {
-                                        targetProperty.SetValue(target, (int)val, null);
+                                        targetProperty.SetValue(target, Convert.ToInt32(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(decimal) || targetProperty.PropertyType == typeof(Nullable<decimal>))
                                     {
-                                        targetProperty.SetValue(target, (decimal)val, null);
+                                        targetProperty.SetValue(target, Convert.ToDecimal(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(float) || targetProperty.PropertyType == typeof(Nullable<float>))
                                     {
-                                        targetProperty.SetValue(target, (float)val, null);
+                                        targetProperty.SetValue(target, Convert.ToSingle(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(double) || targetProperty.PropertyType == typeof(Nullable<double>))
                                     {
-                                        targetProperty.SetValue(target, (double)val, null);
+                                        targetProperty.SetValue(target, Convert.ToDouble(val), null);
                                     }
                                 }
                                 else if (sourceProperty.PropertyType == typeof(Nullable<short>))
@@ -503,19 +502,19 @@ namespace WEF
                                             }
                                             else if (targetProperty.PropertyType == typeof(bool) || targetProperty.PropertyType == typeof(Nullable<bool>))
                                             {
-                                                targetProperty.SetValue(target, ((short)nVal.Value) != 0, null);
+                                                targetProperty.SetValue(target, (Convert.ToInt16(nVal.Value)) != 0, null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(byte) || targetProperty.PropertyType == typeof(Nullable<byte>))
                                             {
-                                                targetProperty.SetValue(target, (byte)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToByte(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(int) || targetProperty.PropertyType == typeof(Nullable<int>))
                                             {
-                                                targetProperty.SetValue(target, (int)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToInt32(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(decimal) || targetProperty.PropertyType == typeof(Nullable<decimal>))
                                             {
-                                                targetProperty.SetValue(target, (decimal)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToDecimal(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(long) || targetProperty.PropertyType == typeof(Nullable<long>))
                                             {
@@ -527,7 +526,7 @@ namespace WEF
                                             }
                                             else if (targetProperty.PropertyType == typeof(double) || targetProperty.PropertyType == typeof(Nullable<double>))
                                             {
-                                                targetProperty.SetValue(target, (double)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToDouble(nVal.Value), null);
                                             }
                                         }
                                     }
@@ -551,27 +550,27 @@ namespace WEF
                                     }
                                     else if (targetProperty.PropertyType == typeof(bool) || targetProperty.PropertyType == typeof(Nullable<bool>))
                                     {
-                                        targetProperty.SetValue(target, ((int)val) != 0, null);
+                                        targetProperty.SetValue(target, (Convert.ToInt32(val)) != 0, null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(byte) || targetProperty.PropertyType == typeof(Nullable<byte>))
                                     {
-                                        targetProperty.SetValue(target, (byte)val, null);
+                                        targetProperty.SetValue(target, Convert.ToByte(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(short) || targetProperty.PropertyType == typeof(Nullable<short>))
                                     {
-                                        targetProperty.SetValue(target, (short)val, null);
+                                        targetProperty.SetValue(target, Convert.ToInt16(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(decimal) || targetProperty.PropertyType == typeof(Nullable<decimal>))
                                     {
-                                        targetProperty.SetValue(target, (decimal)val, null);
+                                        targetProperty.SetValue(target, Convert.ToDecimal(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(float) || targetProperty.PropertyType == typeof(Nullable<float>))
                                     {
-                                        targetProperty.SetValue(target, (float)val, null);
+                                        targetProperty.SetValue(target, Convert.ToSingle(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(double) || targetProperty.PropertyType == typeof(Nullable<double>))
                                     {
-                                        targetProperty.SetValue(target, (double)val, null);
+                                        targetProperty.SetValue(target, Convert.ToDouble(val), null);
                                     }
                                 }
                                 else if (sourceProperty.PropertyType == typeof(Nullable<int>))
@@ -598,19 +597,19 @@ namespace WEF
                                             }
                                             else if (targetProperty.PropertyType == typeof(bool) || targetProperty.PropertyType == typeof(Nullable<bool>))
                                             {
-                                                targetProperty.SetValue(target, ((int)nVal.Value) != 0, null);
+                                                targetProperty.SetValue(target, (Convert.ToInt32(nVal.Value)) != 0, null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(byte) || targetProperty.PropertyType == typeof(Nullable<byte>))
                                             {
-                                                targetProperty.SetValue(target, (byte)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToByte(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(short) || targetProperty.PropertyType == typeof(Nullable<short>))
                                             {
-                                                targetProperty.SetValue(target, (short)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToInt16(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(decimal) || targetProperty.PropertyType == typeof(Nullable<decimal>))
                                             {
-                                                targetProperty.SetValue(target, (decimal)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToDecimal(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(long) || targetProperty.PropertyType == typeof(Nullable<long>))
                                             {
@@ -622,7 +621,7 @@ namespace WEF
                                             }
                                             else if (targetProperty.PropertyType == typeof(double) || targetProperty.PropertyType == typeof(Nullable<double>))
                                             {
-                                                targetProperty.SetValue(target, (double)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToDouble(nVal.Value), null);
                                             }
                                         }
                                     }
@@ -646,27 +645,27 @@ namespace WEF
                                     }
                                     else if (targetProperty.PropertyType == typeof(byte) || targetProperty.PropertyType == typeof(Nullable<byte>))
                                     {
-                                        targetProperty.SetValue(target, (byte)val, null);
+                                        targetProperty.SetValue(target, Convert.ToByte(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(short) || targetProperty.PropertyType == typeof(Nullable<short>))
                                     {
-                                        targetProperty.SetValue(target, (short)val, null);
+                                        targetProperty.SetValue(target, Convert.ToInt16(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(int) || targetProperty.PropertyType == typeof(Nullable<int>))
                                     {
-                                        targetProperty.SetValue(target, (int)val, null);
+                                        targetProperty.SetValue(target, Convert.ToInt32(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(decimal) || targetProperty.PropertyType == typeof(Nullable<decimal>))
                                     {
-                                        targetProperty.SetValue(target, (decimal)val, null);
+                                        targetProperty.SetValue(target, Convert.ToDecimal(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(float) || targetProperty.PropertyType == typeof(Nullable<float>))
                                     {
-                                        targetProperty.SetValue(target, (float)val, null);
+                                        targetProperty.SetValue(target, Convert.ToSingle(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(double) || targetProperty.PropertyType == typeof(Nullable<double>))
                                     {
-                                        targetProperty.SetValue(target, (double)val, null);
+                                        targetProperty.SetValue(target, Convert.ToDouble(val), null);
                                     }
                                 }
                                 else if (sourceProperty.PropertyType == typeof(Nullable<long>))
@@ -693,23 +692,23 @@ namespace WEF
                                             }
                                             else if (targetProperty.PropertyType == typeof(byte) || targetProperty.PropertyType == typeof(Nullable<byte>))
                                             {
-                                                targetProperty.SetValue(target, (byte)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToByte(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(short) || targetProperty.PropertyType == typeof(Nullable<short>))
                                             {
-                                                targetProperty.SetValue(target, (short)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToInt16(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(int) || targetProperty.PropertyType == typeof(Nullable<int>))
                                             {
-                                                targetProperty.SetValue(target, (int)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToInt32(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(double) || targetProperty.PropertyType == typeof(Nullable<double>))
                                             {
-                                                targetProperty.SetValue(target, (double)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToDouble(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(decimal) || targetProperty.PropertyType == typeof(Nullable<decimal>))
                                             {
-                                                targetProperty.SetValue(target, (decimal)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToDecimal(nVal.Value), null);
                                             }
                                         }
                                     }
@@ -724,15 +723,15 @@ namespace WEF
                                     }
                                     else if (targetProperty.PropertyType == typeof(byte) || targetProperty.PropertyType == typeof(Nullable<byte>))
                                     {
-                                        targetProperty.SetValue(target, (byte)val, null);
+                                        targetProperty.SetValue(target, Convert.ToByte(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(short) || targetProperty.PropertyType == typeof(Nullable<short>))
                                     {
-                                        targetProperty.SetValue(target, (short)val, null);
+                                        targetProperty.SetValue(target, Convert.ToInt16(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(int) || targetProperty.PropertyType == typeof(Nullable<int>))
                                     {
-                                        targetProperty.SetValue(target, (int)val, null);
+                                        targetProperty.SetValue(target, Convert.ToInt32(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(long) || targetProperty.PropertyType == typeof(Nullable<long>))
                                     {
@@ -740,11 +739,11 @@ namespace WEF
                                     }
                                     else if (targetProperty.PropertyType == typeof(double) || targetProperty.PropertyType == typeof(Nullable<double>))
                                     {
-                                        targetProperty.SetValue(target, (float)val, null);
+                                        targetProperty.SetValue(target, Convert.ToSingle(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(decimal) || targetProperty.PropertyType == typeof(Nullable<decimal>))
                                     {
-                                        targetProperty.SetValue(target, (decimal)val, null);
+                                        targetProperty.SetValue(target, Convert.ToDecimal(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(Nullable<float>))
                                     {
@@ -769,15 +768,15 @@ namespace WEF
                                             }
                                             else if (targetProperty.PropertyType == typeof(byte) || targetProperty.PropertyType == typeof(Nullable<byte>))
                                             {
-                                                targetProperty.SetValue(target, (byte)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToByte(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(short) || targetProperty.PropertyType == typeof(Nullable<short>))
                                             {
-                                                targetProperty.SetValue(target, (short)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToInt16(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(int) || targetProperty.PropertyType == typeof(Nullable<int>))
                                             {
-                                                targetProperty.SetValue(target, (int)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToInt32(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(long) || targetProperty.PropertyType == typeof(Nullable<long>))
                                             {
@@ -785,11 +784,11 @@ namespace WEF
                                             }
                                             else if (targetProperty.PropertyType == typeof(decimal) || targetProperty.PropertyType == typeof(Nullable<decimal>))
                                             {
-                                                targetProperty.SetValue(target, (decimal)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToDecimal(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(double) || targetProperty.PropertyType == typeof(Nullable<double>))
                                             {
-                                                targetProperty.SetValue(target, (double)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToDouble(nVal.Value), null);
                                             }
                                         }
                                     }
@@ -803,15 +802,15 @@ namespace WEF
                                     }
                                     else if (targetProperty.PropertyType == typeof(byte) || targetProperty.PropertyType == typeof(Nullable<byte>))
                                     {
-                                        targetProperty.SetValue(target, (byte)val, null);
+                                        targetProperty.SetValue(target, Convert.ToByte(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(short) || targetProperty.PropertyType == typeof(Nullable<short>))
                                     {
-                                        targetProperty.SetValue(target, (short)val, null);
+                                        targetProperty.SetValue(target, Convert.ToInt16(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(int) || targetProperty.PropertyType == typeof(Nullable<int>))
                                     {
-                                        targetProperty.SetValue(target, (int)val, null);
+                                        targetProperty.SetValue(target, Convert.ToInt32(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(long) || targetProperty.PropertyType == typeof(Nullable<long>))
                                     {
@@ -819,11 +818,11 @@ namespace WEF
                                     }
                                     else if (targetProperty.PropertyType == typeof(float) || targetProperty.PropertyType == typeof(Nullable<float>))
                                     {
-                                        targetProperty.SetValue(target, (float)val, null);
+                                        targetProperty.SetValue(target, Convert.ToSingle(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(decimal) || targetProperty.PropertyType == typeof(Nullable<decimal>))
                                     {
-                                        targetProperty.SetValue(target, (decimal)val, null);
+                                        targetProperty.SetValue(target, Convert.ToDecimal(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(Nullable<double>))
                                     {
@@ -848,15 +847,15 @@ namespace WEF
                                             }
                                             else if (targetProperty.PropertyType == typeof(byte) || targetProperty.PropertyType == typeof(Nullable<byte>))
                                             {
-                                                targetProperty.SetValue(target, (byte)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToByte(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(short) || targetProperty.PropertyType == typeof(Nullable<short>))
                                             {
-                                                targetProperty.SetValue(target, (short)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToInt16(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(int) || targetProperty.PropertyType == typeof(Nullable<int>))
                                             {
-                                                targetProperty.SetValue(target, (int)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToInt32(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(long) || targetProperty.PropertyType == typeof(Nullable<long>))
                                             {
@@ -868,7 +867,7 @@ namespace WEF
                                             }
                                             else if (targetProperty.PropertyType == typeof(double))
                                             {
-                                                targetProperty.SetValue(target, (double)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToDouble(nVal.Value), null);
                                             }
                                         }
                                     }
@@ -882,15 +881,15 @@ namespace WEF
                                     }
                                     else if (targetProperty.PropertyType == typeof(byte) || targetProperty.PropertyType == typeof(Nullable<byte>))
                                     {
-                                        targetProperty.SetValue(target, (byte)val, null);
+                                        targetProperty.SetValue(target, Convert.ToByte(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(short) || targetProperty.PropertyType == typeof(Nullable<short>))
                                     {
-                                        targetProperty.SetValue(target, (short)val, null);
+                                        targetProperty.SetValue(target, Convert.ToInt16(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(int) || targetProperty.PropertyType == typeof(Nullable<int>))
                                     {
-                                        targetProperty.SetValue(target, (int)val, null);
+                                        targetProperty.SetValue(target, Convert.ToInt32(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(long) || targetProperty.PropertyType == typeof(Nullable<long>))
                                     {
@@ -898,11 +897,11 @@ namespace WEF
                                     }
                                     else if (targetProperty.PropertyType == typeof(float) || targetProperty.PropertyType == typeof(Nullable<float>))
                                     {
-                                        targetProperty.SetValue(target, (float)val, null);
+                                        targetProperty.SetValue(target, Convert.ToSingle(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(double) || targetProperty.PropertyType == typeof(Nullable<double>))
                                     {
-                                        targetProperty.SetValue(target, (double)val, null);
+                                        targetProperty.SetValue(target, Convert.ToDouble(val), null);
                                     }
                                     else if (targetProperty.PropertyType == typeof(Nullable<decimal>))
                                     {
@@ -927,15 +926,15 @@ namespace WEF
                                             }
                                             else if (targetProperty.PropertyType == typeof(byte) || targetProperty.PropertyType == typeof(Nullable<byte>))
                                             {
-                                                targetProperty.SetValue(target, (byte)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToByte(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(short) || targetProperty.PropertyType == typeof(Nullable<short>))
                                             {
-                                                targetProperty.SetValue(target, (short)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToInt16(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(int) || targetProperty.PropertyType == typeof(Nullable<int>))
                                             {
-                                                targetProperty.SetValue(target, (int)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToInt32(nVal.Value), null);
                                             }
                                             else if (targetProperty.PropertyType == typeof(long) || targetProperty.PropertyType == typeof(Nullable<long>))
                                             {
@@ -947,7 +946,7 @@ namespace WEF
                                             }
                                             else if (targetProperty.PropertyType == typeof(double) || targetProperty.PropertyType == typeof(Nullable<double>))
                                             {
-                                                targetProperty.SetValue(target, (double)nVal.Value, null);
+                                                targetProperty.SetValue(target, Convert.ToDouble(nVal.Value), null);
                                             }
                                         }
                                     }
@@ -966,17 +965,17 @@ namespace WEF
                                     }
                                     else if (sourceProperty.PropertyType == typeof(byte))
                                     {
-                                        var nVal = (byte)val;
+                                        var nVal = Convert.ToByte(val);
                                         targetProperty.SetValue(target, nVal, null);
                                     }
                                     else if (sourceProperty.PropertyType == typeof(short))
                                     {
-                                        var nVal = (short)val;
+                                        var nVal = Convert.ToInt16(val);
                                         targetProperty.SetValue(target, nVal, null);
                                     }
                                     else if (sourceProperty.PropertyType == typeof(int))
                                     {
-                                        var nVal = (int)val;
+                                        var nVal = Convert.ToInt32(val);
                                         targetProperty.SetValue(target, nVal, null);
                                     }
                                 }
