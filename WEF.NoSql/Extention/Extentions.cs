@@ -17,7 +17,7 @@ namespace WEF.NoSql.Extention
         }
         public static string GetDefaultConnectionString()
         {
-            return ConfigurationManager.ConnectionStrings[ConfigurationManager.ConnectionStrings.Count - 1].ConnectionString;
+            return ConfigurationManager.ConnectionStrings["MongoDBConnectStr"].ConnectionString;
         }
 
         private static MongoDatabase GetDatabaseFromUrl(MongoUrl url)
