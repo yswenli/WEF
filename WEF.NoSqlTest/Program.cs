@@ -13,12 +13,12 @@ namespace WEF.NoSqlTest
 
             var customerOperator = MongoDBFactory.Create<Account>();
 
-
             var account = new Account();
             account.FirstName = "li";
             account.LastName = "wen";
             account.Phone = "13800138000";
             account.Email = "wenguoli_520@qq.com";
+            account.Created = DateTime.Now;
             account.HomeAddress = new Address
             {
                 Address1 = "上海",
@@ -37,6 +37,8 @@ namespace WEF.NoSqlTest
             var list = customerOperator.Where(b => b.FirstName.Contains("l")).Skip(1).Take(10).OrderBy(b => b.Orders).ToList();
 
             var c = customerOperator.Where(b => b.FirstName.Contains("l")).FirstOrDefault();
+
+            var c1 = customerOperator.GetById("5ccebadfb3b7bb38408bce24");
 
             Console.WriteLine("Update");
 

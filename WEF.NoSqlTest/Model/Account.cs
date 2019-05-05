@@ -43,6 +43,11 @@ namespace WEF.NoSqlTest.Model
         {
             get; set;
         }
+
+        public DateTime Created
+        {
+            get;set;
+        }
     }
 
     public class Order

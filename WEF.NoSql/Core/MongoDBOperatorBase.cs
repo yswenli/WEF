@@ -1,4 +1,6 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
@@ -51,6 +53,10 @@ namespace WEF.NoSql.Core
             }
             else
                 this.collection = Extentions<TKey>.GetCollectionFromConnectionString<T>(connectionString);
+
+            //修复日期时区问题
+            var serializer = new DateTimeSerializer(DateTimeKind.Local, BsonType.DateTime);
+            BsonSerializer.RegisterSerializer(typeof(DateTime), serializer);
         }
 
         public MongoDBOperatorBase(string connectionString, string collectionName)

@@ -58,7 +58,7 @@ namespace WEF.NoSql.Extention
 
             set.ReadPreference = new ReadPreference(ReadPreferenceMode.SecondaryPreferred);
 
-            MongoClient client = new MongoClient(set);
+            MongoClient client = new MongoClient(set);            
 
             return client.GetServer().GetDatabase(databaseName);
         }
