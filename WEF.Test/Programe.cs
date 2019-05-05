@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using WEF.Common;
 using WEF.Expressions;
 using WEF.Models;
 
@@ -20,6 +21,12 @@ namespace WEF.Test
     {
         static void Main(string[] args)
         {
+
+            var db = new DBContext();
+
+            var dt = db.FromSql("select * from tb_task").ToDataTable();
+
+            var dttasks = dt.DataTableToEntityList<DBTask>();
 
             var taskModel = new TaskModel()
             {

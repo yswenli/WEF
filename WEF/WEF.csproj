@@ -61,6 +61,7 @@
     <Compile Include="Common\BaseFieldType.cs" />
     <Compile Include="Common\ColumnInfo.cs" />
     <Compile Include="Common\DataUtils.cs" />
+    <Compile Include="Common\DBConvert.cs" />
     <Compile Include="Common\DesignByContract.cs" />
     <Compile Include="Common\CommonExpand.cs" />
     <Compile Include="Common\DynamicCalls.cs" />
