@@ -44,9 +44,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\ArticleKind.cs" />
+    <Compile Include="Models\DBGift.cs" />
     <Compile Include="Models\SUser.cs" />
     <Compile Include="Models\TaskModel.cs" />
-    <Compile Include="Models\TB_Task.cs" />
+    <Compile Include="Models\DBTask.cs" />
     <Compile Include="Models\DBUserPoint.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Programe.cs" />

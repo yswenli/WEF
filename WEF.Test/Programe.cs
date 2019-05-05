@@ -10,6 +10,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using WEF.Expressions;
 using WEF.Models;
 
@@ -64,6 +65,22 @@ namespace WEF.Test
             Console.WriteLine("WEF使用实例");
 
             Console.WriteLine("-----------------------------");
+
+            var giftopt = new DBGiftRepository();
+
+            var glist = giftopt.Search().Where(b => b.Giftid.Contains("1")).ToList();
+
+            var glist2 = giftopt.Search().Where(b => b.Giftid.Like("1")).ToList();
+
+            var gids = new List<string>();
+
+            gids.Add("120100010219094341");
+            gids.Add("030000050310180911");
+            gids.Add("201706260157165");
+            gids.Add("201706300150728");
+
+            var glist3 = giftopt.Search().Where(b => b.Giftid.In(gids)).ToList();
+
 
             DBUserPointRepository tb_UserpointRepository = new DBUserPointRepository();
 
