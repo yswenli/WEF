@@ -10,14 +10,22 @@ namespace WEF.NoSql.Extention
 {
     internal static class Extentions<U>
     {
+        internal const string DefaultName = "MongoDBConnectStr";
+
+        internal const string AppKeyNameMongoServerAddress = "MongoServerAddress";
+
+        internal const string AppKeyNameMongReplicaSetName = "MongReplicaSetName";
+
+        internal const string AppKeyNameTimeOut = "TimeOut";
 
         public static string GetConnectionString(string settingName)
         {
             return ConfigurationManager.ConnectionStrings[settingName].ConnectionString;
         }
+
         public static string GetDefaultConnectionString()
         {
-            return ConfigurationManager.ConnectionStrings["MongoDBConnectStr"].ConnectionString;
+            return ConfigurationManager.ConnectionStrings[DefaultName].ConnectionString;
         }
 
         private static MongoDatabase GetDatabaseFromUrl(MongoUrl url)
@@ -34,8 +42,11 @@ namespace WEF.NoSql.Extention
         private static MongoDatabase GetDatabaseFromAppSettings(string databaseName)
         {
             List<MongoServerAddress> servers = new List<MongoServerAddress>();
+
             string reg = @"^(?'server'\d{1,}.\d{1,}.\d{1,}.\d{1,}):(?'port'\d{1,})$";
-            string[] ServerList = ConfigurationManager.AppSettings["MongoServerAddress"].Trim().Split('|');
+
+            string[] ServerList = ConfigurationManager.AppSettings[AppKeyNameMongoServerAddress].Trim().Split('|');
+
             foreach (string server in ServerList)
             {
                 MatchCollection mc = Regex.Matches(server, reg);
@@ -50,15 +61,15 @@ namespace WEF.NoSql.Extention
 
             set.Servers = servers;
 
-            set.ReplicaSetName = ConfigurationManager.AppSettings["MongReplicaSetName"].Trim();//设置副本集名称  
+            set.ReplicaSetName = ConfigurationManager.AppSettings[AppKeyNameMongReplicaSetName].Trim();//设置副本集名称  
 
-            int TimeOut = ConfigurationManager.AppSettings["TimeOut"].ParseInt();//设置副本集名称  
+            int TimeOut = ConfigurationManager.AppSettings[AppKeyNameTimeOut].ParseInt();//设置副本集名称  
 
             set.ConnectTimeout = new TimeSpan(0, 0, 0, TimeOut, 0);//设置超时时间为5秒  
 
             set.ReadPreference = new ReadPreference(ReadPreferenceMode.SecondaryPreferred);
 
-            MongoClient client = new MongoClient(set);            
+            MongoClient client = new MongoClient(set);
 
             return client.GetServer().GetDatabase(databaseName);
         }

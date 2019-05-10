@@ -18,11 +18,14 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WEF.DbDAL;
 using WEF.ModelGenerator.Common;
+using WEF.ModelGenerator.DbSelect;
 using WEF.ModelGenerator.Model;
+using WEF.NoSql;
 
 namespace WEF.ModelGenerator
 {
@@ -148,6 +151,7 @@ namespace WEF.ModelGenerator
             TreeNode node = Treeview.Nodes[0];
 
             node.ContextMenuStrip = contextMenuStripTop;
+
             foreach (Connection connection in _ConnectList)
             {
                 TreeNode nnode = new TreeNode(connection.Name, 0, 0);
@@ -155,6 +159,7 @@ namespace WEF.ModelGenerator
                 nnode.Tag = connection.ID.ToString();
                 node.Nodes.Add(nnode);
             }
+
             Treeview.ExpandAll();
         }
 
@@ -183,12 +188,22 @@ namespace WEF.ModelGenerator
                 if (null != newcontentForm)
                 {
                     Connection conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(Treeview.SelectedNode.Parent.Parent.Parent.Tag.ToString()); });
-                    conConnectionString = Treeview.SelectedNode.Parent.Parent.Tag.ToString();
-                    try
+
+                    if (conModel.DbType.Equals(DatabaseType.MongoDB.ToString()))
                     {
-                        newcontentForm(conModel, Treeview.SelectedNode.Text, Treeview.SelectedNode.Parent.Parent.Text, Treeview.SelectedNode.Tag.ToString().Equals("V"));
+                        //todo
+
+                        MongoDBTool.Connect(conModel.ConnectionString).GetList(node.Parent.Parent.Text, node.Text, "{\"find\":{\"Id\":\"11\"}}");
                     }
-                    catch { }
+                    else
+                    {
+                        conConnectionString = Treeview.SelectedNode.Parent.Parent.Tag.ToString();
+                        try
+                        {
+                            newcontentForm(conModel, Treeview.SelectedNode.Text, Treeview.SelectedNode.Parent.Parent.Text, Treeview.SelectedNode.Tag.ToString().Equals("V"));
+                        }
+                        catch { }
+                    }
                 }
             }
 
@@ -335,7 +350,7 @@ namespace WEF.ModelGenerator
 
                         this.Invoke(new Action(() =>
                         {
-                            gettables(tnode, tables, views);
+                            ShowTablesAndViews(tnode, tables, views);
                         }));
 
                     }
@@ -360,7 +375,7 @@ namespace WEF.ModelGenerator
 
                         this.Invoke(new Action(() =>
                         {
-                            gettables(tnode, tables, views);
+                            ShowTablesAndViews(tnode, tables, views);
                         }));
 
                     }
@@ -393,7 +408,7 @@ namespace WEF.ModelGenerator
 
                                 this.Invoke(new Action(() =>
                                 {
-                                    gettables(tnode, tables, views);
+                                    ShowTablesAndViews(tnode, tables, views);
                                 }));
                             }
                         }
@@ -415,7 +430,7 @@ namespace WEF.ModelGenerator
 
                             this.Invoke(new Action(() =>
                             {
-                                gettables(tnode, tables, views);
+                                ShowTablesAndViews(tnode, tables, views);
                             }));
                         }
                     }
@@ -439,7 +454,7 @@ namespace WEF.ModelGenerator
 
                         this.Invoke(new Action(() =>
                         {
-                            gettables(tnode, tables, views);
+                            ShowTablesAndViews(tnode, tables, views);
                         }));
                     }
                     else if (conModel.DbType.Equals(DatabaseType.MySql.ToString()))
@@ -468,7 +483,7 @@ namespace WEF.ModelGenerator
 
                                 this.Invoke(new Action(() =>
                                 {
-                                    gettables(tnode, tables, views);
+                                    ShowTablesAndViews(tnode, tables, views);
                                 }));
                             }
 
@@ -491,9 +506,64 @@ namespace WEF.ModelGenerator
 
                             this.Invoke(new Action(() =>
                             {
-                                gettables(tnode, tables, views);
+                                ShowTablesAndViews(tnode, tables, views);
                             }));
                         }
+                    }
+                    else if (conModel.DbType.Equals(DatabaseType.MongoDB.ToString()))
+                    {
+                        var dataBaseName = "admin";
+
+                        var mongoDBTool = MongoDBTool.Connect(conConnectionString);
+
+                        if (conModel.Database.Equals("all"))
+                        {
+                            var dataBaseNames = mongoDBTool.GetDataBases();
+
+                            foreach (var dbs in dataBaseNames)
+                            {
+                                TreeNode tnode = null;
+
+                                this.Invoke(new Action(() =>
+                                {
+                                    tnode = new TreeNode(dbs, 1, 1);
+                                    tnode.Tag = conConnectionString.Replace(dataBaseName, dbs);
+                                    tnode.ContextMenuStrip = contextMenuStripOneMongoDB;
+                                    node.Nodes.Add(tnode);
+                                }));
+
+                                var cs = mongoDBTool.GetCollections(dbs);
+
+                                this.Invoke(new Action(() =>
+                                {
+                                    ShowCollections(tnode, cs);
+                                }));
+                            }
+
+                        }
+                        else
+                        {
+                            dataBaseName = conModel.Database;
+
+                            TreeNode tnode = null;
+
+                            this.Invoke(new Action(() =>
+                            {
+                                tnode = new TreeNode(conModel.Database, 1, 1);
+                                tnode.Tag = conConnectionString;
+                                tnode.ContextMenuStrip = contextMenuStripOneMongoDB;
+                                node.Nodes.Add(tnode);
+                            }));
+
+                            var collections = mongoDBTool.GetCollections(dataBaseName);
+
+                            this.Invoke(new Action(() =>
+                            {
+                                ShowCollections(tnode, collections);
+                            }));
+                        }
+
+
                     }
                     LoadForm.HideLoading();
                 }
@@ -519,7 +589,7 @@ namespace WEF.ModelGenerator
         /// <param name="databaseNodel"></param>
         /// <param name="tables"></param>
         /// <param name="views"></param>
-        private void gettables(TreeNode databaseNodel, DataTable tables, DataTable views)
+        private void ShowTablesAndViews(TreeNode databaseNodel, DataTable tables, DataTable views)
         {
             if (databaseNodel.Level == 3)
             {
@@ -590,6 +660,52 @@ namespace WEF.ModelGenerator
                 databaseNodel.Nodes.Add(viewNode);
             }
         }
+
+
+        /// <summary>
+        /// 获取数据集合信息
+        /// </summary>
+        /// <param name="databaseNodel"></param>
+        /// <param name="collections"></param>
+        private void ShowCollections(TreeNode databaseNodel, IEnumerable<string> collections)
+        {
+            if (databaseNodel.Level == 3)
+            {
+                if (databaseNodel.Text == "数据集合")
+                {
+                    databaseNodel.ContextMenuStrip = contextMenuStripOneMongoDB;
+
+                    if (null != collections && collections.Any())
+                    {
+                        foreach (var item in collections)
+                        {
+                            TreeNode tnode = new TreeNode(item, 4, 4);
+                            tnode.Tag = "T";
+                            tnode.ContextMenuStrip = contextMenuStripOneMongoDB;
+                            databaseNodel.Nodes.Add(tnode);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                TreeNode tableNode = new TreeNode("数据集合", 2, 3);
+
+                tableNode.ContextMenuStrip = contextMenuStripOneMongoDB;
+
+                if (null != collections && collections.Any())
+                {
+                    foreach (var item in collections)
+                    {
+                        TreeNode tnode = new TreeNode(item, 4, 4);
+                        tnode.Tag = "T";
+                        tnode.ContextMenuStrip = contextMenuStripOneMongoDB;
+                        tableNode.Nodes.Add(tnode);
+                    }
+                }
+                databaseNodel.Nodes.Add(tableNode);
+            }
+        }
         #endregion
 
 
@@ -622,53 +738,65 @@ namespace WEF.ModelGenerator
         {
             TreeNode node = Treeview.SelectedNode;
 
+            if (node.Level == 3)
+            {
+                node = node.Parent;
+            }
+            if (node.Level == 4)
+            {
+                node = node.Parent.Parent;
+            }
+
             node.Nodes.Clear();
 
             Connection conModel = null;
             try
             {
                 conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
-            }
-            catch { }
-            try
-            {
-                if (conModel == null) conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Parent.Tag.ToString()); });
-            }
-            catch { }
 
-            IDbObject dbObject;
+                IDbObject dbObject;
 
-            if (conModel.DbType.Equals(DatabaseType.MsAccess.ToString()))
-            {
-                dbObject = new WEF.DbDAL.OleDb.DbObject(conConnectionString);
-                gettables(node, dbObject.GetTables(""), dbObject.GetVIEWs(""));
+                if (conModel.DbType.Equals(DatabaseType.MsAccess.ToString()))
+                {
+                    dbObject = new WEF.DbDAL.OleDb.DbObject(conConnectionString);
+                    ShowTablesAndViews(node, dbObject.GetTables(""), dbObject.GetVIEWs(""));
+                }
+                else if (conModel.DbType.Equals(DatabaseType.SqlServer.ToString()))
+                {
+                    dbObject = new WEF.DbDAL.SQL2000.DbObject(conConnectionString);
+                    ShowTablesAndViews(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
+                }
+                else if (conModel.DbType.Equals(DatabaseType.SqlServer9.ToString()))
+                {
+                    dbObject = new WEF.DbDAL.SQL2005.DbObject(conConnectionString);
+                    ShowTablesAndViews(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
+                }
+                else if (conModel.DbType.Equals(DatabaseType.Oracle.ToString()))
+                {
+                    dbObject = new WEF.DbDAL.Oracle.DbObject(conConnectionString);
+                    ShowTablesAndViews(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
+                }
+                else if (conModel.DbType.Equals(DatabaseType.MySql.ToString()))
+                {
+                    dbObject = new WEF.DbDAL.MySql.DbObject(conConnectionString);
+                    ShowTablesAndViews(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
+                }
+                else if (conModel.DbType.Equals(DatabaseType.Sqlite3.ToString()))
+                {
+                    dbObject = new WEF.DbDAL.SQLite.DbObject(conConnectionString);
+                    ShowTablesAndViews(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
+                }
+                else if (conModel.DbType.Equals(DatabaseType.MongoDB.ToString()))
+                {
+                    var mongoDBTool = MongoDBTool.Connect(conConnectionString);
+                    ShowCollections(node, mongoDBTool.GetCollections(node.Text));
+                }
+                node.ExpandAll();
             }
-            else if (conModel.DbType.Equals(DatabaseType.SqlServer.ToString()))
+            catch (Exception ex)
             {
-                dbObject = new WEF.DbDAL.SQL2000.DbObject(conConnectionString);
-                gettables(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
+                MessageBox.Show(ex.Message, "出错啦!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if (conModel.DbType.Equals(DatabaseType.SqlServer9.ToString()))
-            {
-                dbObject = new WEF.DbDAL.SQL2005.DbObject(conConnectionString);
-                gettables(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
-            }
-            else if (conModel.DbType.Equals(DatabaseType.Oracle.ToString()))
-            {
-                dbObject = new WEF.DbDAL.Oracle.DbObject(conConnectionString);
-                gettables(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
-            }
-            else if (conModel.DbType.Equals(DatabaseType.MySql.ToString()))
-            {
-                dbObject = new WEF.DbDAL.MySql.DbObject(conConnectionString);
-                gettables(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
-            }
-            else if (conModel.DbType.Equals(DatabaseType.Sqlite3.ToString()))
-            {
-                dbObject = new WEF.DbDAL.SQLite.DbObject(conConnectionString);
-                gettables(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
-            }
-            node.ExpandAll();
         }
 
 
@@ -783,6 +911,27 @@ namespace WEF.ModelGenerator
             }
         }
 
+        #region mongodb快捷菜单
 
+        /// <summary>
+        /// 刷新
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            刷新ToolStripMenuItem2_Click(sender, e);
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+
+        }
+        #endregion
     }
 }

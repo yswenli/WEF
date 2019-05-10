@@ -1,6 +1,4 @@
 ﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
@@ -9,6 +7,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using WEF.NoSql.Extention;
 using WEF.NoSql.Model;
 
@@ -32,6 +31,7 @@ namespace WEF.NoSql.Core
             get { return _connStr; }
         }
 
+
         public MongoDBOperatorBase()
             : this(Extentions<TKey>.GetDefaultConnectionString())
         {
@@ -53,10 +53,6 @@ namespace WEF.NoSql.Core
             }
             else
                 this.collection = Extentions<TKey>.GetCollectionFromConnectionString<T>(connectionString);
-
-            //修复日期时区问题
-            var serializer = new DateTimeSerializer(DateTimeKind.Local, BsonType.DateTime);
-            BsonSerializer.RegisterSerializer(typeof(DateTime), serializer);
         }
 
         public MongoDBOperatorBase(string connectionString, string collectionName)
@@ -92,6 +88,8 @@ namespace WEF.NoSql.Core
             }
         }
 
+
+
         public string ServerInfo
         {
             get
@@ -100,7 +98,16 @@ namespace WEF.NoSql.Core
 
                 if (cs != null)
                 {
-                    return cs.Database.Server.ToString();
+                    var sb = new StringBuilder();
+
+                    var instances = cs.Database.Server.Instances;
+
+                    foreach (var instance in instances)
+                    {
+                        sb.AppendLine($"{instance.Settings.Server.Host}:{instance.Settings.Server.Port}");
+                    }
+
+                    return sb.ToString();
                 }
                 return null;
             }
@@ -235,7 +242,7 @@ namespace WEF.NoSql.Core
 
 
 
-        #region IQueryable<T>
+        #region IQueryable<T>        
 
         public virtual IEnumerator<T> GetEnumerator()
         {

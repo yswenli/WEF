@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LeftPanel));
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("数据库服务器");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("数据库服务器");
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
@@ -50,11 +50,15 @@
             this.contextMenuStripTable = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.生成代码ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sQL查询ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripOneMongoDB = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.contextMenuStripTop.SuspendLayout();
             this.contextMenuStripDatabase.SuspendLayout();
             this.contextMenuStripOneDataBase.SuspendLayout();
             this.contextMenuStripTable.SuspendLayout();
+            this.contextMenuStripOneMongoDB.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -95,10 +99,10 @@
             this.Treeview.ImageList = this.imgList;
             this.Treeview.Location = new System.Drawing.Point(0, 25);
             this.Treeview.Name = "Treeview";
-            treeNode2.Name = "节点0";
-            treeNode2.Text = "数据库服务器";
+            treeNode1.Name = "节点0";
+            treeNode1.Text = "数据库服务器";
             this.Treeview.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            treeNode1});
             this.Treeview.SelectedImageIndex = 0;
             this.Treeview.Size = new System.Drawing.Size(173, 339);
             this.Treeview.TabIndex = 1;
@@ -204,21 +208,43 @@
             this.生成代码ToolStripMenuItem,
             this.sQL查询ToolStripMenuItem});
             this.contextMenuStripTable.Name = "contextMenuStripOneDataBase";
-            this.contextMenuStripTable.Size = new System.Drawing.Size(181, 70);
+            this.contextMenuStripTable.Size = new System.Drawing.Size(148, 48);
             // 
             // 生成代码ToolStripMenuItem
             // 
             this.生成代码ToolStripMenuItem.Name = "生成代码ToolStripMenuItem";
-            this.生成代码ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.生成代码ToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.生成代码ToolStripMenuItem.Text = "查看详情";
             this.生成代码ToolStripMenuItem.Click += new System.EventHandler(this.生成代码ToolStripMenuItem_Click);
             // 
             // sQL查询ToolStripMenuItem
             // 
             this.sQL查询ToolStripMenuItem.Name = "sQL查询ToolStripMenuItem";
-            this.sQL查询ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sQL查询ToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.sQL查询ToolStripMenuItem.Text = "SQL查询窗口";
             this.sQL查询ToolStripMenuItem.Click += new System.EventHandler(this.sQL查询ToolStripMenuItem_Click);
+            // 
+            // contextMenuStripOneMongoDB
+            // 
+            this.contextMenuStripOneMongoDB.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
+            this.toolStripMenuItem2});
+            this.contextMenuStripOneMongoDB.Name = "contextMenuStripOneMongoDB";
+            this.contextMenuStripOneMongoDB.Size = new System.Drawing.Size(181, 70);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem1.Text = "刷新";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem2.Text = "查询";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // LeftPanel
             // 
@@ -241,6 +267,7 @@
             this.contextMenuStripDatabase.ResumeLayout(false);
             this.contextMenuStripOneDataBase.ResumeLayout(false);
             this.contextMenuStripTable.ResumeLayout(false);
+            this.contextMenuStripOneMongoDB.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -267,5 +294,8 @@
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ToolStripMenuItem 执行SQLToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sQL查询ToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripOneMongoDB;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
     }
 }

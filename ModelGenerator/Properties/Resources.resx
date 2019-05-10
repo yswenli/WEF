@@ -288,7 +288,8 @@ WHERE RN BETWEEN 21 AND 40
 
 oracle取前面n条
 
-select * FROM TB_AUTHKEY where ROWNUM&lt;20
+select * FROM
+ TB_AUTHKEY where ROWNUM&lt;20
 
 sqlserver分页
 

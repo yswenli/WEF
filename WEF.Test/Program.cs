@@ -17,8 +17,10 @@ using WEF.Models;
 
 namespace WEF.Test
 {
-    class Programe
+    class Program
     {
+
+
         static void Main(string[] args)
         {
 
@@ -75,7 +77,11 @@ namespace WEF.Test
 
             var giftopt = new DBGiftRepository();
 
-            var glist = giftopt.Search().Where(b => b.Giftid.Contains("1")).ToList();
+            var giftwhere = giftopt.Search().Where(b => b.Giftid.Contains("1"));
+
+            giftwhere = giftwhere.Where(b => !b.Isdel && b.Isenabled );
+
+            var glist = giftwhere.ToList();
 
             var glist2 = giftopt.Search().Where(b => b.Giftid.Like("1")).ToList();
 
@@ -111,13 +117,11 @@ namespace WEF.Test
             #endregion
 
 
-            #region 无实体sql操作，自定义参数
+            #region 无实体sql操作，自定义参数            
 
-            DBContext dbContext = new DBContext();
+            var dt1 = DBContext.Default.FromSql("select * from tb_task where taskid=@taskID").AddInParameter("@taskID", System.Data.DbType.String, 200, "10B676E5BC852464DE0533C5610ACC53").ToFirst<DBTask>();
 
-            var dt1 = dbContext.FromSql("select * from tb_task where taskid=@taskID").AddInParameter("@taskID", System.Data.DbType.String, 200, "10B676E5BC852464DE0533C5610ACC53").ToFirst<DBTask>();
-
-            dbContext.Search<DBTask>().Sum();
+            var count= DBContext.Default.Search<DBTask>().Where(b=>b.Crc32.Avg()>1).Where(" 1=1 ").Count();
 
             //dbContext.ExecuteNonQuery("");            
 

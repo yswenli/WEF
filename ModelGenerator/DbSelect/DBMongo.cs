@@ -16,6 +16,7 @@
 *描    述：
 *****************************************************************************/
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WEF.ModelGenerator.Common;
@@ -32,31 +33,18 @@ namespace WEF.ModelGenerator.DbSelect
             InitializeComponent();
         }
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButton1.Checked)
-            {
-                panel1.Enabled = false;
-                textBox5.Enabled = true;
-            }
-            else
-            {
-                panel1.Enabled = true;
-                textBox5.Enabled = false;
-            }
-        }
 
         string connectStr = string.Empty;
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (radioButton1.Checked)
+            if (checkBox1.Checked)
             {
                 connectStr = textBox5.Text;
             }
             else
             {
-                connectStr = $"mongodb://{textBox3.Text}:{textBox4.Text}@${textBox1.Text}:{textBox2.Text}/{textBox6.Text}?authSource=admin";
+                connectStr = $"mongodb://{textBox3.Text}:{textBox4.Text}@${textBox1.Text}/{textBox6.Text}?authSource=admin";
             }
 
             LoadForm.ShowLoading(this);
@@ -65,12 +53,11 @@ namespace WEF.ModelGenerator.DbSelect
             {
                 try
                 {
-                    var dbOperator = MongoDBFactory.Create<TestModel>(connectStr);
-                    var cas = dbOperator.DataBaseName;
+                    MongoDBTool.Connect(connectStr).GetDataBases();
+
                     this.Invoke(new Action(() =>
                     {
                         button2.Enabled = true;
-                        button1.Enabled = false;
                         LoadForm.HideLoading();
                     }));
                 }
@@ -94,14 +81,26 @@ namespace WEF.ModelGenerator.DbSelect
                 LoadForm.ShowLoading(this);
                 try
                 {
-                    var dbOperator = MongoDBFactory.Create<TestModel>(connectStr);
+                    var mongoTool = MongoDBTool.Connect(connectStr);
+
+                    var dataBaseNames = mongoTool.GetDataBases();
+
+                    var dataBaseName = "";
+
+                    if (dataBaseNames != null && dataBaseNames.Any())
+                    {
+                        if (System.Linq.Enumerable.Count(dataBaseNames) == 1)
+                            dataBaseName = dataBaseNames.First();
+                        else
+                            dataBaseName = "all";
+                    }
 
                     this.Invoke(new Action(() =>
                     {
                         Connection connectionModel = new Connection();
-                        connectionModel.Database = dbOperator.DataBaseName ?? "all";
+                        connectionModel.Database = dataBaseName;
                         connectionModel.ID = Guid.NewGuid();
-                        connectionModel.Name = dbOperator.ServerInfo + "(" + dbOperator.ServerInfo + ")[" + connectionModel.Database + "]";
+                        connectionModel.Name = mongoTool.ServerInfo + "(MongoDB)[" + connectionModel.Database + "]";
                         connectionModel.DbType = DatabaseType.MongoDB.ToString();
                         connectionModel.ConnectionString = connectStr;
 
@@ -119,10 +118,24 @@ namespace WEF.ModelGenerator.DbSelect
                 LoadForm.HideLoading();
             });
         }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                panel1.Enabled = false;
+                textBox5.Enabled = true;
+            }
+            else
+            {
+                panel1.Enabled = true;
+                textBox5.Enabled = false;
+            }
+        }
     }
 
 
-    public class TestModel : MongoEntity
+    public class MongoTestEntity : MongoEntity
     {
 
     }

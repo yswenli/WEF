@@ -92,7 +92,8 @@ namespace WEF.ModelGenerator.Properties {
         ///
         ///oracle取前面n条
         ///
-        ///select * FROM        /// TB_AUTHKEY where ROWNUM&lt;20
+        ///select * FROM
+        /// TB_AUTHKEY where ROWNUM&lt;20
         ///
         ///sqlserver分页
         ///
@@ -108,7 +109,7 @@ namespace WEF.ModelGenerator.Properties {
         ///
         ///mysql分页
         ///
-        ///select * from orders_h [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///select * from orders_ [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string 分页 {
             get {

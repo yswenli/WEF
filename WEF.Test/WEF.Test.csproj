@@ -50,7 +50,7 @@
     <Compile Include="Models\DBTask.cs" />
     <Compile Include="Models\DBUserPoint.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Programe.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

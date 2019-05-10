@@ -136,8 +136,9 @@ namespace WEF.Expressions
             }
             if (IsBoolFieldOrProperty(e))
             {
-                var key = ((MemberExpression)e).Member.Name;
-                return new WhereOperation();
+                var d = (MemberExpression)e;
+
+                return new WhereOperation(new Field(d.Member.Name), true, QueryOperator.Equal);
             }
             if (e is ConstantExpression)
             {
