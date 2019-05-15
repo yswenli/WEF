@@ -231,6 +231,7 @@ namespace WEF.NoSql.Core
 
         public virtual long Count()
         {
+            Group(null);
             return this.collection.Count();
         }
 
@@ -239,6 +240,55 @@ namespace WEF.NoSql.Core
         {
             return this.collection.AsQueryable<T>().Any(predicate);
         }
+
+
+        #region Test
+
+        public virtual string Run(string json = "{\"dbStats\":1}")
+        {
+            var command = new CommandDocument(CommandDocument.Parse(json));
+
+            var result = this.collection.Database.RunCommand(command);
+            if (result != null && result.Ok)
+            {
+                return result.Response.ToJson();
+            }
+            return string.Empty;
+        }
+
+
+        public virtual string Run(BsonDocument bsons)
+        {
+            var command = new CommandDocument(bsons);
+
+            var result = this.collection.Database.RunCommand(command);
+            if (result != null && result.Ok)
+            {
+                return result.Response.ToJson();
+            }
+            return string.Empty;
+        }
+
+
+        public virtual IEnumerable<BsonDocument> Group(BsonDocument[] bsons)
+        {
+            var pipeline = new[]
+            {
+                new BsonDocument("$group", new BsonDocument { { "_id", "$x" }, { "count", new BsonDocument("$sum", 1) } })
+            };
+
+            var data = this.collection.Aggregate(new AggregateArgs { Pipeline = pipeline });
+
+            //var data = this.collection.Aggregate(new AggregateArgs { Pipeline = bsons });
+
+            return data;
+        }
+
+
+        #endregion
+
+
+
 
 
 

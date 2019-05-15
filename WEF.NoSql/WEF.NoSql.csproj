@@ -69,6 +69,7 @@
     <Compile Include="Extention\CollectionNameAttribute.cs" />
     <Compile Include="Extention\EntityExtention.cs" />
     <Compile Include="Extention\Extentions.cs" />
+    <Compile Include="Model\FindCommandResult.cs" />
     <Compile Include="Model\IMongoEntity.cs" />
     <Compile Include="Model\IMongoEntityT.cs" />
     <Compile Include="Model\IOperator.cs" />

@@ -44,6 +44,8 @@ namespace WEF.NoSqlTest
 
             var c = customerOperator.Where(b => b.FirstName.Contains("l")).FirstOrDefault();
 
+            var count = customerOperator.Count();
+
             var c1 = customerOperator.GetById("5ccebadfb3b7bb38408bce24");
 
             Console.WriteLine("Update");
