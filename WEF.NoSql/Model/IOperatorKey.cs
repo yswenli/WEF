@@ -41,7 +41,11 @@ namespace WEF.NoSql.Model
         long Count();
 
         bool Exists(Expression<Func<T, bool>> predicate);
-        
+
+
+        string Run(string json = "{\"dbStats\":1}");
+
+
 
         IEnumerable<string> CollectionNames
         {

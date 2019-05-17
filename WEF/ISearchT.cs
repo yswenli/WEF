@@ -60,7 +60,12 @@ namespace WEF
         Search<T> Top(int topCount);
         Search<T> Union(Search fromSection);
         Search<T> UnionAll(Search fromSection);
-        Search<T> Where(Expression<Func<T, bool>> lambdaWhere);
+
+
+        //Search<T> Where(Expression<Func<T, bool>> lambdaWhere);
+
+        Search<T> Where(params Expression<Func<T, bool>>[] lambdaWheres);
+
         Search<T> Where(Where whereParam);
         Search<T> Where(Where<T> whereParam);
         Search<T> Where(WhereOperation where);

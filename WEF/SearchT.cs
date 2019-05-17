@@ -215,6 +215,11 @@ namespace WEF
         {
             return (Search<T>)base.Having(where.ToWhereClip());
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lambdaHaving"></param>
+        /// <returns></returns>
         public Search<T> Having(Expression<Func<T, bool>> lambdaHaving)
         {
             return (Search<T>)base.Having(ExpressionToOperation<T>.ToWhereOperation(lambdaHaving));
@@ -247,10 +252,33 @@ namespace WEF
         /// <summary>
         /// 
         /// </summary>
-        public Search<T> Where(Expression<Func<T, bool>> lambdaWhere)
+        //public Search<T> Where(Expression<Func<T, bool>> lambdaWhere)
+        //{
+        //    return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
+        //}
+
+        public Search<T> Where(params Expression<Func<T, bool>>[] lambdaWheres)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
+            if (lambdaWheres == null || !lambdaWheres.Any()) throw new Exception("where条件不能为空");
+
+            WhereBuilder whereBuilder = null;
+
+            foreach (var item in lambdaWheres)
+            {
+                if (item == null) continue;
+
+                if (whereBuilder == null)
+                {
+                    whereBuilder = new WhereBuilder(ExpressionToOperation<T>.ToWhereOperation(item));
+                }
+                else
+                    whereBuilder.And(ExpressionToOperation<T>.ToWhereOperation(item));
+            }
+
+            return Where(whereBuilder.ToWhereClip());
+
         }
+
         /// <summary>
         /// 
         /// </summary>

@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using WEF.Common;
 using WEF.Expressions;
 using WEF.Models;
@@ -19,8 +20,6 @@ namespace WEF.Test
 {
     class Program
     {
-
-
         static void Main(string[] args)
         {
 
@@ -79,7 +78,7 @@ namespace WEF.Test
 
             var giftwhere = giftopt.Search().Where(b => b.Giftid.Contains("1"));
 
-            giftwhere = giftwhere.Where(b => !b.Isdel && b.Isenabled );
+            giftwhere = giftwhere.Where(b => !b.Isdel && b.Isenabled);
 
             var glist = giftwhere.ToList();
 
@@ -95,13 +94,47 @@ namespace WEF.Test
             var glist3 = giftopt.Search().Where(b => b.Giftid.In(gids)).ToList();
 
 
+            #region where
+
+            //不支持
             DBUserPointRepository tb_UserpointRepository = new DBUserPointRepository();
 
-            var upWhere = tb_UserpointRepository.Search();
+            var upWhere1 = tb_UserpointRepository.Search();
 
-            upWhere = upWhere.Where(b => b.Uid == "sss");
+            upWhere1 = upWhere1.Where(b => b.Uid == "sss");
 
-            var up = upWhere.First();
+            upWhere1 = upWhere1.Where(b => b.Points > 0);
+
+            var up1 = upWhere1.First();
+
+            //支持
+            Expression<Func<DBUserPoint, bool>> eWhere1 = null;
+
+            if (true)
+            {
+                eWhere1 = (b => b.Uid.IsNotNull());
+            }
+
+            Expression<Func<DBUserPoint, bool>> eWhere2 = (b => b.Points > 0);
+
+            if (true)
+            {
+                eWhere2 = (b => b.Points > 0);
+            }
+
+            Expression<Func<DBUserPoint, bool>> eWhere3 = null;
+
+            if (false)
+            {
+                eWhere3 = (b => b.Uid.Contains("1"));
+            }
+
+
+            var upWhere2 = tb_UserpointRepository.Search().Where(eWhere1, eWhere2, eWhere3);
+
+            var up2 = upWhere2.ToList();
+
+            #endregion
 
 
             var plist = tb_UserpointRepository.GetList(1, 100);
@@ -121,7 +154,7 @@ namespace WEF.Test
 
             var dt1 = DBContext.Default.FromSql("select * from tb_task where taskid=@taskID").AddInParameter("@taskID", System.Data.DbType.String, 200, "10B676E5BC852464DE0533C5610ACC53").ToFirst<DBTask>();
 
-            var count= DBContext.Default.Search<DBTask>().Where(b=>b.Crc32.Avg()>1).Where(" 1=1 ").Count();
+            var count = DBContext.Default.Search<DBTask>().Where(b => b.Crc32.Avg() > 1).Where(" 1=1 ").Count();
 
             //dbContext.ExecuteNonQuery("");            
 

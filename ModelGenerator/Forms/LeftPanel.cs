@@ -193,7 +193,7 @@ namespace WEF.ModelGenerator
                     {
                         //todo
 
-                        MongoDBTool.Connect(conModel.ConnectionString).GetList(node.Parent.Parent.Text, node.Text, "{\"find\":{\"Id\":\"11\"}}");
+                        MongoDBTool.Connect(conModel.ConnectionString).GetList(node.Parent.Parent.Text, node.Text, "{\"find\":\"Account\", limit:20, sort:{AddTime:-1}}");
                     }
                     else
                     {

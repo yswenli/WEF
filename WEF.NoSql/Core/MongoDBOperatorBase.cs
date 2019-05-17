@@ -231,7 +231,6 @@ namespace WEF.NoSql.Core
 
         public virtual long Count()
         {
-            Group(null);
             return this.collection.Count();
         }
 
@@ -246,14 +245,7 @@ namespace WEF.NoSql.Core
 
         public virtual string Run(string json = "{\"dbStats\":1}")
         {
-            var command = new CommandDocument(CommandDocument.Parse(json));
-
-            var result = this.collection.Database.RunCommand(command);
-            if (result != null && result.Ok)
-            {
-                return result.Response.ToJson();
-            }
-            return string.Empty;
+            return Run(BsonDocument.Parse(json));
         }
 
 

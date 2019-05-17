@@ -655,9 +655,7 @@ namespace WEF
         {
             if (null == fields || fields.Length <= 0) return this;
             var tempgroupby = fields.Aggregate(GroupByOperation.None, (current, f) => current && f.GroupBy);
-            //2015-09-08修改
             this.groupBy = tempgroupby;
-            //this.groupBy = this.groupBy && tempgroupby;
             return this;
         }
 
@@ -741,7 +739,6 @@ namespace WEF
             {
                 foreach (Field field in fields)
                 {
-                    //2015-09-25修改
                     Field f = this.fields.Find(fi => fi.Name.Equals(field.Name) && fi.TableName.Equals(field.TableName));
                     if (Field.IsNullOrEmpty(f))
                         this.fields.Add(field);

@@ -19,7 +19,6 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using WEF.NoSql.Model;
 
 namespace WEF.NoSql
@@ -52,21 +51,34 @@ namespace WEF.NoSql
 
         public IEnumerable<string> GetDataBases()
         {
-            return _mongoClient.GetServer().GetDatabaseNames();
+            using (var cursor = _mongoClient.ListDatabases())
+            {
+                foreach (var document in cursor.ToEnumerable())
+                {
+                    yield return document["name"].ToString();
+                }
+            }
         }
 
         public IEnumerable<string> GetCollections(string dataBaseName)
         {
-            return _mongoClient.GetServer().GetDatabase(dataBaseName).GetCollectionNames();
+            using (var cursor = _mongoClient.GetDatabase(dataBaseName).ListCollections())
+            {
+                foreach (var document in cursor.ToEnumerable())
+                {
+                    yield return document["name"].ToString();
+                }
+            }
+
+            //var db = _mongoClient.GetDatabase(dataBaseName, null).RunCommand<string>("");
         }
 
-        public List<MongoResult> GetList(string dataBaseName, string collectionName, string json)
+        public List<MongoResult> GetList(string dataBaseName, string collectionName, string cmd= "{\"find\":\"test\", limit:20, sort:{AddTime:-1}}")
         {
-            var bson = BsonDocument.Parse(json);
 
-            var rc= new CommandDocument(bson);
+            var db = _mongoClient.GetDatabase(dataBaseName, null);
 
-            var result= _mongoClient.GetServer().GetDatabase(dataBaseName).RunCommand(rc);
+            var result= db.RunCommand<string>(cmd);
 
             return new List<MongoResult>();
         }
