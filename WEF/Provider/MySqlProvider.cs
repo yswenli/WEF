@@ -9,14 +9,11 @@
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data.Common;
-using System.Data;
-using WEF.Common;
 using MySql.Data.MySqlClient;
-using WEF.Section;
+using System;
+using System.Data;
+using System.Data.Common;
+using WEF.Common;
 
 namespace WEF.Provider
 {

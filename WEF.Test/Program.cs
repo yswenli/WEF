@@ -23,6 +23,14 @@ namespace WEF.Test
         static void Main(string[] args)
         {
 
+            #region test1
+
+            var mdb = new DBContext(DatabaseType.MySql, "server=172.31.32.83;user id=EMUser; password=20190415; Port=3306;database=emdb; pooling=false");
+            var a = mdb.FromSql("select 1").ToScalar();
+
+            #endregion
+
+
             var db = new DBContext();
 
             var dt = db.FromSql("select * from tb_task").ToDataTable();

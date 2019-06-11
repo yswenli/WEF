@@ -333,6 +333,16 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");
+            plus.AppendSpaceLine(2, "/// 构造方法");
+            plus.AppendSpaceLine(2, "/// <param name=\"dbType\">数据库类型</param>");
+            plus.AppendSpaceLine(2, "/// <param name=\"connStr\">连接字符串</param>");
+            plus.AppendSpaceLine(2, "/// </summary>");
+            plus.AppendSpaceLine(2, "public " + ClassName + "Repository(DatabaseType dbType, string connStr)");
+            plus.AppendSpaceLine(2, "{");
+            plus.AppendSpaceLine(3, "db = new DBContext(dbType, connStr);");
+            plus.AppendSpaceLine(2, "}");
+
+            plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 当前db操作上下文");
             plus.AppendSpaceLine(2, "/// </summary>");
             plus.AppendSpaceLine(2, "public DBContext DBContext");

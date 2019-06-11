@@ -157,10 +157,10 @@ namespace WEF
                     provider = ProviderFactory.CreateDbProvider(null, typeof(OracleProvider).FullName, connStr, dt);
                     break;
                 case DatabaseType.MySql:
-                    provider = ProviderFactory.CreateDbProvider("WEF.MySql", "WEF.Provider.MySqlProvider", connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, typeof(MySqlProvider).FullName, connStr, dt);
                     break;
                 case DatabaseType.Sqlite3:
-                    provider = ProviderFactory.CreateDbProvider("WEF.Sqlite", "WEF.Provider.SqliteProvider", connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, typeof(SqliteProvider).FullName, connStr, dt);
                     break;
                 case DatabaseType.MsAccess:
                     provider = ProviderFactory.CreateDbProvider(null, typeof(MsAccessProvider).FullName, connStr, dt);
@@ -216,7 +216,7 @@ namespace WEF
         {
             cmdCreator = new CommandCreator(db);
 
-            object cacheConfig = System.Configuration.ConfigurationManager.GetSection("DosCacheConfig");
+            object cacheConfig = System.Configuration.ConfigurationManager.GetSection("WEFCacheConfig");
 
 
             if (null != cacheConfig)
