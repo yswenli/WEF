@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using WEF.NoSql;
@@ -13,6 +14,27 @@ namespace WEF.NoSqlTest
             Console.Title = "MongoDBOperator.Test";
 
             var customerOperator = MongoDBFactory.Create<Account>();
+
+            #region test
+
+            var total = 100000;
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            for (int i = 0; i < total; i++)
+            {
+                MongoDBFactory.Create<Account>().Where(b => b.FirstName == "li9").FirstOrDefault();
+            }
+
+            stopwatch.Stop();
+
+            Console.WriteLine($"mongodb 查询速度：{total * 1000 / stopwatch.ElapsedMilliseconds} 次/秒");
+            Console.ReadLine();
+            #endregion
+
+
+
 
             Parallel.For(0, 10, i =>
             {
