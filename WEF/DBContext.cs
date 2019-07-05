@@ -2177,7 +2177,7 @@ namespace WEF
                 return null;
 
             return db.ExecuteScalar(cmd);
-        }
+        }        
 
         /// <summary>
         /// 执行ExecuteReader
@@ -2312,6 +2312,16 @@ namespace WEF
         }
 
         /// <summary>
+        /// 执行ExecuteDataSet
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public DataSet ExecuteDataSet(string sql)
+        {
+            return db.ExecuteDataSet(sql);
+        }
+
+        /// <summary>
         /// 执行ExecuteNonQuery
         /// </summary>
         /// <param name="sql"></param>
@@ -2320,7 +2330,29 @@ namespace WEF
         {
             return db.ExecuteNonQuery(sql);
         }
+
+        /// <summary>
+        /// 执行ExecuteScalar
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public object ExecuteScalar(string sql)
+        {
+            return db.ExecuteScalar(sql);
+        }
+
+        /// <summary>
+        /// 执行ExecuteReader
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public IDataReader ExecuteReader(string sql)
+        {
+            return db.ExecuteReader(sql);
+        }
+
         #endregion
+
         #region mvc 
 
         public DataTable GetMap(string tableName)
@@ -2571,8 +2603,6 @@ namespace WEF
         #endregion
         #endregion
 
-
-
         #region 数据导入导出
         /// <summary>
         /// 读取CSV文件
@@ -2704,7 +2734,7 @@ namespace WEF
         {
             var dataTable = ReadFromCSV(filePath);
 
-            var list = DataUtils.DataTableToEntityList<TEntity>(dataTable);
+            var list = dataTable.DataTableToEntityList<TEntity>();
 
             return Insert(list);
         }
@@ -2717,10 +2747,16 @@ namespace WEF
         {
             var list = Search<TEntity>().ToList();
 
-            var dataTable = DataUtils.EntityArrayToDataTable<TEntity>(list);
+            var dataTable = list.EntityArrayToDataTable();
 
             WriteToCSV(dataTable, filePath);
         }
+
+        #endregion
+
+        #region 监控数据变化
+
+
 
         #endregion
     }

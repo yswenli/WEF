@@ -252,6 +252,7 @@ namespace WEF.ModelGenerator
 
         }
 
+        int _noneWorkCount = 0;
 
         /// <summary>
         /// 开始
@@ -260,6 +261,7 @@ namespace WEF.ModelGenerator
         /// <param name="e"></param>
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
+            _noneWorkCount = 0;
 
             EntityCodeBuilder builder;
 
@@ -267,10 +269,19 @@ namespace WEF.ModelGenerator
             {
                 builder = new EntityCodeBuilder(o.ToString(), txtNamaspace.Text, o.ToString().Trim().Replace(" ", ""), UtilsHelper.GetColumnInfos(dbObject.GetColumnInfoList(DatabaseName, o.ToString())), tableview[o.ToString()], cbToupperFrstword.Checked);
 
-                using (StreamWriter sw = new StreamWriter(Path.Combine(txtPath.Text, o.ToString().Trim().Replace(' ', '_') + ".cs"), false, Encoding.UTF8))
+                var cs = builder.Builder();
+
+                if (!string.IsNullOrEmpty(cs))
                 {
-                    sw.Write(builder.Builder());
-                    sw.Flush();
+                    using (StreamWriter sw = new StreamWriter(Path.Combine(txtPath.Text, o.ToString().Trim().Replace(' ', '_') + ".cs"), false, Encoding.UTF8))
+                    {
+                        sw.Write(cs);
+                        sw.Flush();
+                    }
+                }
+                else
+                {
+                    _noneWorkCount++;
                 }
 
                 backgroundWorker1.ReportProgress(1);
@@ -298,10 +309,21 @@ namespace WEF.ModelGenerator
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             button1.Enabled = true;
+
             panelbtns.Enabled = true;
+
             sysconfigModel.Namespace = txtNamaspace.Text;
+
             UtilsHelper.WriteNamespace(txtNamaspace.Text);
-            MessageBox.Show("生成成功!");
+
+            if (_noneWorkCount == 0)
+            {
+                MessageBox.Show("代码导出操作已完成!");
+            }
+            else
+            {
+                MessageBox.Show($"代码导出操作已完成，但其中有{_noneWorkCount}张表因无任何主键未能生成代码");
+            }
         }
 
 

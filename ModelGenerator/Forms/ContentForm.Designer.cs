@@ -235,7 +235,7 @@
             this.tp2.Location = new System.Drawing.Point(4, 4);
             this.tp2.Name = "tp2";
             this.tp2.Padding = new System.Windows.Forms.Padding(3);
-            this.tp2.Size = new System.Drawing.Size(712, 599);
+            this.tp2.Size = new System.Drawing.Size(712, 618);
             this.tp2.TabIndex = 1;
             this.tp2.Text = "代码预览";
             this.tp2.UseVisualStyleBackColor = true;
@@ -248,7 +248,7 @@
             this.txtContent.Margin = new System.Windows.Forms.Padding(0);
             this.txtContent.Name = "txtContent";
             this.txtContent.ReadOnly = true;
-            this.txtContent.Size = new System.Drawing.Size(706, 593);
+            this.txtContent.Size = new System.Drawing.Size(706, 612);
             this.txtContent.TabIndex = 0;
             this.txtContent.Text = "请点击生成设置中的预览按钮";
             // 

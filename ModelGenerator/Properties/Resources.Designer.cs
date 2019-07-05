@@ -334,7 +334,15 @@ namespace WEF.ModelGenerator.Properties {
         }
         
         /// <summary>
-        ///   查找类似 Alter table tabname add primary key(col) 的本地化字符串。
+        ///   查找类似 sqlserver
+        ///
+        ///Alter table tabname add primary key(col)
+        ///
+        ///
+        ///oracle
+        ///
+        ///alter table T_Grade 
+        ///add constraint pk_gradeId primary key (gradeId); 的本地化字符串。
         /// </summary>
         internal static string 添加主键 {
             get {

@@ -194,7 +194,15 @@ select pwdcompare('原始密码','加密后密码') = 1--相同；否则不相�
 B：create table tab_new as select col1,col2… from tab_old definition only</value>
   </data>
   <data name="添加主键" xml:space="preserve">
-    <value>Alter table tabname add primary key(col)</value>
+    <value>sqlserver
+
+Alter table tabname add primary key(col)
+
+
+oracle
+
+alter table T_Grade 
+add constraint pk_gradeId primary key (gradeId);</value>
   </data>
   <data name="用户表" xml:space="preserve">
     <value>select Name from sysobjects where xtype='u' and status&gt;=0</value>

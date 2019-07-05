@@ -54,6 +54,8 @@ namespace WEF.ModelGenerator
 
             splitContainer1.Panel1.Controls.Add(autoTextBox1);
 
+            stopwatch.Start();
+
         }
 
         /// <summary>
@@ -67,7 +69,7 @@ namespace WEF.ModelGenerator
 
             ShortcutKeyHelper.Run(sender, e, () =>
             {
-                stopwatch.Start();
+                stopwatch.Restart();
 
                 LoadForm.ShowLoading(this);
 
@@ -103,14 +105,12 @@ namespace WEF.ModelGenerator
                     {
                         LoadForm.HideLoading(1);
                         MessageBox.Show("不支持的数据库类型!");
-                        stopwatch.Stop();
                         return;
                     }
 
                     if (string.IsNullOrEmpty(sql))
                     {
                         MessageBox.Show("sql内容不能为空!");
-                        stopwatch.Stop();
                         return;
                     }
 
@@ -123,7 +123,6 @@ namespace WEF.ModelGenerator
                             if (string.IsNullOrEmpty(sql))
                             {
                                 MessageBox.Show("sql内容不能为空!");
-                                stopwatch.Stop();
                                 return;
                             }
                         }
@@ -157,8 +156,7 @@ namespace WEF.ModelGenerator
                                 dataGridView1.Invoke(new Action(() =>
                                 {
                                     dataGridView1.DataSource = ds.Tables[0];
-                                    lbl_execute.Text = $"当前显示{(max > count ? count : max)}行，影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalSeconds}秒";
-                                    stopwatch.Stop();
+                                    lbl_execute.Text = $"当前显示{(max > count ? count : max)}行，影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalMilliseconds} 毫秒";
                                 }));
                             }
                         }
@@ -167,7 +165,6 @@ namespace WEF.ModelGenerator
                             this.Invoke(new Action(() =>
                             {
                                 MessageBox.Show(this, $"查询发生异常，ex:" + ex.Message);
-                                stopwatch.Stop();
                             }));
                         }
                     }
@@ -179,8 +176,7 @@ namespace WEF.ModelGenerator
 
                             lbl_execute.Invoke(new Action(() =>
                             {
-                                lbl_execute.Text = $"影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalSeconds}秒";
-                                stopwatch.Stop();
+                                lbl_execute.Text = $"影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalMilliseconds} 毫秒";
                             }));
                         }
                         catch (Exception ex)
@@ -188,7 +184,6 @@ namespace WEF.ModelGenerator
                             this.Invoke(new Action(() =>
                             {
                                 MessageBox.Show(this, $"操作发生异常，ex:" + ex.Message);
-                                stopwatch.Stop();
                             }));
                         }
                     }

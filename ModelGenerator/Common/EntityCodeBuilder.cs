@@ -141,7 +141,14 @@ namespace WEF.ModelGenerator.Common
             plus.AppendLine(BuilderModel());
             plus.AppendLine(BuilderMethod());
             plus.AppendSpaceLine(1, "}");
-            plus.AppendLine(BuilderRepository());
+
+            var repositoryCs = BuilderRepository();
+
+            if (string.IsNullOrEmpty(repositoryCs))
+                return string.Empty;
+
+            plus.AppendLine(repositoryCs);
+
             plus.AppendLine("}");
             plus.AppendLine("");
             return plus.ToString();
@@ -354,6 +361,8 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, "}");
 
             ColumnInfo identityColumn = Columns.Find(delegate (ColumnInfo col) { return col.IsPrimaryKey; });
+
+            if (identityColumn == null) return string.Empty;
 
             plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 获取实体");

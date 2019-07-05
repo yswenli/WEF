@@ -473,6 +473,25 @@ namespace WEF.Db
         }
 
         /// <summary>
+        /// ExecuteReader
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public IDataReader ExecuteReader(string sql)
+        {
+            Check.Require(sql, "sql", Check.NotNullOrEmpty);
+
+            using (DbConnection connection = GetConnection(true))
+            {
+                using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
+                {
+                    PrepareCommand(command, connection);
+                    return ExecuteReader(command);
+                }
+            }
+        }
+
+        /// <summary>
         /// <para>Executes the <paramref name="commandText"/> interpreted as specified by the <paramref name="commandType" /> within the given 
         /// <paramref name="transaction" /> and returns an <see cref="IDataReader"></see> through which the result can be read.
         /// It is the responsibility of the caller to close the connection and reader when finished.</para>
@@ -716,6 +735,25 @@ namespace WEF.Db
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public object ExecuteScalar(string sql)
+        {
+            Check.Require(sql, "sql", Check.NotNullOrEmpty);
+
+            using (DbConnection connection = GetConnection(true))
+            {
+                using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
+                {
+                    PrepareCommand(command, connection);
+                    return DoExecuteScalar(command);
+                }
+            }
+        }
+
+        /// <summary>
         /// <para>Executes the <paramref name="command"/> within a <paramref name="transaction" />, and returns the first column of the first row in the result set returned by the query. Extra columns or rows are ignored.</para>
         /// </summary>
         /// <param name="command">
@@ -796,7 +834,6 @@ namespace WEF.Db
             }
             else
             {
-                //TODO 性能瓶颈
                 using (DbConnection connection = GetConnection(true))
                 {
                     PrepareCommand(command, connection);
@@ -814,6 +851,7 @@ namespace WEF.Db
         public int ExecuteNonQuery(string sql)
         {
             Check.Require(sql, "sql", Check.NotNullOrEmpty);
+
             using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
             {
                 if (IsBatchConnection)

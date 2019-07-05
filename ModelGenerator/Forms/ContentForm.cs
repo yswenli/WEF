@@ -105,6 +105,12 @@ namespace WEF.ModelGenerator
 
                 DataTable primarykeydt = dbObject.GetKeyName(DatabaseName, TableName);
 
+
+                if (primarykeydt.Rows.Count == 0)
+                {
+                    MessageBox.Show("当前表找不到任何主键，请选择上面的列表行来添加主键");
+                }
+
                 this.Invoke(new Action(() =>
                 {
                     cnnTxt.Text = ConnectionModel.ConnectionString;
@@ -129,6 +135,8 @@ namespace WEF.ModelGenerator
                         cbPrimarykey.SelectedIndex = 0;
                     }
 
+
+
                     txtClassName.Text = TableName.Trim().Replace(' ', '_');
                     txtnamespace.Text = UtilsHelper.ReadNamespace();
                 }));
@@ -136,7 +144,7 @@ namespace WEF.ModelGenerator
             });
         }
 
-        
+
 
         /// <summary>
         /// 添加主键
@@ -218,7 +226,16 @@ namespace WEF.ModelGenerator
 
             EntityCodeBuilder builder = new EntityCodeBuilder(TableName, txtnamespace.Text, txtClassName.Text, columns, IsView, cbToupperFrstword.Checked, ConnectionModel.DbType);
 
-            txtContent.Text = builder.Builder();
+            var cs = builder.Builder();
+
+            if (string.IsNullOrEmpty(cs))
+            {
+                txtContent.Text = "当前表无任何主键，请在详情界面上选择某行添加为主键后再执行此操作";
+            }
+            else
+            {
+                txtContent.Text = cs;
+            }
 
             _isOk = true;
         }
@@ -299,6 +316,6 @@ namespace WEF.ModelGenerator
             }
         }
 
-        
+
     }
 }
