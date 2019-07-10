@@ -982,6 +982,53 @@ namespace WEF
                                     }
                                 }
                                 #endregion
+
+                                #region bool
+
+                                if (sourceProperty.PropertyType == typeof(bool))
+                                {
+                                    if (targetProperty.PropertyType == typeof(string))
+                                    {
+                                        if (val != null)
+                                        {
+                                            targetProperty.SetValue(target, val.ToString(), null);
+                                        }
+                                    }
+                                    else if (targetProperty.PropertyType == typeof(Nullable<bool>))
+                                    {
+                                        if (val != null)
+                                        {
+                                            targetProperty.SetValue(target, val, null);
+                                        }
+                                    }
+                                }
+                                else if (sourceProperty.PropertyType == typeof(Nullable<bool>))
+                                {
+                                    if (targetProperty.PropertyType == typeof(string))
+                                    {
+                                        if (val != null)
+                                        {
+                                            var tval = (Nullable<bool>)val;
+                                            if (tval.HasValue)
+                                            {
+                                                targetProperty.SetValue(target, tval.ToString(), null);
+                                            }
+                                        }
+                                    }
+                                    else if (targetProperty.PropertyType == typeof(bool))
+                                    {
+                                        if (val != null)
+                                        {
+                                            var tavl = (Nullable<bool>)val;
+                                            if (tavl.HasValue)
+                                            {
+                                                targetProperty.SetValue(target, tavl.Value, null);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                #endregion
                             }
                         }
                         catch (Exception ex)

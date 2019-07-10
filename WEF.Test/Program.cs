@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using WEF.Common;
 using WEF.Expressions;
@@ -86,11 +87,18 @@ namespace WEF.Test
 
             var giftwhere = giftopt.Search().Where(b => b.Giftid.Contains("1"));
 
-            giftwhere = giftwhere.Where(b => !b.Isdel && b.Isenabled);
+            giftwhere = giftwhere.Where(b => !b.Isdel && b.Isenabled); //不能连接
+
+
+            giftwhere = giftwhere.OrderBy(b => b.Createtime).OrderByDescending(b => b.Giftid);//不能连接
 
             var glist = giftwhere.ToList();
 
             var glist2 = giftopt.Search().Where(b => b.Giftid.Like("1")).ToList();
+
+            var giftids = giftopt.Search().Page(1, 10).ToList().Select(b => b.Giftid).ToList();
+
+            var glist22 = giftopt.Search().Where(b => b.Giftid.In(giftids)).ToList();
 
             var gids = new List<string>();
 
