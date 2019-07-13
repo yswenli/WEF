@@ -58,10 +58,6 @@ namespace WEF.Provider
             Check.Require(endIndex, "endIndex", Check.GreaterThanOrEqual<int>(1));
             Check.Require(startIndex <= endIndex, "startIndex must be less than endIndex!");
             Check.Require(fromSection, "fromSection", Check.NotNullOrEmpty);
-            //Check.Require(fromSection.OrderByClip, "query.OrderByClip", Check.NotNullOrEmpty);
-
-            //OrderByClip orderBy = fromSection.OrderByClip;
-
 
             fromSection.TableName = string.Concat("(", fromSection.SqlString, ") tmpi_table");
 

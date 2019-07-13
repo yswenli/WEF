@@ -115,6 +115,7 @@
     <Compile Include="Expressions\Where.cs" />
     <Compile Include="Expressions\WhereOperation.cs" />
     <Compile Include="Expressions\WhereBuilder.cs" />
+    <Compile Include="IRepository.cs" />
     <Compile Include="ISearch.cs" />
     <Compile Include="ISearchT.cs" />
     <Compile Include="MvcPager\Page.cs" />

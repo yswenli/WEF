@@ -299,7 +299,7 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(1, "/// <summary>");
             plus.AppendSpaceLine(1, "/// 实体类" + ClassName + "操作类");
             plus.AppendSpaceLine(1, "/// </summary>");
-            plus.AppendSpaceLine(1, "public partial class " + ClassName + "Repository");
+            plus.AppendSpaceLine(1, "public partial class " + ClassName + "Repository: IRepository<"+ ClassName + ">");
             plus.AppendSpaceLine(1, "{");
             plus.AppendSpaceLine(2, "DBContext db;");
             plus.AppendSpaceLine(2, "/// <summary>");
@@ -328,6 +328,15 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, "public " + ClassName + "Repository()");
             plus.AppendSpaceLine(2, "{");
             plus.AppendSpaceLine(3, "db = new DBContext();");
+            plus.AppendSpaceLine(2, "}");
+
+
+            plus.AppendSpaceLine(2, "/// <summary>");
+            plus.AppendSpaceLine(2, "/// 构造方法");
+            plus.AppendSpaceLine(2, "/// </summary>");
+            plus.AppendSpaceLine(2, "public " + ClassName + "Repository(DBContext dbContext)");
+            plus.AppendSpaceLine(2, "{");
+            plus.AppendSpaceLine(3, "db = dbContext;");
             plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");

@@ -38,9 +38,9 @@ namespace WEF.Db
 
 
         /// <summary>
-        /// 
+        /// DBContext
         /// </summary>
-        private DBContext DBContext;
+        public DBContext DBContext { get; private set; }
 
         /// <summary>
         /// 判断是否有提交或回滚
