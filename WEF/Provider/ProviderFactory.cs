@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using WEF.Db;
+using System.Collections.Concurrent;
 
 namespace WEF.Provider
 {
@@ -23,7 +24,7 @@ namespace WEF.Provider
     {
         #region Private Members
 
-        private static Dictionary<string, DbProvider> providerCache = new Dictionary<string, DbProvider>();
+        private static ConcurrentDictionary<string, DbProvider> providerCache = new ConcurrentDictionary<string, DbProvider>();        
 
         private ProviderFactory()
         {
@@ -45,105 +46,109 @@ namespace WEF.Provider
         {
             Check.Require(connectionString, "connectionString", Check.NotNullOrEmpty);
 
-            if (connectionString.IndexOf("microsoft.jet.oledb", StringComparison.OrdinalIgnoreCase) > -1 || connectionString.IndexOf(".db3", StringComparison.OrdinalIgnoreCase) > -1)
-            {
-                Check.Require(connectionString.IndexOf("data source", StringComparison.OrdinalIgnoreCase) > -1, "ConnectionString的格式有错误，请查证！");
-
-                string mdbPath = connectionString.Substring(connectionString.IndexOf("data source", StringComparison.OrdinalIgnoreCase) + "data source".Length + 1).TrimStart(' ', '=');
-                if (mdbPath.ToLower().StartsWith("|datadirectory|"))
-                {
-                    mdbPath = AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\') + "\\App_Data" + mdbPath.Substring("|datadirectory|".Length);
-                }
-                else if (connectionString.StartsWith("./") || connectionString.EndsWith(".\\"))
-                {
-                    connectionString = connectionString.Replace("/", "\\").Replace(".\\", AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\') + "\\");
-                }
-                connectionString = connectionString.Substring(0, connectionString.ToLower().IndexOf("data source")) + "Data Source=" + mdbPath;
-            }
-
-            //如果是~则表示当前目录
-            if (connectionString.Contains("~/") || connectionString.Contains("~\\"))
-            {
-                connectionString = connectionString.Replace("/", "\\").Replace("~\\", AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\') + "\\");
-            }
-
-            //by default, using sqlserver db provider
-            if (string.IsNullOrEmpty(className))
-            {
-                className = typeof(SqlServerProvider).ToString();
-                if (databaseType == null)
-                {
-                    databaseType = DatabaseType.SqlServer;
-                }
-            }
-            else if (String.Compare(className, "System.Data.SqlClient", StringComparison.OrdinalIgnoreCase) == 0 || String.Compare(className, "WEF.SqlServer", StringComparison.OrdinalIgnoreCase) == 0)
-            {
-                className = typeof(SqlServerProvider).ToString();
-                if (databaseType == null)
-                {
-                    databaseType = DatabaseType.SqlServer;
-                }
-            }
-            else if (String.Compare(className, "WEF.SqlServer9", StringComparison.OrdinalIgnoreCase) == 0 || className.IndexOf("SqlServer9", StringComparison.OrdinalIgnoreCase) >= 0 || className.IndexOf("sqlserver2005", StringComparison.OrdinalIgnoreCase) >= 0 || className.IndexOf("sql2005", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                className = typeof(SqlServer9Provider).ToString();
-                if (databaseType == null)
-                {
-                    databaseType = DatabaseType.SqlServer9;
-                }
-            }
-            else if (className.IndexOf("oracle", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                className = typeof(OracleProvider).ToString();
-                if (databaseType == null)
-                {
-                    databaseType = DatabaseType.Oracle;
-                }
-            }
-            else if (className.IndexOf("access", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                className = typeof(MsAccessProvider).ToString();
-                if (databaseType == null)
-                {
-                    databaseType = DatabaseType.MsAccess;
-                }
-            }
-            else if (className.IndexOf("mysql", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                className = typeof(MySqlProvider).ToString();
-                if (databaseType == null)
-                {
-                    databaseType = DatabaseType.MySql;
-                }
-            }
-            else if (className.IndexOf("sqlite", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                className = "WEF.Sqlite.SqliteProvider";
-                assemblyName = "MySql.Data";
-                if (databaseType == null)
-                {
-                    databaseType = DatabaseType.Sqlite3;
-                }
-            }
-
             string cacheKey = string.Concat(assemblyName, className, connectionString);
+
             if (providerCache.ContainsKey(cacheKey))
             {
                 return providerCache[cacheKey];
             }
             else
             {
+                if (connectionString.IndexOf("microsoft.jet.oledb", StringComparison.OrdinalIgnoreCase) > -1 || connectionString.IndexOf(".db3", StringComparison.OrdinalIgnoreCase) > -1)
+                {
+                    Check.Require(connectionString.IndexOf("data source", StringComparison.OrdinalIgnoreCase) > -1, "ConnectionString的格式有错误，请查证！");
+
+                    string mdbPath = connectionString.Substring(connectionString.IndexOf("data source", StringComparison.OrdinalIgnoreCase) + "data source".Length + 1).TrimStart(' ', '=');
+                    if (mdbPath.ToLower().StartsWith("|datadirectory|"))
+                    {
+                        mdbPath = AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\') + "\\App_Data" + mdbPath.Substring("|datadirectory|".Length);
+                    }
+                    else if (connectionString.StartsWith("./") || connectionString.EndsWith(".\\"))
+                    {
+                        connectionString = connectionString.Replace("/", "\\").Replace(".\\", AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\') + "\\");
+                    }
+                    connectionString = connectionString.Substring(0, connectionString.ToLower().IndexOf("data source")) + "Data Source=" + mdbPath;
+                }
+
+                //如果是~则表示当前目录
+                if (connectionString.Contains("~/") || connectionString.Contains("~\\"))
+                {
+                    connectionString = connectionString.Replace("/", "\\").Replace("~\\", AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\') + "\\");
+                }
+
+                //by default, using sqlserver db provider
+                if (string.IsNullOrEmpty(className))
+                {
+                    className = typeof(SqlServerProvider).ToString();
+                    if (databaseType == null)
+                    {
+                        databaseType = DatabaseType.SqlServer;
+                    }
+                }
+                else if (String.Compare(className, "System.Data.SqlClient", StringComparison.OrdinalIgnoreCase) == 0 || String.Compare(className, "WEF.SqlServer", StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    className = typeof(SqlServerProvider).ToString();
+                    if (databaseType == null)
+                    {
+                        databaseType = DatabaseType.SqlServer;
+                    }
+                }
+                else if (String.Compare(className, "WEF.SqlServer9", StringComparison.OrdinalIgnoreCase) == 0 || className.IndexOf("SqlServer9", StringComparison.OrdinalIgnoreCase) >= 0 || className.IndexOf("sqlserver2005", StringComparison.OrdinalIgnoreCase) >= 0 || className.IndexOf("sql2005", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    className = typeof(SqlServer9Provider).ToString();
+                    if (databaseType == null)
+                    {
+                        databaseType = DatabaseType.SqlServer9;
+                    }
+                }
+                else if (className.IndexOf("oracle", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    className = typeof(OracleProvider).ToString();
+                    if (databaseType == null)
+                    {
+                        databaseType = DatabaseType.Oracle;
+                    }
+                }
+                else if (className.IndexOf("access", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    className = typeof(MsAccessProvider).ToString();
+                    if (databaseType == null)
+                    {
+                        databaseType = DatabaseType.MsAccess;
+                    }
+                }
+                else if (className.IndexOf("mysql", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    className = typeof(MySqlProvider).ToString();
+                    if (databaseType == null)
+                    {
+                        databaseType = DatabaseType.MySql;
+                    }
+                }
+                else if (className.IndexOf("sqlite", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    className = "WEF.Sqlite.SqliteProvider";
+                    assemblyName = "MySql.Data";
+                    if (databaseType == null)
+                    {
+                        databaseType = DatabaseType.Sqlite3;
+                    }
+                }
+
                 System.Reflection.Assembly ass;
 
                 ass = assemblyName == null ? typeof(DbProvider).Assembly
                     : System.Reflection.Assembly.Load(assemblyName);
 
                 DbProvider retProvider = ass.CreateInstance(className, false, System.Reflection.BindingFlags.Default, null, new object[] { connectionString }, null, null) as DbProvider;
+
                 if (retProvider != null && databaseType != null)
                 {
                     retProvider.DatabaseType = databaseType.Value;
                 }
-                providerCache.Add(cacheKey, retProvider);
+
+                providerCache.TryAdd(cacheKey, retProvider);
+
                 return retProvider;
             }
         }

@@ -14,6 +14,7 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
@@ -216,61 +217,58 @@ namespace WEF
         {
             cmdCreator = new CommandCreator(db);
 
-            object cacheConfig = System.Configuration.ConfigurationManager.GetSection("WEFCacheConfig");
-
-
-            if (null != cacheConfig)
+            if (db.DbProvider.CacheConfig == null)
             {
-                db.DbProvider.CacheConfig = (CacheConfiguration)cacheConfig;
+                object cacheConfig = System.Configuration.ConfigurationManager.GetSection("WEFCacheConfig");
 
-                Dictionary<string, CacheInfo> entitiesCache = new Dictionary<string, CacheInfo>();
-
-                //获取缓存配制
-
-                foreach (string key in db.DbProvider.CacheConfig.Entities.AllKeys)
-
+                if (cacheConfig != null)
                 {
-                    if (key.IndexOf('.') > 0)
+                    db.DbProvider.CacheConfig = (CacheConfiguration)cacheConfig;
+
+                    ConcurrentDictionary<string, CacheInfo> entitiesCache = new ConcurrentDictionary<string, CacheInfo>();
+
+                    //获取缓存配制
+
+                    foreach (string key in db.DbProvider.CacheConfig.Entities.AllKeys)
                     {
-                        string[] splittedKey = key.Split('.');
-                        if (splittedKey[0].Trim() == db.DbProvider.ConnectionStringsName)
+                        if (key.IndexOf('.') > 0)
                         {
-                            int expireSeconds = 0;
-                            CacheInfo cacheInfo = new CacheInfo();
+                            string[] splittedKey = key.Split('.');
 
-                            if (int.TryParse(db.DbProvider.CacheConfig.Entities[key].Value, out expireSeconds))
-
+                            if (splittedKey[0].Trim() == db.DbProvider.ConnectionStringsName)
                             {
-                                cacheInfo.TimeOut = expireSeconds;
-                            }
-                            else
-                            {
+                                int expireSeconds = 0;
+                                CacheInfo cacheInfo = new CacheInfo();
 
-                                string tempFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, db.DbProvider.CacheConfig.Entities[key].Value);
+                                if (int.TryParse(db.DbProvider.CacheConfig.Entities[key].Value, out expireSeconds))
 
-                                if (File.Exists(tempFilePath))
                                 {
-                                    cacheInfo.FilePath = tempFilePath;
+                                    cacheInfo.TimeOut = expireSeconds;
+                                }
+                                else
+                                {
+                                    string tempFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, db.DbProvider.CacheConfig.Entities[key].Value);
+
+                                    if (File.Exists(tempFilePath))
+                                    {
+                                        cacheInfo.FilePath = tempFilePath;
+                                    }
                                 }
 
-                            }
+                                if (!cacheInfo.IsNullOrEmpty())
+                                {
+                                    string entityName = string.Concat(db.DbProvider.ConnectionStringsName, splittedKey[1].Trim());                                   
 
-                            if (!cacheInfo.IsNullOrEmpty())
-                            {
-                                string entityName = string.Concat(db.DbProvider.ConnectionStringsName, splittedKey[1].Trim());
-                                if (entitiesCache.ContainsKey(entityName))
-                                    entitiesCache.Remove(entityName);
-
-                                entitiesCache.Add(entityName, cacheInfo);
+                                    entitiesCache[entityName] = cacheInfo;
+                                }
                             }
                         }
                     }
+
+                    db.DbProvider.EntitiesCache = entitiesCache;
                 }
 
-                db.DbProvider.EntitiesCache = entitiesCache;
             }
-
-
         }
 
 
@@ -2177,7 +2175,7 @@ namespace WEF
                 return null;
 
             return db.ExecuteScalar(cmd);
-        }        
+        }
 
         /// <summary>
         /// 执行ExecuteReader

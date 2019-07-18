@@ -17,7 +17,10 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WEF.ModelGenerator.Common;
@@ -153,9 +156,29 @@ namespace WEF.ModelGenerator
 
                                 var data = ds.Tables[0];
 
+                                var dList = new List<int>();
+
+                                for (int i = 0; i < ds.Tables[0].Columns.Count; i++)
+                                {
+                                    if (ds.Tables[0].Columns[i].DataType == typeof(DateTime))
+                                    {
+                                        dList.Add(i);
+                                    }
+                                }
+
+
                                 dataGridView1.Invoke(new Action(() =>
                                 {
                                     dataGridView1.DataSource = ds.Tables[0];
+
+                                    if (dList.Any())
+                                    {
+                                        foreach (var item in dList)
+                                        {
+                                            dataGridView1.Columns[item].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
+                                        }
+                                    }
+
                                     lbl_execute.Text = $"当前显示{(max > count ? count : max)}行，影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalMilliseconds} 毫秒";
                                 }));
                             }

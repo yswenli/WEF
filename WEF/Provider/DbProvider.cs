@@ -10,6 +10,7 @@
  *****************************************************************************************************/
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -220,12 +221,12 @@ namespace WEF.Provider
         /// <summary>
         /// 实体缓存
         /// </summary>
-        private Dictionary<string, CacheInfo> entitiesCache = new Dictionary<string, CacheInfo>();
+        private ConcurrentDictionary<string, CacheInfo> entitiesCache = new ConcurrentDictionary<string, CacheInfo>();
 
         /// <summary>
         /// 实体缓存
         /// </summary>
-        public Dictionary<string, CacheInfo> EntitiesCache
+        public ConcurrentDictionary<string, CacheInfo> EntitiesCache
         {
             get
             {
