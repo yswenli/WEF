@@ -73,7 +73,7 @@ namespace WEF.ModelGenerator
         void lp_newsqlForm(WEF.ModelGenerator.Model.Connection conModel)
         {
             SQLForm s = new SQLForm();
-            s.Text = "(" + conModel.Database + ")" + "sql查询窗口";
+            s.Text = "(" + conModel.Database + ")" + "sql查询窗口,输入sql后F5执行";
             s.ConnectionModel = conModel;
             s.Show(dpleft);
         }

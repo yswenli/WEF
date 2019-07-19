@@ -18,7 +18,6 @@
  *****************************************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -179,7 +178,7 @@ namespace WEF.ModelGenerator
                                         }
                                     }
 
-                                    lbl_execute.Text = $"当前显示{(max > count ? count : max)}行，影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalMilliseconds} 毫秒";
+                                    lbl_execute.Text = $"当前显示{(max > count ? count : max)}行，影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalSeconds} 秒";
                                 }));
                             }
                         }

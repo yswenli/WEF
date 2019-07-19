@@ -41,7 +41,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(119, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "WEF Version:3.5.5.5";
+            this.label1.Text = "WEF Version:3.6.3.2";
             // 
             // label2
             // 
