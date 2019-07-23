@@ -287,12 +287,17 @@ select text from syscomments where id=object_id('AddUser2')</value>
   <data name="分页" xml:space="preserve">
     <value>oracle 分页
 
-SELECT * FROM  
-(  
-SELECT A.*, ROWNUM RN  
-FROM (SELECT * FROM TABLE_NAME) A  
-)  
-WHERE RN BETWEEN 21 AND 40 
+SELECT *
+
+  FROM (SELECT a.*, ROWNUM rn
+
+          FROM (SELECT *
+
+                  FROM table_name) a
+
+         WHERE ROWNUM &lt;= 40)
+
+ WHERE rn &gt;= 21
 
 oracle取前面n条
 

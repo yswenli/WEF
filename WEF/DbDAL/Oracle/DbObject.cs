@@ -206,36 +206,12 @@ namespace WEF.DbDAL.Oracle
             return this.Query("", sQLString).Tables[0];
         }
 
-        public void OpenDB()
-        {
-            //try
-            //{
-            //    if (this.connect.ConnectionString == "")
-            //    {
-            //        this.connect.ConnectionString = this._dbconnectStr;
-            //    }
-            //    if (this.connect.ConnectionString != this._dbconnectStr)
-            //    {
-            //        this.connect.Close();
-            //        this.connect.ConnectionString = this._dbconnectStr;
-            //    }
-            //    if (this.connect.State == ConnectionState.Closed)
-            //    {
-            //        this.connect.Open();
-            //    }
-            //}
-            //catch
-            //{
-            //}
-        }
 
         public DataSet Query(string DbName, string SQLString)
         {
-            //return dbSession.FromSql(SQLString).ToDataSet();
 
             DataSet ds = new DataSet();
 
-            //OpenDB();
             using (OracleConnection oracleCon = new OracleConnection(_dbconnectStr))
             {
                 oracleCon.Open();

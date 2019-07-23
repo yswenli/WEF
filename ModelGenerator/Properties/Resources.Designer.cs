@@ -83,12 +83,17 @@ namespace WEF.ModelGenerator.Properties {
         /// <summary>
         ///   查找类似 oracle 分页
         ///
-        ///SELECT * FROM  
-        ///(  
-        ///SELECT A.*, ROWNUM RN  
-        ///FROM (SELECT * FROM TABLE_NAME) A  
-        ///)  
-        ///WHERE RN BETWEEN 21 AND 40 
+        ///SELECT *
+        ///
+        ///  FROM (SELECT a.*, ROWNUM rn
+        ///
+        ///          FROM (SELECT *
+        ///
+        ///                  FROM table_name) a
+        ///
+        ///         WHERE ROWNUM &lt;= 40)
+        ///
+        /// WHERE rn &gt;= 21
         ///
         ///oracle取前面n条
         ///
@@ -105,11 +110,7 @@ namespace WEF.ModelGenerator.Properties {
         ///
         ///sqlserver 取前面n条
         ///
-        ///select top 20 * from TB_USER
-        ///
-        ///mysql分页
-        ///
-        ///select * from orders_ [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///select top 20 * from [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string 分页 {
             get {
