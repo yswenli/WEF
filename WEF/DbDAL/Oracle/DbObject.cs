@@ -47,15 +47,10 @@ namespace WEF.DbDAL.Oracle
 
         public int ExecuteSql(string DbName, string SQLString)
         {
-            //return dbSession.FromSql(SQLString).ExecuteNonQuery();
-
-
-            //OpenDB();
-
-            using (OracleConnection oracleCon = new OracleConnection(_dbconnectStr))
+            using (var oracleCon = new OracleConnection(_dbconnectStr))
             {
                 oracleCon.Open();
-                OracleCommand dbCommand = new OracleCommand(SQLString, oracleCon);
+                var dbCommand = new OracleCommand(SQLString, oracleCon);
                 dbCommand.CommandText = SQLString;
                 int rows = dbCommand.ExecuteNonQuery();
                 return rows;

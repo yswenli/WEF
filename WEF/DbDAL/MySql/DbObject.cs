@@ -109,6 +109,8 @@ namespace WEF.DbDAL.MySql
 
         #region 打开数据库 OpenDB(string DbName)
 
+        object _locker = new object();
+
         /// <summary>
         /// 打开数据库
         /// </summary>
@@ -118,29 +120,32 @@ namespace WEF.DbDAL.MySql
         {
             if (string.IsNullOrEmpty(DbName)) throw new Exception("DbName 不能为空！");
 
-            if (_connect.ConnectionString == "")
+            lock (_locker)
             {
-                _connect.ConnectionString = _dbconnectStr;
+                if (_connect.ConnectionString == "")
+                {
+                    _connect.ConnectionString = _dbconnectStr;
+                }
+
+                if (_connect.ConnectionString != _dbconnectStr)
+                {
+                    _connect.Close();
+                    _connect.ConnectionString = _dbconnectStr;
+                }
+
+                var dbCommand = new MySqlCommand();
+
+                if (_connect.State == System.Data.ConnectionState.Closed)
+                {
+                    _connect.Open();
+                }
+
+                dbCommand.Connection = _connect;
+                dbCommand.CommandTimeout = 1200;
+                dbCommand.CommandText = "use " + DbName + "";
+                dbCommand.ExecuteNonQuery();
+                return dbCommand;
             }
-
-            if (_connect.ConnectionString != _dbconnectStr)
-            {
-                _connect.Close();
-                _connect.ConnectionString = _dbconnectStr;
-            }
-
-            MySqlCommand dbCommand = new MySqlCommand();
-
-            if (_connect.State == System.Data.ConnectionState.Closed)
-            {
-                _connect.Open();
-            }
-
-            dbCommand.Connection = _connect;
-            dbCommand.CommandTimeout = 1200;
-            dbCommand.CommandText = "use " + DbName + "";
-            dbCommand.ExecuteNonQuery();
-            return dbCommand;
         }
 
 
@@ -149,19 +154,22 @@ namespace WEF.DbDAL.MySql
         /// </summary>
         public void OpenDB()
         {
-            if (_connect.ConnectionString == "")
+            lock (_locker)
             {
-                _connect.ConnectionString = _dbconnectStr;
-            }
+                if (_connect.ConnectionString == "")
+                {
+                    _connect.ConnectionString = _dbconnectStr;
+                }
 
-            if (_connect.ConnectionString != _dbconnectStr)
-            {
-                _connect.Close();
-                _connect.ConnectionString = _dbconnectStr;
-            }
-            if (_connect.State == System.Data.ConnectionState.Closed)
-            {
-                _connect.Open();
+                if (_connect.ConnectionString != _dbconnectStr)
+                {
+                    _connect.Close();
+                    _connect.ConnectionString = _dbconnectStr;
+                }
+                if (_connect.State == System.Data.ConnectionState.Closed)
+                {
+                    _connect.Open();
+                }
             }
         }
         #endregion
