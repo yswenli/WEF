@@ -22,6 +22,7 @@ namespace WEF.DbDAL.MySql
             set { _dbconnectStr = value; }
             get { return _dbconnectStr; }
         }
+
         MySqlConnection _connect = new MySqlConnection();
 
         #endregion
@@ -188,16 +189,16 @@ namespace WEF.DbDAL.MySql
         {
             DataSet ds = new DataSet();
             OpenDB(DbName);
-            MySqlDataAdapter command = new MySqlDataAdapter(SQLString, _connect);
-            command.Fill(ds, "ds");
+            MySqlDataAdapter adapter = new MySqlDataAdapter(SQLString, _connect);
+            adapter.Fill(ds, "ds");
             return ds;
         }
 
 
         public MySqlDataReader ExecuteReader(string DbName, string strSQL)
         {
-            OpenDB(DbName);
-            MySqlCommand cmd = new MySqlCommand(strSQL, _connect);
+            MySqlCommand cmd = OpenDB(DbName);
+            cmd.CommandText = strSQL;
             MySqlDataReader myReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
             return myReader;
         }
@@ -546,7 +547,6 @@ namespace WEF.DbDAL.MySql
         public string GetObjectInfo(string DbName, string objName)
         {
             StringBuilder strSql = new StringBuilder();
-            //strSql.Append("select a.name,'',a.xtype,a.crdate,b.text ");
             strSql.Append("select b.text ");
             strSql.Append("from sysobjects a, syscomments b  ");
             strSql.Append("where a.xtype='p' and a.id = b.id  ");
@@ -589,7 +589,7 @@ namespace WEF.DbDAL.MySql
                 string strSql = "SHOW COLUMNS FROM " + TableName;
                 DataTable columnsTables = CreateColumnTable();
                 DataRow dr;
-                MySqlDataReader reader = ExecuteReader(DbName, strSql);
+                var reader = ExecuteReader(DbName, strSql);
                 int n = 1;
                 while (reader.Read())
                 {
