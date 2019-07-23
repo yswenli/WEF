@@ -114,9 +114,9 @@ namespace WEF.DbDAL.MySql
         /// </summary>
         /// <param name="DbName">要打开的数据库</param>
         /// <returns></returns>
-        private MySqlCommand OpenDB(string DbName)
+        public MySqlCommand OpenDB(string DbName)
         {
-            if (string.IsNullOrEmpty(DbName)) throw new Exception("DbName 不能为空!");
+            if (string.IsNullOrEmpty(DbName)) throw new Exception("DbName 不能为空！");
 
             if (_connect.ConnectionString == "")
             {
@@ -130,7 +130,7 @@ namespace WEF.DbDAL.MySql
             }
 
             MySqlCommand dbCommand = new MySqlCommand();
-            
+
             if (_connect.State == System.Data.ConnectionState.Closed)
             {
                 _connect.Open();
@@ -141,7 +141,28 @@ namespace WEF.DbDAL.MySql
             dbCommand.CommandText = "use " + DbName + "";
             dbCommand.ExecuteNonQuery();
             return dbCommand;
+        }
 
+
+        /// <summary>
+        /// 打开数据库
+        /// </summary>
+        public void OpenDB()
+        {
+            if (_connect.ConnectionString == "")
+            {
+                _connect.ConnectionString = _dbconnectStr;
+            }
+
+            if (_connect.ConnectionString != _dbconnectStr)
+            {
+                _connect.Close();
+                _connect.ConnectionString = _dbconnectStr;
+            }
+            if (_connect.State == System.Data.ConnectionState.Closed)
+            {
+                _connect.Open();
+            }
         }
         #endregion
 

@@ -85,7 +85,7 @@ namespace WEF.ModelGenerator.DbSelect
                 MessageBox.Show("登陆名不能为空!");
                 return;
             }
-            WEF.DbDAL.IDbObject dbObejct;
+            WEF.DbDAL.MySql.DbObject dbObejct;
 
             var dataBase = cbbDatabase.Items[cbbDatabase.SelectedIndex].ToString();
 
@@ -102,10 +102,7 @@ namespace WEF.ModelGenerator.DbSelect
 
             try
             {
-                using (MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection(tempconnectionstring))
-                {
-                    connection.Open();
-                }
+                dbObejct.OpenDB();
             }
             catch (Exception ex)
             {
