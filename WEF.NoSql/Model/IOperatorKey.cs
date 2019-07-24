@@ -37,7 +37,6 @@ namespace WEF.NoSql.Model
 
         void DeleteAll();
 
-
         long Count();
 
         bool Exists(Expression<Func<T, bool>> predicate);

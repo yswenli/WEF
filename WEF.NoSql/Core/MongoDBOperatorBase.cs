@@ -276,7 +276,6 @@ namespace WEF.NoSql.Core
             return data;
         }
 
-
         #endregion
 
 
@@ -295,8 +294,7 @@ namespace WEF.NoSql.Core
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return this.collection.AsQueryable<T>().GetEnumerator();
-        }
-
+        }        
 
         public virtual Type ElementType
         {

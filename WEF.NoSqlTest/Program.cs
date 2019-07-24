@@ -17,7 +17,7 @@ namespace WEF.NoSqlTest
 
             #region test
 
-            var total = 100000;
+            var total = int.MaxValue;
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -58,6 +58,8 @@ namespace WEF.NoSqlTest
                 Console.WriteLine("Create");
 
                 customerOperator1.Add(account);
+
+                
             });
 
             Console.WriteLine("Read");
