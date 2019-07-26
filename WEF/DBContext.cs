@@ -275,7 +275,7 @@ namespace WEF
         /// <summary>
         /// 构造函数    使用默认  DBContext.Default
         /// </summary>
-        public DBContext()
+        public DBContext(int timeOut = 30)
         {
             db = Database.Default;
 
@@ -286,9 +286,9 @@ namespace WEF
         /// 构造函数
         /// </summary>
         /// <param name="connStrName">config文件中connectionStrings节点的name</param>
-        public DBContext(string connStrName)
+        public DBContext(string connStrName, int timeout = 30)
         {
-            this.db = new Database(ProviderFactory.CreateDbProvider(connStrName));
+            this.db = new Database(ProviderFactory.CreateDbProvider(connStrName), timeout);
             this.db.DbProvider.ConnectionStringsName = connStrName;
             initDbSesion();
         }
@@ -298,7 +298,7 @@ namespace WEF
         /// 构造函数
         /// </summary>
         /// <param name="db">已知的Database</param>
-        public DBContext(Database db)
+        public DBContext(Database db, int timeout = 30)
         {
             this.db = db;
 
@@ -310,11 +310,11 @@ namespace WEF
         /// </summary>
         /// <param name="dt">数据库类别</param>
         /// <param name="connStr">连接字符串</param>
-        public DBContext(DatabaseType dt, string connStr)
+        public DBContext(DatabaseType dt, string connStr, int timeout = 30)
         {
             DbProvider provider = CreateDbProvider(dt, connStr);
 
-            this.db = new Database(provider);
+            this.db = new Database(provider, timeout);
 
             initDbSesion();
         }
@@ -325,7 +325,7 @@ namespace WEF
         /// <param name="assemblyName">程序集</param>
         /// <param name="className">类名</param>
         /// <param name="connStr">连接字符串</param>
-        public DBContext(string assemblyName, string className, string connStr)
+        public DBContext(string assemblyName, string className, string connStr,int timeout =30)
         {
             DbProvider provider = ProviderFactory.CreateDbProvider(assemblyName, className, connStr, null);
             if (provider == null)
@@ -334,7 +334,7 @@ namespace WEF
                     assemblyName, className, connStr));
             }
 
-            this.db = new Database(provider);
+            this.db = new Database(provider, timeout);
 
             cmdCreator = new CommandCreator(db);
         }

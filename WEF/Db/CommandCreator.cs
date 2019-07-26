@@ -25,15 +25,8 @@ namespace WEF.Db
     public class CommandCreator
     {
 
-        /// <summary>
-        /// 
-        /// </summary>
         private Database db;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="db"></param>
         public CommandCreator(Database db)
         {
             this.db = db;

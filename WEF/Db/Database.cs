@@ -26,6 +26,8 @@ namespace WEF.Db
     /// </summary>
     public sealed class Database : ILogable
     {
+        int _timeout = 30;
+
         private DbProvider dbProvider;
 
         /// <summary>
@@ -33,13 +35,11 @@ namespace WEF.Db
         /// </summary>
         public static Database Default = new Database(ProviderFactory.Default);
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="dbProvider"></param>
-        public Database(DbProvider dbProvider)
+
+        public Database(DbProvider dbProvider,int timeout=30)
         {
             this.dbProvider = dbProvider;
+            _timeout = timeout;
         }
 
         #region Properties
@@ -76,6 +76,21 @@ namespace WEF.Db
             get
             {
                 return dbProvider;
+            }
+        }
+
+        /// <summary>
+        /// 命令令超时时间 30s
+        /// </summary>
+        public int CommandTimeout
+        {
+            get
+            {
+                return _timeout;
+            }
+            set
+            {
+                _timeout = value;
             }
         }
 
@@ -134,9 +149,10 @@ namespace WEF.Db
             DbCommand command = dbProvider.DbProviderFactory.CreateCommand();
             command.CommandType = commandType;
             command.CommandText = commandText;
-
+            command.CommandTimeout = _timeout;
             return command;
         }
+
         private void DoLoadDataSet(DbCommand command, DataSet dataSet, string[] tableNames)
         {
             Check.Require(tableNames != null && tableNames.Length > 0, "tableNames could not be null or empty.");
@@ -163,6 +179,7 @@ namespace WEF.Db
 
             }
         }
+
         private object DoExecuteScalar(DbCommand command)
         {
 
@@ -186,6 +203,7 @@ namespace WEF.Db
             return command.ExecuteNonQuery();
 
         }
+
         private IDataReader DoExecuteReader(DbCommand command, CommandBehavior cmdBehavior)
         {
 
@@ -194,14 +212,20 @@ namespace WEF.Db
             return command.ExecuteReader(cmdBehavior);
 
         }
+
+
         private DbTransaction BeginTransaction(DbConnection connection)
         {
             return connection.BeginTransaction();
         }
+
+
         private IDbTransaction BeginTransaction(DbConnection connection, IsolationLevel il)
         {
             return connection.BeginTransaction(il);
         }
+
+
         private void PrepareCommand(DbCommand command, DbConnection connection)
         {
             Check.Require(command != null, "command could not be null.");
@@ -729,6 +753,7 @@ namespace WEF.Db
         {
             using (DbConnection connection = GetConnection(true))
             {
+                command.CommandTimeout = _timeout;
                 PrepareCommand(command, connection);
                 return DoExecuteScalar(command);
             }
@@ -747,6 +772,7 @@ namespace WEF.Db
             {
                 using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
                 {
+                    command.CommandTimeout = _timeout;
                     PrepareCommand(command, connection);
                     return DoExecuteScalar(command);
                 }
@@ -768,6 +794,7 @@ namespace WEF.Db
         /// <seealso cref="IDbCommand.ExecuteScalar"/>
         public object ExecuteScalar(DbCommand command, DbTransaction transaction)
         {
+            command.CommandTimeout = _timeout;
             PrepareCommand(command, transaction);
             return DoExecuteScalar(command);
         }
@@ -789,6 +816,7 @@ namespace WEF.Db
         {
             using (DbCommand command = CreateCommandByCommandType(commandType, commandText))
             {
+                command.CommandTimeout = _timeout;
                 return ExecuteScalar(command);
             }
         }
@@ -814,6 +842,7 @@ namespace WEF.Db
         {
             using (DbCommand command = CreateCommandByCommandType(commandType, commandText))
             {
+                command.CommandTimeout = _timeout;
                 return ExecuteScalar(command, transaction);
             }
         }
@@ -827,6 +856,8 @@ namespace WEF.Db
         /// <seealso cref="IDbCommand.ExecuteScalar"/>
         public int ExecuteNonQuery(DbCommand command)
         {
+            command.CommandTimeout = _timeout;
+
             if (IsBatchConnection)
             {
                 PrepareCommand(command, GetConnection(true));
@@ -854,6 +885,7 @@ namespace WEF.Db
 
             using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
             {
+                command.CommandTimeout = _timeout;
                 if (IsBatchConnection)
                 {
                     PrepareCommand(command, GetConnection(true));
@@ -882,6 +914,7 @@ namespace WEF.Db
         /// <seealso cref="IDbCommand.ExecuteScalar"/>
         public int ExecuteNonQuery(DbCommand command, DbTransaction transaction)
         {
+            command.CommandTimeout = _timeout;
             PrepareCommand(command, transaction);
             return DoExecuteNonQuery(command);
         }
@@ -903,6 +936,7 @@ namespace WEF.Db
         {
             using (DbCommand command = CreateCommandByCommandType(commandType, commandText))
             {
+                command.CommandTimeout = _timeout;
                 return ExecuteNonQuery(command);
             }
         }
@@ -927,6 +961,7 @@ namespace WEF.Db
         {
             using (DbCommand command = CreateCommandByCommandType(commandType, commandText))
             {
+                command.CommandTimeout = _timeout;
                 return ExecuteNonQuery(command, transaction);
             }
         }
@@ -943,7 +978,10 @@ namespace WEF.Db
         /// </returns>        
         public IDataReader ExecuteReader(DbCommand command)
         {
+            command.CommandTimeout = _timeout;
+
             DbConnection connection = GetConnection(true);
+
             PrepareCommand(command, connection);
 
             try
@@ -979,6 +1017,7 @@ namespace WEF.Db
         /// </returns>        
         public IDataReader ExecuteReader(DbCommand command, DbTransaction transaction)
         {
+            command.CommandTimeout = _timeout;
             PrepareCommand(command, transaction);
             return DoExecuteReader(command, CommandBehavior.Default);
         }
@@ -1026,6 +1065,7 @@ namespace WEF.Db
         /// <param name="value"><para>The value of the parameter.</para></param>       
         public void AddParameter(DbCommand command, string name, DbType dbType, int size, ParameterDirection direction, bool nullable, byte precision, byte scale, string sourceColumn, DataRowVersion sourceVersion, object value)
         {
+            command.CommandTimeout = _timeout;
             DbParameter parameter = CreateParameter(name, dbType == DbType.Object ? DbType.String : dbType, size, direction, nullable, precision, scale, sourceColumn, sourceVersion, value);
             command.Parameters.Add(parameter);
         }
@@ -1042,6 +1082,7 @@ namespace WEF.Db
         /// <param name="value"><para>The value of the parameter.</para></param>    
         public void AddParameter(DbCommand command, string name, DbType dbType, ParameterDirection direction, string sourceColumn, DataRowVersion sourceVersion, object value)
         {
+            command.CommandTimeout = _timeout;
             AddParameter(command, name, dbType, 0, direction, false, 0, 0, sourceColumn, sourceVersion, value);
         }
 
@@ -1054,6 +1095,7 @@ namespace WEF.Db
         /// <param name="size"><para>The maximum size of the data within the column.</para></param>        
         public void AddOutParameter(DbCommand command, string name, DbType dbType, int size)
         {
+            command.CommandTimeout = _timeout;
             AddParameter(command, name, dbType, size, ParameterDirection.Output, true, 0, 0, String.Empty, DataRowVersion.Default, DBNull.Value);
         }
 
@@ -1068,6 +1110,7 @@ namespace WEF.Db
         /// </remarks>        
         public void AddInParameter(DbCommand command, string name, DbType dbType)
         {
+            command.CommandTimeout = _timeout;
             AddParameter(command, name, dbType, ParameterDirection.Input, String.Empty, DataRowVersion.Default, null);
         }
 
@@ -1080,6 +1123,7 @@ namespace WEF.Db
         /// <param name="value"><para>The value of the parameter.</para></param>      
         public void AddInParameter(DbCommand command, string name, DbType dbType, object value)
         {
+            command.CommandTimeout = _timeout;
             AddParameter(command, name, dbType, ParameterDirection.Input, String.Empty, DataRowVersion.Default, value);
         }
 
@@ -1093,6 +1137,7 @@ namespace WEF.Db
         /// <param name="value"><para>The value of the parameter.</para></param>      
         public void AddInParameter(DbCommand command, string name, DbType dbType, int size, object value)
         {
+            command.CommandTimeout = _timeout;
             AddParameter(command, name, dbType, size, ParameterDirection.Input, true, 0, 0, String.Empty, DataRowVersion.Default, value);
         }
 
@@ -1104,6 +1149,7 @@ namespace WEF.Db
         /// <param name="value"><para>The value of the parameter.</para></param>      
         public void AddInParameter(DbCommand command, string name, object value)
         {
+            command.CommandTimeout = _timeout;
             AddParameter(command, name, DbType.Object, ParameterDirection.Input, String.Empty, DataRowVersion.Default, value);
         }
 
@@ -1117,6 +1163,7 @@ namespace WEF.Db
         /// <param name="sourceVersion"><para>One of the <see cref="DataRowVersion"/> values.</para></param>
         public void AddInParameter(DbCommand command, string name, DbType dbType, string sourceColumn, DataRowVersion sourceVersion)
         {
+            command.CommandTimeout = _timeout;
             AddParameter(command, name, dbType, 0, ParameterDirection.Input, true, 0, 0, sourceColumn, sourceVersion, null);
         }
 
@@ -1126,6 +1173,7 @@ namespace WEF.Db
         /// </summary>
         public void AddInputOutputParameter(DbCommand command, string name, DbType dbType, int size, object value)
         {
+            command.CommandTimeout = _timeout;
             AddParameter(command, name, dbType, size, ParameterDirection.InputOutput, true, 0, 0, String.Empty, DataRowVersion.Default, value);
         }
 
@@ -1135,6 +1183,7 @@ namespace WEF.Db
         /// </summary>
         public void AddReturnValueParameter(DbCommand command, string name, DbType dbType, int size)
         {
+            command.CommandTimeout = _timeout;
             AddParameter(command, name, dbType, size, ParameterDirection.ReturnValue, true, 0, 0, String.Empty, DataRowVersion.Default, DBNull.Value);
         }
 
@@ -1144,6 +1193,8 @@ namespace WEF.Db
         /// </summary>
         public void AddParameter(DbCommand command, params DbParameter[] parameters)
         {
+            command.CommandTimeout = _timeout;
+
             if (null == parameters || parameters.Length == 0)
                 return;
             foreach (DbParameter p in parameters)
@@ -1163,6 +1214,8 @@ namespace WEF.Db
         /// <returns></returns>
         internal DbCommand AddCommandParameter(DbCommand command, params Parameter[] parameters)
         {
+            command.CommandTimeout = _timeout;
+
             if (null == parameters || parameters.Length == 0)
                 return command;
             //var i = 0;
@@ -1275,6 +1328,7 @@ namespace WEF.Db
 
             using (DbDataAdapter adapter = GetDataAdapter())
             {
+                command.CommandTimeout = _timeout;
                 adapter.SelectCommand = command;
                 adapter.FillSchema(data, SchemaType.Mapped);
                 data.AcceptChanges();
@@ -1295,6 +1349,7 @@ namespace WEF.Db
             {
                 using (DbCommand command = CreateCommandByCommandType(CommandType.Text, "select * from [" + tableName + "]"))
                 {
+                    command.CommandTimeout = _timeout;
                     PrepareCommand(command, connection);
                     return DoLoadMap(command, "Table");
                 }
