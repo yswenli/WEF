@@ -288,7 +288,7 @@ namespace WEF.Common
         /// <param name="value"></param>
         public static void SetPropertyValue(Type type, object obj, string propertyName, object value)
         {
-            var properties= type.GetProperties();
+            var properties = type.GetProperties();
 
             var property = properties.Where(b => b.Name.ToLower() == propertyName.ToLower()).FirstOrDefault();
 
@@ -532,7 +532,7 @@ namespace WEF.Common
             return new string[] { bodyText.Substring(0, colonIndex), bodyText.Substring(colonIndex + 1) };
         }
 
-        
+
         private static T ConvertObj<T>(dynamic obj)
         {
             return (T)obj;
@@ -585,7 +585,6 @@ namespace WEF.Common
             }
         }
 
-        #region Extiond
         public static string ReplaceSqlKey(string text, int maxlength)
         {
             text = text.ToLower().Trim();
@@ -599,6 +598,5 @@ namespace WEF.Common
             text = Regex.Replace(text, ";", "");
             return text;
         }
-        #endregion
     }
 }
