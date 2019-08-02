@@ -139,27 +139,26 @@ namespace WEF.ModelGenerator
                         {
                             int max = 50;
 
-                            var ds = dbObject.Query(ConnectionModel.Database, sql);
+                            var dt = dbObject.GetTabData(ConnectionModel.Database, sql,max);
 
-                            if (ds != null && ds.Tables.Count > 0)
+                            if (dt != null && dt.Rows.Count > 0)
                             {
-                                var count = ds.Tables[0].Rows.Count;
+                                var count = dt.Rows.Count;
 
                                 if (count > max)
                                 {
                                     for (int i = max; i < count; i++)
                                     {
-                                        ds.Tables[0].Rows.RemoveAt(max);
+                                        dt.Rows.RemoveAt(max);
                                     }
                                 }
 
-                                var data = ds.Tables[0];
 
                                 var dList = new List<int>();
 
-                                for (int i = 0; i < ds.Tables[0].Columns.Count; i++)
+                                for (int i = 0; i < dt.Columns.Count; i++)
                                 {
-                                    if (ds.Tables[0].Columns[i].DataType == typeof(DateTime))
+                                    if (dt.Columns[i].DataType == typeof(DateTime))
                                     {
                                         dList.Add(i);
                                     }
@@ -168,7 +167,7 @@ namespace WEF.ModelGenerator
 
                                 dataGridView1.Invoke(new Action(() =>
                                 {
-                                    dataGridView1.DataSource = ds.Tables[0];
+                                    dataGridView1.DataSource = dt;
 
                                     if (dList.Any())
                                     {
