@@ -35,7 +35,7 @@ namespace WEF.ModelGenerator
             Task.Factory.StartNew(() =>
             {
                 while (loadForm != null)
-                {                   
+                {
                     try
                     {
                         if (loadForm.IsHandleCreated)
@@ -74,7 +74,7 @@ namespace WEF.ModelGenerator
         {
             Task.Factory.StartNew(() =>
             {
-                Thread.Sleep(sec * 1000);
+                Thread.Sleep((sec == 0 ? 1 : sec) * 1000);
                 if (loadForm.IsHandleCreated)
                     loadForm.Invoke(new Action(() =>
                     {
