@@ -13,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using WEF.Common;
 using WEF.Expressions;
 using WEF.Models;
 
@@ -113,9 +112,9 @@ namespace WEF.Test
 
             var upWhere1 = tb_UserpointRepository.Search();
 
-            upWhere1 = upWhere1.Where(b => b.Uid == "sss");
+            var w1 = upWhere1.Where(b => b.Uid == "sss");
 
-            upWhere1 = upWhere1.Where(b => b.Points > 0);
+            var w2 = w1.Where(b => b.Points > 0);
 
             var up1 = upWhere1.First();
 
@@ -142,9 +141,43 @@ namespace WEF.Test
             }
 
 
-            var upWhere2 = tb_UserpointRepository.Search().Where(eWhere1, eWhere2, eWhere3);
+            var upWhere2 = tb_UserpointRepository.Search().Where(eWhere1, eWhere2, eWhere3).ToList();
 
-            var up2 = upWhere2.ToList();
+
+            //Where条件拼接一：
+
+            var dbTaskRepository = new DBTaskRepository();
+
+            var where1 = new Where<DBTask>();
+            where1.And(d => d.Operator != "");
+            where1.And(d => d.Totallimit >= 0);
+
+            var list1 = dbTaskRepository.Search()
+                            .Where(where1)
+                            .Page(1, 2)
+                            .ToList();
+
+            var list2 = dbTaskRepository.Search()
+                            .Where(where1)
+                            .Page(2, 2)
+                            .ToList();
+
+            //多表条件拼接
+
+            //var where2 = new Where<table>();
+            //where2.And(a => a.id == 1);
+            //where2.And<table2>((a, b) => b.id == 2);
+            //where2.And<table3>((a, c) => c.id == 3);
+
+            //var list2 = new DBContext().Search<table>()
+            //                .InnerJoin<table2>((a, b) => a.id == b.aid)
+            //                .InnerJoin<table3>((a, c) => a.id == c.aid)
+            //                .Where(where1)
+            //                .ToList();
+
+            //上面的where还可以这样写：
+            //var where3 = new Where<table>();
+            //where3.And<table2, table3>((a, b, c) => a.id == 1 && b.id == 2 && c.id == 3);
 
             #endregion
 

@@ -54,6 +54,43 @@ db.Search<Area>(tableName)    //Model.table1类通过<a href="https://github.com
 
 ```
 
+## 多where条件拼接
+
+```CSharp
+
+            //Where条件拼接一：
+            var dbTestRepository = new DBTestRepository();
+
+            var where1 = new Where<DBTest>();
+            where1.And(d => d.Operator != "");
+            where1.And(d => d.Totallimit >= 0);
+
+            var list1 = dbTestRepository.Search()
+                            .Where(where1)
+                            .Page(1, 2)
+                            .ToList();
+
+
+            //多表条件拼接
+            var where2 = new Where<table>();
+            where2.And(a => a.id == 1);
+            where2.And<table2>((a, b) => b.id == 2);
+            where2.And<table3>((a, c) => c.id == 3);
+
+            var list2 = new DBContext().Search<table>()
+                            .InnerJoin<table2>((a, b) => a.id == b.aid)
+                            .InnerJoin<table3>((a, c) => a.id == c.aid)
+                            .Where(where1)
+                            .ToList();
+
+            //上面的where还可以这样写：
+            var where3 = new Where<table>();
+            where3.And<table2, table3>((a, b, c) => a.id == 1 && b.id == 2 && c.id == 3);
+
+
+```
+
+
 ## WEF数据库工具
 
 WEF数据库工具是基于WEF的winform项目，可以快捷对数据库进行可视化操作的同时，高效生成基于WEF的ORM操作

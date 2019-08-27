@@ -249,14 +249,12 @@ namespace WEF
         {
             return (Search<T>)base.Where(whereParam.ToWhereClip());
         }
+
         /// <summary>
         /// 
         /// </summary>
-        //public Search<T> Where(Expression<Func<T, bool>> lambdaWhere)
-        //{
-        //    return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
-        //}
-
+        /// <param name="lambdaWheres"></param>
+        /// <returns></returns>
         public Search<T> Where(params Expression<Func<T, bool>>[] lambdaWheres)
         {
             if (lambdaWheres == null || !lambdaWheres.Any()) throw new Exception("where条件不能为空");
@@ -276,7 +274,6 @@ namespace WEF
             }
 
             return Where(whereBuilder.ToWhereClip());
-
         }
 
         /// <summary>

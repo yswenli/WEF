@@ -61,9 +61,8 @@ namespace WEF
         Search<T> Union(Search fromSection);
         Search<T> UnionAll(Search fromSection);
 
-
-        //Search<T> Where(Expression<Func<T, bool>> lambdaWhere);
-
+        #region where
+        
         Search<T> Where(params Expression<Func<T, bool>>[] lambdaWheres);
 
         Search<T> Where(Where whereParam);
@@ -74,6 +73,10 @@ namespace WEF
         Search<T> Where<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> lambdaWhere);
         Search<T> Where<T2, T3>(Expression<Func<T, T2, T3, bool>> lambdaWhere);
         Search<T> Where<T2>(Expression<Func<T, T2, bool>> lambdaWhere);
+
+        #endregion
+
+
 
         PagedList<T> GetPagedList(int pageIndex, int pageSize, string orderBy, bool sorted);
     }
