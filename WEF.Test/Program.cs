@@ -144,6 +144,9 @@ namespace WEF.Test
             var upWhere2 = tb_UserpointRepository.Search().Where(eWhere1, eWhere2, eWhere3).ToList();
 
 
+            //tb_UserpointRepository.Search().OrderBy()
+
+
             //Where条件拼接一：
 
             var dbTaskRepository = new DBTaskRepository();
