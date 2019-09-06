@@ -1846,7 +1846,6 @@ namespace WEF
             int count = 0;
             foreach (TEntity entity in entities)
             {
-                //2015-08-20 修改为tcount判断
                 var tcount = insertExecute<TEntity>(cmdCreator.CreateInsertCommand<TEntity>(entity), tran);
                 if (tcount > 1)
                     count = tcount;

@@ -161,7 +161,6 @@ namespace WEF
 
                 foreach (var targetProperty in targetProperties)
                 {
-
                     var sourceProperty = sourceProperties.Where(b => b.Name.ToLower() == targetProperty.Name.ToLower()).FirstOrDefault();
 
                     if (sourceProperty != null)
