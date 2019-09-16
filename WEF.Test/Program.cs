@@ -52,7 +52,11 @@ namespace WEF.Test
                 TaskType = 3
             };
 
+            
+
             var tn = taskModel.ConvertTo<DBTask>();
+
+            var insertResult= new DBTaskRepository().Insert(tn);
 
             var taa = taskModel.ConvertTo<TestA>();
 
