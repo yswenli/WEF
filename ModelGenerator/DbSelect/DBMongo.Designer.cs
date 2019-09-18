@@ -38,7 +38,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.textBox5 = new CCWin.SkinControl.SkinWaterTextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
@@ -64,7 +64,7 @@
             // 
             this.textBox6.Location = new System.Drawing.Point(113, 94);
             this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(100, 21);
+            this.textBox6.Size = new System.Drawing.Size(239, 21);
             this.textBox6.TabIndex = 1;
             // 
             // textBox4
@@ -72,7 +72,7 @@
             this.textBox4.Location = new System.Drawing.Point(113, 67);
             this.textBox4.Name = "textBox4";
             this.textBox4.PasswordChar = '*';
-            this.textBox4.Size = new System.Drawing.Size(100, 21);
+            this.textBox4.Size = new System.Drawing.Size(239, 21);
             this.textBox4.TabIndex = 1;
             // 
             // label5
@@ -88,7 +88,7 @@
             // 
             this.textBox3.Location = new System.Drawing.Point(113, 40);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 21);
+            this.textBox3.Size = new System.Drawing.Size(239, 21);
             this.textBox3.TabIndex = 1;
             // 
             // label4
@@ -113,7 +113,7 @@
             // 
             this.textBox1.Location = new System.Drawing.Point(113, 13);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 21);
+            this.textBox1.Size = new System.Drawing.Size(239, 21);
             this.textBox1.TabIndex = 1;
             this.textBox1.Text = "127.0.0.1:27017";
             // 
@@ -130,14 +130,18 @@
             // 
             this.textBox5.Enabled = false;
             this.textBox5.Location = new System.Drawing.Point(43, 230);
+            this.textBox5.Multiline = true;
             this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(355, 21);
+            this.textBox5.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBox5.Size = new System.Drawing.Size(355, 98);
             this.textBox5.TabIndex = 2;
             this.textBox5.Text = "mongodb://";
+            this.textBox5.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.textBox5.WaterText = "请输入连接字符串";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(242, 261);
+            this.button1.Location = new System.Drawing.Point(242, 347);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 28);
             this.button1.TabIndex = 3;
@@ -148,7 +152,7 @@
             // button2
             // 
             this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(323, 261);
+            this.button2.Location = new System.Drawing.Point(323, 347);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 28);
             this.button2.TabIndex = 3;
@@ -171,7 +175,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(438, 306);
+            this.ClientSize = new System.Drawing.Size(438, 393);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -198,7 +202,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox5;
+        private CCWin.SkinControl.SkinWaterTextBox textBox5;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox textBox6;

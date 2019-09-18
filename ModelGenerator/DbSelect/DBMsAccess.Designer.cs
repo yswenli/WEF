@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DBMsAccess));
             this.label1 = new System.Windows.Forms.Label();
-            this.txtConnectionString = new System.Windows.Forms.TextBox();
+            this.txtConnectionString = new CCWin.SkinControl.SkinAlphaWaterTextBox();
             this.rbconnstring = new System.Windows.Forms.RadioButton();
             this.rbdatabaseselect = new System.Windows.Forms.RadioButton();
             this.txtfilepath = new System.Windows.Forms.TextBox();
@@ -48,7 +48,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(74, 140);
+            this.label1.Location = new System.Drawing.Point(50, 134);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 12);
             this.label1.TabIndex = 0;
@@ -56,16 +56,23 @@
             // 
             // txtConnectionString
             // 
+            this.txtConnectionString.BackAlpha = 10;
+            this.txtConnectionString.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.txtConnectionString.Enabled = false;
-            this.txtConnectionString.Location = new System.Drawing.Point(139, 203);
+            this.txtConnectionString.Location = new System.Drawing.Point(92, 226);
+            this.txtConnectionString.Multiline = true;
             this.txtConnectionString.Name = "txtConnectionString";
-            this.txtConnectionString.Size = new System.Drawing.Size(291, 21);
+            this.txtConnectionString.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtConnectionString.Size = new System.Drawing.Size(314, 97);
             this.txtConnectionString.TabIndex = 7;
+            this.txtConnectionString.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.txtConnectionString.WaterFont = new System.Drawing.Font("微软雅黑", 8.5F);
+            this.txtConnectionString.WaterText = "";
             // 
             // rbconnstring
             // 
             this.rbconnstring.AutoSize = true;
-            this.rbconnstring.Location = new System.Drawing.Point(44, 203);
+            this.rbconnstring.Location = new System.Drawing.Point(20, 197);
             this.rbconnstring.Name = "rbconnstring";
             this.rbconnstring.Size = new System.Drawing.Size(89, 16);
             this.rbconnstring.TabIndex = 6;
@@ -76,7 +83,7 @@
             // 
             this.rbdatabaseselect.AutoSize = true;
             this.rbdatabaseselect.Checked = true;
-            this.rbdatabaseselect.Location = new System.Drawing.Point(44, 72);
+            this.rbdatabaseselect.Location = new System.Drawing.Point(20, 66);
             this.rbdatabaseselect.Name = "rbdatabaseselect";
             this.rbdatabaseselect.Size = new System.Drawing.Size(65, 16);
             this.rbdatabaseselect.TabIndex = 1;
@@ -120,7 +127,7 @@
             this.panelDB.Controls.Add(this.txtPassword);
             this.panelDB.Controls.Add(this.button1);
             this.panelDB.Controls.Add(this.txtfilepath);
-            this.panelDB.Location = new System.Drawing.Point(116, 42);
+            this.panelDB.Location = new System.Drawing.Point(92, 36);
             this.panelDB.Name = "panelDB";
             this.panelDB.Size = new System.Drawing.Size(314, 153);
             this.panelDB.TabIndex = 7;
@@ -135,7 +142,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(139, 244);
+            this.button2.Location = new System.Drawing.Point(250, 341);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 31);
             this.button2.TabIndex = 8;
@@ -145,7 +152,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(265, 244);
+            this.button3.Location = new System.Drawing.Point(331, 341);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 31);
             this.button3.TabIndex = 9;
@@ -156,7 +163,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(74, 107);
+            this.label2.Location = new System.Drawing.Point(50, 101);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(35, 12);
             this.label2.TabIndex = 10;
@@ -166,7 +173,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(474, 307);
+            this.ClientSize = new System.Drawing.Size(446, 394);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -191,7 +198,7 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtConnectionString;
+        private CCWin.SkinControl.SkinAlphaWaterTextBox txtConnectionString;
         private System.Windows.Forms.RadioButton rbconnstring;
         private System.Windows.Forms.RadioButton rbdatabaseselect;
         private System.Windows.Forms.TextBox txtfilepath;

@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Data.OleDb;
 using System.Text;
 using System.Windows.Forms;
-using System.Data.OleDb;
-using WEF;
 using WEF.ModelGenerator.Common;
 
 namespace WEF.ModelGenerator.DbSelect

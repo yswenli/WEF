@@ -293,14 +293,21 @@ namespace WEF.ModelGenerator
             getDatabaseinfo();
         }
 
-
-
         private void 刷新ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             TreeNode node = Treeview.SelectedNode;
             node.Nodes.Clear();
             getDatabaseinfo();
             Treeview.ExpandAll();
+        }
+
+        private void viewConnectStringToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TreeNode node = Treeview.SelectedNode;
+            var conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Tag.ToString()); });
+            conConnectionString = conModel.ConnectionString;
+            Clipboard.SetText(conConnectionString);
+            MessageBox.Show($"已复制到剪切板，conConnectionString：\r\n{conConnectionString}", "WEF数据库工具!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
 
         /// <summary>
@@ -709,7 +716,6 @@ namespace WEF.ModelGenerator
         #endregion
 
 
-
         /// <summary>
         /// 代码生成
         /// </summary>
@@ -835,6 +841,13 @@ namespace WEF.ModelGenerator
             ShowSQLForm();
         }
 
+        private void copyFieldNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TreeNode node = Treeview.SelectedNode;
+            Clipboard.SetText(node.Text);
+            MessageBox.Show($"已复制到剪切板，表名：\r\n{node.Text}", "WEF数据库工具!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+        }
+
         public void ShowSQLForm()
         {
             TreeNode node = Treeview.SelectedNode;
@@ -907,7 +920,7 @@ namespace WEF.ModelGenerator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("复制操作异常!ex:" + ex.Message);
+                MessageBox.Show("复制操作异常!ex:" + ex.Message, "出错啦!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -932,6 +945,9 @@ namespace WEF.ModelGenerator
         {
 
         }
+
         #endregion
+
+       
     }
 }

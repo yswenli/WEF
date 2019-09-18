@@ -37,7 +37,7 @@
             this.txtfilepath = new System.Windows.Forms.TextBox();
             this.rbdatabaseselect = new System.Windows.Forms.RadioButton();
             this.rbconnstring = new System.Windows.Forms.RadioButton();
-            this.txtConnectionString = new System.Windows.Forms.TextBox();
+            this.txtConnectionString = new CCWin.SkinControl.SkinAlphaWaterTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
             this.panelDB.SuspendLayout();
@@ -45,7 +45,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(260, 248);
+            this.button3.Location = new System.Drawing.Point(350, 369);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 32);
             this.button3.TabIndex = 8;
@@ -55,7 +55,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(134, 248);
+            this.button2.Location = new System.Drawing.Point(269, 369);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 32);
             this.button2.TabIndex = 7;
@@ -123,11 +123,19 @@
             // 
             // txtConnectionString
             // 
+            this.txtConnectionString.BackAlpha = 10;
+            this.txtConnectionString.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.txtConnectionString.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtConnectionString.Enabled = false;
             this.txtConnectionString.Location = new System.Drawing.Point(134, 208);
+            this.txtConnectionString.Multiline = true;
             this.txtConnectionString.Name = "txtConnectionString";
-            this.txtConnectionString.Size = new System.Drawing.Size(291, 21);
+            this.txtConnectionString.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtConnectionString.Size = new System.Drawing.Size(291, 141);
             this.txtConnectionString.TabIndex = 6;
+            this.txtConnectionString.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.txtConnectionString.WaterFont = new System.Drawing.Font("微软雅黑", 8.5F);
+            this.txtConnectionString.WaterText = "请输入连接字符串";
             // 
             // label1
             // 
@@ -146,7 +154,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(464, 297);
+            this.ClientSize = new System.Drawing.Size(464, 422);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.panelDB);
@@ -176,7 +184,7 @@
         private System.Windows.Forms.TextBox txtfilepath;
         private System.Windows.Forms.RadioButton rbdatabaseselect;
         private System.Windows.Forms.RadioButton rbconnstring;
-        private System.Windows.Forms.TextBox txtConnectionString;
+        private CCWin.SkinControl.SkinAlphaWaterTextBox txtConnectionString;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.OpenFileDialog fileDialog;
 

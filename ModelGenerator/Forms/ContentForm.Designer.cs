@@ -52,12 +52,15 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.cnnTxt = new System.Windows.Forms.TextBox();
             this.saveEntity = new System.Windows.Forms.SaveFileDialog();
+            this.contextMenuCopy = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tp1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridColumns)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tp2.SuspendLayout();
             this.contextMenuStripSave.SuspendLayout();
+            this.contextMenuCopy.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -100,6 +103,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gridColumns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridColumns.ContextMenuStrip = this.contextMenuCopy;
             this.gridColumns.Location = new System.Drawing.Point(3, 3);
             this.gridColumns.Name = "gridColumns";
             this.gridColumns.RowTemplate.Height = 23;
@@ -257,14 +261,14 @@
             this.contextMenuStripSave.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.保存ToolStripMenuItem});
             this.contextMenuStripSave.Name = "contextMenuStripSave";
-            this.contextMenuStripSave.Size = new System.Drawing.Size(181, 26);
+            this.contextMenuStripSave.Size = new System.Drawing.Size(193, 26);
             // 
             // 保存ToolStripMenuItem
             // 
             this.保存ToolStripMenuItem.Name = "保存ToolStripMenuItem";
             this.保存ToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.保存ToolStripMenuItem.Text = "导出到文件";
+            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.保存ToolStripMenuItem.Text = "保存代码文件";
             this.保存ToolStripMenuItem.Click += new System.EventHandler(this.保存ToolStripMenuItem_Click);
             // 
             // imageList1
@@ -282,6 +286,20 @@
             this.cnnTxt.ReadOnly = true;
             this.cnnTxt.Size = new System.Drawing.Size(720, 21);
             this.cnnTxt.TabIndex = 7;
+            // 
+            // contextMenuCopy
+            // 
+            this.contextMenuCopy.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyToolStripMenuItem});
+            this.contextMenuCopy.Name = "contextMenuCopy";
+            this.contextMenuCopy.Size = new System.Drawing.Size(181, 48);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyToolStripMenuItem.Text = "复制";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // ContentForm
             // 
@@ -304,6 +322,7 @@
             this.groupBox1.PerformLayout();
             this.tp2.ResumeLayout(false);
             this.contextMenuStripSave.ResumeLayout(false);
+            this.contextMenuCopy.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -333,5 +352,7 @@
         private System.Windows.Forms.TextBox txtnamespace;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cbPrimarykey;
+        private System.Windows.Forms.ContextMenuStrip contextMenuCopy;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
     }
 }

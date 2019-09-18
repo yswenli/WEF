@@ -139,46 +139,51 @@ namespace WEF.ModelGenerator
                         {
                             int max = 50;
 
-                            var dt = dbObject.GetTabData(ConnectionModel.Database, sql,max);
+                            var ds = dbObject.Query(ConnectionModel.Database, sql);
 
-                            if (dt != null && dt.Rows.Count > 0)
+                            if (ds != null && ds.Tables != null)
                             {
-                                var count = dt.Rows.Count;
+                                var dt = ds.Tables[0];
 
-                                if (count > max)
+                                if (dt != null && dt.Rows.Count > 0)
                                 {
-                                    for (int i = max; i < count; i++)
+                                    var count = dt.Rows.Count;
+
+                                    if (count > max)
                                     {
-                                        dt.Rows.RemoveAt(max);
-                                    }
-                                }
-
-
-                                var dList = new List<int>();
-
-                                for (int i = 0; i < dt.Columns.Count; i++)
-                                {
-                                    if (dt.Columns[i].DataType == typeof(DateTime))
-                                    {
-                                        dList.Add(i);
-                                    }
-                                }
-
-
-                                dataGridView1.Invoke(new Action(() =>
-                                {
-                                    dataGridView1.DataSource = dt;
-
-                                    if (dList.Any())
-                                    {
-                                        foreach (var item in dList)
+                                        for (int i = max; i < count; i++)
                                         {
-                                            dataGridView1.Columns[item].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
+                                            dt.Rows.RemoveAt(max);
                                         }
                                     }
 
-                                    lbl_execute.Text = $"当前显示{(max > count ? count : max)}行，影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalSeconds} 秒";
-                                }));
+
+                                    var dList = new List<int>();
+
+                                    for (int i = 0; i < dt.Columns.Count; i++)
+                                    {
+                                        if (dt.Columns[i].DataType == typeof(DateTime))
+                                        {
+                                            dList.Add(i);
+                                        }
+                                    }
+
+
+                                    dataGridView1.Invoke(new Action(() =>
+                                    {
+                                        dataGridView1.DataSource = dt;
+
+                                        if (dList.Any())
+                                        {
+                                            foreach (var item in dList)
+                                            {
+                                                dataGridView1.Columns[item].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
+                                            }
+                                        }
+
+                                        lbl_execute.Text = $"当前显示{(max > count ? count : max)}行，影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalSeconds} 秒";
+                                    }));
+                                }
                             }
                         }
                         catch (Exception ex)

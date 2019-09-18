@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LeftPanel));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("数据库服务器");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("数据库服务器");
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
@@ -53,6 +53,8 @@
             this.contextMenuStripOneMongoDB = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewConnectStringToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyFieldNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.contextMenuStripTop.SuspendLayout();
             this.contextMenuStripDatabase.SuspendLayout();
@@ -99,10 +101,10 @@
             this.Treeview.ImageList = this.imgList;
             this.Treeview.Location = new System.Drawing.Point(0, 25);
             this.Treeview.Name = "Treeview";
-            treeNode1.Name = "节点0";
-            treeNode1.Text = "数据库服务器";
+            treeNode2.Name = "节点0";
+            treeNode2.Text = "数据库服务器";
             this.Treeview.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode2});
             this.Treeview.SelectedImageIndex = 0;
             this.Treeview.Size = new System.Drawing.Size(173, 339);
             this.Treeview.TabIndex = 1;
@@ -147,28 +149,29 @@
             this.contextMenuStripDatabase.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.连接ToolStripMenuItem,
             this.删除ToolStripMenuItem,
-            this.刷新ToolStripMenuItem1});
+            this.刷新ToolStripMenuItem1,
+            this.viewConnectStringToolStripMenuItem});
             this.contextMenuStripDatabase.Name = "contextMenuStripDatabase";
-            this.contextMenuStripDatabase.Size = new System.Drawing.Size(101, 70);
+            this.contextMenuStripDatabase.Size = new System.Drawing.Size(161, 92);
             // 
             // 连接ToolStripMenuItem
             // 
             this.连接ToolStripMenuItem.Name = "连接ToolStripMenuItem";
-            this.连接ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.连接ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.连接ToolStripMenuItem.Text = "连接";
             this.连接ToolStripMenuItem.Click += new System.EventHandler(this.连接ToolStripMenuItem_Click);
             // 
             // 删除ToolStripMenuItem
             // 
             this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
-            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.删除ToolStripMenuItem.Text = "删除";
             this.删除ToolStripMenuItem.Click += new System.EventHandler(this.删除ToolStripMenuItem_Click);
             // 
             // 刷新ToolStripMenuItem1
             // 
             this.刷新ToolStripMenuItem1.Name = "刷新ToolStripMenuItem1";
-            this.刷新ToolStripMenuItem1.Size = new System.Drawing.Size(100, 22);
+            this.刷新ToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.刷新ToolStripMenuItem1.Text = "刷新";
             this.刷新ToolStripMenuItem1.Click += new System.EventHandler(this.刷新ToolStripMenuItem1_Click);
             // 
@@ -206,9 +209,10 @@
             // 
             this.contextMenuStripTable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.生成代码ToolStripMenuItem,
-            this.sQL查询ToolStripMenuItem});
+            this.sQL查询ToolStripMenuItem,
+            this.copyFieldNameToolStripMenuItem});
             this.contextMenuStripTable.Name = "contextMenuStripOneDataBase";
-            this.contextMenuStripTable.Size = new System.Drawing.Size(148, 48);
+            this.contextMenuStripTable.Size = new System.Drawing.Size(181, 92);
             // 
             // 生成代码ToolStripMenuItem
             // 
@@ -230,21 +234,35 @@
             this.toolStripMenuItem1,
             this.toolStripMenuItem2});
             this.contextMenuStripOneMongoDB.Name = "contextMenuStripOneMongoDB";
-            this.contextMenuStripOneMongoDB.Size = new System.Drawing.Size(181, 70);
+            this.contextMenuStripOneMongoDB.Size = new System.Drawing.Size(101, 48);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(100, 22);
             this.toolStripMenuItem1.Text = "刷新";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(100, 22);
             this.toolStripMenuItem2.Text = "查询";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            // 
+            // viewConnectStringToolStripMenuItem
+            // 
+            this.viewConnectStringToolStripMenuItem.Name = "viewConnectStringToolStripMenuItem";
+            this.viewConnectStringToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.viewConnectStringToolStripMenuItem.Text = "查看连接字符串";
+            this.viewConnectStringToolStripMenuItem.Click += new System.EventHandler(this.viewConnectStringToolStripMenuItem_Click);
+            // 
+            // copyFieldNameToolStripMenuItem
+            // 
+            this.copyFieldNameToolStripMenuItem.Name = "copyFieldNameToolStripMenuItem";
+            this.copyFieldNameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyFieldNameToolStripMenuItem.Text = "复制表名";
+            this.copyFieldNameToolStripMenuItem.Click += new System.EventHandler(this.copyFieldNameToolStripMenuItem_Click);
             // 
             // LeftPanel
             // 
@@ -297,5 +315,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStripOneMongoDB;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem viewConnectStringToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyFieldNameToolStripMenuItem;
     }
 }

@@ -72,22 +72,22 @@ namespace WEF.DbDAL.MySql
             {
                 if (SSPI)
                 {
-                    _dbconnectStr = String.Format("server={0};user id={1}; password={2}; Port={3};database={4}; pooling=false", Ip, User, Pass, port, dataBase);//database=mysql
+                    _dbconnectStr = String.Format("server={0};user id={1}; password={2}; Port={3};database={4}; pooling=true", Ip, User, Pass, port, dataBase);//database=mysql
                 }
                 else
                 {
-                    _dbconnectStr = String.Format("server={0};user id={1}; password={2}; Port={3};database={4}; pooling=false", Ip, User, Pass, port, dataBase);//database=mysql
+                    _dbconnectStr = String.Format("server={0};user id={1}; password={2}; Port={3};database={4}; pooling=true", Ip, User, Pass, port, dataBase);//database=mysql
                 }
             }
             else
             {
                 if (SSPI)
                 {
-                    _dbconnectStr = String.Format("server={0};user id={1}; password={2}; Port={3};database=; pooling=false", Ip, User, Pass, port);//database=mysql
+                    _dbconnectStr = String.Format("server={0};user id={1}; password={2}; Port={3};database=; pooling=true", Ip, User, Pass, port);//database=mysql
                 }
                 else
                 {
-                    _dbconnectStr = String.Format("server={0};user id={1}; password={2}; Port={3};database=; pooling=false", Ip, User, Pass, port);//database=mysql
+                    _dbconnectStr = String.Format("server={0};user id={1}; password={2}; Port={3};database=; pooling=true", Ip, User, Pass, port);//database=mysql
                 }
             }
             _connect.ConnectionString = _dbconnectStr;
@@ -912,7 +912,7 @@ namespace WEF.DbDAL.MySql
         {
             StringBuilder builder = new StringBuilder();
 
-            builder.Append("select  * from [" + TableName + "]");
+            builder.Append("select  * from " + TableName);
             if (TopNum > 0)
             {
                 builder.Append(" limit 0," + TopNum.ToString());

@@ -10,6 +10,7 @@ using WEF;
 using WEF.ModelGenerator.Common;
 using WEF.Common;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace WEF.ModelGenerator
 {
@@ -316,6 +317,28 @@ namespace WEF.ModelGenerator
             }
         }
 
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var cells = gridColumns.SelectedCells;
 
+            if (cells != null)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                foreach (DataGridViewCell cell in cells)
+                {
+                    if (cell == cells[cells.Count - 1])
+                    {
+                        sb.Append($"{cell.Value}");
+                    }
+                    else
+                    {
+                        sb.Append($"{cell.Value},");
+                    }
+                }
+
+                Clipboard.SetText(sb.ToString());                
+            }
+        }
     }
 }

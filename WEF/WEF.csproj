@@ -63,6 +63,7 @@
     <Compile Include="Cache\CacheInfo.cs" />
     <Compile Include="Common\BaseFieldType.cs" />
     <Compile Include="Common\ColumnInfo.cs" />
+    <Compile Include="Common\ConvertMatchType.cs" />
     <Compile Include="Common\DataUtils.cs" />
     <Compile Include="Common\DBConvert.cs" />
     <Compile Include="Common\DesignByContract.cs" />

@@ -310,7 +310,7 @@ namespace WEF.Test
         }
 
 
-        class TestA
+        public class TestA
         {
             public DateTime aa { get; set; }
 
@@ -340,7 +340,7 @@ namespace WEF.Test
             }
         }
 
-        class TestB
+        public class TestB
         {
             public int ID
             {

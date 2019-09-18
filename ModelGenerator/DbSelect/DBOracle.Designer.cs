@@ -39,16 +39,16 @@
             this.txtUserName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.chbConnectString = new System.Windows.Forms.CheckBox();
-            this.txtConnectString = new System.Windows.Forms.TextBox();
+            this.txtConnectString = new CCWin.SkinControl.SkinAlphaWaterTextBox();
             this.panelServer = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
             this.cbbServer = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.panelServer.SuspendLayout();
             this.SuspendLayout();
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(304, 295);
+            this.button3.Location = new System.Drawing.Point(281, 373);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 32);
             this.button3.TabIndex = 8;
@@ -59,7 +59,7 @@
             // button2
             // 
             this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(223, 295);
+            this.button2.Location = new System.Drawing.Point(200, 373);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 32);
             this.button2.TabIndex = 7;
@@ -71,7 +71,7 @@
             // 
             this.txtPassword.Location = new System.Drawing.Point(79, 142);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(214, 21);
+            this.txtPassword.Size = new System.Drawing.Size(251, 21);
             this.txtPassword.TabIndex = 3;
             // 
             // label5
@@ -94,11 +94,11 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(113, 295);
+            this.button1.Location = new System.Drawing.Point(90, 373);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(104, 32);
             this.button1.TabIndex = 6;
-            this.button1.Text = "连接/连接测试";
+            this.button1.Text = "连接测试";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -107,14 +107,14 @@
             this.cbbService.FormattingEnabled = true;
             this.cbbService.Location = new System.Drawing.Point(79, 53);
             this.cbbService.Name = "cbbService";
-            this.cbbService.Size = new System.Drawing.Size(214, 20);
+            this.cbbService.Size = new System.Drawing.Size(251, 20);
             this.cbbService.TabIndex = 1;
             // 
             // txtUserName
             // 
             this.txtUserName.Location = new System.Drawing.Point(79, 98);
             this.txtUserName.Name = "txtUserName";
-            this.txtUserName.Size = new System.Drawing.Size(214, 21);
+            this.txtUserName.Size = new System.Drawing.Size(251, 21);
             this.txtUserName.TabIndex = 2;
             // 
             // label1
@@ -129,7 +129,7 @@
             // chbConnectString
             // 
             this.chbConnectString.AutoSize = true;
-            this.chbConnectString.Location = new System.Drawing.Point(73, 232);
+            this.chbConnectString.Location = new System.Drawing.Point(39, 233);
             this.chbConnectString.Name = "chbConnectString";
             this.chbConnectString.Size = new System.Drawing.Size(84, 16);
             this.chbConnectString.TabIndex = 4;
@@ -139,11 +139,19 @@
             // 
             // txtConnectString
             // 
+            this.txtConnectString.BackAlpha = 10;
+            this.txtConnectString.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.txtConnectString.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtConnectString.Enabled = false;
-            this.txtConnectString.Location = new System.Drawing.Point(73, 254);
+            this.txtConnectString.Location = new System.Drawing.Point(39, 255);
+            this.txtConnectString.Multiline = true;
             this.txtConnectString.Name = "txtConnectString";
-            this.txtConnectString.Size = new System.Drawing.Size(280, 21);
+            this.txtConnectString.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtConnectString.Size = new System.Drawing.Size(317, 103);
             this.txtConnectString.TabIndex = 5;
+            this.txtConnectString.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.txtConnectString.WaterFont = new System.Drawing.Font("微软雅黑", 8.5F);
+            this.txtConnectString.WaterText = "请输入连接字符串";
             // 
             // panelServer
             // 
@@ -157,10 +165,19 @@
             this.panelServer.Controls.Add(this.label4);
             this.panelServer.ForeColor = System.Drawing.SystemColors.ControlText;
             this.panelServer.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.panelServer.Location = new System.Drawing.Point(60, 37);
+            this.panelServer.Location = new System.Drawing.Point(26, 38);
             this.panelServer.Name = "panelServer";
-            this.panelServer.Size = new System.Drawing.Size(319, 173);
+            this.panelServer.Size = new System.Drawing.Size(350, 173);
             this.panelServer.TabIndex = 32;
+            // 
+            // cbbServer
+            // 
+            this.cbbServer.FormattingEnabled = true;
+            this.cbbServer.Location = new System.Drawing.Point(79, 14);
+            this.cbbServer.Name = "cbbServer";
+            this.cbbServer.Size = new System.Drawing.Size(251, 20);
+            this.cbbServer.TabIndex = 1;
+            this.cbbServer.Text = "127.0.0.1:1521";
             // 
             // label2
             // 
@@ -171,20 +188,11 @@
             this.label2.TabIndex = 15;
             this.label2.Text = "服务器:";
             // 
-            // cbbServer
-            // 
-            this.cbbServer.FormattingEnabled = true;
-            this.cbbServer.Location = new System.Drawing.Point(79, 14);
-            this.cbbServer.Name = "cbbServer";
-            this.cbbServer.Size = new System.Drawing.Size(214, 20);
-            this.cbbServer.TabIndex = 1;
-            this.cbbServer.Text = "127.0.0.1:1521";
-            // 
             // DBOracle
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(417, 346);
+            this.ClientSize = new System.Drawing.Size(383, 427);
             this.Controls.Add(this.txtConnectString);
             this.Controls.Add(this.chbConnectString);
             this.Controls.Add(this.button3);
@@ -215,7 +223,7 @@
         private System.Windows.Forms.TextBox txtUserName;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chbConnectString;
-        private System.Windows.Forms.TextBox txtConnectString;
+        private CCWin.SkinControl.SkinAlphaWaterTextBox txtConnectString;
         private System.Windows.Forms.Panel panelServer;
         private System.Windows.Forms.ComboBox cbbServer;
         private System.Windows.Forms.Label label2;
