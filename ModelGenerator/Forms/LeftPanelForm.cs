@@ -29,17 +29,17 @@ using WEF.NoSql;
 
 namespace WEF.ModelGenerator
 {
-    public partial class LeftPanel : WeifenLuo.WinFormsUI.Docking.DockContent
+    public partial class LeftPanelForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {
         string conConnectionString;
 
-        public LeftPanel()
+        public LeftPanelForm()
         {
             InitializeComponent();
             Treeview.ExpandAll();
         }
 
-        public delegate void NewContentForm(Connection conModel, string tableName, string databaseName, bool isView);
+        public delegate void NewContentForm(Connection conModel);
 
         public event NewContentForm newcontentForm;
 
@@ -200,7 +200,10 @@ namespace WEF.ModelGenerator
                         conConnectionString = Treeview.SelectedNode.Parent.Parent.Tag.ToString();
                         try
                         {
-                            newcontentForm(conModel, Treeview.SelectedNode.Text, Treeview.SelectedNode.Parent.Parent.Text, Treeview.SelectedNode.Tag.ToString().Equals("V"));
+                            conModel.TableName = Treeview.SelectedNode.Text;
+                            conModel.Database = Treeview.SelectedNode.Parent.Parent.Text;
+                            conModel.IsView = Treeview.SelectedNode.Tag.ToString().Equals("V");
+                            newcontentForm?.Invoke(conModel);
                         }
                         catch { }
                     }
@@ -731,7 +734,10 @@ namespace WEF.ModelGenerator
                         return con.ID.ToString().Equals(Treeview.SelectedNode.Parent.Parent.Parent.Tag.ToString());
                     });
                 conConnectionString = Treeview.SelectedNode.Parent.Parent.Tag.ToString();
-                newcontentForm(conModel, Treeview.SelectedNode.Text, Treeview.SelectedNode.Parent.Parent.Text, Treeview.SelectedNode.Tag.ToString().Equals("V"));
+                conModel.TableName = Treeview.SelectedNode.Text;
+                conModel.Database = Treeview.SelectedNode.Parent.Parent.Text;
+                conModel.IsView = Treeview.SelectedNode.Tag.ToString().Equals("V");
+                newcontentForm(conModel);
             }
         }
 
@@ -845,7 +851,6 @@ namespace WEF.ModelGenerator
         {
             TreeNode node = Treeview.SelectedNode;
             Clipboard.SetText(node.Text);
-            MessageBox.Show($"已复制到剪切板，表名：\r\n{node.Text}", "WEF数据库工具!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
 
         public void ShowSQLForm()
@@ -948,6 +953,6 @@ namespace WEF.ModelGenerator
 
         #endregion
 
-       
+
     }
 }

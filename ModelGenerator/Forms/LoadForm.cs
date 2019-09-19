@@ -42,14 +42,15 @@ namespace WEF.ModelGenerator
                             loadForm.Invoke(new Action(() =>
                             {
                                 i++;
-                                if (loadForm.Visible)
-                                {
-                                    loadForm.SetTime(i);
-                                }
-                                else
-                                {
-                                    i = 0;
-                                }
+                                if (loadForm != null)
+                                    if (loadForm.Visible)
+                                    {
+                                        loadForm.SetTime(i);
+                                    }
+                                    else
+                                    {
+                                        i = 0;
+                                    }
                             }));
                     }
                     catch
@@ -63,9 +64,12 @@ namespace WEF.ModelGenerator
 
             Task.Factory.StartNew(() =>
             {
+                Thread.Sleep(100);
+
                 parent.Invoke(new Action(() =>
                 {
-                    loadForm.ShowDialog(parent);
+                    if (loadForm != null)
+                        loadForm.ShowDialog(parent);
                 }));
             });
         }
@@ -75,7 +79,7 @@ namespace WEF.ModelGenerator
             Task.Factory.StartNew(() =>
             {
                 Thread.Sleep((sec == 0 ? 1 : sec) * 1000);
-                if (loadForm.IsHandleCreated)
+                if (loadForm != null && loadForm.IsHandleCreated)
                     loadForm.Invoke(new Action(() =>
                     {
                         loadForm.Close();

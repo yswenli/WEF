@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using CCWin.SkinControl;
 using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using WEF.ModelGenerator.Common;
 
 namespace WEF.ModelGenerator.Controls
@@ -20,16 +16,11 @@ namespace WEF.ModelGenerator.Controls
             listBox1.Hide();
         }
 
-
-        public string Text
+        public SkinWaterTextBox TextBox
         {
             get
             {
-                return textBox1.Text;
-            }
-            set
-            {
-                textBox1.Text = value;
+                return textBox1;
             }
         }
 
@@ -69,7 +60,7 @@ namespace WEF.ModelGenerator.Controls
                             listBox1.SelectedIndex += inc;
                         }
                     }
-                    
+
                 }, () =>
                 {
                     if (GetCaretPos(out Point point))

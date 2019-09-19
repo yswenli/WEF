@@ -33,10 +33,13 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lbl_execute = new System.Windows.Forms.Label();
+            this.contextMenuStripCopy = new CCWin.SkinControl.SkinContextMenuStrip();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.contextMenuStripCopy.SuspendLayout();
             this.SuspendLayout();
             // 
             // cnnTxt
@@ -53,6 +56,7 @@
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.ContextMenuStrip = this.contextMenuStripCopy;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
@@ -88,6 +92,41 @@
             this.lbl_execute.TabIndex = 12;
             this.lbl_execute.Text = "就绪";
             // 
+            // contextMenuStripCopy
+            // 
+            this.contextMenuStripCopy.Arrow = System.Drawing.Color.Black;
+            this.contextMenuStripCopy.Back = System.Drawing.Color.White;
+            this.contextMenuStripCopy.BackRadius = 4;
+            this.contextMenuStripCopy.Base = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(200)))), ((int)(((byte)(254)))));
+            this.contextMenuStripCopy.DropDownImageSeparator = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(197)))), ((int)(((byte)(197)))));
+            this.contextMenuStripCopy.Fore = System.Drawing.Color.Black;
+            this.contextMenuStripCopy.HoverFore = System.Drawing.Color.White;
+            this.contextMenuStripCopy.ItemAnamorphosis = true;
+            this.contextMenuStripCopy.ItemBorder = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
+            this.contextMenuStripCopy.ItemBorderShow = true;
+            this.contextMenuStripCopy.ItemHover = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
+            this.contextMenuStripCopy.ItemPressed = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
+            this.contextMenuStripCopy.ItemRadius = 4;
+            this.contextMenuStripCopy.ItemRadiusStyle = CCWin.SkinClass.RoundStyle.All;
+            this.contextMenuStripCopy.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyToolStripMenuItem});
+            this.contextMenuStripCopy.ItemSplitter = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
+            this.contextMenuStripCopy.Name = "contextMenuStripCopy";
+            this.contextMenuStripCopy.RadiusStyle = CCWin.SkinClass.RoundStyle.All;
+            this.contextMenuStripCopy.Size = new System.Drawing.Size(101, 26);
+            this.contextMenuStripCopy.SkinAllColor = true;
+            this.contextMenuStripCopy.TitleAnamorphosis = true;
+            this.contextMenuStripCopy.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(228)))), ((int)(((byte)(236)))));
+            this.contextMenuStripCopy.TitleRadius = 4;
+            this.contextMenuStripCopy.TitleRadiusStyle = CCWin.SkinClass.RoundStyle.All;
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.copyToolStripMenuItem.Text = "复制";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            // 
             // SQLForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -105,6 +144,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.contextMenuStripCopy.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -116,5 +156,7 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Label lbl_execute;
+        private CCWin.SkinControl.SkinContextMenuStrip contextMenuStripCopy;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
     }
 }

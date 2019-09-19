@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new CCWin.SkinControl.SkinWaterTextBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
@@ -44,6 +44,8 @@
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBox1.Size = new System.Drawing.Size(521, 452);
             this.textBox1.TabIndex = 1;
+            this.textBox1.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.textBox1.WaterText = "请输入要执行的SQL";
             this.textBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyUp);
             // 
             // listBox1
@@ -71,7 +73,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
+        private CCWin.SkinControl.SkinWaterTextBox textBox1;
         private System.Windows.Forms.ListBox listBox1;
     }
 }

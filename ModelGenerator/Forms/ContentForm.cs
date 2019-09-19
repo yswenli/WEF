@@ -69,6 +69,15 @@ namespace WEF.ModelGenerator
         {
             LoadForm.ShowLoading(this);
 
+            if (ConnectionModel != null)
+            {
+                this.DatabaseName = ConnectionModel.Database;
+                this.TableName = ConnectionModel.TableName;
+                this.IsView = ConnectionModel.IsView;
+            }
+
+            
+
             Task.Factory.StartNew(() =>
             {
                 WEF.DbDAL.IDbObject dbObject = null;

@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\DBToCSharp.cs" />
+    <Compile Include="Common\DockContentHelper.cs" />
     <Compile Include="Common\EntityCodeBuilder.cs" />
     <Compile Include="Common\ShortcutKeyHelper.cs" />
     <Compile Include="Common\StringPlus.cs" />
@@ -138,11 +139,11 @@
     <Compile Include="Forms\DatabaseSelect.Designer.cs">
       <DependentUpon>DatabaseSelect.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\LeftPanel.cs">
+    <Compile Include="Forms\LeftPanelForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\LeftPanel.Designer.cs">
-      <DependentUpon>LeftPanel.cs</DependentUpon>
+    <Compile Include="Forms\LeftPanelForm.Designer.cs">
+      <DependentUpon>LeftPanelForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\LoadForm.cs">
       <SubType>Form</SubType>
@@ -211,8 +212,8 @@
     <EmbeddedResource Include="Forms\DatabaseSelect.resx">
       <DependentUpon>DatabaseSelect.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\LeftPanel.resx">
-      <DependentUpon>LeftPanel.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\LeftPanelForm.resx">
+      <DependentUpon>LeftPanelForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\LoadForm.resx">
       <DependentUpon>LoadForm.cs</DependentUpon>

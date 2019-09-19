@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WEF.ModelGenerator.Common;
@@ -41,24 +42,33 @@ namespace WEF.ModelGenerator
 
         Stopwatch stopwatch = new Stopwatch();
 
-        AutoTextBox autoTextBox1 = new AutoTextBox();
+        AutoTextBox autoTextBox1 = null;
+
+        public AutoTextBox AutoTextBox
+        {
+            get
+            {
+                if (autoTextBox1 == null)
+                    autoTextBox1 = new AutoTextBox();
+                return autoTextBox1;
+            }
+        }
 
         private void SQLForm_Load(object sender, System.EventArgs e)
         {
-
             cnnTxt.Text = ConnectionModel.ConnectionString;
 
-            autoTextBox1.Dock = DockStyle.Fill;
+            AutoTextBox.Dock = DockStyle.Fill;
 
-            autoTextBox1.KeyUp += autoTextBox1_KeyUp;
+            AutoTextBox.KeyUp += autoTextBox1_KeyUp;
 
-            autoTextBox1.TabIndex = 0;
+            AutoTextBox.TabIndex = 0;
 
-            splitContainer1.Panel1.Controls.Add(autoTextBox1);
+            splitContainer1.Panel1.Controls.Add(AutoTextBox);
 
             stopwatch.Start();
-
         }
+
 
         /// <summary>
         /// 执行sql
@@ -67,159 +77,194 @@ namespace WEF.ModelGenerator
         /// <param name="e"></param>
         private void autoTextBox1_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            string sql = ((TextBox)sender).Text.Trim();
+            ShortcutKeyHelper.AllSelect(sender, e);
 
-            ShortcutKeyHelper.Run(sender, e, () =>
+            ShortcutKeyHelper.Run(sender, e, () => RunSql());
+        }
+
+        public void RunSql()
+        {
+            var sql = AutoTextBox.TextBox.Text;
+
+            stopwatch.Restart();
+
+            LoadForm.ShowLoading(this);
+
+            Task.Factory.StartNew(() =>
             {
-                stopwatch.Restart();
+                WEF.DbDAL.IDbObject dbObject = null;
 
-                LoadForm.ShowLoading(this);
-
-                Task.Factory.StartNew(() =>
+                if (ConnectionModel.DbType.Equals(DatabaseType.SqlServer.ToString()))
                 {
-                    WEF.DbDAL.IDbObject dbObject = null;
+                    dbObject = new WEF.DbDAL.SQL2000.DbObject(ConnectionModel.ConnectionString);
+                }
+                else if (ConnectionModel.DbType.Equals(DatabaseType.SqlServer9.ToString()))
+                {
+                    dbObject = new WEF.DbDAL.SQL2005.DbObject(ConnectionModel.ConnectionString);
+                }
+                else if (ConnectionModel.DbType.Equals(DatabaseType.MsAccess.ToString()))
+                {
+                    dbObject = new WEF.DbDAL.OleDb.DbObject(ConnectionModel.ConnectionString);
+                }
+                else if (ConnectionModel.DbType.Equals(DatabaseType.Oracle.ToString()))
+                {
+                    dbObject = new WEF.DbDAL.Oracle.DbObject(ConnectionModel.ConnectionString);
+                }
+                else if (ConnectionModel.DbType.Equals(DatabaseType.Sqlite3.ToString()))
+                {
+                    dbObject = new WEF.DbDAL.SQLite.DbObject(ConnectionModel.ConnectionString);
+                }
+                else if (ConnectionModel.DbType.Equals(DatabaseType.MySql.ToString()))
+                {
+                    dbObject = new WEF.DbDAL.MySql.DbObject(ConnectionModel.ConnectionString);
+                }
+                else
+                {
+                    LoadForm.HideLoading(1);
+                    this.Invoke(new Action(() =>
+                    {
+                        MessageBox.Show(this, "不支持的数据库类型!");
+                    }));
+                    return;
+                }
 
-                    if (ConnectionModel.DbType.Equals(DatabaseType.SqlServer.ToString()))
-                    {
-                        dbObject = new WEF.DbDAL.SQL2000.DbObject(ConnectionModel.ConnectionString);
-                    }
-                    else if (ConnectionModel.DbType.Equals(DatabaseType.SqlServer9.ToString()))
-                    {
-                        dbObject = new WEF.DbDAL.SQL2005.DbObject(ConnectionModel.ConnectionString);
-                    }
-                    else if (ConnectionModel.DbType.Equals(DatabaseType.MsAccess.ToString()))
-                    {
-                        dbObject = new WEF.DbDAL.OleDb.DbObject(ConnectionModel.ConnectionString);
-                    }
-                    else if (ConnectionModel.DbType.Equals(DatabaseType.Oracle.ToString()))
-                    {
-                        dbObject = new WEF.DbDAL.Oracle.DbObject(ConnectionModel.ConnectionString);
-                    }
-                    else if (ConnectionModel.DbType.Equals(DatabaseType.Sqlite3.ToString()))
-                    {
-                        dbObject = new WEF.DbDAL.SQLite.DbObject(ConnectionModel.ConnectionString);
-                    }
-                    else if (ConnectionModel.DbType.Equals(DatabaseType.MySql.ToString()))
-                    {
-                        dbObject = new WEF.DbDAL.MySql.DbObject(ConnectionModel.ConnectionString);
-                    }
-                    else
-                    {
-                        LoadForm.HideLoading(1);
-                        MessageBox.Show("不支持的数据库类型!");
-                        return;
-                    }
-
-                    if (string.IsNullOrEmpty(sql))
-                    {
-                        MessageBox.Show("sql内容不能为空!");
-                        return;
-                    }
+                if (string.IsNullOrEmpty(sql))
+                {
+                    LoadForm.HideLoading(1);
 
                     this.Invoke(new Action(() =>
                     {
-                        if (!string.IsNullOrWhiteSpace(((TextBox)sender).SelectedText))
-                        {
-                            sql = ((TextBox)sender).SelectedText.Trim();
-
-                            if (string.IsNullOrEmpty(sql))
-                            {
-                                MessageBox.Show("sql内容不能为空!");
-                                return;
-                            }
-                        }
-
-                        dataGridView1.DataSource = null;
-
+                        MessageBox.Show(this, "sql内容不能为空!");
                     }));
 
-                    if (string.Compare(sql, "select", true) >= 0)
+                    return;
+                }
+
+                this.Invoke(new Action(() =>
+                {
+                    if (!string.IsNullOrWhiteSpace(AutoTextBox.TextBox.SelectedText))
                     {
-                        try
+                        sql = AutoTextBox.TextBox.SelectedText.Trim();
+
+                        if (string.IsNullOrEmpty(sql))
                         {
-                            int max = 50;
+                            LoadForm.HideLoading(1);
+                            MessageBox.Show(this, "sql内容不能为空!");
+                            return;
+                        }
+                    }
 
-                            var ds = dbObject.Query(ConnectionModel.Database, sql);
+                    dataGridView1.DataSource = null;
 
-                            if (ds != null && ds.Tables != null)
+                }));
+
+                if (string.Compare(sql, "select", true) >= 0)
+                {
+                    try
+                    {
+                        int max = 50;
+
+                        var ds = dbObject.Query(ConnectionModel.Database, sql);
+
+                        if (ds != null && ds.Tables != null)
+                        {
+                            var dt = ds.Tables[0];
+
+                            if (dt != null && dt.Rows.Count > 0)
                             {
-                                var dt = ds.Tables[0];
+                                var count = dt.Rows.Count;
 
-                                if (dt != null && dt.Rows.Count > 0)
+                                if (count > max)
                                 {
-                                    var count = dt.Rows.Count;
-
-                                    if (count > max)
+                                    for (int i = max; i < count; i++)
                                     {
-                                        for (int i = max; i < count; i++)
-                                        {
-                                            dt.Rows.RemoveAt(max);
-                                        }
+                                        dt.Rows.RemoveAt(max);
                                     }
-
-
-                                    var dList = new List<int>();
-
-                                    for (int i = 0; i < dt.Columns.Count; i++)
-                                    {
-                                        if (dt.Columns[i].DataType == typeof(DateTime))
-                                        {
-                                            dList.Add(i);
-                                        }
-                                    }
-
-
-                                    dataGridView1.Invoke(new Action(() =>
-                                    {
-                                        dataGridView1.DataSource = dt;
-
-                                        if (dList.Any())
-                                        {
-                                            foreach (var item in dList)
-                                            {
-                                                dataGridView1.Columns[item].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
-                                            }
-                                        }
-
-                                        lbl_execute.Text = $"当前显示{(max > count ? count : max)}行，影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalSeconds} 秒";
-                                    }));
                                 }
+
+
+                                var dList = new List<int>();
+
+                                for (int i = 0; i < dt.Columns.Count; i++)
+                                {
+                                    if (dt.Columns[i].DataType == typeof(DateTime))
+                                    {
+                                        dList.Add(i);
+                                    }
+                                }
+
+
+                                dataGridView1.Invoke(new Action(() =>
+                                {
+                                    dataGridView1.DataSource = dt;
+
+                                    if (dList.Any())
+                                    {
+                                        foreach (var item in dList)
+                                        {
+                                            dataGridView1.Columns[item].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
+                                        }
+                                    }
+
+                                    lbl_execute.Text = $"当前显示{(max > count ? count : max)}行，影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalSeconds} 秒";
+                                }));
                             }
                         }
-                        catch (Exception ex)
+                    }
+                    catch (Exception ex)
+                    {
+                        this.Invoke(new Action(() =>
                         {
-                            this.Invoke(new Action(() =>
-                            {
-                                MessageBox.Show(this, $"查询发生异常，ex:" + ex.Message);
-                            }));
-                        }
+                            MessageBox.Show(this, $"查询发生异常，ex:" + ex.Message);
+                        }));
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        var count = dbObject.ExecuteSql(ConnectionModel.Database, sql);
+
+                        lbl_execute.Invoke(new Action(() =>
+                        {
+                            lbl_execute.Text = $"影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalMilliseconds} 毫秒";
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        this.Invoke(new Action(() =>
+                        {
+                            MessageBox.Show(this, $"操作发生异常，ex:" + ex.Message);
+                        }));
+                    }
+                }
+                LoadForm.HideLoading();
+
+            });
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var cells = dataGridView1.SelectedCells;
+
+            if (cells != null)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                foreach (DataGridViewCell cell in cells)
+                {
+                    if (cell == cells[cells.Count - 1])
+                    {
+                        sb.Append($"{cell.Value}");
                     }
                     else
                     {
-                        try
-                        {
-                            var count = dbObject.ExecuteSql(ConnectionModel.Database, sql);
-
-                            lbl_execute.Invoke(new Action(() =>
-                            {
-                                lbl_execute.Text = $"影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalMilliseconds} 毫秒";
-                            }));
-                        }
-                        catch (Exception ex)
-                        {
-                            this.Invoke(new Action(() =>
-                            {
-                                MessageBox.Show(this, $"操作发生异常，ex:" + ex.Message);
-                            }));
-                        }
+                        sb.Append($"{cell.Value},");
                     }
-                    LoadForm.HideLoading();
+                }
 
-                });
-            });
-
-            ShortcutKeyHelper.AllSelect(sender, e);
+                Clipboard.SetText(sb.ToString());
+            }
         }
-
     }
 }

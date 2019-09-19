@@ -20,5 +20,11 @@ namespace WEF.ModelGenerator.Model
 
         private string connectionString;
         public string ConnectionString { get { return connectionString; } set { connectionString = value; } }
+
+        public string TableName { get; set; }
+
+        public bool IsView { get; set; }
+
+        public string Sql { get; set; }
     }
 }

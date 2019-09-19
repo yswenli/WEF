@@ -18,6 +18,7 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Forms;
 
 namespace WEF.ModelGenerator
@@ -36,7 +37,7 @@ namespace WEF.ModelGenerator
             Init();
         }
 
-        LeftPanel lp = new LeftPanel();
+        LeftPanelForm lp = new LeftPanelForm();
 
         SQLTemplateForm sqlTemplateForm = new SQLTemplateForm();
 
@@ -45,13 +46,16 @@ namespace WEF.ModelGenerator
         /// </summary>
         private void Init()
         {
-            lp.newcontentForm += new LeftPanel.NewContentForm(lp_newcontentForm);
-            lp.newsqlForm += lp_newsqlForm;
-            lp.Show(dpleft);
-            lp.DockTo(dpleft, DockStyle.Left);
+            if (!DockContentHelper.Load(dpleft))
+            {
+                lp.newcontentForm += lp_newcontentForm;
+                lp.newsqlForm += lp_newsqlForm;
+                lp.Show(dpleft);
+                lp.DockTo(dpleft, DockStyle.Left);
 
-            sqlTemplateForm.Show(dpleft);
-            sqlTemplateForm.DockTo(dpleft, DockStyle.Right);
+                sqlTemplateForm.Show(dpleft);
+                sqlTemplateForm.DockTo(dpleft, DockStyle.Right);
+            }
         }
 
         /// <summary>
@@ -59,13 +63,13 @@ namespace WEF.ModelGenerator
         /// </summary>
         /// <param name="conModel"></param>
         /// <param name="tableName"></param>
-        void lp_newcontentForm(WEF.ModelGenerator.Model.Connection conModel, string tableName, string databaseName, bool isView)
+        void lp_newcontentForm(WEF.ModelGenerator.Model.Connection conModel)
         {
             ContentForm s = new ContentForm();
-            s.Text = "(" + databaseName + ")" + tableName;
-            s.TableName = tableName;
-            s.DatabaseName = databaseName;
-            s.IsView = isView;
+            s.Text = "(" + conModel.Database + ")" + conModel.TableName;
+            s.TableName = conModel.TableName;
+            s.DatabaseName = conModel.Database;
+            s.IsView = conModel.IsView;
             s.ConnectionModel = conModel;
             s.Show(dpleft);
         }
@@ -73,7 +77,7 @@ namespace WEF.ModelGenerator
         void lp_newsqlForm(WEF.ModelGenerator.Model.Connection conModel)
         {
             SQLForm s = new SQLForm();
-            s.Text = "(" + conModel.Database + ")" + "sql查询窗口,输入sql后F5执行";
+            s.Text = "(" + conModel.Database + ")SQL查询窗口";
             s.ConnectionModel = conModel;
             s.Show(dpleft);
         }
@@ -109,9 +113,25 @@ namespace WEF.ModelGenerator
                 MessageBox.Show("请先选择具体数据库！");
         }
 
+        private void runToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var sqlForm = dpleft.ActiveContent as SQLForm;
+
+            if (sqlForm != null)
+            {
+                sqlForm.RunSql();
+            }
+
+        }
+
         private void logsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             lp.ShowLogs();
+        }
+
+        private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new AboutForm().ShowDialog(this);
         }
 
         #endregion
@@ -121,9 +141,9 @@ namespace WEF.ModelGenerator
             Process.Start("https://github.com/yswenli/WEF/releases");
         }
 
-        private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            new AboutForm().ShowDialog(this);
+            DockContentHelper.Save(dpleft);
         }
     }
 }
