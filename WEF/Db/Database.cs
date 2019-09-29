@@ -36,7 +36,7 @@ namespace WEF.Db
         public static Database Default = new Database(ProviderFactory.Default);
 
 
-        public Database(DbProvider dbProvider,int timeout=30)
+        public Database(DbProvider dbProvider, int timeout = 30)
         {
             this.dbProvider = dbProvider;
             _timeout = timeout;
@@ -156,6 +156,7 @@ namespace WEF.Db
         private void DoLoadDataSet(DbCommand command, DataSet dataSet, string[] tableNames)
         {
             Check.Require(tableNames != null && tableNames.Length > 0, "tableNames could not be null or empty.");
+
             Check.Require(dataSet != null, "dataSet could not be null.");
 
             using (DbDataAdapter adapter = GetDataAdapter())
@@ -176,32 +177,41 @@ namespace WEF.Db
                 }
 
                 adapter.Fill(dataSet);
-
             }
         }
 
         private object DoExecuteScalar(DbCommand command)
         {
+            try
+            {
+                WriteLog(command);
 
-            WriteLog(command);
-
-            return command.ExecuteScalar();
-
+                return command.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("DoExecuteScalar 异常，ConnectionString:{ConnectionString} CommandText:{command.CommandText}", ex);
+            }
         }
 
         private int DoExecuteNonQuery(DbCommand command)
         {
-            if (IsBatchConnection)
+            try
             {
-                batchCommander.Process(command);
-                return 0;
+                if (IsBatchConnection)
+                {
+                    batchCommander.Process(command);
+                    return 0;
+                }
+
+                WriteLog(command);
+
+                return command.ExecuteNonQuery();
             }
-
-
-            WriteLog(command);
-
-            return command.ExecuteNonQuery();
-
+            catch (Exception ex)
+            {
+                throw new Exception("DoExecuteScalar 异常，ConnectionString:{ConnectionString} CommandText:{command.CommandText}", ex);
+            }
         }
 
         private IDataReader DoExecuteReader(DbCommand command, CommandBehavior cmdBehavior)
@@ -209,8 +219,14 @@ namespace WEF.Db
 
             WriteLog(command);
 
-            return command.ExecuteReader(cmdBehavior);
-
+            try
+            {
+                return command.ExecuteReader(cmdBehavior);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"DoExecuteReader 异常， ConnectionString:{ConnectionString} CommandText:{command.CommandText}", ex);
+            }
         }
 
 
@@ -265,6 +281,7 @@ namespace WEF.Db
         private DbParameter CreateParameter(string name)
         {
             DbParameter param = dbProvider.DbProviderFactory.CreateParameter();
+
             param.ParameterName = dbProvider.BuildParameterName(name);
 
             return param;
@@ -369,6 +386,7 @@ namespace WEF.Db
         public DbConnection CreateConnection()
         {
             DbConnection newConnection = dbProvider.DbProviderFactory.CreateConnection();
+
             newConnection.ConnectionString = ConnectionString;
 
             return newConnection;
@@ -394,7 +412,7 @@ namespace WEF.Db
                 connection = CreateConnection();
                 connection.Open();
             }
-            catch
+            catch (Exception ex)
             {
                 try
                 {
@@ -404,7 +422,7 @@ namespace WEF.Db
                 {
                 }
 
-                throw;
+                throw new Exception($"CreateConnection ConnectionString:{ConnectionString}", ex);
             }
 
             return connection;
@@ -988,7 +1006,7 @@ namespace WEF.Db
             {
                 return DoExecuteReader(command, CommandBehavior.CloseConnection);
             }
-            catch
+            catch (Exception ex)
             {
                 try
                 {
@@ -996,9 +1014,10 @@ namespace WEF.Db
                 }
                 catch
                 {
+
                 }
 
-                throw;
+                throw new Exception($"ExecuteReader 异常,ConnectionString:{ConnectionString}", ex);
             }
         }
 
