@@ -190,7 +190,7 @@ namespace WEF.Db
             }
             catch (Exception ex)
             {
-                throw new Exception("DoExecuteScalar 异常，ConnectionString:{ConnectionString} CommandText:{command.CommandText}", ex);
+                throw new Exception($"DoExecuteScalar 异常，ConnectionString:{ConnectionString} CommandText:{command.CommandText}", ex);
             }
         }
 
@@ -210,7 +210,7 @@ namespace WEF.Db
             }
             catch (Exception ex)
             {
-                throw new Exception("DoExecuteScalar 异常，ConnectionString:{ConnectionString} CommandText:{command.CommandText}", ex);
+                throw new Exception($"DoExecuteScalar 异常，ConnectionString:{ConnectionString} CommandText:{command.CommandText}", ex);
             }
         }
 
@@ -422,7 +422,7 @@ namespace WEF.Db
                 {
                 }
 
-                throw new Exception($"CreateConnection ConnectionString:{ConnectionString}", ex);
+                throw new Exception($"CreateConnection 异常， ConnectionString:{ConnectionString}", ex);
             }
 
             return connection;
@@ -1017,7 +1017,7 @@ namespace WEF.Db
 
                 }
 
-                throw new Exception($"ExecuteReader 异常,ConnectionString:{ConnectionString}", ex);
+                throw new Exception($"ExecuteReader 异常，ConnectionString:{ConnectionString}，CommandText:{command.CommandText}", ex);
             }
         }
 
