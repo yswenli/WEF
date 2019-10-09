@@ -158,7 +158,7 @@ namespace WEF.ModelGenerator
 
                 }));
 
-                if (string.Compare(sql, "select", true) >= 0)
+                if (sql.IndexOf("select", StringComparison.InvariantCultureIgnoreCase) >= 0)
                 {
                     try
                     {
@@ -210,9 +210,11 @@ namespace WEF.ModelGenerator
                                 }));
                             }
                         }
+                        LoadForm.HideLoading();
                     }
                     catch (Exception ex)
                     {
+                        LoadForm.HideLoading();
                         this.Invoke(new Action(() =>
                         {
                             MessageBox.Show(this, $"查询发生异常，ex:" + ex.Message);
@@ -229,16 +231,18 @@ namespace WEF.ModelGenerator
                         {
                             lbl_execute.Text = $"影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalMilliseconds} 毫秒";
                         }));
+
+                        LoadForm.HideLoading();
                     }
                     catch (Exception ex)
                     {
+                        LoadForm.HideLoading();
                         this.Invoke(new Action(() =>
                         {
                             MessageBox.Show(this, $"操作发生异常，ex:" + ex.Message);
                         }));
                     }
                 }
-                LoadForm.HideLoading();
 
             });
         }

@@ -135,7 +135,6 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newDBConnectToolStripMenuItem,
-            this.sQL查询ToolStripMenuItem,
             this.runToolStripMenuItem,
             this.logsToolStripMenuItem,
             this.关于ToolStripMenuItem});
@@ -154,10 +153,6 @@
             // 
             // sQL查询ToolStripMenuItem
             // 
-            this.sQL查询ToolStripMenuItem.Name = "sQL查询ToolStripMenuItem";
-            this.sQL查询ToolStripMenuItem.Size = new System.Drawing.Size(82, 21);
-            this.sQL查询ToolStripMenuItem.Text = "(&S)SQL查询";
-            this.sQL查询ToolStripMenuItem.Click += new System.EventHandler(this.sQL查询ToolStripMenuItem_Click);
             // 
             // logsToolStripMenuItem
             // 

@@ -101,17 +101,6 @@ namespace WEF.ModelGenerator
         {
             lp.ShowDbSelect();
         }
-        private void sQL查询ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var node = lp.Treeview.SelectedNode;
-
-            if (node != null && (node.Level == 2 || node.Level == 3 || node.Level == 4))
-            {
-                lp.ShowSQLForm();
-            }
-            else
-                MessageBox.Show("请先选择具体数据库！");
-        }
 
         private void runToolStripMenuItem_Click(object sender, EventArgs e)
         {

@@ -80,11 +80,11 @@ namespace WEF.ModelGenerator
             {
                 Thread.Sleep((sec == 0 ? 1 : sec) * 1000);
                 if (loadForm != null && loadForm.IsHandleCreated)
-                    loadForm.Invoke(new Action(() =>
+                    loadForm.BeginInvoke(new Action(() =>
                     {
                         loadForm.Close();
                         loadForm = null;
-                    }));
+                    }), null);
             });
         }
     }
