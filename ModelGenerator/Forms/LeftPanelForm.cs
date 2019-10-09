@@ -310,7 +310,7 @@ namespace WEF.ModelGenerator
             var conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Tag.ToString()); });
             conConnectionString = conModel.ConnectionString;
             Clipboard.SetText(conConnectionString);
-            MessageBox.Show($"已复制到剪切板，conConnectionString：\r\n{conConnectionString}", "WEF数据库工具!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            MessageBox.Show($"已复制到剪切板，conConnectionString：\r\n{conConnectionString}", "WEF数据库工具", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
 
         /// <summary>

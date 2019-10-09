@@ -49,10 +49,10 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.newDBConnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sQL查询ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sQL查询ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -128,7 +128,7 @@
             this.toolStripStatusLabel1.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(304, 17);
-            this.toolStripStatusLabel1.Text = "软件地址：https://github.com/yswenli/WEF/releases";
+            this.toolStripStatusLabel1.Text = "下载地址：https://github.com/yswenli/WEF/releases";
             this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             // 
             // menuStrip1
@@ -151,8 +151,12 @@
             this.newDBConnectToolStripMenuItem.Text = "(&N)新连接";
             this.newDBConnectToolStripMenuItem.Click += new System.EventHandler(this.newDBConnectToolStripMenuItem_Click);
             // 
-            // sQL查询ToolStripMenuItem
+            // runToolStripMenuItem
             // 
+            this.runToolStripMenuItem.Name = "runToolStripMenuItem";
+            this.runToolStripMenuItem.Size = new System.Drawing.Size(83, 21);
+            this.runToolStripMenuItem.Text = "(&R)执行SQL";
+            this.runToolStripMenuItem.Click += new System.EventHandler(this.runToolStripMenuItem_Click);
             // 
             // logsToolStripMenuItem
             // 
@@ -168,12 +172,10 @@
             this.关于ToolStripMenuItem.Text = "(&A)关于";
             this.关于ToolStripMenuItem.Click += new System.EventHandler(this.关于ToolStripMenuItem_Click);
             // 
-            // runToolStripMenuItem
+            // sQL查询ToolStripMenuItem
             // 
-            this.runToolStripMenuItem.Name = "runToolStripMenuItem";
-            this.runToolStripMenuItem.Size = new System.Drawing.Size(75, 21);
-            this.runToolStripMenuItem.Text = "&R执行SQL";
-            this.runToolStripMenuItem.Click += new System.EventHandler(this.runToolStripMenuItem_Click);
+            this.sQL查询ToolStripMenuItem.Name = "sQL查询ToolStripMenuItem";
+            this.sQL查询ToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
             // 
             // MainForm
             // 
