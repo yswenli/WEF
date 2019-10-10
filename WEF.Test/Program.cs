@@ -23,6 +23,8 @@ namespace WEF.Test
         static void Main(string[] args)
         {
 
+            Test3();
+
             var db = new DBContext();
 
             var dt = db.FromSql("select * from tb_task").ToDataTable();
@@ -367,6 +369,19 @@ namespace WEF.Test
             public decimal? Num1
             {
                 get; set;
+            }
+        }
+
+
+        static void Test3()
+        {
+            var list1 = new DBTaskRepository().Search().GetPagedList(1, 20, "begintime", true).Select(b=>b.Begintime).ToList();
+
+            var list2 = new DBTaskRepository().Search().GetPagedList(1, 20, "begintime", false).Select(b => b.Begintime).ToList();
+
+            if (list1.First() == list2.First())
+            {
+
             }
         }
     }

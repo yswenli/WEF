@@ -78,6 +78,6 @@ namespace WEF
 
 
 
-        PagedList<T> GetPagedList(int pageIndex, int pageSize, string orderBy, bool sorted);
+        PagedList<T> GetPagedList(int pageIndex, int pageSize, string orderBy, bool asc);
     }
 }
