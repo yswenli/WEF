@@ -25,58 +25,71 @@ namespace WEF
     /// <summary>
     /// 实体信息
     /// </summary>
-    [Serializable]
     public class Entity
     {
         /// <summary>
         /// 表名
         /// </summary>
+        [XmlIgnore]
+        [NonSerialized]
+        [ScriptIgnore]
         private string _tableName;
         /// <summary>
         /// 
         /// </summary>
+        [XmlIgnore]
+        [NonSerialized]
+        [ScriptIgnore]
         private string _userName;
         /// <summary>
         /// 别名
         /// </summary>
+        [XmlIgnore]
+        [NonSerialized]
+        [ScriptIgnore]
         private string _tableAsName;
         /// <summary>
         /// 是否
         /// </summary>
+        [XmlIgnore]
+        [NonSerialized]
+        [ScriptIgnore]
         private bool _isAttached;
 
-        private bool _isFilterModifyFields = false;//2016-02-03新增
+        [XmlIgnore]
+        [NonSerialized]
+        [ScriptIgnore]
+        private bool _isFilterModifyFields = false;
         /// <summary>
         /// 实体状态
         /// </summary>
+        [XmlIgnore]
+        [NonSerialized]
+        [ScriptIgnore]
         private EntityState _entityState = EntityState.Unchanged;
         /// <summary>
         /// select *。用于Lambda写法实现 select * 。注：表中不得含有字段名为All。
         /// </summary>
         [XmlIgnore]
         [NonSerialized]
-
         [ScriptIgnore]
         public object All;
 
         /// <summary>
         /// 修改的字段集合
         /// </summary>
+        [XmlIgnore]
+        [NonSerialized]
+        [ScriptIgnore]
         private List<ModifyField> _modifyFields = new List<ModifyField>();
 
         /// <summary>
         /// 修改的字段集合 v1.10.5.6及以上版本可使用。
         /// </summary>
+        [XmlIgnore]
+        [NonSerialized]
+        [ScriptIgnore]
         private List<string> _modifyFieldsStr = new List<string>();
-
-
-        /// <summary>
-        /// 是否是v1.10.5.6及以上版本实体。
-        /// </summary>
-        public virtual bool V1_10_5_6_Plus()
-        {
-            return false;
-        }
         #region 构造函数
 
         /// <summary>
@@ -137,10 +150,6 @@ namespace WEF
                 if (ignoreNullOrEmpty && (values[i] == null || string.IsNullOrEmpty(values[i].ToString())))
                 {
                     continue;
-                }
-                if (V1_10_5_6_Plus())
-                {
-                    _modifyFieldsStr.Add(fs[i].Name);
                 }
                 else
                 {
@@ -257,10 +266,6 @@ namespace WEF
         /// <returns></returns>
         public bool IsModify()
         {
-            if (V1_10_5_6_Plus())
-            {
-                return _modifyFieldsStr.Count > 0;
-            }
             return _modifyFields.Count > 0;
         }
 

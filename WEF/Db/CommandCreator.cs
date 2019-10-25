@@ -45,42 +45,19 @@ namespace WEF.Db
         public DbCommand CreateUpdateCommand<TEntity>(TEntity entity, WhereOperation where)
             where TEntity : Entity
         {
-            var v11056 = entity.V1_10_5_6_Plus();
-            if (v11056)
+            var mfields = entity.GetModifyFields();
+            if (null == mfields || mfields.Count == 0)
+                return null;
+            var fields = new Field[mfields.Count];
+            var values = new object[mfields.Count];
+            var i = 0;
+            foreach (ModifyField mf in mfields)
             {
-                var fs = entity.GetModifyFieldsStr();
-                if (null == fs || fs.Count == 0)
-                    return null;
-                var fields = new Field[fs.Count];
-                var values = new object[fs.Count];
-                var i = 0;
-                var fields2 = entity.GetFields().ToList();
-                var values2 = entity.GetValues();
-                foreach (string f in fs)
-                {
-                    var index = fields2.FindIndex(d => d.Name == f);
-                    fields[i] = fields2[index];
-                    values[i] = values2[index];
-                    i++;
-                }
-                return CreateUpdateCommand<TEntity>(fields, values, where);
+                fields[i] = mf.Field;
+                values[i] = mf.NewValue;
+                i++;
             }
-            else
-            {
-                var mfields = entity.GetModifyFields();
-                if (null == mfields || mfields.Count == 0)
-                    return null;
-                var fields = new Field[mfields.Count];
-                var values = new object[mfields.Count];
-                var i = 0;
-                foreach (ModifyField mf in mfields)
-                {
-                    fields[i] = mf.Field;
-                    values[i] = mf.NewValue;
-                    i++;
-                }
-                return CreateUpdateCommand<TEntity>(fields, values, where);
-            }
+            return CreateUpdateCommand<TEntity>(fields, values, where);
         }
 
         /// <summary>
@@ -285,47 +262,24 @@ namespace WEF.Db
         {
             if (null == entity)
                 return null;
-            var v11056 = entity.V1_10_5_6_Plus();
-            if (v11056)
-            {
-                var fs = entity.GetModifyFieldsStr();
-                if (null == fs || fs.Count == 0)
-                    return CreateInsertCommand<TEntity>(entity.GetFields(), entity.GetValues());
 
-                var fields = new Field[fs.Count];
-                var values = new object[fs.Count];
-                var i = 0;
-                var fields2 = entity.GetFields().ToList();
-                var values2 = entity.GetValues();
-                foreach (string f in fs)
-                {
-                    var index = fields2.FindIndex(d => d.Name == f);
-                    fields[i] = fields2[index];
-                    values[i] = values2[index];
-                    i++;
-                }
-                return CreateInsertCommand<TEntity>(fields, values);
+            var mfields = entity.GetModifyFields();
+
+            if (null == mfields || mfields.Count == 0)
+            {
+                return CreateInsertCommand<TEntity>(entity.GetFields(), entity.GetValues());
             }
             else
             {
-                var mfields = entity.GetModifyFields();
-
-                if (null == mfields || mfields.Count == 0)
+                List<Field> fields = new List<Field>();
+                List<object> values = new List<object>();
+                foreach (ModifyField m in mfields)
                 {
-                    return CreateInsertCommand<TEntity>(entity.GetFields(), entity.GetValues());
+                    fields.Add(m.Field);
+                    values.Add(m.NewValue);
                 }
-                else
-                {
-                    List<Field> fields = new List<Field>();
-                    List<object> values = new List<object>();
-                    foreach (ModifyField m in mfields)
-                    {
-                        fields.Add(m.Field);
-                        values.Add(m.NewValue);
-                    }
 
-                    return CreateInsertCommand<TEntity>(fields.ToArray(), values.ToArray());
-                }
+                return CreateInsertCommand<TEntity>(fields.ToArray(), values.ToArray());
             }
         }
 
