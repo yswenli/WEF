@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Web.Script.Serialization;
 using System.Xml.Serialization;
 using WEF.Common;
@@ -25,6 +26,7 @@ namespace WEF
     /// <summary>
     /// 实体信息
     /// </summary>
+    [Serializable, DataContract]
     public class Entity
     {
         /// <summary>

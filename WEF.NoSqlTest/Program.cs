@@ -64,7 +64,7 @@ namespace WEF.NoSqlTest
 
             Console.WriteLine("Read");
 
-            var list = customerOperator.Where(b => b.FirstName.Contains("l")).Skip(1).Take(10).OrderBy(b => b.Orders).ToList();
+            var list = customerOperator.Where(b => b.FirstName.Contains("l")).OrderBy(b => b.Orders).Skip(1).Take(10).ToList();
 
             var c = customerOperator.Where(b => b.FirstName.Contains("l")).FirstOrDefault();
 
