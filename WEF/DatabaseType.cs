@@ -48,6 +48,10 @@ namespace WEF
         /// <summary>
         /// MongoDB
         /// </summary>
-        MongoDB=6
+        MongoDB=6,
+        /// <summary>
+        /// PostgreSQL
+        /// </summary>
+        PostgreSQL = 7
     }
 }

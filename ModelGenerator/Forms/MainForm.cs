@@ -133,6 +133,33 @@ namespace WEF.ModelGenerator
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             DockContentHelper.Save(dpleft);
+            e.Cancel = true;
+            this.Hide();
         }
+
+        #region 托盘
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.Show();
+        }
+
+        private void displayUIToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Show();
+        }
+
+        private void shutDownToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DockContentHelper.Save(dpleft);
+
+            if (MessageBox.Show("确定要退出WEF数据库工具吗？", "WEF数据库工具", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                Environment.Exit(0);
+            }
+        }
+
+        #endregion
+
+
     }
 }

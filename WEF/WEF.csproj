@@ -36,8 +36,14 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.2.2.3\lib\net40\Mono.Security.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Data, Version=6.9.12.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\packages\MySql.Data.6.9.12\lib\net40\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql, Version=2.2.3.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.2.2.3\lib\net40\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -82,6 +88,7 @@
     <Compile Include="DbDAL\MySql\DbObject.cs" />
     <Compile Include="DbDAL\OleDb\DbObject.cs" />
     <Compile Include="DbDAL\Oracle\DbObject.cs" />
+    <Compile Include="DbDAL\PostgreSQL\DbObject.cs" />
     <Compile Include="DbDAL\SQL2000\DbObject.cs" />
     <Compile Include="DbDAL\SQL2005\DbObject.cs" />
     <Compile Include="DbDAL\Sqlite\DbObject.cs" />

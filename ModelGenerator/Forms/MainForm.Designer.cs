@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
             WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin1 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
             WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
@@ -53,8 +54,13 @@
             this.logsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sQL查询ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.displayUIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.shutDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // dpleft
@@ -177,6 +183,38 @@
             this.sQL查询ToolStripMenuItem.Name = "sQL查询ToolStripMenuItem";
             this.sQL查询ToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
             // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.BalloonTipText = "正在后台运行";
+            this.notifyIcon1.BalloonTipTitle = "WEF数据库工具";
+            this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "WEF数据库工具";
+            this.notifyIcon1.Visible = true;
+            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.displayUIToolStripMenuItem,
+            this.shutDownToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(137, 48);
+            // 
+            // displayUIToolStripMenuItem
+            // 
+            this.displayUIToolStripMenuItem.Name = "displayUIToolStripMenuItem";
+            this.displayUIToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.displayUIToolStripMenuItem.Text = "显示主界面";
+            this.displayUIToolStripMenuItem.Click += new System.EventHandler(this.displayUIToolStripMenuItem_Click);
+            // 
+            // shutDownToolStripMenuItem
+            // 
+            this.shutDownToolStripMenuItem.Name = "shutDownToolStripMenuItem";
+            this.shutDownToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.shutDownToolStripMenuItem.Text = "退出";
+            this.shutDownToolStripMenuItem.Click += new System.EventHandler(this.shutDownToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -197,6 +235,7 @@
             this.statusStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -213,6 +252,10 @@
         private System.Windows.Forms.ToolStripMenuItem sQL查询ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 关于ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem runToolStripMenuItem;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem displayUIToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem shutDownToolStripMenuItem;
     }
 }
 
