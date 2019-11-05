@@ -329,3 +329,5 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 ModelGenerator/Config/databaseconfig2.xml
+WEF/.vs/WEF/v14/.suo
+WEF.Test/app.config
