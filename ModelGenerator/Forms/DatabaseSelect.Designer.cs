@@ -126,19 +126,17 @@
             // rbPostgreSql
             // 
             this.rbPostgreSql.AutoSize = true;
-            this.rbPostgreSql.Enabled = false;
-            this.rbPostgreSql.Location = new System.Drawing.Point(23, 212);
+            this.rbPostgreSql.Location = new System.Drawing.Point(56, 159);
             this.rbPostgreSql.Name = "rbPostgreSql";
             this.rbPostgreSql.Size = new System.Drawing.Size(83, 16);
             this.rbPostgreSql.TabIndex = 8;
             this.rbPostgreSql.Text = "PostgreSql";
             this.rbPostgreSql.UseVisualStyleBackColor = true;
-            this.rbPostgreSql.Visible = false;
             // 
             // rbMongoDB
             // 
             this.rbMongoDB.AutoSize = true;
-            this.rbMongoDB.Location = new System.Drawing.Point(56, 159);
+            this.rbMongoDB.Location = new System.Drawing.Point(169, 159);
             this.rbMongoDB.Name = "rbMongoDB";
             this.rbMongoDB.Size = new System.Drawing.Size(65, 16);
             this.rbMongoDB.TabIndex = 7;

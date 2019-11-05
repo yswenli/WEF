@@ -274,7 +274,6 @@ namespace WEF.Provider
                     nameStr = nameStr.Insert(0, new string(paramPrefixToken, 1));
                 }
             }
-            //剔除参数中的“.” 2016-04-08 added
             return nameStr.Replace(".", "_");
         }
 
@@ -439,9 +438,18 @@ namespace WEF.Provider
         public virtual void PrepareCommand(DbCommand cmd)
         {
             bool isStoredProcedure = (cmd.CommandType == CommandType.StoredProcedure);
+
             if (!isStoredProcedure)
             {
-                cmd.CommandText = DataUtils.FormatSQL(cmd.CommandText, leftToken, rightToken);
+                if (databaseType == DatabaseType.PostgreSQL)
+                {
+                    cmd.CommandText = string.Format(cmd.CommandText, "", "");
+                }
+                else
+                {
+                    cmd.CommandText = DataUtils.FormatSQL(cmd.CommandText, leftToken, rightToken);
+                }
+
             }
 
             foreach (DbParameter p in cmd.Parameters)
@@ -449,18 +457,11 @@ namespace WEF.Provider
 
                 if (!isStoredProcedure)
                 {
-                    //TODO 这里可以继续优化
                     if (cmd.CommandText.IndexOf(p.ParameterName, StringComparison.Ordinal) == -1)
                     {
-                        //2015-08-11修改
                         cmd.CommandText = cmd.CommandText.Replace("@" + p.ParameterName.Substring(1), p.ParameterName);
                         cmd.CommandText = cmd.CommandText.Replace("?" + p.ParameterName.Substring(1), p.ParameterName);
                         cmd.CommandText = cmd.CommandText.Replace(":" + p.ParameterName.Substring(1), p.ParameterName);
-                        //if (p.ParameterName.Substring(0, 1) == "?" || p.ParameterName.Substring(0, 1) == ":"
-                        //        || p.ParameterName.Substring(0, 1) == "@")
-                        //    cmd.CommandText = cmd.CommandText.Replace(paramPrefixToken + p.ParameterName.Substring(1), p.ParameterName);
-                        //else
-                        //    cmd.CommandText = cmd.CommandText.Replace(p.ParameterName.Substring(1), p.ParameterName);
                     }
                 }
 
@@ -497,32 +498,6 @@ namespace WEF.Provider
                     p.Value = new Guid(value.ToString());
                     continue;
                 }
-                #region 2015-09-08注释
-                ////2015-09-07 写
-                //var v = value.ToString();
-                //if (DatabaseType == DatabaseType.MsAccess
-                //    && (dbType == DbType.AnsiString || dbType == DbType.String)
-                //    && !string.IsNullOrWhiteSpace(v)
-                //    && cmd.CommandText.ToLower()
-                //    .IndexOf("like " + p.ParameterName.ToLower(), StringComparison.Ordinal) > -1)
-                //{
-                //    if (v[0] == '%')
-                //    {
-                //        v = "*" + v.Substring(1);
-                //    }
-                //    if (v[v.Length-1] == '%')
-                //    {
-                //        v = v.TrimEnd('%') + "*";
-                //    }
-                //    p.Value = v;
-                //}
-                #endregion
-                //if ((dbType == DbType.AnsiString || dbType == DbType.String ||
-                //    dbType == DbType.AnsiStringFixedLength || dbType == DbType.StringFixedLength) && (!(value is string)))
-                //{
-                //    p.Value = SerializationManager.Serialize(value);
-                //    continue;
-                //}
 
                 if (type == typeof(Boolean))
                 {

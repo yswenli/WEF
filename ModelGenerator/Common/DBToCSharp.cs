@@ -17,6 +17,7 @@
  * 创建说明：
  *****************************************************************************************************/
 
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Xml;
@@ -96,33 +97,48 @@ namespace WEF.ModelGenerator.Common
             {
                 try
                 {
-                    if (column.DataTypeName.Trim().ToLower() == "char" && column.MaxLength == 36 && dbType == "MySql")
+                    if (dbType == "MySql")
                     {
-                        column.DataTypeName = types["uniqueidentifier"];
-                    }
-                    else if (column.DataTypeName.Trim().ToLower() == "tinyint" && column.MaxLength == 1 && dbType == "MySql")
-                    {
-                        column.DataTypeName = types["bit"];
-                    }
-                    else if (column.DataTypeName.Trim().ToLower() == "number" && dbType == "Oracle")
-                    {
-                        if (column.Preci == "1")
-                        {
+                        if (column.DataTypeName.Trim().ToLower() == "char" && column.MaxLength == 36)
+                            column.DataTypeName = types["uniqueidentifier"];
+                        else if (column.DataTypeName.Trim().ToLower() == "tinyint" && column.MaxLength == 1)
                             column.DataTypeName = types["bit"];
-                        }
-                        else if (column.Preci == "18" || column.Scale != "0")
+                        else
+                            column.DataTypeName = types[column.DataTypeName.Trim().ToLower()];
+                    }
+                    else if (dbType == "Oracle")
+                    {
+                        if (column.DataTypeName.Trim().ToLower() == "number")
                         {
-                            column.DataTypeName = types["decimal"];
+                            if (column.Preci == "1")
+                            {
+                                column.DataTypeName = types["bit"];
+                            }
+                            else if (column.Preci == "18" || column.Scale != "0")
+                            {
+                                column.DataTypeName = types["decimal"];
+                            }
+                            else
+                            {
+                                column.DataTypeName = types["int"];
+                            }
                         }
                         else
-                        {
-                            column.DataTypeName = types["int"];
-                        }
+                            column.DataTypeName = types[column.DataTypeName.Trim().ToLower()];
 
                     }
-                    else
+                    else if (dbType == "PostgreSQL")
                     {
-                        column.DataTypeName = types[column.DataTypeName.Trim().ToLower()];
+                        if (column.DataTypeName == "character")
+                        {
+                            column.DataTypeName = types["string"];
+                        }
+                        else if (column.DataTypeName == "date")
+                        {
+                            column.DataTypeName = types["datetime"];
+                        }
+                        else
+                            column.DataTypeName = types[column.DataTypeName.Trim().ToLower()];
                     }
                 }
                 catch

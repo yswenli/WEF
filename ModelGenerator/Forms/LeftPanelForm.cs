@@ -103,6 +103,10 @@ namespace WEF.ModelGenerator
                         DbSelect.DBMySql dbMySql = new WEF.ModelGenerator.DbSelect.DBMySql();
                         dia = dbMySql.ShowDialog();
                         break;
+                    case DatabaseType.PostgreSQL:
+                        DbSelect.DBPostgre dbPostgreSql = new WEF.ModelGenerator.DbSelect.DBPostgre();
+                        dia = dbPostgreSql.ShowDialog();
+                        break;
                     case DatabaseType.MongoDB:
                         DbSelect.DBMongo dbMongo = new WEF.ModelGenerator.DbSelect.DBMongo();
                         dia = dbMongo.ShowDialog();
@@ -483,6 +487,59 @@ namespace WEF.ModelGenerator
                                 {
                                     tnode = new TreeNode(dr[0].ToString(), 1, 1);
                                     tnode.Tag = conConnectionString.Replace("master", dr[0].ToString());
+                                    tnode.ContextMenuStrip = contextMenuStripOneDataBase;
+                                    node.Nodes.Add(tnode);
+                                }));
+
+                                var tables = dbObject.GetTables(tnode.Text);
+
+                                var views = dbObject.GetVIEWs(tnode.Text);
+
+                                this.Invoke(new Action(() =>
+                                {
+                                    ShowTablesAndViews(tnode, tables, views);
+                                }));
+                            }
+
+                        }
+                        else
+                        {
+                            TreeNode tnode = null;
+
+                            this.Invoke(new Action(() =>
+                            {
+                                tnode = new TreeNode(conModel.Database, 1, 1);
+                                tnode.Tag = conConnectionString;
+                                tnode.ContextMenuStrip = contextMenuStripOneDataBase;
+                                node.Nodes.Add(tnode);
+                            }));
+
+                            var tables = dbObject.GetTables(tnode.Text);
+
+                            var views = dbObject.GetVIEWs(tnode.Text);
+
+                            this.Invoke(new Action(() =>
+                            {
+                                ShowTablesAndViews(tnode, tables, views);
+                            }));
+                        }
+                    }
+                    else if (conModel.DbType.Equals(DatabaseType.PostgreSQL.ToString()))
+                    {
+                        dbObject = new WEF.DbDAL.PostgreSQL.DbObject(conConnectionString);
+
+                        if (conModel.Database.Equals("all"))
+                        {
+                            DataTable dt = dbObject.GetDBList();
+
+                            foreach (DataRow dr in dt.Rows)
+                            {
+                                TreeNode tnode = null;
+
+                                this.Invoke(new Action(() =>
+                                {
+                                    tnode = new TreeNode(dr[0].ToString(), 1, 1);
+                                    tnode.Tag = conConnectionString.Replace("postgres", dr[0].ToString());
                                     tnode.ContextMenuStrip = contextMenuStripOneDataBase;
                                     node.Nodes.Add(tnode);
                                 }));

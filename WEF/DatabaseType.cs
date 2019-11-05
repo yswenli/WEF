@@ -46,9 +46,13 @@ namespace WEF
         /// </summary>
         MySql = 5,
         /// <summary>
+        /// MariaDB
+        /// </summary>
+        MariaDB = 6,
+        /// <summary>
         /// MongoDB
         /// </summary>
-        MongoDB=6,
+        MongoDB =6,
         /// <summary>
         /// PostgreSQL
         /// </summary>

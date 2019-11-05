@@ -23,6 +23,8 @@ namespace WEF.Test
         static void Main(string[] args)
         {
 
+            Test4();
+
             Test3();
 
             var db = new DBContext();
@@ -54,11 +56,11 @@ namespace WEF.Test
                 TaskType = 3
             };
 
-            
+
 
             var tn = taskModel.ConvertTo<DBTask>();
 
-            var insertResult= new DBTaskRepository().Insert(tn);
+            var insertResult = new DBTaskRepository().Insert(tn);
 
             var taa = taskModel.ConvertTo<TestA>();
 
@@ -375,7 +377,7 @@ namespace WEF.Test
 
         static void Test3()
         {
-            var list1 = new DBTaskRepository().Search().GetPagedList(1, 20, "begintime", true).Select(b=>b.Begintime).ToList();
+            var list1 = new DBTaskRepository().Search().GetPagedList(1, 20, "begintime", true).Select(b => b.Begintime).ToList();
 
             var list2 = new DBTaskRepository().Search().GetPagedList(1, 20, "begintime", false).Select(b => b.Begintime).ToList();
 
@@ -383,6 +385,34 @@ namespace WEF.Test
             {
 
             }
+        }
+
+        static void Test4()
+        {
+            UsersRepository usersRepository = new UsersRepository(DatabaseType.PostgreSQL, "PORT=5432;DATABASE=test;HOST=127.0.0.1;PASSWORD=yswenli;USER ID=postgres;");
+
+            var id = Guid.NewGuid().GetHashCode();
+
+            var r = usersRepository.Insert(new Users()
+            {
+                Id = id,
+                Name = "chewang",
+                Pwd = "12321",
+                Created = DateTime.Now
+            });
+
+            var e = usersRepository.GetUsers(id);
+
+
+            e.Name = "Chewang";
+
+            usersRepository.Update(e);
+
+
+            var l = usersRepository.Search().Where(b => b.Id > 0).OrderBy(b => b.Created).Page(1, 10).ToList();
+
+            Console.ReadLine();
+
         }
     }
 }

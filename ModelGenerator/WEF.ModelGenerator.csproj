@@ -91,6 +91,12 @@
     <Compile Include="DbSelect\DBMsAccess.Designer.cs">
       <DependentUpon>DBMsAccess.cs</DependentUpon>
     </Compile>
+    <Compile Include="DbSelect\DBPostgre.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DbSelect\DBPostgre.Designer.cs">
+      <DependentUpon>DBPostgre.cs</DependentUpon>
+    </Compile>
     <Compile Include="DbSelect\DBMySql.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -187,6 +193,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DbSelect\DBMsAccess.resx">
       <DependentUpon>DBMsAccess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DbSelect\DBPostgre.resx">
+      <DependentUpon>DBPostgre.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DbSelect\DBMySql.resx">
       <DependentUpon>DBMySql.cs</DependentUpon>

@@ -192,7 +192,17 @@ namespace WEF.Db
 
             var sql = new StringBuilder();
             sql.Append("INSERT INTO ");
-            sql.Append(db.DbProvider.BuildTableName(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>()));
+
+            if (db.DbProvider.DatabaseType == DatabaseType.PostgreSQL)
+            {
+                sql.Append($"public.\"{EntityCache.GetTableName<TEntity>()}\"");
+            }
+            else
+            {
+                sql.Append(db.DbProvider.BuildTableName(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>()));
+            }
+
+            
             sql.Append(" (");
 
             var identityField = EntityCache.GetIdentityField<TEntity>();
@@ -223,7 +233,6 @@ namespace WEF.Db
                     }
                 }
                 string panme = DataUtils.MakeUniqueKey(fields[i]);
-                //var panme = string.Concat("@", fields[i].Name, i);
                 insertFields.Add(fields[i].FieldName, panme);
                 var p = new Parameter(panme, values[i], fields[i].ParameterDbType, fields[i].ParameterSize);
                 parameters.Add(p);
@@ -246,7 +255,6 @@ namespace WEF.Db
             sql.Append(")");
 
             var cmd = db.GetSqlStringCommand(sql.ToString());
-
             db.AddCommandParameter(cmd, parameters.ToArray());
             return cmd;
         }

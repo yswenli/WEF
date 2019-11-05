@@ -1242,11 +1242,11 @@ namespace WEF
         #region 连接字符串处理
 
         /// <summary>
-        /// 将mysql连接符串转换成dictionary
+        /// 将sql连接符串转换成dictionary
         /// </summary>
         /// <param name="connStr"></param>
         /// <returns></returns>
-        public static Dictionary<string, string> ToMySqlDic(this string connStr)
+        public static Dictionary<string, string> ToConnectParmaDic(this string connStr)
         {
             Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
 

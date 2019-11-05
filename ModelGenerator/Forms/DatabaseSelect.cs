@@ -50,6 +50,10 @@ namespace WEF.ModelGenerator
             {
                 databaseType = DatabaseType.MongoDB;
             }
+            else if (rbPostgreSql.Checked)
+            {
+                databaseType = DatabaseType.PostgreSQL;
+            }
             this.Close();
         }
 

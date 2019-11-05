@@ -118,6 +118,14 @@ namespace WEF.ModelGenerator
                 {
                     dbObject = new WEF.DbDAL.MySql.DbObject(ConnectionModel.ConnectionString);
                 }
+                else if (ConnectionModel.DbType.Equals(DatabaseType.MariaDB.ToString()))
+                {
+                    dbObject = new WEF.DbDAL.MySql.DbObject(ConnectionModel.ConnectionString);
+                }
+                else if (ConnectionModel.DbType.Equals(DatabaseType.PostgreSQL.ToString()))
+                {
+                    dbObject = new WEF.DbDAL.PostgreSQL.DbObject(ConnectionModel.ConnectionString);
+                }
                 else
                 {
                     LoadForm.HideLoading(1);

@@ -263,10 +263,17 @@ namespace WEF.Common
         {
             get
             {
-                if (string.IsNullOrEmpty(tableName))
+                if (DBContext.Current.Db.DbProvider.DatabaseType == DatabaseType.PostgreSQL)
+                {
                     return FieldName;
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(tableName))
+                        return FieldName;
 
-                return string.Concat(TableName, ".", FieldName);
+                    return string.Concat(TableName, ".", FieldName);
+                }
             }
         }
 

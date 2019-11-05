@@ -22,6 +22,7 @@ using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using WEF.Cache;
 using WEF.Common;
@@ -47,6 +48,58 @@ namespace WEF
         /// </summary>
         private CommandCreator cmdCreator;
 
+        #region 属性
+
+
+        /// <summary>
+        /// 左边  
+        /// <example>例如:sqlserver   的    [</example>
+        /// </summary>
+        public string LeftToken
+        {
+            get
+            {
+                return db.DbProvider.LeftToken.ToString();
+            }
+        }
+
+
+        /// <summary>
+        /// 右边
+        /// <example>例如:sqlserver   的    ]</example>
+        /// </summary>
+        public string RightToken
+        {
+            get
+            {
+                return db.DbProvider.RightToken.ToString();
+            }
+        }
+
+        /// <summary>
+        /// 参数前缀
+        /// <example>例如:sqlserver 的     @</example>
+        /// </summary>
+        public string ParamPrefix
+        {
+            get
+            {
+                return db.DbProvider.ParamPrefix.ToString();
+            }
+        }
+
+        /// <summary>
+        /// 获取当前上下文的DBContext
+        /// </summary>
+        public static DBContext Current
+        {
+            get
+            {
+                return (DBContext)CallContext.GetData("DBContext.Current");
+            }
+        }
+
+        #endregion
 
         #region Cache
 
@@ -166,6 +219,9 @@ namespace WEF
                 case DatabaseType.MsAccess:
                     provider = ProviderFactory.CreateDbProvider(null, typeof(MsAccessProvider).FullName, connStr, dt);
                     break;
+                case DatabaseType.PostgreSQL:
+                    provider = ProviderFactory.CreateDbProvider(null, typeof(PostgreSqlProvider).FullName, connStr, dt);
+                    break;
             }
             if (provider != null)
             {
@@ -257,7 +313,7 @@ namespace WEF
 
                                 if (!cacheInfo.IsNullOrEmpty())
                                 {
-                                    string entityName = string.Concat(db.DbProvider.ConnectionStringsName, splittedKey[1].Trim());                                   
+                                    string entityName = string.Concat(db.DbProvider.ConnectionStringsName, splittedKey[1].Trim());
 
                                     entitiesCache[entityName] = cacheInfo;
                                 }
@@ -271,26 +327,30 @@ namespace WEF
             }
         }
 
-
         /// <summary>
         /// 构造函数    使用默认  DBContext.Default
         /// </summary>
+        /// <param name="timeOut"></param>
         public DBContext(int timeOut = 30)
         {
             db = Database.Default;
 
             initDbSesion();
+
+            CallContext.SetData("DBContext.Current", this);
         }
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="connStrName">config文件中connectionStrings节点的name</param>
+        /// <param name="timeout"></param>
         public DBContext(string connStrName, int timeout = 30)
         {
             this.db = new Database(ProviderFactory.CreateDbProvider(connStrName), timeout);
             this.db.DbProvider.ConnectionStringsName = connStrName;
             initDbSesion();
+            CallContext.SetData("DBContext.Current", this);
         }
 
 
@@ -298,11 +358,14 @@ namespace WEF
         /// 构造函数
         /// </summary>
         /// <param name="db">已知的Database</param>
+        /// <param name="timeout"></param>
         public DBContext(Database db, int timeout = 30)
         {
             this.db = db;
 
             initDbSesion();
+
+            CallContext.SetData("DBContext.Current", this);
         }
 
         /// <summary>
@@ -310,6 +373,7 @@ namespace WEF
         /// </summary>
         /// <param name="dt">数据库类别</param>
         /// <param name="connStr">连接字符串</param>
+        /// <param name="timeout"></param>
         public DBContext(DatabaseType dt, string connStr, int timeout = 30)
         {
             DbProvider provider = CreateDbProvider(dt, connStr);
@@ -317,6 +381,8 @@ namespace WEF
             this.db = new Database(provider, timeout);
 
             initDbSesion();
+
+            CallContext.SetData("DBContext.Current", this);
         }
 
         /// <summary>
@@ -325,7 +391,8 @@ namespace WEF
         /// <param name="assemblyName">程序集</param>
         /// <param name="className">类名</param>
         /// <param name="connStr">连接字符串</param>
-        public DBContext(string assemblyName, string className, string connStr,int timeout =30)
+        /// <param name="timeout"></param>
+        public DBContext(string assemblyName, string className, string connStr, int timeout = 30)
         {
             DbProvider provider = ProviderFactory.CreateDbProvider(assemblyName, className, connStr, null);
             if (provider == null)
@@ -337,6 +404,8 @@ namespace WEF
             this.db = new Database(provider, timeout);
 
             cmdCreator = new CommandCreator(db);
+
+            CallContext.SetData("DBContext.Current", this);
         }
 
         #endregion
@@ -2224,48 +2293,6 @@ namespace WEF
             if (null == cmd)
                 return null;
             return db.ExecuteDataSet(cmd, tran);
-        }
-
-        #endregion
-
-        #region 属性
-
-
-        /// <summary>
-        /// 左边  
-        /// <example>例如:sqlserver   的    [</example>
-        /// </summary>
-        public string LeftToken
-        {
-            get
-            {
-                return db.DbProvider.LeftToken.ToString();
-            }
-        }
-
-
-        /// <summary>
-        /// 右边
-        /// <example>例如:sqlserver   的    ]</example>
-        /// </summary>
-        public string RightToken
-        {
-            get
-            {
-                return db.DbProvider.RightToken.ToString();
-            }
-        }
-
-        /// <summary>
-        /// 参数前缀
-        /// <example>例如:sqlserver 的     @</example>
-        /// </summary>
-        public string ParamPrefix
-        {
-            get
-            {
-                return db.DbProvider.ParamPrefix.ToString();
-            }
         }
 
         #endregion
