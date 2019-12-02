@@ -140,6 +140,10 @@ namespace WEF.ModelGenerator.Common
                         else
                             column.DataTypeName = types[column.DataTypeName.Trim().ToLower()];
                     }
+                    else
+                    {
+                        column.DataTypeName = types[column.DataTypeName.Trim().ToLower()];
+                    }
                 }
                 catch
                 {
