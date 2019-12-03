@@ -28,9 +28,13 @@ namespace WEF.NoSql.Extention
             return ConfigurationManager.ConnectionStrings[DefaultName].ConnectionString;
         }
 
+
         private static MongoDatabase GetDatabaseFromUrl(MongoUrl url)
         {
-            return new MongoClient(url).GetServer().GetDatabase(url.DatabaseName);
+            var mc = new MongoClient(url);
+            var ms = mc.GetServer();
+            ms.WithReadPreference(new ReadPreference(ReadPreferenceMode.SecondaryPreferred));
+            return ms.GetDatabase(url.DatabaseName);
         }
 
         /// <summary>  
@@ -49,9 +53,9 @@ namespace WEF.NoSql.Extention
 
             foreach (string server in ServerList)
             {
-                MatchCollection mc = Regex.Matches(server, reg);
-                if (mc != null && mc.Count > 0)
-                    servers.Add(new MongoServerAddress(mc[0].Groups["server"].ToString(), Convert.ToInt32(mc[0].Groups["port"].ToString())));
+                MatchCollection collections = Regex.Matches(server, reg);
+                if (collections != null && collections.Count > 0)
+                    servers.Add(new MongoServerAddress(collections[0].Groups["server"].ToString(), Convert.ToInt32(collections[0].Groups["port"].ToString())));
             }
 
             if (servers == null || servers.Count < 1)
@@ -61,6 +65,8 @@ namespace WEF.NoSql.Extention
 
             set.Servers = servers;
 
+            set.ConnectionMode = ConnectionMode.Automatic;
+
             set.ReplicaSetName = ConfigurationManager.AppSettings[AppKeyNameMongReplicaSetName].Trim();//设置副本集名称  
 
             int TimeOut = ConfigurationManager.AppSettings[AppKeyNameTimeOut].ParseInt();//设置副本集名称  
@@ -69,9 +75,13 @@ namespace WEF.NoSql.Extention
 
             set.ReadPreference = new ReadPreference(ReadPreferenceMode.SecondaryPreferred);
 
-            MongoClient client = new MongoClient(set);
+            MongoClient mc = new MongoClient(set);
 
-            return client.GetServer().GetDatabase(databaseName);
+            var ms = mc.GetServer();
+
+            ms.WithReadPreference(new ReadPreference(ReadPreferenceMode.SecondaryPreferred));
+
+            return ms.GetDatabase(databaseName);
         }
 
 
@@ -110,6 +120,7 @@ namespace WEF.NoSql.Extention
         private static string GetCollectionName<T>() where T : IMongoEntity<U>
         {
             string collectionName;
+
             if (typeof(T).BaseType.Equals(typeof(object)))
             {
                 collectionName = GetCollectioNameFromInterface<T>();

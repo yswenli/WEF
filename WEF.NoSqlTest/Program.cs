@@ -17,7 +17,7 @@ namespace WEF.NoSqlTest
 
             #region test
 
-            var total = int.MaxValue;
+            var total = 1000;
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
