@@ -440,6 +440,7 @@ namespace WEF.ModelGenerator.Common
 
             plus.AppendSpaceLine(2, "{");
             plus.AppendSpaceLine(3, $"var obj = Search().Where(b => b.{identityColumn.Name} == {identityColumn.Name}).First();");
+            plus.AppendSpaceLine(3, "if (obj == null) return -1;");
             plus.AppendSpaceLine(3, "return db.Delete(obj);");
             plus.AppendSpaceLine(2, "}");
 

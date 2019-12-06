@@ -23,9 +23,9 @@ namespace WEF.Test
         static void Main(string[] args)
         {
 
-            Test4();
+            //Test4();
 
-            Test3();
+            //Test3();
 
             var db = new DBContext();
 
@@ -81,6 +81,8 @@ namespace WEF.Test
             Console.WriteLine("WEF使用实例");
 
             Console.WriteLine("-----------------------------");
+
+            new DBTaskRepository().Delete("");
 
             var giftopt = new DBGiftRepository();
 

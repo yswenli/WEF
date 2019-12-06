@@ -953,6 +953,7 @@ namespace WEF.Models
         public int Delete(string Taskid)
         {
             var obj = Search().Where(b => b.Taskid == Taskid).First();
+            if (obj == null) return -1;
             return db.Delete(obj);
         }
         /// <summary>
