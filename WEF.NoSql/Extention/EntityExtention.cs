@@ -17,7 +17,7 @@ namespace WEF.NoSql.Extention
 
             if (!int.TryParse(str, out result))
             {
-                result = 0;
+                result = 30;
             }
             return result;
         }

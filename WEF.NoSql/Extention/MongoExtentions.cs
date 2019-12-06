@@ -1,14 +1,34 @@
-﻿using MongoDB.Driver;
+﻿/*****************************************************************************************************
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
+ *****************************************************************************************************
+ * 所属域：WENLI-PC
+ * 登录用户：yswenli
+ * CLR版本：4.0.30319.17929
+ * 唯一标识：9a4fe848-95cb-4ad2-ac1b-d757a6ea1cd0
+ * 机器名称：WENLI-PC
+ * 联系人邮箱：wenguoli_520@qq.com
+ *****************************************************************************************************
+ * 命名空间：WEF.NoSql.Extention
+ * 类名称：Extentions
+ * 文件名：Extentions
+ * 创建年份：2015
+ * 创建时间：2015-09-29 16:35:12
+ * 创建人：Wenli
+ * 创建说明：
+ *****************************************************************************************************/
+using MongoDB.Driver;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using WEF.NoSql.Core;
 using WEF.NoSql.Model;
 
 namespace WEF.NoSql.Extention
 {
-    internal static class Extentions<U>
+    internal static class MongoExtentions<ObjectId>
     {
         internal const string DefaultName = "MongoDBConnectStr";
 
@@ -32,8 +52,20 @@ namespace WEF.NoSql.Extention
         private static MongoDatabase GetDatabaseFromUrl(MongoUrl url)
         {
             var mc = new MongoClient(url);
+
             var ms = mc.GetServer();
+
             ms.WithReadPreference(new ReadPreference(ReadPreferenceMode.SecondaryPreferred));
+
+            if (!ms.Settings.IsFrozen)
+            {
+                ms.Settings.ConnectionMode = ConnectionMode.Automatic;
+
+                ms.Settings.ConnectTimeout = TimeSpan.FromSeconds(10);
+            }
+
+            MaintenanceTask(ms);
+
             return ms.GetDatabase(url.DatabaseName);
         }
 
@@ -79,45 +111,45 @@ namespace WEF.NoSql.Extention
 
             var ms = mc.GetServer();
 
-            ms.WithReadPreference(new ReadPreference(ReadPreferenceMode.SecondaryPreferred));
+            MaintenanceTask(ms);
 
             return ms.GetDatabase(databaseName);
         }
 
 
         public static MongoCollection<T> GetCollectionFromCluster<T>(string databaseName)
-            where T : IMongoEntity<U>
+            where T : IMongoEntity<ObjectId>
         {
             return GetDatabaseFromAppSettings(databaseName).GetCollection<T>(GetCollectionName<T>());
         }
 
         public static MongoCollection<T> GetCollectionFromConnectionString<T>(string connectionString)
-            where T : IMongoEntity<U>
+            where T : IMongoEntity<ObjectId>
         {
-            return Extentions<U>.GetCollectionFromConnectionString<T>(connectionString, GetCollectionName<T>());
+            return MongoExtentions<ObjectId>.GetCollectionFromConnectionString<T>(connectionString, GetCollectionName<T>());
         }
 
         public static MongoCollection<T> GetCollectionFromConnectionString<T>(string connectionString, string collectionName)
-            where T : IMongoEntity<U>
+            where T : IMongoEntity<ObjectId>
         {
-            return Extentions<U>.GetDatabaseFromUrl(new MongoUrl(connectionString))
+            return MongoExtentions<ObjectId>.GetDatabaseFromUrl(new MongoUrl(connectionString))
                 .GetCollection<T>(collectionName);
         }
 
         public static MongoCollection<T> GetCollectionFromUrl<T>(MongoUrl url)
-            where T : IMongoEntity<U>
+            where T : IMongoEntity<ObjectId>
         {
-            return Extentions<U>.GetCollectionFromUrl<T>(url, GetCollectionName<T>());
+            return MongoExtentions<ObjectId>.GetCollectionFromUrl<T>(url, GetCollectionName<T>());
         }
 
         public static MongoCollection<T> GetCollectionFromUrl<T>(MongoUrl url, string collectionName)
-            where T : IMongoEntity<U>
+            where T : IMongoEntity<ObjectId>
         {
-            return Extentions<U>.GetDatabaseFromUrl(url)
+            return MongoExtentions<ObjectId>.GetDatabaseFromUrl(url)
                 .GetCollection<T>(collectionName);
         }
 
-        private static string GetCollectionName<T>() where T : IMongoEntity<U>
+        private static string GetCollectionName<T>() where T : IMongoEntity<ObjectId>
         {
             string collectionName;
 
@@ -186,5 +218,44 @@ namespace WEF.NoSql.Extention
         }
 
 
+        /// <summary>
+        /// 维护任务
+        /// </summary>
+        /// <param name="mongoServer"></param>
+        private static void MaintenanceTask(MongoServer mongoServer)
+        {
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        if (mongoServer.State == MongoServerState.Disconnected)
+                        {
+                            MongoExtentions.OnDisconnected?.BeginInvoke(mongoServer.Settings.ToString(), null, null);
+
+                            mongoServer.Reconnect();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MongoExtentions.OnError?.BeginInvoke(mongoServer.Settings.ToString(), ex, null, null);
+                    }
+                    finally
+                    {
+                        Task.Delay(3 * 1000).GetAwaiter().GetResult();
+                    }
+                }
+            });
+        }
+
+    }
+
+
+    internal static class MongoExtentions
+    {
+        internal static OnDisconnectedHandler OnDisconnected;
+
+        internal static OnErrorHandler OnError;
     }
 }

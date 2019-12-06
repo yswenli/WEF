@@ -1,4 +1,22 @@
-﻿using MongoDB.Bson;
+﻿/*****************************************************************************************************
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
+ *****************************************************************************************************
+ * 所属域：WENLI-PC
+ * 登录用户：yswenli
+ * CLR版本：4.0.30319.17929
+ * 唯一标识：9a4fe848-95cb-4ad2-ac1b-d757a6ea1cd0
+ * 机器名称：WENLI-PC
+ * 联系人邮箱：wenguoli_520@qq.com
+ *****************************************************************************************************
+ * 命名空间：WEF.NoSql.Core
+ * 类名称：MongoDBOperatorBase<T>
+ * 文件名：MongoDBOperatorBase<T>
+ * 创建年份：2015
+ * 创建时间：2015-09-29 16:35:12
+ * 创建人：Wenli
+ * 创建说明：
+ *****************************************************************************************************/
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
@@ -17,15 +35,13 @@ namespace WEF.NoSql.Core
     /// MongoDB实体操作类
     /// </summary>
     /// <typeparam name="T">存储库中包含的类型.</typeparam>
-    /// <typeparam name="TKey">用于实体ID的类型。</typeparam>
-    public class MongoDBOperatorBase<T, TKey> : IOperator<T, TKey>
-        where T : IMongoEntity<TKey>
+    /// <typeparam name="ObjectId">用于实体ID的类型。</typeparam>
+    public class MongoDBOperatorBase<T, ObjectId> : IOperator<T, ObjectId>
+        where T : IMongoEntity<ObjectId>
     {
         protected internal MongoCollection<T> collection;
 
         protected string _connStr = string.Empty;
-
-
         public string ConnectionString
         {
             get { return _connStr; }
@@ -33,7 +49,7 @@ namespace WEF.NoSql.Core
 
 
         public MongoDBOperatorBase()
-            : this(Extentions<TKey>.GetDefaultConnectionString())
+            : this(MongoExtentions<ObjectId>.GetDefaultConnectionString())
         {
         }
 
@@ -49,26 +65,27 @@ namespace WEF.NoSql.Core
             if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["MongReplicaSetName"]) &&
                 !string.IsNullOrEmpty(ConfigurationManager.AppSettings["MongoServerAddress"]))
             {
-                this.collection = Extentions<TKey>.GetCollectionFromCluster<T>(connectionString);
+                this.collection = MongoExtentions<ObjectId>.GetCollectionFromCluster<T>(connectionString);
             }
             else
-                this.collection = Extentions<TKey>.GetCollectionFromConnectionString<T>(connectionString);
+                this.collection = MongoExtentions<ObjectId>.GetCollectionFromConnectionString<T>(connectionString);            
         }
 
+      
         public MongoDBOperatorBase(string connectionString, string collectionName)
         {
             _connStr = connectionString;
-            this.collection = Extentions<TKey>.GetCollectionFromConnectionString<T>(connectionString, collectionName);
+            this.collection = MongoExtentions<ObjectId>.GetCollectionFromConnectionString<T>(connectionString, collectionName);
         }
 
         public MongoDBOperatorBase(MongoUrl url)
         {
-            this.collection = Extentions<TKey>.GetCollectionFromUrl<T>(url);
+            this.collection = MongoExtentions<ObjectId>.GetCollectionFromUrl<T>(url);
         }
 
         public MongoDBOperatorBase(MongoUrl url, string collectionName)
         {
-            this.collection = Extentions<TKey>.GetCollectionFromUrl<T>(url, collectionName);
+            this.collection = MongoExtentions<ObjectId>.GetCollectionFromUrl<T>(url, collectionName);
         }
 
         public MongoCollection<T> Collection
@@ -150,17 +167,17 @@ namespace WEF.NoSql.Core
             }
         }
 
-        public virtual T GetById(TKey id)
+        public virtual T GetById(ObjectId id)
         {
             if (typeof(T).IsSubclassOf(typeof(MongoEntity)))
             {
-                return this.GetById(new ObjectId(id as string));
+                return this.GetById(new MongoDB.Bson.ObjectId(id as string));
             }
 
             return this.collection.FindOneByIdAs<T>(BsonValue.Create(id));
         }
 
-        public virtual T GetById(ObjectId id)
+        public virtual T GetById(MongoDB.Bson.ObjectId id)
         {
             return this.collection.FindOneByIdAs<T>(id);
         }
@@ -194,11 +211,11 @@ namespace WEF.NoSql.Core
             }
         }
 
-        public virtual void Delete(TKey id)
+        public virtual void Delete(ObjectId id)
         {
             if (typeof(T).IsSubclassOf(typeof(MongoEntity)))
             {
-                this.collection.Remove(Query.EQ("_id", new ObjectId(id as string)));
+                this.collection.Remove(Query.EQ("_id", new MongoDB.Bson.ObjectId(id as string)));
             }
             else
             {
@@ -206,7 +223,7 @@ namespace WEF.NoSql.Core
             }
         }
 
-        public virtual void Delete(ObjectId id)
+        public virtual void Delete(MongoDB.Bson.ObjectId id)
         {
             this.collection.Remove(Query.EQ("_id", id));
         }
@@ -278,11 +295,6 @@ namespace WEF.NoSql.Core
 
         #endregion
 
-
-
-
-
-
         #region IQueryable<T>        
 
         public virtual IEnumerator<T> GetEnumerator()
@@ -294,7 +306,7 @@ namespace WEF.NoSql.Core
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return this.collection.AsQueryable<T>().GetEnumerator();
-        }        
+        }
 
         public virtual Type ElementType
         {

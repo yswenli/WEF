@@ -2,10 +2,10 @@
 
 namespace WEF.NoSql.Model
 {
-    public interface IMongoEntity<TKey>
+    public interface IMongoEntity<MongoEntityId>
     {
         [BsonId]
-        TKey Id
+        MongoEntityId Id
         {
             get; set;
         }

@@ -13,6 +13,10 @@ namespace WEF.NoSqlTest
         {
             Console.Title = "MongoDBOperator.Test";
 
+            MongoDBFactory.OnDisconnected += MongoDBFactory_OnDisconnected;
+
+            MongoDBFactory.OnError += MongoDBFactory_OnError;
+
             var customerOperator = MongoDBFactory.Create<Account>();
 
             #region test
@@ -59,7 +63,7 @@ namespace WEF.NoSqlTest
 
                 customerOperator1.Add(account);
 
-                
+
             });
 
             Console.WriteLine("Read");
@@ -85,6 +89,16 @@ namespace WEF.NoSqlTest
             customerOperator.DeleteAll();
 
             Console.ReadLine();
+        }
+
+        private static void MongoDBFactory_OnError(string settingInfo, Exception ex)
+        {
+            Console.WriteLine($"settingInfo:{settingInfo} \r\nex:{ex.Message}");
+        }
+
+        private static void MongoDBFactory_OnDisconnected(string settingInfo)
+        {
+            Console.WriteLine($"settingInfo:{settingInfo}");
         }
     }
 }
