@@ -1,4 +1,22 @@
-﻿using MongoDB.Bson;
+﻿/*****************************************************************************************************
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
+ *****************************************************************************************************
+ * 所属域：WENLI-PC
+ * 登录用户：yswenli
+ * CLR版本：4.0.30319.17929
+ * 唯一标识：9a4fe848-95cb-4ad2-ac1b-d757a6ea1cd0
+ * 机器名称：WENLI-PC
+ * 联系人邮箱：wenguoli_520@qq.com
+ *****************************************************************************************************
+ * 命名空间：WEF.NoSql
+ * 类名称：MongoDBFactory
+ * 文件名：MongoDBFactory
+ * 创建年份：2015
+ * 创建时间：2015-09-29 16:35:12
+ * 创建人：Wenli
+ * 创建说明：
+ *****************************************************************************************************/
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using System;
@@ -17,10 +35,18 @@ namespace WEF.NoSql
     {
         static ConcurrentDictionary<string, object> concurrentDictionary = null;
 
+        /// <summary>
+        /// 断开连接事件
+        /// </summary>
         public static event OnDisconnectedHandler OnDisconnected;
-
+        /// <summary>
+        /// 异常事件
+        /// </summary>
         public static event OnErrorHandler OnError;
 
+        /// <summary>
+        /// mongodb工厂类
+        /// </summary>
         static MongoDBFactory()
         {
             var ns = new DateTimeSerializer(DateTimeKind.Local, BsonType.DateTime);
@@ -29,17 +55,27 @@ namespace WEF.NoSql
 
             concurrentDictionary = new ConcurrentDictionary<string, object>();
 
-            MongoExtentions.OnDisconnected += OnDisconnectedAction;
+            MongoCoreExtentions.OnDisconnected += OnDisconnectedAction;
 
-            MongoExtentions.OnError += OnErrorAction;
+            MongoCoreExtentions.OnError += OnErrorAction;
         }
 
+        /// <summary>
+        /// 创建Mongo操作实例
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static IOperator<T> Create<T>() where T : MongoEntity
         {
             return CreateWithName<T>();
         }
 
-
+        /// <summary>
+        /// 创建Mongo操作实例
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connectionString"></param>
+        /// <returns></returns>
         public static IOperator<T> Create<T>(string connectionString) where T : MongoEntity
         {
             var key = connectionString + typeof(T).Name;
@@ -52,8 +88,13 @@ namespace WEF.NoSql
             return (IOperator<T>)mo;
         }
 
-
-        public static IOperator<T> CreateWithAppSetting<T>(string appKeyName = MongoExtentions<ObjectId>.DefaultName) where T : MongoEntity
+        /// <summary>
+        /// 创建Mongo操作实例
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="appKeyName"></param>
+        /// <returns></returns>
+        public static IOperator<T> CreateWithAppSetting<T>(string appKeyName = MongoCoreExtentions<ObjectId>.DefaultName) where T : MongoEntity
         {
             var connectionString = ConfigurationManager.AppSettings[appKeyName];
 
@@ -61,8 +102,13 @@ namespace WEF.NoSql
         }
 
 
-
-        public static IOperator<T> CreateWithName<T>(string name = MongoExtentions<ObjectId>.DefaultName) where T : MongoEntity
+        /// <summary>
+        /// 创建Mongo操作实例
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static IOperator<T> CreateWithName<T>(string name = MongoCoreExtentions<ObjectId>.DefaultName) where T : MongoEntity
         {
             var connectionString = ConfigurationManager.ConnectionStrings[name].ToString();
 

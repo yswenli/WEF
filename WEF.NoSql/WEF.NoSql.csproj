@@ -68,9 +68,9 @@
     <Compile Include="Core\MongoDBOperatorBase.cs" />
     <Compile Include="Core\OnDisconnectedHandler.cs" />
     <Compile Include="Core\OnErrorHandler.cs" />
-    <Compile Include="Extention\CollectionNameAttribute.cs" />
-    <Compile Include="Extention\EntityExtention.cs" />
-    <Compile Include="Extention\MongoExtentions.cs" />
+    <Compile Include="Extention\MongoCollectionNameAttribute.cs" />
+    <Compile Include="Extention\MongoEntityExtention.cs" />
+    <Compile Include="Extention\MongoCoreExtentions.cs" />
     <Compile Include="Model\FindCommandResult.cs" />
     <Compile Include="Model\IMongoEntity.cs" />
     <Compile Include="Model\IMongoEntityT.cs" />

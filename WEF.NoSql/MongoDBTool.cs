@@ -15,7 +15,6 @@
 *版 本 号： V1.0.0.0
 *描    述：
 *****************************************************************************/
-using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

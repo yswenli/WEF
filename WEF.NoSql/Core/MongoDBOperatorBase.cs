@@ -49,12 +49,12 @@ namespace WEF.NoSql.Core
 
 
         public MongoDBOperatorBase()
-            : this(MongoExtentions<ObjectId>.GetDefaultConnectionString())
+            : this(MongoCoreExtentions<ObjectId>.GetDefaultConnectionString())
         {
         }
 
         /// <summary>
-        /// 若设置过MongoServerAddress 、MongReplicaSetName则已cluster优先
+        /// 若设置过MongoServerAddress 、MongReplicaSetName则已Default优先
         /// 否则默认为最后一个ConnectionString设置
         /// </summary>
         /// <param name="connectionString"></param>
@@ -65,27 +65,40 @@ namespace WEF.NoSql.Core
             if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["MongReplicaSetName"]) &&
                 !string.IsNullOrEmpty(ConfigurationManager.AppSettings["MongoServerAddress"]))
             {
-                this.collection = MongoExtentions<ObjectId>.GetCollectionFromCluster<T>(connectionString);
+                this.collection = MongoCoreExtentions<ObjectId>.GetCollectionFromDefault<T>(connectionString);
             }
             else
-                this.collection = MongoExtentions<ObjectId>.GetCollectionFromConnectionString<T>(connectionString);            
+                this.collection = MongoCoreExtentions<ObjectId>.GetCollectionFromConnectionString<T>(connectionString);
         }
 
-      
+        /// <summary>
+        /// MongoDB实体操作类
+        /// </summary>
+        /// <param name="connectionString"></param>
+        /// <param name="collectionName"></param>
         public MongoDBOperatorBase(string connectionString, string collectionName)
         {
             _connStr = connectionString;
-            this.collection = MongoExtentions<ObjectId>.GetCollectionFromConnectionString<T>(connectionString, collectionName);
+            this.collection = MongoCoreExtentions<ObjectId>.GetCollectionFromConnectionString<T>(connectionString, collectionName);
         }
 
+        /// <summary>
+        /// MongoDB实体操作类
+        /// </summary>
+        /// <param name="url"></param>
         public MongoDBOperatorBase(MongoUrl url)
         {
-            this.collection = MongoExtentions<ObjectId>.GetCollectionFromUrl<T>(url);
+            this.collection = MongoCoreExtentions<ObjectId>.GetCollectionFromUrl<T>(url);
         }
 
+        /// <summary>
+        /// MongoDB实体操作类
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="collectionName"></param>
         public MongoDBOperatorBase(MongoUrl url, string collectionName)
         {
-            this.collection = MongoExtentions<ObjectId>.GetCollectionFromUrl<T>(url, collectionName);
+            this.collection = MongoCoreExtentions<ObjectId>.GetCollectionFromUrl<T>(url, collectionName);
         }
 
         public MongoCollection<T> Collection
@@ -169,37 +182,78 @@ namespace WEF.NoSql.Core
 
         public virtual T GetById(ObjectId id)
         {
-            if (typeof(T).IsSubclassOf(typeof(MongoEntity)))
+            try
             {
-                return this.GetById(new MongoDB.Bson.ObjectId(id as string));
+                if (typeof(T).IsSubclassOf(typeof(MongoEntity)))
+                {
+                    return this.GetById(new MongoDB.Bson.ObjectId(id.ToString()));
+                }
+                return this.collection.FindOneByIdAs<T>(BsonValue.Create(id));
             }
-
-            return this.collection.FindOneByIdAs<T>(BsonValue.Create(id));
+            catch (Exception ex)
+            {
+                MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
+            }
+            return default(T);
         }
 
         public virtual T GetById(MongoDB.Bson.ObjectId id)
         {
-            return this.collection.FindOneByIdAs<T>(id);
+            try
+            {
+                return this.collection.FindOneByIdAs<T>(id);
+            }
+            catch (Exception ex)
+            {
+                MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
+            }
+            return default(T);
         }
 
         public virtual T Add(T entity)
         {
-            this.collection.Insert<T>(entity);
+            try
+            {
+                var result = this.collection.Insert<T>(entity);
 
-            return entity;
+                if (result != null && result?.Response?.AsBsonValue?.AsBsonDocument?.Elements?.FirstOrDefault().Value?.ToBoolean() == true)
+                {
+                    return entity;
+                }
+            }
+            catch (Exception ex)
+            {
+                MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
+            }
+            return default(T);
         }
 
 
         public virtual void Add(IEnumerable<T> entities)
         {
-            this.collection.InsertBatch<T>(entities);
+            try
+            {
+                this.collection.InsertBatch<T>(entities);
+            }
+            catch (Exception ex)
+            {
+                MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
+            }
         }
 
         public virtual T Update(T entity)
         {
-            this.collection.Save<T>(entity);
+            try
+            {
+                this.collection.Save<T>(entity);
 
-            return entity;
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
+            }
+            return default(T);
         }
 
 
@@ -287,8 +341,6 @@ namespace WEF.NoSql.Core
             };
 
             var data = this.collection.Aggregate(new AggregateArgs { Pipeline = pipeline });
-
-            //var data = this.collection.Aggregate(new AggregateArgs { Pipeline = bsons });
 
             return data;
         }
