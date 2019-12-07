@@ -245,9 +245,12 @@ namespace WEF.NoSql.Core
         {
             try
             {
-                this.collection.Save<T>(entity);
+                var result = this.collection.Save<T>(entity);
 
-                return entity;
+                if (result != null && result?.Response?.AsBsonValue?.AsBsonDocument?.Elements?.FirstOrDefault().Value?.ToBoolean() == true)
+                {
+                    return entity;
+                }
             }
             catch (Exception ex)
             {
@@ -259,27 +262,48 @@ namespace WEF.NoSql.Core
 
         public virtual void Update(IEnumerable<T> entities)
         {
-            foreach (T entity in entities)
+            try
             {
-                this.collection.Save<T>(entity);
+                foreach (T entity in entities)
+                {
+                    this.collection.Save<T>(entity);
+                }
+            }
+            catch (Exception ex)
+            {
+                MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
             }
         }
 
         public virtual void Delete(ObjectId id)
         {
-            if (typeof(T).IsSubclassOf(typeof(MongoEntity)))
+            try
             {
-                this.collection.Remove(Query.EQ("_id", new MongoDB.Bson.ObjectId(id as string)));
+                if (typeof(T).IsSubclassOf(typeof(MongoEntity)))
+                {
+                    this.collection.Remove(Query.EQ("_id", new MongoDB.Bson.ObjectId(id as string)));
+                }
+                else
+                {
+                    this.collection.Remove(Query.EQ("_id", BsonValue.Create(id)));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                this.collection.Remove(Query.EQ("_id", BsonValue.Create(id)));
+                MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
             }
         }
 
         public virtual void Delete(MongoDB.Bson.ObjectId id)
         {
-            this.collection.Remove(Query.EQ("_id", id));
+            try
+            {
+                this.collection.Remove(Query.EQ("_id", id));
+            }
+            catch (Exception ex)
+            {
+                MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
+            }
         }
 
         public virtual void Delete(T entity)
@@ -297,18 +321,41 @@ namespace WEF.NoSql.Core
 
         public virtual void DeleteAll()
         {
-            this.collection.RemoveAll();
+            try
+            {
+                this.collection.RemoveAll();
+            }
+            catch (Exception ex)
+            {
+                MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
+            }
         }
 
         public virtual long Count()
         {
-            return this.collection.Count();
+            try
+            {
+                return this.collection.Count();
+            }
+            catch (Exception ex)
+            {
+                MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
+            }
+            return -1;
         }
 
 
         public virtual bool Exists(Expression<Func<T, bool>> predicate)
         {
-            return this.collection.AsQueryable<T>().Any(predicate);
+            try
+            {
+                return this.collection.AsQueryable<T>().Any(predicate);
+            }
+            catch (Exception ex)
+            {
+                MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
+            }
+            return false;
         }
 
 
@@ -351,20 +398,44 @@ namespace WEF.NoSql.Core
 
         public virtual IEnumerator<T> GetEnumerator()
         {
-            return this.collection.AsQueryable<T>().GetEnumerator();
+            try
+            {
+                return this.collection.AsQueryable<T>().GetEnumerator();
+            }
+            catch (Exception ex)
+            {
+                MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
+            }
+            return null;
         }
 
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return this.collection.AsQueryable<T>().GetEnumerator();
+            try
+            {
+                return this.collection.AsQueryable<T>().GetEnumerator();
+            }
+            catch (Exception ex)
+            {
+                MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
+            }
+            return null;
         }
 
         public virtual Type ElementType
         {
             get
             {
-                return this.collection.AsQueryable<T>().ElementType;
+                try
+                {
+                    return this.collection.AsQueryable<T>().ElementType;
+                }
+                catch (Exception ex)
+                {
+                    MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
+                }
+                return null;
             }
         }
 
@@ -372,7 +443,15 @@ namespace WEF.NoSql.Core
         {
             get
             {
-                return this.collection.AsQueryable<T>().Expression;
+                try
+                {
+                    return this.collection.AsQueryable<T>().Expression;
+                }
+                catch (Exception ex)
+                {
+                    MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
+                }
+                return null;
             }
         }
 
@@ -380,7 +459,15 @@ namespace WEF.NoSql.Core
         {
             get
             {
-                return this.collection.AsQueryable<T>().Provider;
+                try
+                {
+                    return this.collection.AsQueryable<T>().Provider;
+                }
+                catch (Exception ex)
+                {
+                    MongoCoreExtentions.OnError?.BeginInvoke(this.collection?.Database?.Server?.Settings?.ToString(), ex, null, null);
+                }
+                return null;
             }
         }
         #endregion
