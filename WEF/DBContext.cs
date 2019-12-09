@@ -36,8 +36,11 @@ namespace WEF
     /// <summary>
     /// WEF核心类，数据操作上下文
     /// </summary>
-    public sealed class DBContext
+    public sealed class DBContext:IDisposable
     {
+
+        const string CONTEXTKEY = "DBContext.Current";
+
         /// <summary>
         /// 
         /// </summary>
@@ -95,7 +98,7 @@ namespace WEF
         {
             get
             {
-                var obj = (DBContext)CallContext.GetData("DBContext.Current");
+                var obj = (DBContext)CallContext.LogicalGetData(CONTEXTKEY);
 
                 if (obj == null)
                 {
@@ -282,7 +285,7 @@ namespace WEF
 
             initDbSesion();
 
-            CallContext.SetData("DBContext.Current", this);
+            CallContext.LogicalSetData(CONTEXTKEY, this);
         }
 
         /// <summary>
@@ -295,7 +298,7 @@ namespace WEF
             this.db = new Database(ProviderFactory.CreateDbProvider(connStrName), timeout);
             this.db.DbProvider.ConnectionStringsName = connStrName;
             initDbSesion();
-            CallContext.SetData("DBContext.Current", this);
+            CallContext.LogicalSetData(CONTEXTKEY, this);
         }
 
 
@@ -310,7 +313,7 @@ namespace WEF
 
             initDbSesion();
 
-            CallContext.SetData("DBContext.Current", this);
+            CallContext.LogicalSetData(CONTEXTKEY, this);
         }
 
         /// <summary>
@@ -327,7 +330,7 @@ namespace WEF
 
             initDbSesion();
 
-            CallContext.SetData("DBContext.Current", this);
+            CallContext.LogicalSetData(CONTEXTKEY, this);
         }
 
         /// <summary>
@@ -350,7 +353,7 @@ namespace WEF
 
             cmdCreator = new CommandCreator(db);
 
-            CallContext.SetData("DBContext.Current", this);
+            CallContext.LogicalSetData(CONTEXTKEY, this);
         }
 
         #endregion
@@ -2728,5 +2731,13 @@ namespace WEF
 
 
         #endregion
+
+        /// <summary>
+        /// 释放资源
+        /// </summary>
+        public void Dispose()
+        {
+            CallContext.FreeNamedDataSlot(CONTEXTKEY);
+        }
     }
 }
