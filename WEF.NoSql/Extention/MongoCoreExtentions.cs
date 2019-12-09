@@ -19,6 +19,7 @@
 using MongoDB.Driver;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Text.RegularExpressions;
@@ -237,6 +238,10 @@ namespace WEF.NoSql.Extention
             return collectionname;
         }
 
+        /// <summary>
+        /// 记录mongoserver是否连接成功过
+        /// </summary>
+        static ConcurrentDictionary<MongoServer, bool> _recordConnectedCollection = new ConcurrentDictionary<MongoServer, bool>();
 
         /// <summary>
         /// 维护任务
@@ -252,9 +257,16 @@ namespace WEF.NoSql.Extention
                     {
                         if (mongoServer.State == MongoServerState.Disconnected)
                         {
-                            MongoCoreExtentions.OnDisconnected?.BeginInvoke(mongoServer.Settings.ToString(), null, null);
-
+                            if (_recordConnectedCollection.TryGetValue(mongoServer, out bool connected))
+                            {
+                                if (connected)
+                                    MongoCoreExtentions.OnDisconnected?.BeginInvoke(mongoServer.Settings.ToString(), null, null);
+                            }
                             mongoServer.Reconnect();
+                        }
+                        else if (mongoServer.State == MongoServerState.Connected)
+                        {
+                            _recordConnectedCollection.TryAdd(mongoServer, true);
                         }
                     }
                     catch (Exception ex)

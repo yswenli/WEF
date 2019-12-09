@@ -63,7 +63,6 @@ namespace WEF.NoSqlTest
 
                 customerOperator1.Add(account);
 
-
             });
 
             Console.WriteLine("Read");

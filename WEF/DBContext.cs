@@ -95,7 +95,13 @@ namespace WEF
         {
             get
             {
-                return (DBContext)CallContext.GetData("DBContext.Current");
+                var obj = (DBContext)CallContext.GetData("DBContext.Current");
+
+                if (obj == null)
+                {
+                    throw new InvalidOperationException("WEF.DBContext.Current无访问对象，因为它不是当前上下文创建的！");
+                }
+                return obj;
             }
         }
 
@@ -170,32 +176,6 @@ namespace WEF
 
         #endregion
 
-        #region Default
-
-
-        /// <summary>
-        /// Get the default gateway, which mapping to the default Database.
-        /// </summary>
-        public static DBContext Default = new DBContext(Database.Default);
-
-        /// <summary>
-        /// Sets the default DBContext.
-        /// </summary>
-        /// <param name="dt">The dt.</param>
-        /// <param name="connStr">The conn STR.</param>
-        public static void SetDefault(DatabaseType dt, string connStr)
-        {
-            DbProvider provider = CreateDbProvider(dt, connStr);
-
-            Default = new DBContext(new Database(provider));
-        }
-
-        /// <summary>
-        /// Creates the db provider.
-        /// </summary>
-        /// <param name="dt">The dt.</param>
-        /// <param name="connStr">The conn STR.</param>
-        /// <returns>The db provider.</returns>
         private static DbProvider CreateDbProvider(DatabaseType dt, string connStr)
         {
             DbProvider provider = null;
@@ -229,41 +209,6 @@ namespace WEF
             }
             return provider;
         }
-
-        /// <summary>
-        /// Sets the default DBContext.
-        /// </summary>
-        /// <param name="assemblyName">Name of the assembly.</param>
-        /// <param name="className">Name of the class.</param>
-        /// <param name="connStr">The conn STR.</param>
-        public static void SetDefault(string assemblyName, string className, string connStr)
-        {
-            DbProvider provider = ProviderFactory.CreateDbProvider(assemblyName, className, connStr, null);
-            if (provider == null)
-            {
-                throw new NotSupportedException(string.Format("Cannot construct DbProvider by specified parameters: {0}, {1}, {2}",
-                    assemblyName, className, connStr));
-            }
-
-            Default = new DBContext(new Database(provider));
-        }
-
-        /// <summary>
-        /// Sets the default DBContext.
-        /// </summary>
-        /// <param name="connStrName">Name of the conn STR.</param>
-        public static void SetDefault(string connStrName)
-        {
-            DbProvider provider = ProviderFactory.CreateDbProvider(connStrName);
-            provider.ConnectionStringsName = connStrName;
-            if (provider == null)
-            {
-                throw new NotSupportedException(string.Format("Cannot construct DbProvider by specified ConnectionStringName: {0}", connStrName));
-            }
-
-            Default = new DBContext(new Database(provider));
-        }
-        #endregion
 
         #region 构造函数
 

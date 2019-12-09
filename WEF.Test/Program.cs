@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using WEF.Expressions;
 using WEF.Models;
 
@@ -81,6 +82,42 @@ namespace WEF.Test
             Console.WriteLine("WEF使用实例");
 
             Console.WriteLine("-----------------------------");
+
+
+
+            var tasks = new DBTaskRepository().Search().ToList();
+
+            DBUserTaskRepository userTaskRepository = null;
+
+            var ts1 = Task.Factory.StartNew(() =>
+            {
+                 userTaskRepository = new DBUserTaskRepository();
+            });
+
+            Task.WaitAll(ts1);
+
+            var useTasks1 = userTaskRepository.Search().Where(b => b.Isenabled).ToList();
+
+            var useTasks2 = userTaskRepository.Search().Where(b => b.Userid == "6312124585351742" && b.Isenabled).ToList();
+
+
+            for (int i = 0; i < 10000; i++)
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        userTaskRepository.Search().First();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                });
+            }
+
+
+            Console.ReadLine();
 
             new DBTaskRepository().Delete("");
 
@@ -210,9 +247,9 @@ namespace WEF.Test
 
             #region 无实体sql操作，自定义参数            
 
-            var dt1 = DBContext.Default.FromSql("select * from tb_task where taskid=@taskID").AddInParameter("@taskID", System.Data.DbType.String, 200, "10B676E5BC852464DE0533C5610ACC53").ToFirst<DBTask>();
+            var dt1 = new DBContext().FromSql("select * from tb_task where taskid=@taskID").AddInParameter("@taskID", System.Data.DbType.String, 200, "10B676E5BC852464DE0533C5610ACC53").ToFirst<DBTask>();
 
-            var count = DBContext.Default.Search<DBTask>().Where(b => b.Crc32.Avg() > 1).Where(" 1=1 ").Count();
+            var count = new DBContext().Search<DBTask>().Where(b => b.Crc32.Avg() > 1).Where(" 1=1 ").Count();
 
             //dbContext.ExecuteNonQuery("");            
 
