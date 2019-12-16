@@ -44,7 +44,7 @@ namespace WEF.Test
                 CreateTime = DateTime.Now,
                 DayLimit = 10,
                 DayTimes = 100,
-                Description = "adsfevadsfasdfsadf",
+                Description = "𠂆𠂆𠂆𠂆𠂆𠂆𠂆𠂆",
                 EndTime = DateTime.Now,
                 FlowType = "5687653",
                 IsDel = false,
