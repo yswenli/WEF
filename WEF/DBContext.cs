@@ -36,7 +36,7 @@ namespace WEF
     /// <summary>
     /// WEF核心类，数据操作上下文
     /// </summary>
-    public sealed class DBContext:IDisposable
+    public sealed class DBContext : IDisposable
     {
 
         const string CONTEXTKEY = "DBContext.Current";
@@ -98,13 +98,7 @@ namespace WEF
         {
             get
             {
-                var obj = (DBContext)CallContext.LogicalGetData(CONTEXTKEY);
-
-                if (obj == null)
-                {
-                    throw new InvalidOperationException("WEF.DBContext.Current无访问对象，因为它不是当前上下文创建的！");
-                }
-                return obj;
+                return (DBContext)CallContext.LogicalGetData(CONTEXTKEY);
             }
         }
 

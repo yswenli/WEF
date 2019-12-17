@@ -9,14 +9,11 @@
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
 
-using WEF;
-using WEF.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
-using WEF.Section;
-using WEF.Db;
+using WEF.Expressions;
 
 namespace WEF.Common
 {
@@ -263,13 +260,14 @@ namespace WEF.Common
         {
             get
             {
-                if (DBContext.Current.Db.DbProvider.DatabaseType == DatabaseType.PostgreSQL)
+                if (DBContext.Current != null && DBContext.Current.Db.DbProvider.DatabaseType == DatabaseType.PostgreSQL)
                 {
                     return FieldName;
                 }
                 else
                 {
                     if (string.IsNullOrEmpty(tableName))
+
                         return FieldName;
 
                     return string.Concat(TableName, ".", FieldName);
@@ -285,6 +283,7 @@ namespace WEF.Common
             get
             {
                 if (string.IsNullOrEmpty(aliasName))
+
                     return TableFieldName;
 
                 return string.Concat(TableFieldName, " AS {0}", aliasName, "{1}");
