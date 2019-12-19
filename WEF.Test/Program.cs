@@ -28,6 +28,44 @@ namespace WEF.Test
 
             //Test3();
 
+            var c_id = Guid.NewGuid().ToString("N");
+
+            var dbtickerOrder = new DBTicketOrder()
+            {
+                C_id = c_id,
+                C_supplier=1,
+                C_appId="s",
+                C_channelId="22",
+                C_sku="sss",
+                C_outTradeNo="afefa",
+                C_count=1,
+                C_phone="1111",
+                C_nonce="asfew",
+                C_timestamp="asdfeaf",
+                C_sign="afefqwaf",
+                C_amount=365.031130M,
+                C_discountrate=102.21F,
+                C_price = 19.2231M,
+                C_activityName="asdfasd",
+                C_productName="asdfed",
+                C_created = DateTime.Now
+            };
+
+            if (new DBTicketOrderRepository().Insert(dbtickerOrder) > 0)
+            {
+                Console.WriteLine("DBTicketOrder数据插入成功");
+
+                var newdbtickerOrder = new DBTicketOrderRepository().Search().Where(b => b.C_id == c_id).ToFirstDefault();
+
+                newdbtickerOrder.C_updated = DateTime.Now;
+
+                if(new DBTicketOrderRepository().Update(newdbtickerOrder)>0)
+                {
+                    var newdbtickerOrder2 = new DBTicketOrderRepository().GetDBTicketOrder(c_id);
+                }
+            }
+
+
             var db = new DBContext();
 
             var dt = db.FromSql("select * from tb_task").ToDataTable();
@@ -91,7 +129,7 @@ namespace WEF.Test
 
             var ts1 = Task.Factory.StartNew(() =>
             {
-                 userTaskRepository = new DBUserTaskRepository();
+                userTaskRepository = new DBUserTaskRepository();
             });
 
             Task.WaitAll(ts1);
