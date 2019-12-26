@@ -23,6 +23,8 @@ namespace WEF.Test
     {
         static void Main(string[] args)
         {
+            //new DBTicketOrderRepository().Search().Where(b => b.C_id == "123sdf4asdfsadfgrewfdg5498432165").OrderBy(b=>b.C_price).ToFirst();
+
 
             //Test4();
 
@@ -33,37 +35,50 @@ namespace WEF.Test
             var dbtickerOrder = new DBTicketOrder()
             {
                 C_id = c_id,
-                C_supplier=1,
-                C_appId="s",
-                C_channelId="22",
-                C_sku="sss",
-                C_outTradeNo="afefa",
-                C_count=1,
-                C_phone="1111",
-                C_nonce="asfew",
-                C_timestamp="asdfeaf",
-                C_sign="afefqwaf",
-                C_amount=365.031130M,
-                C_discountrate=102.21F,
-                C_price = 19.2231M,
-                C_activityName="asdfasd",
-                C_productName="asdfed",
+                C_supplier = 1,
+                C_appId = "s",
+                C_channelId = "22",
+                C_sku = "sss",
+                C_outTradeNo = "afefa",
+                C_count = 1,
+                C_phone = "1111",
+                C_nonce = "asfew",
+                C_timestamp = "asdfeaf",
+                C_sign = "afefqwaf",
+                C_amount = 19.80M,
+                C_discountrate = 90F,
+                C_activityName = "asdfasd",
+                C_productName = "asdfed",
                 C_created = DateTime.Now
             };
 
+
+            var c_price = (decimal)(((float)dbtickerOrder.C_amount) * dbtickerOrder.C_discountrate / 100F);
+
+            dbtickerOrder.C_price = c_price;
+
             if (new DBTicketOrderRepository().Insert(dbtickerOrder) > 0)
             {
-                Console.WriteLine("DBTicketOrder数据插入成功");
+                Console.WriteLine($"DBTicketOrder数据插入成功,{dbtickerOrder.C_price}");
+
 
                 var newdbtickerOrder = new DBTicketOrderRepository().Search().Where(b => b.C_id == c_id).ToFirstDefault();
 
+                Console.WriteLine($"DBTicketOrder数据查询成功,{newdbtickerOrder.C_price}");
+
                 newdbtickerOrder.C_updated = DateTime.Now;
 
-                if(new DBTicketOrderRepository().Update(newdbtickerOrder)>0)
+                if (new DBTicketOrderRepository().Update(newdbtickerOrder) > 0)
                 {
                     var newdbtickerOrder2 = new DBTicketOrderRepository().GetDBTicketOrder(c_id);
+
+                    Console.WriteLine($"DBTicketOrder数据查询成功,{newdbtickerOrder2.C_price}");
                 }
             }
+
+            new DBTicketOrderRepository().Delete(c_id);
+
+            Console.ReadLine();
 
 
             var db = new DBContext();
