@@ -848,6 +848,7 @@ namespace WEF
             Search search = this.Top(1).GetPagedFromSection();
 
             string cacheKey = string.Format("{0}FirstT|{1}", dbProvider.ConnectionStringsName, formatSql(search.SqlString, search));
+
             object cacheValue = getCache(cacheKey);
 
             if (null != cacheValue)

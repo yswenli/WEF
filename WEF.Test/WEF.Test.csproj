@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Models\ArticleKind.cs" />
     <Compile Include="Models\DBGift.cs" />
+    <Compile Include="Models\DBTicketOrder.cs" />
     <Compile Include="Models\DBUserTask.cs" />
     <Compile Include="Models\SUser.cs" />
     <Compile Include="Models\TaskModel.cs" />
