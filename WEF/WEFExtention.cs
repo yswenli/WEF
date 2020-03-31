@@ -214,7 +214,7 @@ namespace WEF
                                         if (val != null)
                                         {
                                             var dt = (DateTime)val;
-                                            DataUtils.SetPropertyValue(target, targetProperty, dt.ToString("yyyy-MM-dd HH:mm:ss"));
+                                            DataUtils.SetPropertyValue(target, targetProperty, dt.ToString("yyyy-MM-dd HH:mm:ss.fff"));
                                         }
                                     }
                                     else if (targetProperty.PropertyType == typeof(Nullable<DateTime>))
@@ -234,7 +234,7 @@ namespace WEF
                                             var dt = (Nullable<DateTime>)val;
                                             if (dt.HasValue)
                                             {
-                                                DataUtils.SetPropertyValue(target, targetProperty, dt.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+                                                DataUtils.SetPropertyValue(target, targetProperty, dt.Value.ToString("yyyy-MM-dd HH:mm:ss.fff"));
                                             }
                                         }
                                     }

@@ -205,11 +205,10 @@ namespace WEF.Provider
                 Check.Require(connStrName, "connStrName", Check.NotNullOrEmpty);
 
                 var connStrSetting = ConfigurationManager.ConnectionStrings[connStrName];
-                Check.Invariant(connStrSetting != null, null, new ConfigurationErrorsException(string.Concat("Cannot find specified connection string setting named as ", connStrName, " in application config file's ConnectionString section.")));
-                //2015-08-13新增
+                Check.Invariant(connStrSetting != null, null, new ConfigurationErrorsException(string.Concat("Cannot find specified connection string setting named as ", connStrName, " in application config file's ConnectionString section.")));                
                 if (connStrSetting == null || string.IsNullOrWhiteSpace(connStrSetting.ConnectionString))
                 {
-                    throw new Exception("数据库连接字符串【" + connStrName + "】没有配置！");
+                    throw new Exception("连接字符串名称为connStrName：【" + connStrName + "】的没有配置具体的值！");
                 }
                 var assAndClass = connStrSetting.ProviderName.Split(',');
                 var dbProvider = assAndClass.Length > 1
