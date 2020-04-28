@@ -332,17 +332,20 @@ namespace WEF.Common
         }
 
         public static int paramCount = 0;
+
         /// <summary>
-        /// 
+        /// 生成下一个参数
         /// </summary>
         /// <returns></returns>
         public static int GetNewParamCount()
         {
-            if (paramCount >= 9999)
+            if (paramCount >= 999999)
             {
-                paramCount = 0;
+                Interlocked.Exchange(ref paramCount, 0);
             }
-            paramCount++;
+
+            Interlocked.Increment(ref paramCount);
+
             return paramCount;
         }
 

@@ -62,7 +62,7 @@ namespace WEF.Test
                 Console.WriteLine($"DBTicketOrder数据插入成功,{dbtickerOrder.C_price}");
 
 
-                var newdbtickerOrder = new DBTicketOrderRepository().Search().Where(b => b.C_id == c_id).ToFirstDefault();
+                var newdbtickerOrder = new DBTicketOrderRepository().Search().Where(b => b.C_amount >= 0 && b.C_amount < 100).ToFirstDefault();
 
                 Console.WriteLine($"DBTicketOrder数据查询成功,{newdbtickerOrder.C_price}");
 
