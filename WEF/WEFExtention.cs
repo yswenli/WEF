@@ -1237,6 +1237,68 @@ namespace WEF
             return list;
         }
 
+
+        /// <summary>
+        /// 填充实体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="t1"></param>
+        /// <param name="allowNull"></param>
+        /// <returns></returns>
+        public static T FillModel<T>(this object t1, bool allowNull = false) where T: class, new()
+        {
+            T t2 = default(T);
+
+            if (t1 != null)
+            {
+                var type1 = t1.GetType();
+                var type2 = typeof(T);
+
+                t2 = Activator.CreateInstance<T>();
+
+                var properties1 = type1.GetProperties();
+                var properties2 = type2.GetProperties();
+
+                if (!allowNull)
+                {
+                    foreach (var item in properties1)
+                    {
+                        var v1 = item.GetValue(t1, null);
+
+                        if (v1 != null)
+                        {
+                            var p2 = properties2.Where(b => b.Name == item.Name).FirstOrDefault();
+
+                            if (p2 != null)
+                            {
+                                if (item.PropertyType == p2.PropertyType)
+                                {
+                                    p2.SetValue(t2, v1, null);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var item in properties1)
+                    {
+                        var v1 = item.GetValue(t1, null);
+
+                        var p2 = properties2.Where(b => b.Name == item.Name).FirstOrDefault();
+
+                        if (p2 != null)
+                        {
+                            if (item.PropertyType == p2.PropertyType)
+                            {
+                                p2.SetValue(t2, v1, null);
+                            }
+                        }
+                    }
+                }
+            }
+            return t2;
+        }
         #endregion
 
         #region 连接字符串处理

@@ -365,7 +365,9 @@ namespace WEF.Test.Models
         /// </summary>
         public int Delete(ArticleKind obj)
         {
-            return db.Delete(obj);
+            obj.Attach(EntityState.Deleted);
+            return db.Save(obj);
+            //return db.Delete(obj);
         }
         /// <summary>
         /// 删除实体

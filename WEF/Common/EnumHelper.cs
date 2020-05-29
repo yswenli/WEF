@@ -68,7 +68,7 @@ namespace WEF.Common
         /// <summary>
         /// 标记为不做任何数据库操作。
         /// </summary>
-        Unchanged = 2,
+        Default = 2,
         /// <summary>
         /// 标记为插入状态。.Save()触发。
         /// </summary>

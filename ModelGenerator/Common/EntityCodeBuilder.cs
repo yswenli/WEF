@@ -116,14 +116,18 @@ namespace WEF.ModelGenerator.Common
             plus.AppendLine("//     不建议手动更改此代码，如有需要请自行扩展partial类");
             plus.AppendLine("// </auto-generated>");
             plus.AppendLine("//------------------------------------------------------------------------------");
+
             plus.AppendLine();
             plus.AppendLine();
+
+
             plus.AppendLine("using System;");
+            plus.AppendLine("using System.Collections.Generic;");
+            plus.AppendLine("using System.Data.Common;");
             plus.AppendLine("using System.Runtime.Serialization;");
-            plus.AppendLine("using WEF;");
             plus.AppendLine("using WEF.Common;");
             plus.AppendLine("using WEF.Section;");
-            plus.AppendLine("using System.Collections.Generic;");
+
             plus.AppendLine();
             plus.AppendLine("namespace " + NameSpace);
             plus.AppendLine("{");
@@ -299,7 +303,7 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(1, "/// <summary>");
             plus.AppendSpaceLine(1, "/// 实体类" + ClassName + "操作类");
             plus.AppendSpaceLine(1, "/// </summary>");
-            plus.AppendSpaceLine(1, "public partial class " + ClassName + "Repository: IRepository<"+ ClassName + ">");
+            plus.AppendSpaceLine(1, "public partial class " + ClassName + "Repository: IRepository<" + ClassName + ">");
             plus.AppendSpaceLine(1, "{");
             plus.AppendSpaceLine(2, "DBContext db;");
             plus.AppendSpaceLine(2, "/// <summary>");
@@ -406,30 +410,30 @@ namespace WEF.ModelGenerator.Common
 
             plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 添加实体");
-            plus.AppendSpaceLine(2, "/// <param name=\"obj\">传进的实体</param>");
+            plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public int Insert(" + ClassName + " obj)");
+            plus.AppendSpaceLine(2, "public int Insert(" + ClassName + " entity)");
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return db.Insert(obj);");
+            plus.AppendSpaceLine(3, "return db.Insert(entity);");
             plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 更新实体");
-            plus.AppendSpaceLine(2, "/// <param name=\"obj\">传进的实体</param>");
+            plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public int Update(" + ClassName + " obj)");
+            plus.AppendSpaceLine(2, "public int Update(" + ClassName + " entity)");
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return db.Update(obj);");
+            plus.AppendSpaceLine(3, "return db.Update(entity);");
             plus.AppendSpaceLine(2, "}");
 
 
             plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 删除实体");
-            plus.AppendSpaceLine(2, "/// <param name=\"obj\">传进的实体</param>");
+            plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public int Delete(" + ClassName + " obj)");
+            plus.AppendSpaceLine(2, "public int Delete(" + ClassName + " entity)");
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return db.Delete(obj);");
+            plus.AppendSpaceLine(3, "return db.Delete(entity);");
             plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");
@@ -439,18 +443,61 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, $"public int Delete({identityColumn.DataTypeName} {identityColumn.Name})");
 
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, $"var obj = Search().Where(b => b.{identityColumn.Name} == {identityColumn.Name}).First();");
-            plus.AppendSpaceLine(3, "if (obj == null) return -1;");
-            plus.AppendSpaceLine(3, "return db.Delete(obj);");
+            plus.AppendSpaceLine(3, $"var entity = Search().Where(b => b.{identityColumn.Name} == {identityColumn.Name}).First();");
+            plus.AppendSpaceLine(3, "if (entity == null) return -1;");
+            plus.AppendSpaceLine(3, "entity.Attach(EntityState.Deleted);");
+            plus.AppendSpaceLine(3, "return db.Save(entity);");
             plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 批量删除实体");
             plus.AppendSpaceLine(2, "/// <param name=\"obj\">传进的实体列表</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public int Deletes(List<" + ClassName + "> objs)");
+            plus.AppendSpaceLine(2, "public int Deletes(List<" + ClassName + "> entities)");
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return db.Delete<" + ClassName + ">(objs);");
+            plus.AppendSpaceLine(3, "return db.Delete<" + ClassName + ">(entities);");
+            plus.AppendSpaceLine(2, "}");
+
+
+            plus.AppendSpaceLine(2, "/// <summary>");
+            plus.AppendSpaceLine(2, "/// 持久化实体");
+            plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
+            plus.AppendSpaceLine(2, "/// </summary>");
+            plus.AppendSpaceLine(2, "public int Save(" + ClassName + " entity)");
+            plus.AppendSpaceLine(2, "{");
+            plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(entity);");
+            plus.AppendSpaceLine(2, "}");
+
+
+            plus.AppendSpaceLine(2, "/// <summary>");
+            plus.AppendSpaceLine(2, "/// 批量持久化实体");
+            plus.AppendSpaceLine(2, "/// <param name=\"entities\">传进的实体列表</param>");
+            plus.AppendSpaceLine(2, "/// </summary>");
+            plus.AppendSpaceLine(2, "public int Save(List<" + ClassName + "> entities)");
+            plus.AppendSpaceLine(2, "{");
+            plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(entities);");
+            plus.AppendSpaceLine(2, "}");
+
+
+            plus.AppendSpaceLine(2, "/// <summary>");
+            plus.AppendSpaceLine(2, "/// 持久化实体");
+            plus.AppendSpaceLine(2, "/// <param name=\"tran\">事务</param>");
+            plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
+            plus.AppendSpaceLine(2, "/// </summary>");
+            plus.AppendSpaceLine(2, "public int Save(DbTransaction tran," + ClassName + " entity)");
+            plus.AppendSpaceLine(2, "{");
+            plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(tran, entity);");
+            plus.AppendSpaceLine(2, "}");
+
+
+            plus.AppendSpaceLine(2, "/// <summary>");
+            plus.AppendSpaceLine(2, "/// 批量持久化实体");
+            plus.AppendSpaceLine(2, "/// <param name=\"tran\">事务</param>");
+            plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体列表</param>");
+            plus.AppendSpaceLine(2, "/// </summary>");
+            plus.AppendSpaceLine(2, "public int Save(DbTransaction tran, List<" + ClassName + "> entities)");
+            plus.AppendSpaceLine(2, "{");
+            plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(tran, entities);");
             plus.AppendSpaceLine(2, "}");
 
 

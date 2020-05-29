@@ -1189,7 +1189,9 @@ namespace WEF.Models
         /// </summary>
         public int Delete(DBGift obj)
         {
-            return db.Delete(obj);
+            obj.Attach(EntityState.Deleted);
+            return db.Save(obj);
+            //return db.Delete(obj);
         }
         /// <summary>
         /// 删除实体

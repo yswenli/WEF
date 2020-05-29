@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using WEF.Common;
 using WEF.Expressions;
 using WEF.Models;
 
@@ -49,8 +50,11 @@ namespace WEF.Test
                 C_discountrate = 90F,
                 C_activityName = "asdfasd",
                 C_productName = "asdfed",
+                C_resv1 ="hello",
                 C_created = DateTime.Now
             };
+
+            
 
 
             var c_price = (decimal)(((float)dbtickerOrder.C_amount) * dbtickerOrder.C_discountrate / 100F);
@@ -61,12 +65,15 @@ namespace WEF.Test
             {
                 Console.WriteLine($"DBTicketOrder数据插入成功,{dbtickerOrder.C_price}");
 
+                var newdbtickerOrder = new DBTicketOrderRepository().GetDBTicketOrder(dbtickerOrder.C_id);
 
-                var newdbtickerOrder = new DBTicketOrderRepository().Search().Where(b => b.C_amount >= 0 && b.C_amount < 100).ToFirstDefault();
+                var newdbtickerOrder22 = newdbtickerOrder.FillModel<DBTicketOrder>(false);
 
                 Console.WriteLine($"DBTicketOrder数据查询成功,{newdbtickerOrder.C_price}");
 
                 newdbtickerOrder.C_updated = DateTime.Now;
+
+                newdbtickerOrder.C_resv1 = null;
 
                 if (new DBTicketOrderRepository().Update(newdbtickerOrder) > 0)
                 {

@@ -29,7 +29,7 @@ namespace WEF.Common
     /// <summary>
     /// 实体帮助类
     /// </summary>
-    public class EntityUtils
+    public static class EntityUtils
     {
         /// <summary>
         /// 为Entity赋值
@@ -465,6 +465,8 @@ namespace WEF.Common
             }
 
         }
+
+
         private static readonly MethodInfo Object_ToString = typeof(object).GetMethod("ToString");
         private static readonly MethodInfo Reader_Read = typeof(IDataReader).GetMethod("Read");
         private static readonly MethodInfo Reader_GetValues = typeof(IDataRecord).GetMethod("GetValues", new Type[] { typeof(object[]) });
@@ -498,6 +500,8 @@ namespace WEF.Common
         private static readonly MethodInfo Convert_ToNullGuid = typeof(DBConvert).GetMethod("ToNGuid", new Type[] { typeof(object) });
         private delegate T ReadEntityInvoker<T>(IDataReader dr);
         private static Dictionary<string, DynamicMethod> m_CatchMethod;
+
+
         private static void ConvertValue(ILGenerator ilg, Type pi)//PropertyInfo pi
         {
             TypeCode code = Type.GetTypeCode(pi);
@@ -598,7 +602,11 @@ namespace WEF.Common
             }
             throw new Exception(string.Format("不支持\"{0}\"类型的转换！", pi.Name));
         }
+
+
         static readonly Dictionary<Type, DbType> typeMap;
+
+
         static EntityUtils()
         {
             typeMap = new Dictionary<Type, DbType>();
@@ -640,7 +648,13 @@ namespace WEF.Common
             FastExpandoDescriptionProvider provider = new FastExpandoDescriptionProvider();
             TypeDescriptor.AddProvider(provider, typeof(FastExpando));
         }
+
+
+
         private const string LinqBinary = "System.Data.Linq.Binary";
+
+
+
         /// <summary>
         ///// 
         /// </summary>
@@ -663,12 +677,15 @@ namespace WEF.Common
                 return GetTypeDeserializer(type, reader, startBound, length, returnNullIfFirstMissing);
             }
             return GetStructDeserializer(type, startBound);
-        }/// <summary>
-         /// 
-         /// </summary>
-         /// <param name="type"></param>
-         /// <param name="index"></param>
-         /// <returns></returns>
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
         private static Func<IDataReader, object> GetStructDeserializer(Type type, int index)
         {
             if (type == typeof(char))
@@ -705,6 +722,7 @@ namespace WEF.Common
                 return val is DBNull ? null : val;
             };
         }
+
         class PropInfo
         {
             public string Name
@@ -719,11 +737,13 @@ namespace WEF.Common
             {
                 get; set;
             }
-        }/// <summary>
-         /// 
-         /// </summary>
-         /// <param name="t"></param>
-         /// <returns></returns>
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         static List<PropInfo> GetSettableProps(Type t)
         {
             return t
@@ -737,19 +757,23 @@ namespace WEF.Common
                   })
                   .Where(info => info.Setter != null)
                   .ToList();
-        }/// <summary>
-         /// 
-         /// </summary>
-         /// <param name="t"></param>
-         /// <returns></returns>
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         static List<FieldInfo> GetSettableFields(Type t)
         {
             return t.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).ToList();
-        }/// <summary>
-         /// 
-         /// </summary>
-         /// <param name="il"></param>
-         /// <param name="value"></param>
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="il"></param>
+        /// <param name="value"></param>
         private static void EmitInt32(ILGenerator il, int value)
         {
             switch (value)
@@ -1005,6 +1029,8 @@ namespace WEF.Common
             il.Emit(OpCodes.Ret);
             return (Func<IDataReader, object>)dm.CreateDelegate(typeof(Func<IDataReader, object>));
         }
+
+
         static MethodInfo GetOperator(Type from, Type to)
         {
             if (to == null)
@@ -1016,6 +1042,8 @@ namespace WEF.Common
                 ?? ResolveOperator(toMethods, from, to, "op_Explicit");
 
         }
+
+
         static MethodInfo ResolveOperator(MethodInfo[] methods, Type from, Type to, string name)
         {
             for (int i = 0; i < methods.Length; i++)
@@ -1029,6 +1057,8 @@ namespace WEF.Common
             }
             return null;
         }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -1190,6 +1220,8 @@ namespace WEF.Common
                 return new PropertyDescriptorCollection(customFields.ToArray());
             }
         }
+
+
         class DynamicPropertyDescriptor : PropertyDescriptor
         {
             Type propertyType = typeof(object);

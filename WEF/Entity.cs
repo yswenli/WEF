@@ -68,7 +68,7 @@ namespace WEF
         [XmlIgnore]
         [NonSerialized]
         [ScriptIgnore]
-        private EntityState _entityState = EntityState.Unchanged;
+        private EntityState _entityState = EntityState.Default;
         /// <summary>
         /// select *。用于Lambda写法实现 select * 。注：表中不得含有字段名为All。
         /// </summary>
@@ -181,18 +181,7 @@ namespace WEF
         public void DeAttach()
         {
             _isAttached = false;
-            _entityState = EntityState.Unchanged;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="f"></param>
-        public void OnPropertyValueChange(string f)
-        {
-            if (_isAttached)
-            {
-                _modifyFieldsStr.Add(f);
-            }
+            _entityState = EntityState.Default;
         }
 
         /// <summary>
@@ -214,11 +203,13 @@ namespace WEF
                         if (GetIdentityField().FieldName != field.FieldName)
                         {
                             _modifyFields.Add(new ModifyField(field, oldValue, newValue));
+                            _modifyFieldsStr.Add(field.Name);
                         }
                     }
                     else
                     {
                         _modifyFields.Add(new ModifyField(field, oldValue, newValue));
+                        _modifyFieldsStr.Add(field.Name);
                     }
                 }
             }
