@@ -148,23 +148,22 @@ namespace WEF
         #endregion
 
         #region Convert
-
         /// <summary>
         /// 转换成另外一个实体
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
+        /// <param name="targetType"></param>
         /// <param name="convertMatchType"></param>
         /// <returns></returns>
-        public static T ConvertTo<T>(this object source, ConvertMatchType convertMatchType = ConvertMatchType.IgnoreCase) where T : class
+        public static object ConvertTo(this object source, Type targetType, ConvertMatchType convertMatchType = ConvertMatchType.IgnoreCase)
         {
             if (source != null && source.GetType().IsClass)
             {
                 var sourceProperties = source.GetType().GetProperties();
 
-                var type = typeof(T);
+                var type = targetType;
 
-                var target = (T)Activator.CreateInstance(type);
+                var target = Activator.CreateInstance(targetType);
 
                 var targetProperties = type.GetProperties();
 
@@ -1072,7 +1071,19 @@ namespace WEF
                 }
                 return target;
             }
-            return default(T);
+            return null;
+        }
+
+        /// <summary>
+        /// 转换成另外一个实体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="convertMatchType"></param>
+        /// <returns></returns>
+        public static T ConvertTo<T>(this object source, ConvertMatchType convertMatchType = ConvertMatchType.IgnoreCase) where T : class
+        {
+            return (T)source.ConvertTo(typeof(T), convertMatchType);
         }
 
         /// <summary>
@@ -1101,6 +1112,26 @@ namespace WEF
                 }
             }
             return null;
+        }
+
+        #endregion
+
+
+        #region Fill
+
+        /// <summary>
+        /// 从某个模型中填充当前实体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="target"></param>
+        /// <param name="convertMatchType"></param>
+        /// <param name="allowNull"></param>
+        public static bool FillFrom<T>(this IEntity entity, T target, ConvertMatchType convertMatchType = ConvertMatchType.IgnoreCase, bool allowNull = true) where T : class, new()
+        {
+            var s = target.ConvertTo<IEntity>(convertMatchType);
+
+            return FillModel(s, ref entity, allowNull);
         }
 
         #endregion
@@ -1225,6 +1256,7 @@ namespace WEF
         public static List<TEntity> DataTableToEntityList<TEntity>(this DataTable dt) where TEntity : Entity
         {
             List<TEntity> list = new List<TEntity>();
+
             if ((dt == null) || (dt.Rows.Count == 0))
                 return list;
 
@@ -1239,35 +1271,50 @@ namespace WEF
 
 
         /// <summary>
-        /// 填充实体
+        /// 填充模型
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="t1"></param>
+        /// <param name="source"></param>
+        /// <param name="t2"></param>
         /// <param name="allowNull"></param>
         /// <returns></returns>
-        public static T FillModel<T>(this object t1, bool allowNull = false) where T: class, new()
+        public static bool FillModel<T>(this T source, ref T t2, bool allowNull = false)
         {
-            T t2 = default(T);
-
-            if (t1 != null)
+            try
             {
-                var type1 = t1.GetType();
-                var type2 = typeof(T);
-
-                t2 = Activator.CreateInstance<T>();
-
-                var properties1 = type1.GetProperties();
-                var properties2 = type2.GetProperties();
-
-                if (!allowNull)
+                if (source != null)
                 {
-                    foreach (var item in properties1)
-                    {
-                        var v1 = item.GetValue(t1, null);
+                    var type = source.GetType();
 
-                        if (v1 != null)
+                    var properties = type.GetProperties();
+
+                    if (!allowNull)
+                    {
+                        foreach (var item in properties)
                         {
-                            var p2 = properties2.Where(b => b.Name == item.Name).FirstOrDefault();
+                            var v1 = item.GetValue(source, null);
+
+                            if (v1 != null)
+                            {
+                                var p2 = properties.Where(b => b.Name == item.Name).FirstOrDefault();
+
+                                if (p2 != null)
+                                {
+                                    if (item.PropertyType == p2.PropertyType)
+                                    {
+                                        p2.SetValue(t2, v1, null);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in properties)
+                        {
+                            var v1 = item.GetValue(source, null);
+
+                            var p2 = properties.Where(b => b.Name == item.Name).FirstOrDefault();
 
                             if (p2 != null)
                             {
@@ -1279,25 +1326,13 @@ namespace WEF
                         }
                     }
                 }
-                else
-                {
-                    foreach (var item in properties1)
-                    {
-                        var v1 = item.GetValue(t1, null);
-
-                        var p2 = properties2.Where(b => b.Name == item.Name).FirstOrDefault();
-
-                        if (p2 != null)
-                        {
-                            if (item.PropertyType == p2.PropertyType)
-                            {
-                                p2.SetValue(t2, v1, null);
-                            }
-                        }
-                    }
-                }
+                return true;
             }
-            return t2;
+            catch
+            {
+
+            }
+            return false;
         }
         #endregion
 

@@ -67,8 +67,6 @@ namespace WEF.Test
 
                 var newdbtickerOrder = new DBTicketOrderRepository().GetDBTicketOrder(dbtickerOrder.C_id);
 
-                var newdbtickerOrder22 = newdbtickerOrder.FillModel<DBTicketOrder>(false);
-
                 Console.WriteLine($"DBTicketOrder数据查询成功,{newdbtickerOrder.C_price}");
 
                 newdbtickerOrder.C_updated = DateTime.Now;

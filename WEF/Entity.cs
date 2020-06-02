@@ -24,10 +24,10 @@ using WEF.Common;
 namespace WEF
 {
     /// <summary>
-    /// 实体信息
+    /// WEF 实体信息
     /// </summary>
     [Serializable, DataContract]
-    public class Entity
+    public class Entity : IEntity
     {
         /// <summary>
         /// 表名
