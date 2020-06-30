@@ -81,6 +81,15 @@ namespace WEF.ModelGenerator.Properties {
         }
         
         /// <summary>
+        ///   查找类似 select COUNT(*) sum, name from(select id,SUBSTRING(test.name, number ,CHARINDEX(&apos;,&apos;,test.name+&apos;,&apos;,number)-number) name from test,master..spt_values s where s.number &gt;=1 and s.type = &apos;P&apos; and SUBSTRING(&apos;,&apos;+test.name,s.number,1) = &apos;,&apos;)test group by name order by sum desc 的本地化字符串。
+        /// </summary>
+        internal static string 分割字段并分组统计 {
+            get {
+                return ResourceManager.GetString("分割字段并分组统计", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 oracle 分页
         ///
         ///SELECT *

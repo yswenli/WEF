@@ -18,6 +18,7 @@
  *****************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -26,7 +27,7 @@ using System.Windows.Forms;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Controls;
 
-namespace WEF.ModelGenerator
+namespace WEF.ModelGenerator.Forms
 {
     public partial class SQLForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {
@@ -255,6 +256,8 @@ namespace WEF.ModelGenerator
             });
         }
 
+        #region 快捷菜单
+
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var cells = dataGridView1.SelectedCells;
@@ -278,5 +281,17 @@ namespace WEF.ModelGenerator
                 Clipboard.SetText(sb.ToString());
             }
         }
+
+        private void exportDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var cells = dataGridView1.SelectedCells;
+            if (cells != null)
+            {
+                new SQLExportForm((DataTable)dataGridView1.DataSource).ShowDialog();
+            }
+        }
+
+        #endregion
+
     }
 }

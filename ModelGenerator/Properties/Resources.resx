@@ -320,4 +320,7 @@ mysql分页
 
 select * from orders_history where type=8 order by id limit 10000,10;</value>
   </data>
+  <data name="分割字段并分组统计" xml:space="preserve">
+    <value>select COUNT(*) sum, name from(select id,SUBSTRING(test.name, number ,CHARINDEX(',',test.name+',',number)-number) name from test,master..spt_values s where s.number &gt;=1 and s.type = 'P' and SUBSTRING(','+test.name,s.number,1) = ',')test group by name order by sum desc</value>
+  </data>
 </root>
