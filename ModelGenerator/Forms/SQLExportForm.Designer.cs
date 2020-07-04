@@ -32,11 +32,12 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(53, 56);
+            this.button1.Location = new System.Drawing.Point(53, 31);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(147, 55);
             this.button1.TabIndex = 0;
@@ -46,7 +47,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(269, 56);
+            this.button2.Location = new System.Drawing.Point(269, 31);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(147, 55);
             this.button2.TabIndex = 0;
@@ -58,11 +59,21 @@
             // 
             this.saveFileDialog1.DefaultExt = "*.xls";
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(53, 121);
+            this.progressBar1.MarqueeAnimationSpeed = 10;
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(363, 23);
+            this.progressBar1.TabIndex = 1;
+            this.progressBar1.Visible = false;
+            // 
             // SQLExportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(463, 179);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -81,5 +92,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }

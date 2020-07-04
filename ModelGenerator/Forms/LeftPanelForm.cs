@@ -24,6 +24,7 @@ using System.Windows.Forms;
 using WEF.DbDAL;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.DbSelect;
+using WEF.ModelGenerator.Forms;
 using WEF.ModelGenerator.Model;
 using WEF.NoSql;
 
@@ -895,6 +896,7 @@ namespace WEF.ModelGenerator
             bf.ShowDialog();
         }
 
+        #region tree菜单
         private void 执行SQLToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSQLForm();
@@ -909,6 +911,16 @@ namespace WEF.ModelGenerator
             TreeNode node = Treeview.SelectedNode;
             Clipboard.SetText(node.Text);
         }
+
+        private void exportDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TreeNode node = Treeview.SelectedNode;
+            if (node != null && !string.IsNullOrEmpty(node.Text) && node.Level == 4)
+            {
+                ShowSQLExportForm();
+            }
+        }
+        #endregion
 
         public void ShowSQLForm()
         {
@@ -952,6 +964,36 @@ namespace WEF.ModelGenerator
             #endregion
 
             newsqlForm?.Invoke(conModel);
+        }
+
+        public void ShowSQLExportForm()
+        {
+            TreeNode node = Treeview.SelectedNode;
+
+            Connection conModel = null;
+
+            conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
+            conModel.Database = node.Parent.Parent.Text;
+
+            #region mysql
+            var index1 = conModel.ConnectionString.IndexOf("database=");
+
+            if (index1 > 0)
+            {
+                var str1 = conModel.ConnectionString.Substring(0, index1);
+
+                var str2 = conModel.ConnectionString.Substring(index1);
+
+                var index2 = str2.IndexOf(";");
+
+                str2 = str2.Substring(index2 + 1);
+
+                conModel.ConnectionString = $"{str1}database={conModel.Database};{str2}";
+            }
+
+            #endregion
+
+            new SQLExportForm(conModel, node.Text).ShowDialog(this);
         }
 
         /// <summary>
@@ -1007,6 +1049,7 @@ namespace WEF.ModelGenerator
         {
 
         }
+
 
         #endregion
 

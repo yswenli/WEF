@@ -154,6 +154,7 @@ namespace WEF.ModelGenerator
 
             if (MessageBox.Show("确定要退出WEF数据库工具吗？", "WEF数据库工具", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                notifyIcon1.Dispose();
                 Environment.Exit(0);
             }
         }

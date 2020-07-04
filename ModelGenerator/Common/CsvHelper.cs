@@ -15,16 +15,23 @@
 *版 本 号： V1.0.0.0
 *描    述：
 *****************************************************************************/
+using System;
 using System.Data;
 using System.IO;
 using System.Text;
+using WEF.ModelGenerator.Model;
 
 namespace WEF.ModelGenerator.Common
 {
     class CsvHelper
     {
-        public static void CSV(string filename, DataTable dt)
+        public static event Action OnStart;
+        public static event Action<long, long> OnRunning;
+        public static event Action OnStop;
+
+        public static void CSV(DataTable dt, string filename)
         {
+            OnStart?.Invoke();
             using (StringWriter sw = new StringWriter())
             {
                 StringBuilder sb = new StringBuilder();
@@ -73,6 +80,12 @@ namespace WEF.ModelGenerator.Common
             cellStr = cellStr.Replace(",", "，").Trim();
             cellStr = cellStr.Replace("\"", "\"\"");
             return "\"" + cellStr + "\"" + ",";
+        }
+
+
+        public static void CSV(Connection cnn, string tableName,string fileName)
+        {
+            //todo
         }
     }
 }

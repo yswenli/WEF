@@ -17,15 +17,22 @@
 *****************************************************************************/
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using System;
 using System.Data;
 using System.IO;
+using WEF.ModelGenerator.Model;
 
 namespace WEF.ModelGenerator.Common
 {
     class ExcelHelper
     {
+        public static event Action OnStart;
+        public static event Action<long, long> OnRunning;
+        public static event Action OnStop;
+
         public static void DataTableToExcel(DataTable dt, string fileName, string sheetName = "sheet1")
         {
+            OnStart?.Invoke();
             var workbook = new HSSFWorkbook();//创建Workbook对象
             var styleTitle = workbook.CreateCellStyle();
             IFont font = workbook.CreateFont();
@@ -56,7 +63,7 @@ namespace WEF.ModelGenerator.Common
                     row.CreateCell(j).SetCellValue(rowValue);
                 }
             }
-
+            OnRunning?.Invoke(dt.Rows.Count, 0);
             using (var fs = File.Open(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             {
                 using (MemoryStream ms = new MemoryStream())
@@ -67,7 +74,13 @@ namespace WEF.ModelGenerator.Common
                     fs.WriteAsync(buffer, 0, buffer.Length);
                 }
             }
+            OnStop?.Invoke();
         }
 
+
+        public static void DataTableToExcel(Connection cnn,string tableName,string fileName)
+        {
+            //todo
+        }
     }
 }
