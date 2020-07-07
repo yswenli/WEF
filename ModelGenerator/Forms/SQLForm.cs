@@ -93,166 +93,133 @@ namespace WEF.ModelGenerator.Forms
 
             Task.Factory.StartNew(() =>
             {
-                WEF.DbDAL.IDbObject dbObject = null;
+                try
+                {
+                    WEF.DbDAL.IDbObject dbObject = DBObjectHelper.GetDBObject(ConnectionModel);
 
-                if (ConnectionModel.DbType.Equals(DatabaseType.SqlServer.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.SQL2000.DbObject(ConnectionModel.ConnectionString);
-                }
-                else if (ConnectionModel.DbType.Equals(DatabaseType.SqlServer9.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.SQL2005.DbObject(ConnectionModel.ConnectionString);
-                }
-                else if (ConnectionModel.DbType.Equals(DatabaseType.MsAccess.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.OleDb.DbObject(ConnectionModel.ConnectionString);
-                }
-                else if (ConnectionModel.DbType.Equals(DatabaseType.Oracle.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.Oracle.DbObject(ConnectionModel.ConnectionString);
-                }
-                else if (ConnectionModel.DbType.Equals(DatabaseType.Sqlite3.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.SQLite.DbObject(ConnectionModel.ConnectionString);
-                }
-                else if (ConnectionModel.DbType.Equals(DatabaseType.MySql.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.MySql.DbObject(ConnectionModel.ConnectionString);
-                }
-                else if (ConnectionModel.DbType.Equals(DatabaseType.MariaDB.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.MySql.DbObject(ConnectionModel.ConnectionString);
-                }
-                else if (ConnectionModel.DbType.Equals(DatabaseType.PostgreSQL.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.PostgreSQL.DbObject(ConnectionModel.ConnectionString);
-                }
-                else
-                {
-                    LoadForm.HideLoading(1);
-                    this.Invoke(new Action(() =>
+                    if (string.IsNullOrEmpty(sql))
                     {
-                        MessageBox.Show(this, "不支持的数据库类型!");
-                    }));
-                    return;
-                }
+                        LoadForm.HideLoading(1);
 
-                if (string.IsNullOrEmpty(sql))
-                {
-                    LoadForm.HideLoading(1);
-
-                    this.Invoke(new Action(() =>
-                    {
-                        MessageBox.Show(this, "sql内容不能为空!");
-                    }));
-
-                    return;
-                }
-
-                this.Invoke(new Action(() =>
-                {
-                    if (!string.IsNullOrWhiteSpace(AutoTextBox.TextBox.SelectedText))
-                    {
-                        sql = AutoTextBox.TextBox.SelectedText.Trim();
-
-                        if (string.IsNullOrEmpty(sql))
+                        this.Invoke(new Action(() =>
                         {
-                            LoadForm.HideLoading(1);
                             MessageBox.Show(this, "sql内容不能为空!");
-                            return;
-                        }
+                        }));
+
+                        return;
                     }
 
-                    dataGridView1.DataSource = null;
-
-                }));
-
-                if (sql.IndexOf("select", StringComparison.InvariantCultureIgnoreCase) >= 0)
-                {
-                    try
+                    this.Invoke(new Action(() =>
                     {
-                        int max = 50;
-
-                        var ds = dbObject.Query(ConnectionModel.Database, sql);
-
-                        if (ds != null && ds.Tables != null)
+                        if (!string.IsNullOrWhiteSpace(AutoTextBox.TextBox.SelectedText))
                         {
-                            var dt = ds.Tables[0];
+                            sql = AutoTextBox.TextBox.SelectedText.Trim();
 
-                            if (dt != null && dt.Rows.Count > 0)
+                            if (string.IsNullOrEmpty(sql))
                             {
-                                var count = dt.Rows.Count;
+                                LoadForm.HideLoading(1);
+                                MessageBox.Show(this, "sql内容不能为空!");
+                                return;
+                            }
+                        }
 
-                                if (count > max)
+                        dataGridView1.DataSource = null;
+
+                    }));
+
+                    if (sql.IndexOf("select", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    {
+                        try
+                        {
+                            int max = 50;
+
+                            var ds = dbObject.Query(ConnectionModel.Database, sql);
+
+                            if (ds != null && ds.Tables != null)
+                            {
+                                var dt = ds.Tables[0];
+
+                                if (dt != null && dt.Rows.Count > 0)
                                 {
-                                    for (int i = max; i < count; i++)
+                                    var count = dt.Rows.Count;
+
+                                    if (count > max)
                                     {
-                                        dt.Rows.RemoveAt(max);
-                                    }
-                                }
-
-
-                                var dList = new List<int>();
-
-                                for (int i = 0; i < dt.Columns.Count; i++)
-                                {
-                                    if (dt.Columns[i].DataType == typeof(DateTime))
-                                    {
-                                        dList.Add(i);
-                                    }
-                                }
-
-
-                                dataGridView1.Invoke(new Action(() =>
-                                {
-                                    dataGridView1.DataSource = dt;
-
-                                    if (dList.Any())
-                                    {
-                                        foreach (var item in dList)
+                                        for (int i = max; i < count; i++)
                                         {
-                                            dataGridView1.Columns[item].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
+                                            dt.Rows.RemoveAt(max);
                                         }
                                     }
 
-                                    lbl_execute.Text = $"当前显示{(max > count ? count : max)}行，影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalSeconds} 秒";
-                                }));
+
+                                    var dList = new List<int>();
+
+                                    for (int i = 0; i < dt.Columns.Count; i++)
+                                    {
+                                        if (dt.Columns[i].DataType == typeof(DateTime))
+                                        {
+                                            dList.Add(i);
+                                        }
+                                    }
+
+
+                                    dataGridView1.Invoke(new Action(() =>
+                                    {
+                                        dataGridView1.DataSource = dt;
+
+                                        if (dList.Any())
+                                        {
+                                            foreach (var item in dList)
+                                            {
+                                                dataGridView1.Columns[item].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
+                                            }
+                                        }
+
+                                        lbl_execute.Text = $"当前显示{(max > count ? count : max)}行，影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalSeconds} 秒";
+                                    }));
+                                }
                             }
+                            LoadForm.HideLoading();
                         }
-                        LoadForm.HideLoading();
-                    }
-                    catch (Exception ex)
-                    {
-                        LoadForm.HideLoading();
-                        this.Invoke(new Action(() =>
+                        catch (Exception ex)
                         {
-                            MessageBox.Show(this, $"查询发生异常，ex:" + ex.Message);
-                        }));
+                            LoadForm.HideLoading();
+                            this.Invoke(new Action(() =>
+                            {
+                                MessageBox.Show(this, $"查询发生异常，ex:" + ex.Message);
+                            }));
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            var count = dbObject.ExecuteSql(ConnectionModel.Database, sql);
+
+                            lbl_execute.Invoke(new Action(() =>
+                            {
+                                lbl_execute.Text = $"影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalMilliseconds} 毫秒";
+                            }));
+
+                            LoadForm.HideLoading();
+                        }
+                        catch (Exception ex)
+                        {
+                            LoadForm.HideLoading();
+                            this.Invoke(new Action(() =>
+                            {
+                                MessageBox.Show(this, $"操作发生异常，ex:" + ex.Message);
+                            }));
+                        }
                     }
                 }
-                else
+                catch(Exception ex)
                 {
-                    try
+                    this.Invoke(new Action(() =>
                     {
-                        var count = dbObject.ExecuteSql(ConnectionModel.Database, sql);
-
-                        lbl_execute.Invoke(new Action(() =>
-                        {
-                            lbl_execute.Text = $"影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalMilliseconds} 毫秒";
-                        }));
-
-                        LoadForm.HideLoading();
-                    }
-                    catch (Exception ex)
-                    {
-                        LoadForm.HideLoading();
-                        this.Invoke(new Action(() =>
-                        {
-                            MessageBox.Show(this, $"操作发生异常，ex:" + ex.Message);
-                        }));
-                    }
+                        MessageBox.Show(this, $"操作发生异常，ex:" + ex.Message);
+                    }));
                 }
-
             });
         }
 

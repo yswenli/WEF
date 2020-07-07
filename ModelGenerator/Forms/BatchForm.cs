@@ -47,58 +47,46 @@ namespace WEF.ModelGenerator
         /// <param name="e"></param>
         private void BatchForm_Load(object sender, EventArgs e)
         {
-            sysconfigModel = UtilsHelper.GetSysconfigModel();
-            txtNamaspace.Text = sysconfigModel.Namespace;
+            try
+            {
+                sysconfigModel = UtilsHelper.GetSysconfigModel();
 
-            var index = connectionModel.Name.IndexOf("[");
+                txtNamaspace.Text = sysconfigModel.Namespace;
 
-            if (index < 0)
-            {
-                index = connectionModel.Name.IndexOf("(");
-            }
+                var index = connectionModel.Name.IndexOf("[");
 
-            llServer.Text = connectionModel.Name.Substring(0, index);
-            llDatabaseName.Text = DatabaseName;
-            txtPath.Text = sysconfigModel.BatchDirectoryPath;
-
-
-            DataTable tablesDT = null;
-            if (ConnectionModel.DbType.Equals(DatabaseType.MsAccess.ToString()))
-            {
-                dbObject = new WEF.DbDAL.OleDb.DbObject(ConnectionModel.ConnectionString);
-            }
-            else if (ConnectionModel.DbType.Equals(DatabaseType.SqlServer.ToString()))
-            {
-                dbObject = new WEF.DbDAL.SQL2000.DbObject(ConnectionModel.ConnectionString);
-            }
-            else if (ConnectionModel.DbType.Equals(DatabaseType.SqlServer9.ToString()))
-            {
-                dbObject = new WEF.DbDAL.SQL2005.DbObject(ConnectionModel.ConnectionString);
-            }
-            else if (ConnectionModel.DbType.Equals(DatabaseType.Oracle.ToString()))
-            {
-                dbObject = new WEF.DbDAL.Oracle.DbObject(ConnectionModel.ConnectionString);
-            }
-            else if (ConnectionModel.DbType.Equals(DatabaseType.Sqlite3.ToString()))
-            {
-                dbObject = new WEF.DbDAL.SQLite.DbObject(ConnectionModel.ConnectionString);
-            }
-            else if (ConnectionModel.DbType.Equals(DatabaseType.MySql.ToString()))
-            {
-                dbObject = new WEF.DbDAL.MySql.DbObject(ConnectionModel.ConnectionString);
-            }
-
-            tablesDT = dbObject.GetTables(DatabaseName);
-            DataRow[] drs = tablesDT.Select("", "name asc");
-            if (null != drs && drs.Length > 0)
-            {
-                foreach (DataRow dr in drs)
+                if (index < 0)
                 {
-                    lbleft.Items.Add(dr[0]);
-                    tableview.Add(dr[0].ToString(), false);
+                    index = connectionModel.Name.IndexOf("(");
+                }
+
+                llServer.Text = connectionModel.Name.Substring(0, index);
+                llDatabaseName.Text = DatabaseName;
+                txtPath.Text = sysconfigModel.BatchDirectoryPath;
+
+
+                DataTable tablesDT = null;
+
+                dbObject = DBObjectHelper.GetDBObject(ConnectionModel);
+
+                tablesDT = dbObject.GetTables(DatabaseName);
+
+                DataRow[] drs = tablesDT.Select("", "name asc");
+
+                if (null != drs && drs.Length > 0)
+                {
+                    foreach (DataRow dr in drs)
+                    {
+                        lbleft.Items.Add(dr[0]);
+                        tableview.Add(dr[0].ToString(), false);
+                    }
                 }
             }
-
+            catch(Exception ex)
+            {
+                MessageBox.Show($"");
+                this.Close();
+            }
         }
 
 

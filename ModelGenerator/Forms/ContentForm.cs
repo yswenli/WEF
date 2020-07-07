@@ -80,49 +80,9 @@ namespace WEF.ModelGenerator
 
             Task.Factory.StartNew(() =>
             {
-                WEF.DbDAL.IDbObject dbObject = null;
-
-                if (ConnectionModel.DbType.Equals(DatabaseType.SqlServer.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.SQL2000.DbObject(ConnectionModel.ConnectionString);
-                }
-                else if (ConnectionModel.DbType.Equals(DatabaseType.SqlServer9.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.SQL2005.DbObject(ConnectionModel.ConnectionString);
-                }
-                else if (ConnectionModel.DbType.Equals(DatabaseType.MsAccess.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.OleDb.DbObject(ConnectionModel.ConnectionString);
-                }
-                else if (ConnectionModel.DbType.Equals(DatabaseType.Oracle.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.Oracle.DbObject(ConnectionModel.ConnectionString);
-                }
-                else if (ConnectionModel.DbType.Equals(DatabaseType.Sqlite3.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.SQLite.DbObject(ConnectionModel.ConnectionString);
-                }
-                else if (ConnectionModel.DbType.Equals(DatabaseType.MySql.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.MySql.DbObject(ConnectionModel.ConnectionString);
-                }
-                else if (ConnectionModel.DbType.Equals(DatabaseType.MongoDB.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.MySql.DbObject(ConnectionModel.ConnectionString);
-                }
-                else if (ConnectionModel.DbType.Equals(DatabaseType.PostgreSQL.ToString()))
-                {
-                    dbObject = new WEF.DbDAL.PostgreSQL.DbObject(ConnectionModel.ConnectionString);
-                }
-                else
-                {
-                    LoadForm.HideLoading(1);
-                    MessageBox.Show("未知数据库类型!");
-                    return;
-                }
+                var dbObject = DBObjectHelper.GetDBObject(ConnectionModel);
 
                 DataTable primarykeydt = dbObject.GetKeyName(DatabaseName, TableName);
-
 
                 if (primarykeydt.Rows.Count == 0)
                 {

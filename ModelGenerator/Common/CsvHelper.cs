@@ -85,7 +85,14 @@ namespace WEF.ModelGenerator.Common
 
         public static void CSV(Connection cnn, string tableName,string fileName)
         {
-            //todo
+            var dbt = (DatabaseType)Enum.Parse(typeof(DatabaseType), cnn.DbType);
+
+            switch (dbt)
+            {
+                case DatabaseType.SqlServer:
+
+                    break;
+            }
         }
     }
 }
