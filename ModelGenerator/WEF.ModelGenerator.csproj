@@ -305,6 +305,7 @@
     <Content Include="Config\sysconfig.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="db.ico" />
     <Content Include="Dlls\CSkin.dll" />
     <Content Include="Dlls\WeifenLuo.WinFormsUI.Docking.dll" />
     <Content Include="favourite.ico" />
