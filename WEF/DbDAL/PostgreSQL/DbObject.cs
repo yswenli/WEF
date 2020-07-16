@@ -50,28 +50,37 @@ namespace WEF.DbDAL.PostgreSQL
 
         }
 
-        public DataSet Query(string DbName, string SQLString)
+        public DataSet Query(string dbName, string sqlStr)
         {
             DataSet ds = new DataSet();
             using (NpgsqlConnection conn = new NpgsqlConnection(_dbconnectStr))
             {
                 conn.Open();
-                NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(SQLString, conn);
+                NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(sqlStr, conn);
                 adapter.Fill(ds, "ds");
             }
             return ds;
         }
 
-        public int ExecuteSql(string DbName, string SQLString)
+        public int ExecuteSql(string dbName, string sqlStr)
         {
             using (var conn = new NpgsqlConnection(_dbconnectStr))
             {
                 conn.Open();
-                var dbCommand = new NpgsqlCommand(SQLString, conn);
-                dbCommand.CommandText = SQLString;
+                var dbCommand = new NpgsqlCommand(sqlStr, conn);
+                dbCommand.CommandText = sqlStr;
                 int rows = dbCommand.ExecuteNonQuery();
                 return rows;
             }
+        }
+
+        public IDataReader GetDataReader(string dbName, string sqlStr)
+        {
+            var conn = new NpgsqlConnection(_dbconnectStr);
+            conn.Open();
+            var dbCommand = new NpgsqlCommand(sqlStr, conn);
+            dbCommand.CommandText = sqlStr;
+            return dbCommand.ExecuteReader(CommandBehavior.CloseConnection);
         }
 
         public DataTable GetColumnInfoList(string DbName, string TableName)
@@ -79,7 +88,7 @@ namespace WEF.DbDAL.PostgreSQL
             var sql = "SELECT ordinal_position as colorder,column_name as ColumnName,data_type as TypeName,character_maximum_length as Length,numeric_precision as Preci,numeric_scale as Scale,is_identity as IsIdentity,'' as isPK,is_nullable as cisNull,column_default as defaultVal,'' as deText FROM information_schema.columns WHERE table_schema = 'public' AND table_name = '" + TableName + "'";
             DataTable alldt = this.Query("", sql).Tables[0];
 
-            var sql2 = "select pg_attribute.attname as column_name,pg_type.typname as typename,pg_constraint.conname as pk_name from pg_constraint inner join pg_class on pg_constraint.conrelid = pg_class.oid inner join pg_attribute on pg_attribute.attrelid = pg_class.oid and pg_attribute.attnum = pg_constraint.conkey[1] inner join pg_type on pg_type.oid = pg_attribute.atttypid where pg_class.relname = '" + TableName+"' and pg_constraint.contype = 'p'";
+            var sql2 = "select pg_attribute.attname as column_name,pg_type.typname as typename,pg_constraint.conname as pk_name from pg_constraint inner join pg_class on pg_constraint.conrelid = pg_class.oid inner join pg_attribute on pg_attribute.attrelid = pg_class.oid and pg_attribute.attnum = pg_constraint.conkey[1] inner join pg_type on pg_type.oid = pg_attribute.atttypid where pg_class.relname = '" + TableName + "' and pg_constraint.contype = 'p'";
 
             DataTable keydt = Query("", sql2).Tables[0];
 
@@ -176,7 +185,7 @@ namespace WEF.DbDAL.PostgreSQL
             string sQLString = "SELECT viewname as name FROM pg_views a WHERE schemaname != 'pg_catalog' and schemaname != 'information_schema' ORDER BY viewname;";
             return this.Query("", sQLString).Tables[0];
         }
-        
+
 
         public bool DeleteTable(string DbName, string TableName)
         {

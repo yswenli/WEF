@@ -24,7 +24,7 @@ namespace WEF.ModelGenerator
             this.DialogResult = DialogResult.OK;
             if (rbSqlServer.Checked)
             {
-                databaseType = DatabaseType.SqlServer;
+                databaseType = DatabaseType.SqlServer9;
             }
             else if (rbOledb.Checked)
             {

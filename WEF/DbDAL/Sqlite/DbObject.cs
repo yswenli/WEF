@@ -145,13 +145,13 @@ namespace WEF.DbDAL.SQLite
             }
         }
 
-        public SQLiteDataReader ExecuteReader(string DbName, string strSQL)
+        public IDataReader GetDataReader(string dbName, string sqlStr)
         {
             SQLiteDataReader reader2;
             try
             {
-                this.OpenDB(DbName);
-                reader2 = new SQLiteCommand(strSQL, this._connect).ExecuteReader(CommandBehavior.CloseConnection);
+                this.OpenDB(dbName);
+                reader2 = new SQLiteCommand(sqlStr, this._connect).ExecuteReader(CommandBehavior.CloseConnection);
             }
             catch (SQLiteException exception)
             {

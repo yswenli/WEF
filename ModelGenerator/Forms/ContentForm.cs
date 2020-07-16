@@ -76,7 +76,7 @@ namespace WEF.ModelGenerator
                 this.IsView = ConnectionModel.IsView;
             }
 
-            
+
 
             Task.Factory.StartNew(() =>
             {
@@ -91,7 +91,7 @@ namespace WEF.ModelGenerator
 
                 this.Invoke(new Action(() =>
                 {
-                    cnnTxt.Text = ConnectionModel.ConnectionString;
+                    cnnTxt.Text = DBObjectHelper.GetCnnString(ConnectionModel, DatabaseName);
 
                     #region structure
 
@@ -218,6 +218,18 @@ namespace WEF.ModelGenerator
             _isOk = true;
         }
 
+        #region 代码页快捷菜单
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            txtContent.SelectAll();
+        }
+
+        private void copyToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(txtContent.Text);
+        }
+
         /// <summary>
         /// 预览界面快捷菜单保存
         /// </summary>
@@ -238,6 +250,10 @@ namespace WEF.ModelGenerator
             }
 
         }
+
+        #endregion
+
+
         /// <summary>
         /// 点击预览界面
         /// </summary>
@@ -296,26 +312,35 @@ namespace WEF.ModelGenerator
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var cells = gridColumns.SelectedCells;
-
-            if (cells != null)
+            if (contextMenuCopy.SourceControl == cnnTxt)
             {
-                StringBuilder sb = new StringBuilder();
-
-                foreach (DataGridViewCell cell in cells)
-                {
-                    if (cell == cells[cells.Count - 1])
-                    {
-                        sb.Append($"{cell.Value}");
-                    }
-                    else
-                    {
-                        sb.Append($"{cell.Value},");
-                    }
-                }
-
-                Clipboard.SetText(sb.ToString());                
+                cnnTxt.SelectAll();
+                Clipboard.SetText(cnnTxt.Text);
             }
+            else
+            {
+                var cells = gridColumns.SelectedCells;
+
+                if (cells != null)
+                {
+                    StringBuilder sb = new StringBuilder();
+
+                    foreach (DataGridViewCell cell in cells)
+                    {
+                        if (cell == cells[cells.Count - 1])
+                        {
+                            sb.Append($"{cell.Value}");
+                        }
+                        else
+                        {
+                            sb.Append($"{cell.Value},");
+                        }
+                    }
+
+                    Clipboard.SetText(sb.ToString());
+                }
+            }           
         }
+       
     }
 }

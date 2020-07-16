@@ -17,6 +17,8 @@ using System.Data.Common;
 using System.Globalization;
 using System.Text;
 using WEF.Expressions;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace WEF.Db
 {
@@ -262,7 +264,22 @@ namespace WEF.Db
             command.Transaction = transaction;
 
         }
-        private static void ConfigureParameter(DbParameter param, string name, DbType dbType, int size, ParameterDirection direction, bool nullable, byte precision, byte scale, string sourceColumn, DataRowVersion sourceVersion, object value)
+
+        /// <summary>
+        /// ConfigureParameter
+        /// </summary>
+        /// <param name="param"></param>
+        /// <param name="name"></param>
+        /// <param name="dbType"></param>
+        /// <param name="size"></param>
+        /// <param name="direction"></param>
+        /// <param name="nullable"></param>
+        /// <param name="precision"></param>
+        /// <param name="scale"></param>
+        /// <param name="sourceColumn"></param>
+        /// <param name="sourceVersion"></param>
+        /// <param name="value"></param>
+        public static void ConfigureParameter(DbParameter param, string name, DbType dbType, int size, ParameterDirection direction, bool nullable, byte precision, byte scale, string sourceColumn, DataRowVersion sourceVersion, object value)
         {
             param.DbType = dbType;
             param.Size = size;
@@ -272,13 +289,34 @@ namespace WEF.Db
             param.SourceColumn = sourceColumn;
             param.SourceVersion = sourceVersion;
         }
-        private DbParameter CreateParameter(string name, DbType dbType, int size, ParameterDirection direction, bool nullable, byte precision, byte scale, string sourceColumn, DataRowVersion sourceVersion, object value)
+
+        /// <summary>
+        /// CreateParameter
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="dbType"></param>
+        /// <param name="size"></param>
+        /// <param name="direction"></param>
+        /// <param name="nullable"></param>
+        /// <param name="precision"></param>
+        /// <param name="scale"></param>
+        /// <param name="sourceColumn"></param>
+        /// <param name="sourceVersion"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public DbParameter CreateParameter(string name, DbType dbType, int size, ParameterDirection direction, bool nullable, byte precision, byte scale, string sourceColumn, DataRowVersion sourceVersion, object value)
         {
             DbParameter param = CreateParameter(name);
             ConfigureParameter(param, name, dbType, size, direction, nullable, precision, scale, sourceColumn, sourceVersion, value);
             return param;
         }
-        private DbParameter CreateParameter(string name)
+
+        /// <summary>
+        /// CreateParameter
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        DbParameter CreateParameter(string name)
         {
             DbParameter param = dbProvider.DbProviderFactory.CreateParameter();
 
@@ -518,8 +556,9 @@ namespace WEF.Db
         /// ExecuteReader
         /// </summary>
         /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
         /// <returns></returns>
-        public IDataReader ExecuteReader(string sql)
+        public IDataReader ExecuteReader(string sql, params DbParameter[] dbParameters)
         {
             Check.Require(sql, "sql", Check.NotNullOrEmpty);
 
@@ -528,6 +567,12 @@ namespace WEF.Db
                 using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
                 {
                     PrepareCommand(command, connection);
+
+                    if (dbParameters != null && dbParameters.Any())
+                    {
+                        command.Parameters.AddRange(dbParameters);
+                    }
+
                     return ExecuteReader(command);
                 }
             }
@@ -681,8 +726,9 @@ namespace WEF.Db
         /// 执行sql 获取DataSet
         /// </summary>
         /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
         /// <returns></returns>
-        public DataSet ExecuteDataSet(string sql)
+        public DataSet ExecuteDataSet(string sql, params DbParameter[] dbParameters)
         {
             Check.Require(sql, "sql", Check.NotNullOrEmpty);
             using (DbConnection connection = GetConnection(true))
@@ -690,6 +736,10 @@ namespace WEF.Db
                 using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
                 {
                     PrepareCommand(command, connection);
+                    if (dbParameters != null && dbParameters.Any())
+                    {
+                        command.Parameters.AddRange(dbParameters);
+                    }
                     DataSet dataSet = new DataSet();
                     dataSet.Locale = CultureInfo.InvariantCulture;
                     LoadDataSet(command, dataSet, "Table");
@@ -778,7 +828,7 @@ namespace WEF.Db
         }
 
         /// <summary>
-        /// 
+        /// ExecuteScalar
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
@@ -791,6 +841,33 @@ namespace WEF.Db
                 using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
                 {
                     command.CommandTimeout = _timeout;
+                    PrepareCommand(command, connection);
+                    return DoExecuteScalar(command);
+                }
+            }
+        }
+
+        /// <summary>
+        /// ExecuteScalar
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public object ExecuteScalar(string sql, params DbParameter[] dbParameters)
+        {
+            Check.Require(sql, "sql", Check.NotNullOrEmpty);
+
+            using (DbConnection connection = GetConnection(true))
+            {
+                using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
+                {
+                    command.CommandTimeout = _timeout;
+
+                    if (dbParameters != null && dbParameters.Any())
+                    {
+                        command.Parameters.AddRange(dbParameters);
+                    }
+
                     PrepareCommand(command, connection);
                     return DoExecuteScalar(command);
                 }
@@ -919,7 +996,45 @@ namespace WEF.Db
                 }
             }
         }
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public int ExecuteNonQuery(string sql, params DbParameter[] dbParameters)
+        {
+            Check.Require(sql, "sql", Check.NotNullOrEmpty);
 
+            using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
+            {
+                command.CommandTimeout = _timeout;
+                if (IsBatchConnection)
+                {
+                    PrepareCommand(command, GetConnection(true));
+
+                    if (dbParameters != null && dbParameters.Any())
+                    {
+                        command.Parameters.AddRange(dbParameters);
+                    }
+
+                    return DoExecuteNonQuery(command);
+                }
+                else
+                {
+                    using (DbConnection connection = GetConnection(true))
+                    {
+                        PrepareCommand(command, connection);
+
+                        if (dbParameters != null && dbParameters.Any())
+                        {
+                            command.Parameters.AddRange(dbParameters);
+                        }
+                        return DoExecuteNonQuery(command);
+                    }
+                }
+            }
+        }
         /// <summary>
         /// <para>Executes the <paramref name="command"/> within the given <paramref name="transaction" />, and returns the number of rows affected.</para>
         /// </summary>

@@ -85,6 +85,7 @@ namespace WEF.ModelGenerator
                 switch (DatabaseSelect.databaseType)
                 {
                     case DatabaseType.SqlServer:
+                    case DatabaseType.SqlServer9:
                         DbSelect.DBSqlServer dbsqlserver = new WEF.ModelGenerator.DbSelect.DBSqlServer();
                         dia = dbsqlserver.ShowDialog();
                         break;

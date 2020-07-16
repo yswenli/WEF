@@ -44,37 +44,30 @@ namespace WEF.DbDAL.OleDb
             }
         }
 
-        public OleDbDataReader ExecuteReader(string strSQL)
-        {
-            OleDbDataReader reader2;
-            try
-            {
-                this.OpenDB();
-                reader2 = new OleDbCommand(strSQL, this._connect).ExecuteReader();
-            }
-            catch (OleDbException exception)
-            {
-                throw new Exception(exception.Message);
-            }
-            return reader2;
-        }
-
-        public int ExecuteSql(string DbName, string SQLString)
+        public int ExecuteSql(string dbName, string sqlStr)
         {
             this.OpenDB();
-            OleDbCommand command = new OleDbCommand(SQLString, this._connect);
-            command.CommandText = SQLString;
+            OleDbCommand command = new OleDbCommand(sqlStr, this._connect);
+            command.CommandText = sqlStr;
             return command.ExecuteNonQuery();
         }
 
-        public DataTable GetColumnInfoList(string DbName, string TableName)
+        public IDataReader GetDataReader(string dbName, string sqlStr)
+        {
+            this.OpenDB();
+            OleDbCommand command = new OleDbCommand(sqlStr, this._connect);
+            command.CommandText = sqlStr;
+            return command.ExecuteReader(CommandBehavior.CloseConnection);
+        }
+
+        public DataTable GetColumnInfoList(string dbName, string tableName)
         {
             this.OpenDB();
             object[] restrictions = new object[4];
-            restrictions[2] = TableName;
+            restrictions[2] = tableName;
             DataTable oleDbSchemaTable = this._connect.GetOleDbSchemaTable(OleDbSchemaGuid.Columns, restrictions);
             DataTable dt = this.Tab2Colum(oleDbSchemaTable);
-            DataTable primarykeydt = this.GetKeyName(DbName, TableName);
+            DataTable primarykeydt = this.GetKeyName(dbName, tableName);
             if (null != primarykeydt && primarykeydt.Rows.Count > 0)
             {
                 foreach (DataRow dr in dt.Rows)

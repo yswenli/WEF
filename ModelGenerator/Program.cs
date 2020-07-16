@@ -27,7 +27,10 @@ namespace WEF.ModelGenerator
         /// <param name="e"></param>
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
-            if (e.Exception.Message == "矩形“{X=0,Y=0,Width=0,Height=-1}”的宽度或高度不能等于零。") return;
+            if (e.Exception.Message.IndexOf("矩形") > -1) return;
+
+            if (e.Exception.Message.IndexOf("GDI+ 中发生一般性错误") > -1) return;
+
             MessageBox.Show(e.Exception.Message + "\r\n 详情请查看日志!", "出错啦!", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             if (!Directory.Exists(errorpath))

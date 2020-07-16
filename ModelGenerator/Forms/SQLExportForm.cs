@@ -43,6 +43,7 @@ namespace WEF.ModelGenerator.Forms
         {
             Connection = cnn;
             TableName = tableName;
+            button1.Enabled = false;
         }
 
         private async void button1_Click(object sender, EventArgs e)
@@ -65,13 +66,6 @@ namespace WEF.ModelGenerator.Forms
                         await Task.Run(() =>
                         {
                             ExcelHelper.DataTableToExcel(DataTable, fileName);
-                        });
-                    }
-                    else
-                    {
-                        await Task.Run(() =>
-                        {
-                            ExcelHelper.DataTableToExcel(Connection, TableName, fileName);
                         });
                     }
 

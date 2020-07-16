@@ -2269,54 +2269,94 @@ namespace WEF
         /// 执行ExecuteDataTable
         /// </summary>
         /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
         /// <returns></returns>
-        public DataTable ExecuteDataTable(string sql)
+        public DataTable ExecuteDataTable(string sql, params DbParameter[] dbParameters)
         {
-            var ds = db.ExecuteDataSet(sql);
+            var ds = db.ExecuteDataSet(sql, dbParameters);
             if (ds != null && ds.Tables.Count > 0) return ds.Tables[0];
             return null;
         }
-
         /// <summary>
-        /// 执行ExecuteDataSet
+        /// ExecuteDataSet
         /// </summary>
         /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
         /// <returns></returns>
-        public DataSet ExecuteDataSet(string sql)
+        public DataSet ExecuteDataSet(string sql, params DbParameter[] dbParameters)
         {
-            return db.ExecuteDataSet(sql);
+            return db.ExecuteDataSet(sql, dbParameters);
         }
 
         /// <summary>
-        /// 执行ExecuteNonQuery
+        /// ExecuteNonQuery
         /// </summary>
         /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
         /// <returns></returns>
-        public int ExecuteNonQuery(string sql)
+        public int ExecuteNonQuery(string sql, params DbParameter[] dbParameters)
         {
-            return db.ExecuteNonQuery(sql);
+            return db.ExecuteNonQuery(sql, dbParameters);
         }
 
+
         /// <summary>
-        /// 执行ExecuteScalar
+        /// ExecuteScalar
         /// </summary>
         /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
         /// <returns></returns>
-        public object ExecuteScalar(string sql)
+        public object ExecuteScalar(string sql, params DbParameter[] dbParameters)
         {
-            return db.ExecuteScalar(sql);
+            return db.ExecuteScalar(sql, dbParameters);
         }
 
         /// <summary>
         /// 执行ExecuteReader
         /// </summary>
         /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
         /// <returns></returns>
-        public IDataReader ExecuteReader(string sql)
+        public IDataReader ExecuteReader(string sql, params DbParameter[] dbParameters)
         {
-            return db.ExecuteReader(sql);
+            return db.ExecuteReader(sql, dbParameters);
         }
 
+        #endregion
+
+        #region 参数
+
+        /// <summary>
+        /// CreateParameter
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="dbType"></param>
+        /// <param name="size"></param>
+        /// <param name="direction"></param>
+        /// <param name="nullable"></param>
+        /// <param name="precision"></param>
+        /// <param name="scale"></param>
+        /// <param name="sourceColumn"></param>
+        /// <param name="sourceVersion"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public DbParameter CreateParameter(string name, DbType dbType, int size, ParameterDirection direction, bool nullable, byte precision, byte scale, string sourceColumn, DataRowVersion sourceVersion, object value)
+        {
+            return db.CreateParameter(name, dbType, size, direction, nullable, precision, scale, sourceColumn, sourceVersion, value);
+        }
+
+        /// <summary>
+        /// CreateParameter
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="dbType"></param>
+        /// <param name="size"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public DbParameter CreateParameter(string name, DbType dbType, int size, object value)
+        {
+            return CreateParameter(name, dbType, size, ParameterDirection.Input, true, 0, 0, String.Empty, DataRowVersion.Default, value);
+        }
         #endregion
 
         #region mvc 

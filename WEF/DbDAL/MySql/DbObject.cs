@@ -177,13 +177,22 @@ namespace WEF.DbDAL.MySql
 
         #region ADO.NET ²Ù×÷
 
-        public int ExecuteSql(string DbName, string SQLString)
+        public int ExecuteSql(string dbName, string sqlStr)
         {
-            MySqlCommand dbCommand = OpenDB(DbName);
-            dbCommand.CommandText = SQLString;
-            return dbCommand.ExecuteNonQuery();
+            using (MySqlCommand dbCommand = OpenDB(dbName))
+            {
+                dbCommand.CommandText = sqlStr;
+                return dbCommand.ExecuteNonQuery();
+            }
         }
 
+
+        public IDataReader GetDataReader(string dbName, string sqlStr)
+        {
+            MySqlCommand dbCommand = OpenDB(dbName);
+            dbCommand.CommandText = sqlStr;
+            return dbCommand.ExecuteReader(CommandBehavior.CloseConnection);
+        }
 
         public DataSet Query(string DbName, string SQLString)
         {
@@ -191,6 +200,7 @@ namespace WEF.DbDAL.MySql
             OpenDB(DbName);
             MySqlDataAdapter adapter = new MySqlDataAdapter(SQLString, _connect);
             adapter.Fill(ds, "ds");
+            adapter.Dispose();
             return ds;
         }
 

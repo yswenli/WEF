@@ -77,5 +77,51 @@ namespace WEF.ModelGenerator.Common
             }
             return dbObject;
         }
+
+        /// <summary>
+        /// 获取连接字符串
+        /// </summary>
+        /// <param name="cnn"></param>
+        /// <param name="dataBaseName"></param>
+        /// <returns></returns>
+        public static string GetCnnString(Connection cnn, string dataBaseName = "")
+        {
+            var cnnStr = cnn.ConnectionString;
+
+            if (cnn.DbType.Equals(DatabaseType.SqlServer9.ToString()) || cnn.DbType.Equals(DatabaseType.SqlServer.ToString()))
+            {
+                if (!string.IsNullOrEmpty(dataBaseName) && cnnStr.IndexOf("Initial Catalog=master;") > -1)
+                {
+                    cnnStr = cnnStr.Replace("Initial Catalog=master;", $"Initial Catalog={dataBaseName};");
+                }
+            }
+            else if (cnn.DbType.Equals(DatabaseType.MySql.ToString()))
+            {
+                if (!string.IsNullOrEmpty(dataBaseName) && cnnStr.IndexOf("database=;") > -1)
+                {
+                    cnnStr = cnnStr.Replace("database=;", $"database={dataBaseName};");
+                }
+            }
+            else if (cnn.DbType.Equals(DatabaseType.MariaDB.ToString()))
+            {
+                if (!string.IsNullOrEmpty(dataBaseName) && cnnStr.IndexOf("database=;") > -1)
+                {
+                    cnnStr = cnnStr.Replace("database=;", $"database={dataBaseName};");
+                }
+            }
+            else if (cnn.DbType.Equals(DatabaseType.PostgreSQL.ToString()))
+            {
+                if (!string.IsNullOrEmpty(dataBaseName) && cnnStr.IndexOf("Database=;") > -1)
+                {
+                    cnnStr = cnnStr.Replace("Database=;", $"Database={dataBaseName};");
+                }
+            }
+            else
+            {
+                throw new Exception($"暂不支持的数据类型[{cnn.DbType}]");
+            }
+
+            return cnnStr;
+        }
     }
 }

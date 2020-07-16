@@ -127,9 +127,18 @@ namespace WEF.DbDAL.SQL2005
 
         public int ExecuteSql(string DbName, string SQLString)
         {
-            SqlCommand command = this.OpenDB(DbName);
-            command.CommandText = SQLString;
-            return command.ExecuteNonQuery();
+            using (SqlCommand command = this.OpenDB(DbName))
+            {
+                command.CommandText = SQLString;
+                return command.ExecuteNonQuery();
+            }
+        }
+
+        public IDataReader GetDataReader(string dbName, string sqlStr)
+        {
+            SqlCommand command = this.OpenDB(dbName);
+            command.CommandText = sqlStr;
+            return command.ExecuteReader(CommandBehavior.CloseConnection);
         }
 
         public DataTable GetColumnInfoList(string DbName, string TableName)
@@ -157,7 +166,7 @@ namespace WEF.DbDAL.SQL2005
             builder.Append("Modify_Date=O.Modify_date, ");
             builder.Append("cisNull=CASE WHEN C.is_nullable=1 THEN N'√'ELSE N'' END, ");
             builder.Append("defaultVal=ISNULL(D.definition,N'') ");
-            
+
             builder.Append("FROM sys.columns C ");
             builder.Append("INNER JOIN sys.objects O ");
             builder.Append("ON C.[object_id]=O.[object_id] ");
@@ -545,7 +554,7 @@ namespace WEF.DbDAL.SQL2005
         }
 
         private bool IsDboSp()
-        {           
+        {
             return this.isdbosp;
         }
 
@@ -588,7 +597,7 @@ namespace WEF.DbDAL.SQL2005
                 new SqlDataAdapter(SQLString, this._connect).Fill(dataSet, "ds");
             }
             catch (SqlException exception)
-            {                
+            {
                 throw new Exception(exception.Message + "\n" + SQLString);
             }
             return dataSet;

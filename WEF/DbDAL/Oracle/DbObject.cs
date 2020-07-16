@@ -57,6 +57,15 @@ namespace WEF.DbDAL.Oracle
             }
         }
 
+        public IDataReader GetDataReader(string dbName, string sqlStr)
+        {
+            var oracleCon = new OracleConnection(_dbconnectStr);
+            oracleCon.Open();
+            var dbCommand = new OracleCommand(sqlStr, oracleCon);
+            dbCommand.CommandText = sqlStr;
+            return dbCommand.ExecuteReader(CommandBehavior.CloseConnection);
+        }
+
         public DataTable GetColumnInfoList(string DbName, string TableName)
         {
             StringBuilder builder = new StringBuilder();

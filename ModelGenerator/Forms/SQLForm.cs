@@ -57,7 +57,7 @@ namespace WEF.ModelGenerator.Forms
 
         private void SQLForm_Load(object sender, System.EventArgs e)
         {
-            cnnTxt.Text = ConnectionModel.ConnectionString;
+            cnnTxt.Text = DBObjectHelper.GetCnnString(ConnectionModel, ConnectionModel.Database);
 
             AutoTextBox.Dock = DockStyle.Fill;
 

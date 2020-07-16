@@ -16,9 +16,12 @@
 *描    述：
 *****************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using WEF.ModelGenerator.Model;
 
 namespace WEF.ModelGenerator.Common
@@ -48,6 +51,8 @@ namespace WEF.ModelGenerator.Common
                         try
                         {
                             sb.Append(ConvertToSaveCell(dt.Rows[i][j]));
+
+                            OnRunning.Invoke(i * dt.Columns.Count + (j + 1), dt.Rows.Count * dt.Columns.Count);
                         }
                         catch
                         {
@@ -58,14 +63,15 @@ namespace WEF.ModelGenerator.Common
                 }
                 sw.Write(Encoding.UTF8.GetString(new byte[] { (byte)0xEF, (byte)0xBB, (byte)0xBF }));
                 sw.Write(sb);
-                using(var fs = File.Open(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+                using (var fs = File.Open(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
                 {
-                    using(StreamWriter ssw=new StreamWriter(fs))
+                    using (StreamWriter ssw = new StreamWriter(fs))
                     {
                         ssw.Write(sb.ToString());
                     }
                 }
             }
+            OnStop?.Invoke();
         }
 
         /// <summary>
@@ -82,17 +88,84 @@ namespace WEF.ModelGenerator.Common
             return "\"" + cellStr + "\"" + ",";
         }
 
-
-        public static void CSV(Connection cnn, string tableName,string fileName)
+        /// <summary>
+        /// 大数据转换
+        /// </summary>
+        /// <param name="cnn"></param>
+        /// <param name="tableName"></param>
+        /// <param name="fileName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public static Task CSV(Connection cnn, string tableName, string fileName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var dbt = (DatabaseType)Enum.Parse(typeof(DatabaseType), cnn.DbType);
-
-            switch (dbt)
+            return Task.Run(() =>
             {
-                case DatabaseType.SqlServer:
+                OnStart?.Invoke();
 
-                    break;
-            }
+                var dbObj = DBObjectHelper.GetDBObject(cnn);
+
+                var reader = dbObj.GetDataReader(cnn.Database, $"select * from {tableName}");
+
+                var header = new List<string>();
+
+                var filedCount = reader.FieldCount;
+
+                if (filedCount > 0)
+                {
+                    for (int i = 0; i < filedCount; i++)
+                    {
+                        header.Add(reader.GetName(i));
+                    }
+                }
+
+                using (StringWriter sw = new StringWriter())
+                {
+                    StringBuilder sb = new StringBuilder();
+
+                    char c = ',';
+
+                    for (int i = 0; i < filedCount; i++)
+                    {
+                        sb.Append(header[i] + c);
+                    }
+                    sb.Append("\r\n");
+
+                    var rowCount = 1;
+
+                    while (reader.Read())
+                    {
+                        rowCount++;
+
+                        for (int j = 0; j < filedCount; j++)
+                        {
+                            try
+                            {
+                                sb.Append(ConvertToSaveCell(reader[j]));
+
+                                OnRunning?.Invoke(filedCount * j + rowCount, filedCount * rowCount);
+                            }
+                            catch
+                            {
+                                sb.Append(c);
+                            }
+                        }
+                        sb.Append("\r\n");
+                    }
+
+                    sw.Write(Encoding.UTF8.GetString(new byte[] { (byte)0xEF, (byte)0xBB, (byte)0xBF }));
+
+                    sw.Write(sb);
+
+                    using (var fs = File.Open(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+                    {
+                        using (StreamWriter ssw = new StreamWriter(fs))
+                        {
+                            ssw.Write(sb.ToString());
+                        }
+                    }
+                }
+                OnStop?.Invoke();
+            }, cancellationToken);
         }
     }
 }

@@ -127,9 +127,18 @@ namespace WEF.DbDAL.SQL2000
 
         public int ExecuteSql(string DbName, string SQLString)
         {
-            SqlCommand command = this.OpenDB(DbName);
-            command.CommandText = SQLString;
-            return command.ExecuteNonQuery();
+            using (SqlCommand command = this.OpenDB(DbName))
+            {
+                command.CommandText = SQLString;
+                return command.ExecuteNonQuery();
+            }
+        }
+
+        public IDataReader GetDataReader(string dbName, string sqlStr)
+        {
+            SqlCommand command = this.OpenDB(dbName);
+            command.CommandText = sqlStr;
+            return command.ExecuteReader(CommandBehavior.CloseConnection);
         }
 
         public DataTable GetColumnInfoList(string DbName, string TableName)

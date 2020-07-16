@@ -33,6 +33,8 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tp1 = new System.Windows.Forms.TabPage();
             this.gridColumns = new System.Windows.Forms.DataGridView();
+            this.contextMenuCopy = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -52,15 +54,15 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.cnnTxt = new System.Windows.Forms.TextBox();
             this.saveEntity = new System.Windows.Forms.SaveFileDialog();
-            this.contextMenuCopy = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tp1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridColumns)).BeginInit();
+            this.contextMenuCopy.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tp2.SuspendLayout();
             this.contextMenuStripSave.SuspendLayout();
-            this.contextMenuCopy.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -109,6 +111,20 @@
             this.gridColumns.RowTemplate.Height = 23;
             this.gridColumns.Size = new System.Drawing.Size(706, 315);
             this.gridColumns.TabIndex = 4;
+            // 
+            // contextMenuCopy
+            // 
+            this.contextMenuCopy.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyToolStripMenuItem});
+            this.contextMenuCopy.Name = "contextMenuCopy";
+            this.contextMenuCopy.Size = new System.Drawing.Size(101, 26);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.copyToolStripMenuItem.Text = "复制";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // groupBox1
             // 
@@ -259,9 +275,11 @@
             // contextMenuStripSave
             // 
             this.contextMenuStripSave.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.selectAllToolStripMenuItem,
+            this.copyToolStripMenuItem1,
             this.保存ToolStripMenuItem});
             this.contextMenuStripSave.Name = "contextMenuStripSave";
-            this.contextMenuStripSave.Size = new System.Drawing.Size(193, 26);
+            this.contextMenuStripSave.Size = new System.Drawing.Size(193, 70);
             // 
             // 保存ToolStripMenuItem
             // 
@@ -280,6 +298,7 @@
             // 
             // cnnTxt
             // 
+            this.cnnTxt.ContextMenuStrip = this.contextMenuCopy;
             this.cnnTxt.Dock = System.Windows.Forms.DockStyle.Top;
             this.cnnTxt.Location = new System.Drawing.Point(0, 0);
             this.cnnTxt.Name = "cnnTxt";
@@ -287,19 +306,21 @@
             this.cnnTxt.Size = new System.Drawing.Size(720, 21);
             this.cnnTxt.TabIndex = 7;
             // 
-            // contextMenuCopy
+            // selectAllToolStripMenuItem
             // 
-            this.contextMenuCopy.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyToolStripMenuItem});
-            this.contextMenuCopy.Name = "contextMenuCopy";
-            this.contextMenuCopy.Size = new System.Drawing.Size(181, 48);
+            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+            this.selectAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.selectAllToolStripMenuItem.Text = "全选";
+            this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
             // 
-            // copyToolStripMenuItem
+            // copyToolStripMenuItem1
             // 
-            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.copyToolStripMenuItem.Text = "复制";
-            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            this.copyToolStripMenuItem1.Name = "copyToolStripMenuItem1";
+            this.copyToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.copyToolStripMenuItem1.Size = new System.Drawing.Size(192, 22);
+            this.copyToolStripMenuItem1.Text = "复制";
+            this.copyToolStripMenuItem1.Click += new System.EventHandler(this.copyToolStripMenuItem1_Click);
             // 
             // ContentForm
             // 
@@ -318,11 +339,11 @@
             this.tabControl1.ResumeLayout(false);
             this.tp1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridColumns)).EndInit();
+            this.contextMenuCopy.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tp2.ResumeLayout(false);
             this.contextMenuStripSave.ResumeLayout(false);
-            this.contextMenuCopy.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -354,5 +375,7 @@
         private System.Windows.Forms.ComboBox cbPrimarykey;
         private System.Windows.Forms.ContextMenuStrip contextMenuCopy;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem1;
     }
 }
