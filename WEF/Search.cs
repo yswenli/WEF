@@ -6,8 +6,8 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************
- * 项目名称：$projectname$
- * 命名空间：WEF.Section
+ * 项目名称：WEF
+ * 命名空间：WEF
  * 类名称：Search
  * 创建时间：2017/7/26 15:31:40
  * 创建人：wenli
@@ -28,7 +28,7 @@ using WEF.Provider;
 namespace WEF
 {
     /// <summary>
-    /// 查询
+    /// DBContext的查询对象
     /// </summary>    
     public class Search : ISearch
     {
@@ -256,14 +256,13 @@ namespace WEF
         }
 
         /// <summary>
-        /// 
+        /// FromString
         /// </summary>
         internal string FromString
         {
             get
             {
                 StringBuilder fromstring = new StringBuilder();
-
 
                 //处理ACCESS 的多表联合查询
                 if (database.DbProvider is MsAccessProvider)
@@ -280,7 +279,6 @@ namespace WEF
                         fromstring.Append(kv.Value.Value.ToString());
                         fromstring.Append(")");
                     }
-
                 }
                 else
                 {
@@ -843,7 +841,9 @@ namespace WEF
             }
 
             DbCommand dbCommand = database.GetSqlStringCommand(from.CountSqlString);
+
             database.AddCommandParameter(dbCommand, from.Parameters.ToArray());
+
             int returnValue;
             if (trans == null)
                 returnValue = DataUtils.ConvertValue<int>(database.ExecuteScalar(dbCommand));

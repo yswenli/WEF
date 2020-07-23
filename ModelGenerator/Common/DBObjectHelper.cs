@@ -116,10 +116,6 @@ namespace WEF.ModelGenerator.Common
                     cnnStr = cnnStr.Replace("Database=;", $"Database={dataBaseName};");
                 }
             }
-            else
-            {
-                throw new Exception($"暂不支持的数据类型[{cnn.DbType}]");
-            }
 
             return cnnStr;
         }

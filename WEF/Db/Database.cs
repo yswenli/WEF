@@ -9,22 +9,21 @@
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
 
-using WEF.Common;
-using WEF.Provider;
 using System;
 using System.Data;
 using System.Data.Common;
 using System.Globalization;
-using System.Text;
-using WEF.Expressions;
-using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using WEF.Common;
+using WEF.Expressions;
+using WEF.Provider;
 
 namespace WEF.Db
 {
 
     /// <summary>
-    /// Database
+    /// 下拉框选择
     /// </summary>
     public sealed class Database : ILogable
     {
@@ -37,7 +36,11 @@ namespace WEF.Db
         /// </summary>
         public static Database Default = new Database(ProviderFactory.Default);
 
-
+        /// <summary>
+        /// 下拉框选择
+        /// </summary>
+        /// <param name="dbProvider"></param>
+        /// <param name="timeout"></param>
         public Database(DbProvider dbProvider, int timeout = 30)
         {
             this.dbProvider = dbProvider;

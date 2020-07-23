@@ -1,4 +1,19 @@
-﻿using System.Collections.Generic;
+﻿/*****************************************************************************************************
+ * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2019
+ *****************************************************************************************************
+ * CLR版本：4.0.30319.42000
+ * 唯一标识：1a0dd623-eae1-428c-8095-d971d079c8ab
+ * 机器名称：WENLI-PC
+ * 联系人邮箱：wenguoli_520@qq.com
+ *****************************************************************************************************
+ * 项目名称：WEF
+ * 命名空间：WEF
+ * 类名称：ISearch
+ * 创建时间：2017/7/26 15:31:40
+ * 创建人：wenli
+ * 创建说明：
+ *****************************************************************************************************/
+using System.Collections.Generic;
 using System.Data;
 using System.Web.Caching;
 using WEF.Common;
@@ -8,6 +23,9 @@ using WEF.Provider;
 
 namespace WEF
 {
+    /// <summary>
+    /// DBContext的查询对象
+    /// </summary>
     public interface ISearch
     {
         string ColumnsString { get; }

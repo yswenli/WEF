@@ -38,9 +38,9 @@ namespace WEF.ModelGenerator.Common
 
         static DockContentHelper()
         {
-            _configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "wefdp.config");
+            _configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Config", "wefdp.config");
 
-            _tempFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "wefTemp.config");
+            _tempFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Config", "wefTemp.config");
 
             _connections = new List<Connection>();
         }

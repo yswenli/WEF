@@ -1,9 +1,27 @@
-﻿using System.Linq;
+﻿/*****************************************************************************************************
+ * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2019
+ *****************************************************************************************************
+ * CLR版本：4.0.30319.42000
+ * 唯一标识：80082f38-5128-45aa-9217-d181a0bb7f92
+ * 机器名称：WENLI-PC
+ * 联系人邮箱：wenguoli_520@qq.com
+ *****************************************************************************************************
+ * 项目名称：WEF
+ * 命名空间：WEF.MvcPager
+ * 类名称：PageLinqExtensions
+ * 创建时间：2017/7/26 14:34:40
+ * 创建人：wenli
+ * 创建说明：
+ *****************************************************************************************************/
+using System.Linq;
 using System.Collections.Generic;
 using System.Data;
 
 namespace WEF.MvcPager
 {
+    /// <summary>
+    /// 分页Linq扩展
+    /// </summary>
     public static class PageLinqExtensions
     {
         public static PagedList<T> ToPagedList<T>
