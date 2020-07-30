@@ -20,7 +20,7 @@ namespace WEF.Models
     /// <summary>
     /// 实体类DBGift
     /// </summary>
-    [Serializable, DataContract, Table("tb_gift")]
+    [Serializable, DataContract, TableAttribute("tb_gift")]
     public partial class DBGift : Entity
     {
         private static string m_tableName;

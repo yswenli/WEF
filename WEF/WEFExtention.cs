@@ -1117,24 +1117,7 @@ namespace WEF
         #endregion
 
 
-        #region Fill
-
-        /// <summary>
-        /// 从某个模型中填充当前实体
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        /// <param name="target"></param>
-        /// <param name="convertMatchType"></param>
-        /// <param name="allowNull"></param>
-        public static bool FillFrom<T>(this IEntity entity, T target, ConvertMatchType convertMatchType = ConvertMatchType.IgnoreCase, bool allowNull = true) where T : class, new()
-        {
-            var s = target.ConvertTo<IEntity>(convertMatchType);
-
-            return FillModel(s, ref entity, allowNull);
-        }
-
-        #endregion
+       
 
         #region DataTable 与 Entity互相转换
 
@@ -1334,15 +1317,48 @@ namespace WEF
             }
             return false;
         }
-        #endregion
-
-        #region 连接字符串处理
 
         /// <summary>
-        /// 将sql连接符串转换成dictionary
+        /// 填充模型
         /// </summary>
-        /// <param name="connStr"></param>
+        /// <param name="source"></param>
+        /// <param name="t2"></param>
+        /// <param name="allowNull"></param>
         /// <returns></returns>
+        public static bool FillEntity<T>(this T source, ref T t2, bool allowNull = false) where T : Entity
+        {
+            var result = FillModel(source, ref t2, allowNull);
+
+            t2.ClearModifyFields();
+
+            return result;
+        }
+
+        /// <summary>
+        /// 从某个模型中填充当前实体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="target"></param>
+        /// <param name="convertMatchType"></param>
+        /// <param name="allowNull"></param>
+        public static bool FillFrom<T>(this IEntity entity, T target, ConvertMatchType convertMatchType = ConvertMatchType.IgnoreCase, bool allowNull = true) where T : class
+        {
+            var s = target.ConvertTo<IEntity>(convertMatchType);
+
+            return FillModel(s, ref entity, allowNull);
+        }
+
+
+        #endregion
+
+            #region 连接字符串处理
+
+            /// <summary>
+            /// 将sql连接符串转换成dictionary
+            /// </summary>
+            /// <param name="connStr"></param>
+            /// <returns></returns>
         public static Dictionary<string, string> ToConnectParmaDic(this string connStr)
         {
             Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();

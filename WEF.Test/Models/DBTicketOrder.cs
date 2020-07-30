@@ -20,7 +20,7 @@ namespace WEF.Models
     /// <summary>
     /// 实体类DBTicketOrder
     /// </summary>
-    [Serializable, DataContract, Table("tb_ticketorder")]
+    [Serializable, DataContract, TableAttribute("tb_ticketorder")]
     public partial class DBTicketOrder : Entity
     {
         private static string m_tableName;

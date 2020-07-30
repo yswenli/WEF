@@ -591,7 +591,7 @@ namespace WEF.Expressions
                         var filedProp = GetFieldName(member.Member);
                         if (aliasName == "All")
                         {
-                            f[i] = new Field("*", GetTableName(member.Expression.Type));
+                            f[i] = new Field("*", GetTableName(tableName, member.Expression.Type));
                         }
                         else if ((filedProp[0] == filedProp[1] && filedProp[0] != aliasName) || (filedProp[0] != aliasName && filedProp[1] != aliasName))
                         {
@@ -664,12 +664,37 @@ namespace WEF.Expressions
             throw new Exception("'As'仅支持一个参数，参数应为字符串且不允许为空");
         }
 
-
-        private static string GetTableName(Type type)
+        /// <summary>
+        /// 获取表名
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string GetTableName(string tableName, Type type)
         {
-            var tbl = type.GetCustomAttribute<Table>(false);
+            var result = string.Empty;
 
-            return tbl != null ? tbl.GetTableName() : type.Name;
+            if (!string.IsNullOrEmpty(tableName))
+
+            {
+                result = tableName;
+            }
+            else
+            {
+                var tbl = type.GetCustomAttribute<TableAttribute>(false);
+
+                result = tbl != null ? tbl.GetTableName() : type.Name;
+            }
+
+            if (result.IndexOf("`") > -1)
+            {
+                result = result.Replace("`", "");
+            }
+            if (result.IndexOf("'") > -1)
+            {
+                result = result.Replace("'", "");
+            }
+            return result;
         }
 
         private static string[] GetFieldName(MemberInfo type)
@@ -687,7 +712,7 @@ namespace WEF.Expressions
         private static Field CreateField(string tableName, MemberInfo mi, Type t)
         {
             var filedProp = GetFieldName(mi);
-            return new Field(filedProp[0], tableName ?? GetTableName(t), null, null, null, filedProp[1] == filedProp[0] ? null : filedProp[1]);
+            return new Field(filedProp[0], GetTableName(tableName, t), null, null, null, filedProp[1] == filedProp[0] ? null : filedProp[1]);
         }
 
         /// <summary>
@@ -704,20 +729,7 @@ namespace WEF.Expressions
                 filedProp[0] = "*";
             }
 
-            if (string.IsNullOrEmpty(tableName))
-            {
-                tableName = GetTableName(t);
-            }
-            if (tableName.IndexOf("`") > -1)
-            {
-                tableName = tableName.Replace("`", "");
-            }
-            if (tableName.IndexOf("'") > -1)
-            {
-                tableName = tableName.Replace("'", "");
-            }
-
-            return new Field(filedProp[0], tableName);
+            return new Field(filedProp[0], GetTableName(tableName, t));
         }
 
         private static Field CreateField(string tableName, string[] filedProp, Type t, string aliasName)
@@ -731,19 +743,7 @@ namespace WEF.Expressions
                 filedProp[0] = "*";
             }
 
-            if (string.IsNullOrEmpty(tableName))
-            {
-                tableName = GetTableName(t);
-            }
-            if (tableName.IndexOf("`") > -1)
-            {
-                tableName = tableName.Replace("`", "");
-            }
-            if (tableName.IndexOf("'") > -1)
-            {
-                tableName = tableName.Replace("'", "");
-            }
-            return new Field(filedProp[0], tableName, null, null, null, aliasName);
+            return new Field(filedProp[0], GetTableName(tableName, t), null, null, null, aliasName);
         }
     }
 }

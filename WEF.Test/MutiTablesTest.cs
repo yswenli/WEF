@@ -28,22 +28,22 @@ namespace WEF.Test
 {
     class MutiTablesTest
     {
-        public static void InsertAndGet()
+        public static void Test()
         {
             Console.ReadLine();
 
             var rr = new RulesRepository();
 
-            //rr.Insert(new Rules("rules1")
-            //{
-            //    name = "MutiTablesTest3",
-            //    created = DateTime.Now,
-            //    enabled = true,
-            //    json = "",
-            //    ruleType = -1,
-            //    score = 0,
-            //    updated = DateTime.Now
-            //});
+            rr.Insert(new Rules("rules1")
+            {
+                name = "MutiTablesTest4",
+                created = DateTime.Now,
+                enabled = true,
+                json = "",
+                ruleType = -1,
+                score = 0,
+                updated = DateTime.Now
+            });
 
             var list1 = rr.Search().Where(b => b.enabled == true).ToList();
 
@@ -57,17 +57,15 @@ namespace WEF.Test
 
             var st11 = new Rules("rules1");
 
-            st1.FillModel(ref st11);
-
-            st11.ClearModifyFields();
+            st1.FillEntity(ref st11);
 
             st11.name = "update";
 
-            rr.Update(st11); //不支持
+            rr.Update(st11); 
 
             st1 = rr.Search("rules1").Where(b => b.enabled == true).First();
 
-            rr.Delete(st1); //不支持
+            rr.Delete(st1); 
 
             Console.ReadLine();
         }
@@ -80,7 +78,7 @@ namespace WEF.Test
     /// <summary>
     /// 实体类rules
     /// </summary>
-    [Serializable, DataContract, Table("rules")]
+    [Serializable, DataContract, TableAttribute("rules")]
     public partial class Rules : Entity
     {
         private static string m_tableName;

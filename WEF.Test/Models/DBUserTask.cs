@@ -20,7 +20,7 @@ namespace WEF.Models
     /// <summary>
     /// 实体类DBUserTask
     /// </summary>
-    [Serializable, DataContract, Table("tb_usertask")]
+    [Serializable, DataContract, TableAttribute("tb_usertask")]
     public partial class DBUserTask : Entity
     {
         private static string m_tableName;

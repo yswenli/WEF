@@ -20,7 +20,7 @@ namespace WEF.Models
     /// <summary>
     /// 实体类Users
     /// </summary>
-    [Serializable, DataContract, Table("Users")]
+    [Serializable, DataContract, TableAttribute("Users")]
     public partial class Users : Entity
     {
         private static string m_tableName;

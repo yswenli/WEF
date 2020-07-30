@@ -24,7 +24,7 @@ namespace WEF.Test
     {
         static void Main(string[] args)
         {
-            MutiTablesTest.InsertAndGet();
+            MutiTablesTest.Test();
 
 
 

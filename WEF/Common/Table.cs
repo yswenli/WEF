@@ -16,7 +16,7 @@ namespace WEF.Common
     /// <summary>
     /// 标记实体类表名
     /// </summary>
-    public class Table : Attribute
+    public class TableAttribute : Attribute
     {
         /// <summary>
         /// 
@@ -27,7 +27,7 @@ namespace WEF.Common
         /// 
         /// </summary>
         /// <param name="tableName"></param>
-        public Table(string tableName)
+        public TableAttribute(string tableName)
         {
             this._tableName = tableName;
         }
@@ -36,7 +36,7 @@ namespace WEF.Common
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="username"></param>
-        public Table(string tableName, string username)
+        public TableAttribute(string tableName, string username)
         {
             this._tableName = tableName;
             this._userName = username;

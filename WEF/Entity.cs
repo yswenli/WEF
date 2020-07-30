@@ -99,7 +99,7 @@ namespace WEF
         /// </summary>
         public Entity()
         {
-            var tbl = GetType().GetCustomAttribute<Table>(false) as Table;
+            var tbl = GetType().GetCustomAttribute<TableAttribute>(false) as TableAttribute;
             _tableName = tbl != null ? tbl.GetTableName() : GetType().Name;
             _userName = tbl != null ? tbl.GetUserName() : "";
             _isAttached = true;

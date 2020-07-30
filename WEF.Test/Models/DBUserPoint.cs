@@ -20,7 +20,7 @@ namespace WEF.Models
     /// <summary>
     /// 实体类DBUserPoint
     /// </summary>
-    [Serializable, DataContract, Table("tb_userpoint")]
+    [Serializable, DataContract, TableAttribute("tb_userpoint")]
     public partial class DBUserPoint : Entity
     {
         private static string m_tableName;

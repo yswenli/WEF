@@ -19,7 +19,7 @@ namespace WEF.Models
     /// <summary>
     /// 实体类DBTask
     /// </summary>
-    [Serializable, DataContract, Table("tb_task")]
+    [Serializable, DataContract, TableAttribute("tb_task")]
     public partial class DBTask : Entity
     {
         private static string m_tableName;
