@@ -360,10 +360,10 @@ namespace WEF
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        public ISearch<TEntity> Search<TEntity>(string asName = "")
+        public ISearch<TEntity> Search<TEntity>(string tableName = "")
             where TEntity : Entity
         {
-            return new Search<TEntity>(db, null, asName);
+            return new Search<TEntity>(db, null, tableName);
         }
 
         /// <summary>
@@ -717,12 +717,13 @@ namespace WEF
         /// 判断是否存在记录
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="lambdaWhere"></param>
         /// <returns></returns>
-        public bool Exists<TEntity>(Expression<Func<TEntity, bool>> lambdaWhere)
+        public bool Exists<TEntity>(string tableName, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Exists<TEntity>(ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return Exists<TEntity>(ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
         }
         /// <summary>
         /// 判断是否存在记录
@@ -763,13 +764,14 @@ namespace WEF
         /// Count
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="field"></param>
         /// <param name="lambdaWhere"></param>
         /// <returns></returns>
-        public int Count<TEntity>(Field field, Expression<Func<TEntity, bool>> lambdaWhere)
+        public int Count<TEntity>(string tableName, Field field, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Search<TEntity>().Select(field.Count()).Where(ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere)).ToScalar<int>();
+            return Search<TEntity>().Select(field.Count()).Where(ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere)).ToScalar<int>();
         }
         /// <summary>
         /// Count
@@ -797,12 +799,13 @@ namespace WEF
         /// Count
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="lambdaWhere"></param>
         /// <returns></returns>
-        public int Count<TEntity>(Expression<Func<TEntity, bool>> lambdaWhere)
+        public int Count<TEntity>(string tableName, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Search<TEntity>().Select(Field.All.Count()).Where(ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere)).ToScalar<int>();
+            return Search<TEntity>().Select(Field.All.Count()).Where(ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere)).ToScalar<int>();
         }
         #endregion
 
@@ -954,7 +957,7 @@ namespace WEF
             if (entity == null)
                 return 0;
 
-            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(entity.GetFields(), entity.GetValues(), where));
+            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(entity.GetTableName(), entity.GetFields(), entity.GetValues(), where));
         }
 
         /// <summary>
@@ -989,7 +992,7 @@ namespace WEF
             if (entity == null)
                 return 0;
 
-            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(entity.GetFields(), entity.GetValues(), where), tran);
+            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(entity.GetTableName(), entity.GetFields(), entity.GetValues(), where), tran);
         }
         /// <summary>
         /// 
@@ -1076,13 +1079,18 @@ namespace WEF
         }
 
         /// <summary>
-        /// 
+        /// Update<TEntity>
         /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
         public int Update<TEntity>(TEntity entity, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(entity, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return Update<TEntity>(entity, ExpressionToOperation<TEntity>.ToWhereOperation(entity.GetTableName(), lambdaWhere));
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -1170,7 +1178,7 @@ namespace WEF
         public int Update<TEntity>(DbTransaction tran, TEntity entity, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, entity, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return Update<TEntity>(tran, entity, ExpressionToOperation<TEntity>.ToWhereOperation(entity.GetTableName(), lambdaWhere));
         }
         /// <summary>
         /// 
@@ -1184,76 +1192,105 @@ namespace WEF
         /// 更新单个值
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="field"></param>
         /// <param name="value"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Field field, object value, WhereOperation where)
+        public int Update<TEntity>(string tableName, Field field, object value, WhereOperation where)
             where TEntity : Entity
         {
             if (Field.IsNullOrEmpty(field))
                 return 0;
 
-            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(new Field[] { field }, new object[] { value }, where));
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Update<TEntity>(Field field, object value, Expression<Func<TEntity, bool>> lambdaWhere)
-            where TEntity : Entity
-        {
-            return Update<TEntity>(field, value, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Update<TEntity>(Field field, object value, Where where)
-            where TEntity : Entity
-        {
-            return Update<TEntity>(field, value, where.ToWhereClip());
+            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(tableName, new Field[] { field }, new object[] { value }, where));
         }
         /// <summary>
         /// 更新单个值
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public int Update<TEntity>(string tableName, Field field, object value, Expression<Func<TEntity, bool>> lambdaWhere)
+            where TEntity : Entity
+        {
+            return Update<TEntity>(tableName, field, value, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
+        }
+        /// <summary>
+        /// 更新单个值
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="field"></param>
         /// <param name="value"></param>
         /// <param name="where"></param>
-        /// <param name="tran"></param>
         /// <returns></returns>
-        public int Update<TEntity>(DbTransaction tran, Field field, object value, WhereOperation where)
+        public int Update<TEntity>(string tableName, Field field, object value, Where where)
+            where TEntity : Entity
+        {
+            return Update<TEntity>(tableName, field, value, where.ToWhereClip());
+        }
+        /// <summary>
+        /// 更新单个值
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tran"></param>
+        /// <param name="tableName"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public int Update<TEntity>(DbTransaction tran, string tableName, Field field, object value, WhereOperation where)
             where TEntity : Entity
         {
             if (Field.IsNullOrEmpty(field))
                 return 0;
 
-            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(new Field[] { field }, new object[] { value }, where), tran);
+            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(tableName, new Field[] { field }, new object[] { value }, where), tran);
         }
         /// <summary>
-        /// 
+        /// 更新单个值
         /// </summary>
-        public int Update<TEntity>(DbTransaction tran, Field field, object value, Expression<Func<TEntity, bool>> lambdaWhere)
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tran"></param>
+        /// <param name="tableName"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public int Update<TEntity>(DbTransaction tran, string tableName, Field field, object value, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, field, value, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return Update<TEntity>(tran, tableName, field, value, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
         }
         /// <summary>
-        /// 
+        /// 更新单个值
         /// </summary>
-        public int Update<TEntity>(DbTransaction tran, Field field, object value, Where where)
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tran"></param>
+        /// <param name="tableName"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public int Update<TEntity>(DbTransaction tran, string tableName, Field field, object value, Where where)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, field, value, where.ToWhereClip());
+            return Update<TEntity>(tran, tableName, field, value, where.ToWhereClip());
         }
 
         /// <summary>
         /// 更新多个值
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="fieldValue"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Dictionary<Field, object> fieldValue, WhereOperation where)
+        public int Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, WhereOperation where)
               where TEntity : Entity
         {
             if (null == fieldValue || fieldValue.Count == 0)
@@ -1268,33 +1305,34 @@ namespace WEF
 
                 i++;
             }
-            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(fields, values, where));
+            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, where));
         }
         /// <summary>
         /// 
         /// </summary>
-        public int Update<TEntity>(Dictionary<Field, object> fieldValue, Expression<Func<TEntity, bool>> lambdaWhere)
+        public int Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(fieldValue, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return Update<TEntity>(tableName, fieldValue, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
         }
         /// <summary>
         /// 
         /// </summary>
-        public int Update<TEntity>(Dictionary<Field, object> fieldValue, Where where)
+        public int Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, Where where)
             where TEntity : Entity
         {
-            return Update<TEntity>(fieldValue, where.ToWhereClip());
+            return Update<TEntity>(tableName, fieldValue, where.ToWhereClip());
         }
         /// <summary>
         /// 更新多个值
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tran"></param>
+        /// <param name="tableName"></param>
         /// <param name="fieldValue"></param>
         /// <param name="where"></param>
-        /// <param name="tran"></param>
         /// <returns></returns>
-        public int Update<TEntity>(DbTransaction tran, Dictionary<Field, object> fieldValue, WhereOperation where)
+        public int Update<TEntity>(DbTransaction tran, string tableName, Dictionary<Field, object> fieldValue, WhereOperation where)
               where TEntity : Entity
         {
             if (null == fieldValue || fieldValue.Count == 0)
@@ -1313,88 +1351,68 @@ namespace WEF
                 i++;
             }
 
-            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(fields, values, where), tran);
+            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, where), tran);
         }
         /// <summary>
         /// 
         /// </summary>
-        public int Update<TEntity>(DbTransaction tran, Dictionary<Field, object> fieldValue, Expression<Func<TEntity, bool>> lambdaWhere)
+        public int Update<TEntity>(DbTransaction tran, string tableName, Dictionary<Field, object> fieldValue, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, fieldValue, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return Update<TEntity>(tran, tableName, fieldValue, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
         }
         /// <summary>
         /// 
         /// </summary>
-        public int Update<TEntity>(DbTransaction tran, Dictionary<Field, object> fieldValue, Where where)
+        public int Update<TEntity>(DbTransaction tran, string tableName, Dictionary<Field, object> fieldValue, Where where)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, fieldValue, where.ToWhereClip());
+            return Update<TEntity>(tran, tableName, fieldValue, where.ToWhereClip());
         }
-        /// <summary>
-        /// 更新
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="fields"></param>
-        /// <param name="values"></param>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public int Update<TEntity>(Field[] fields, object[] values, WhereOperation where)
+
+        public int Update<TEntity>(string tableName, Field[] fields, object[] values, WhereOperation where)
             where TEntity : Entity
         {
 
             if (null == fields || fields.Length == 0)
                 return 0;
-            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(fields, values, where));
+            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, where));
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Update<TEntity>(Field[] fields, object[] values, Expression<Func<TEntity, bool>> lambdaWhere)
+
+
+        public int Update<TEntity>(string tableName, Field[] fields, object[] values, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(fields, values, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return Update<TEntity>(tableName, fields, values, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Update<TEntity>(Field[] fields, object[] values, Where where)
+
+
+        public int Update<TEntity>(string tableName, Field[] fields, object[] values, Where where)
             where TEntity : Entity
         {
-            return Update<TEntity>(fields, values, where.ToWhereClip());
+            return Update<TEntity>(tableName, fields, values, where.ToWhereClip());
         }
-        /// <summary>
-        /// 更新
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="fields"></param>
-        /// <param name="values"></param>
-        /// <param name="where"></param>
-        /// <param name="tran"></param>
-        /// <returns></returns>
-        public int Update<TEntity>(DbTransaction tran, Field[] fields, object[] values, WhereOperation where)
+        public int Update<TEntity>(DbTransaction tran, string tableName, Field[] fields, object[] values, WhereOperation where)
             where TEntity : Entity
         {
             if (null == fields || fields.Length == 0)
                 return 0;
 
-            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(fields, values, where), tran);
+            return ExecuteNonQuery(cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, where), tran);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Update<TEntity>(DbTransaction tran, Field[] fields, object[] values, Expression<Func<TEntity, bool>> lambdaWhere)
+
+
+        public int Update<TEntity>(DbTransaction tran, string tableName, Field[] fields, object[] values, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, fields, values, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return Update<TEntity>(tran, tableName, fields, values, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Update<TEntity>(DbTransaction tran, Field[] fields, object[] values, Where where)
+
+
+        public int Update<TEntity>(DbTransaction tran, string tableName, Field[] fields, object[] values, Where where)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, fields, values, where.ToWhereClip());
+            return Update<TEntity>(tran, tableName, fields, values, where.ToWhereClip());
         }
         #endregion
 
@@ -1410,30 +1428,16 @@ namespace WEF
         public int Delete<TEntity>(TEntity entity)
             where TEntity : Entity
         {
-            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
+            var tableName = entity.GetTableName();
+
+            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", tableName, ") is readonly!"));
 
             WhereOperation where = DataUtils.GetPrimaryKeyWhere(entity);
 
             Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
 
-            return Delete<TEntity>(where);
+            return Delete<TEntity>(tableName, where);
         }
-
-        ///// <summary>
-        /////  删除
-        ///// </summary>
-        ///// <typeparam name="TEntity"></typeparam>
-        ///// <param name="entity"></param>
-        ///// <param name="where"></param>
-        ///// <returns></returns>
-        //[Obsolete("请使用Delete<TEntity>(WhereClip where)方法!")]
-        //public int Delete<TEntity>(TEntity entity, WhereClip where)
-        //    where TEntity : Entity
-        //{
-        //    Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
-
-        //    return ExecuteNonQuery(createDeleteCommand(entity.GetTableName(), where));
-        //}
 
 
         /// <summary>
@@ -1446,9 +1450,11 @@ namespace WEF
         public int Delete<TEntity>(DbTransaction tran, TEntity entity)
             where TEntity : Entity
         {
-            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
+            var tableName = entity.GetTableName();
 
-            return Delete<TEntity>(tran, DataUtils.GetPrimaryKeyWhere(entity));
+            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", tableName, ") is readonly!"));
+
+            return Delete<TEntity>(tran, entity.GetTableName(), DataUtils.GetPrimaryKeyWhere(entity));
         }
         /// <summary>
         /// 更新
@@ -1503,55 +1509,37 @@ namespace WEF
             return Delete(tran, entities.ToArray());
         }
 
-
-        ///// <summary>
-        /////  删除
-        ///// </summary>
-        ///// <typeparam name="TEntity"></typeparam>
-        ///// <param name="where"></param>
-        ///// <param name="tran"></param>
-        ///// <param name="entity"></param>
-        ///// <returns></returns>
-        //[Obsolete("请使用Delete<TEntity>(WhereClip where, DbTransaction tran)方法!")]
-        //public int Delete<TEntity>(TEntity entity, WhereClip where, DbTransaction tran)
-        //    where TEntity : Entity
-        //{
-        //    Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
-
-        //    return ExecuteNonQuery(createDeleteCommand(entity.GetTableName(), where), tran);
-        //}
-
         /// <summary>
         ///  删除
         /// </summary>
-        public int Delete<TEntity>(params int[] pkValues)
+        public int Delete<TEntity>(string tableName, params int[] pkValues)
             where TEntity : Entity
         {
-            return DeleteByPrimaryKey<TEntity>(pkValues.ToArray());
+            return DeleteByPrimaryKey<TEntity>(tableName, pkValues.ToArray());
         }
         /// <summary>
         ///  删除
         /// </summary>
-        public int Delete<TEntity>(params Guid[] pkValues)
+        public int Delete<TEntity>(string tableName, params Guid[] pkValues)
             where TEntity : Entity
         {
-            return DeleteByPrimaryKey<TEntity>(pkValues.ToArray());
+            return DeleteByPrimaryKey<TEntity>(tableName, pkValues.ToArray());
         }
         /// <summary>
         ///  删除
         /// </summary>
-        public int Delete<TEntity>(params long[] pkValues)
+        public int Delete<TEntity>(string tableName, params long[] pkValues)
             where TEntity : Entity
         {
-            return DeleteByPrimaryKey<TEntity>(pkValues.ToArray());
+            return DeleteByPrimaryKey<TEntity>(tableName, pkValues.ToArray());
         }
         /// <summary>
         ///  删除
         /// </summary>
-        public int Delete<TEntity>(params string[] pkValues)
+        public int Delete<TEntity>(string tableName, params string[] pkValues)
             where TEntity : Entity
         {
-            return DeleteByPrimaryKey<TEntity>(pkValues.ToArray());
+            return DeleteByPrimaryKey<TEntity>(tableName, pkValues.ToArray());
         }
         /// <summary>
         /// 
@@ -1577,44 +1565,25 @@ namespace WEF
                         listKey.Add(DataUtils.GetPropertyValue(entity, f.Name));
                     }
                     where.And(f.In(listKey));
-                    return Delete<TEntity>(where);
+                    return Delete<TEntity>(f.tableName, where);
             }
-            //var count = 0;
-            //using (DbTrans trans = BeginTransaction())
-            //{
-            //    foreach (var entity in entities)
-            //    {
-            //        count += Delete<TEntity>(entity, trans);
-            //    }
-            //    trans.Commit();
-            //}
-            //return count;
         }
-        /// <summary>
-        ///  删除
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="pkValues"></param>
-        /// <returns></returns>
-        //public int Delete<TEntity>(params string[] pkValues)
-        //    where TEntity : Entity
-        //{
-        //    return DeleteByPrimaryKey<TEntity>(pkValues);
-        //}
+
 
         /// <summary>
-        ///  删除
+        /// 删除
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="pkValues"></param>
         /// <returns></returns>
-        internal int DeleteByPrimaryKey<TEntity>(Array pkValues)//params object[] pkValues 2015-08-20
+        internal int DeleteByPrimaryKey<TEntity>(string tableName, Array pkValues)
             where TEntity : Entity
         {
-            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
+            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", tableName, ") is readonly!"));
 
 
-            return ExecuteNonQuery(cmdCreator.CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), DataUtils.GetPrimaryKeyWhere<TEntity>(pkValues)));
+            return ExecuteNonQuery(cmdCreator.CreateDeleteCommand(tableName, EntityCache.GetUserName<TEntity>(), DataUtils.GetPrimaryKeyWhere<TEntity>(pkValues)));
         }
 
         /// <summary>
@@ -1691,12 +1660,18 @@ namespace WEF
         /// <summary>
         ///  删除
         /// </summary>
-        public int Delete<TEntity>(DbTransaction tran, WhereOperation where)
+        public int Delete<TEntity>(DbTransaction tran, string tableName, WhereOperation where)
             where TEntity : Entity
         {
-            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
+            if (string.IsNullOrEmpty(tableName))
+            {
+                tableName = EntityCache.GetTableName<TEntity>();
+            }
 
-            return ExecuteNonQuery(cmdCreator.CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where), tran);
+            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", tableName, ") is readonly!"));
+
+
+            return ExecuteNonQuery(cmdCreator.CreateDeleteCommand(tableName, EntityCache.GetUserName<TEntity>(), where), tran);
         }
         /// <summary>
         ///  删除
@@ -1710,67 +1685,50 @@ namespace WEF
         /// <summary>
         ///  删除
         /// </summary>
-        public int Delete<TEntity>(Expression<Func<TEntity, bool>> lambdaWhere)
+        public int Delete<TEntity>(string tableName, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Delete<TEntity>(ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
-        }
-        /// <summary>
-        ///  删除
-        /// </summary>
-        public int Delete<TEntity>(DbTransaction tran, Expression<Func<TEntity, bool>> lambdaWhere)
-            where TEntity : Entity
-        {
-            return Delete<TEntity>(tran, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
-        }
-        /// <summary>
-        ///  删除
-        /// </summary>
-        public int Delete<TEntity>(WhereOperation where)
-            where TEntity : Entity
-        {
-            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
-
-            return ExecuteNonQuery(cmdCreator.CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where));
+            return Delete<TEntity>(tableName, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
         }
         /// <summary>
         /// 删除
         /// </summary>
-        public int Delete<TEntity>(Where where)
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tran"></param>
+        /// <param name="tableName"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public int Delete<TEntity>(DbTransaction tran, string tableName, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Delete<TEntity>(where.ToWhereClip());
+            return Delete<TEntity>(tran, tableName, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
+        }
+        /// <summary>
+        ///  删除
+        /// </summary>
+        public int Delete<TEntity>(string tableName, WhereOperation where)
+            where TEntity : Entity
+        {
+            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
+
+            return ExecuteNonQuery(cmdCreator.CreateDeleteCommand(tableName ?? EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where));
+        }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        public int Delete<TEntity>(string tableName, Where where)
+            where TEntity : Entity
+        {
+            return Delete<TEntity>(tableName, where.ToWhereClip());
         }
         /// <summary>
         /// 删除整表数据
         /// </summary>
-        public int DeleteAll<TEntity>()
+        public int DeleteAll<TEntity>(string tableName)
             where TEntity : Entity
         {
-            return Delete<TEntity>(d => true);
+            return Delete<TEntity>(tableName, d => true);
         }
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="tableName"></param>
-        ///// <param name="where"></param>
-        ///// <returns></returns>
-        //private DbCommand createDeleteCommand(string tableName, WhereClip where)
-        //{
-        //    if (WhereClip.IsNullOrEmpty(where))
-        //        where = WhereClip.All;
-
-        //    StringBuilder sql = new StringBuilder();
-        //    sql.Append("DELETE FROM ");
-        //    sql.Append(db.DbProvider.LeftToken.ToString());
-        //    sql.Append(tableName);
-        //    sql.Append(db.DbProvider.RightToken.ToString());
-        //    sql.Append(where.WhereString);
-        //    DbCommand cmd = db.GetSqlStringCommand(sql.ToString());
-        //    db.AddCommandParameter(cmd, where.Parameters.ToArray());
-
-        //    return cmd;
-        //}
 
         #endregion
 
@@ -1889,31 +1847,18 @@ namespace WEF
         {
             return Insert(tran, entities.ToArray());
         }
-        /// <summary>
-        /// 添加
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="fields"></param>
-        /// <param name="values"></param>
-        /// <returns></returns>
-        public int Insert<TEntity>(Field[] fields, object[] values)
+
+        public int Insert<TEntity>(string tableName, Field[] fields, object[] values)
             where TEntity : Entity
         {
-            return insertExecute<TEntity>(cmdCreator.CreateInsertCommand<TEntity>(fields, values));
+            return insertExecute<TEntity>(cmdCreator.CreateInsertCommand<TEntity>(tableName, fields, values));
         }
 
-        /// <summary>
-        /// 添加
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="fields"></param>
-        /// <param name="values"></param>
-        /// <param name="tran"></param>
-        /// <returns></returns>
-        public int Insert<TEntity>(DbTransaction tran, Field[] fields, object[] values)
+
+        public int Insert<TEntity>(DbTransaction tran, string tableName, Field[] fields, object[] values)
             where TEntity : Entity
         {
-            return insertExecute<TEntity>(cmdCreator.CreateInsertCommand<TEntity>(fields, values), tran);
+            return insertExecute<TEntity>(cmdCreator.CreateInsertCommand<TEntity>(tableName, fields, values), tran);
         }
 
         /// <summary>

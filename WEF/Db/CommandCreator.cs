@@ -57,21 +57,27 @@ namespace WEF.Db
                 values[i] = mf.NewValue;
                 i++;
             }
-            return CreateUpdateCommand<TEntity>(fields, values, where);
+            return CreateUpdateCommand<TEntity>(entity.GetTableName(), fields, values, where);
         }
 
         /// <summary>
         /// 创建更新DbCommand
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="values"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public DbCommand CreateUpdateCommand<TEntity>(Field[] fields, object[] values, WhereOperation where)
+        public DbCommand CreateUpdateCommand<TEntity>(string tableName, Field[] fields, object[] values, WhereOperation where)
             where TEntity : Entity
         {
-            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
+            if (string.IsNullOrEmpty(tableName))
+            {
+                tableName = EntityCache.GetTableName<TEntity>();
+            }
+
+            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", tableName, ") is readonly!"));
 
             if (null == fields || fields.Length == 0 || null == values || values.Length == 0)
                 return null;
@@ -85,7 +91,7 @@ namespace WEF.Db
 
             var sql = new StringBuilder();
             sql.Append("UPDATE ");
-            sql.Append(db.DbProvider.BuildTableName(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>()));
+            sql.Append(db.DbProvider.BuildTableName(tableName, EntityCache.GetUserName<TEntity>()));
             sql.Append(" SET ");
 
             var identityField = EntityCache.GetIdentityField<TEntity>();
@@ -132,6 +138,7 @@ namespace WEF.Db
             var cmd = db.GetSqlStringCommand(sql.ToString());
 
             db.AddCommandParameter(cmd, list.ToArray());
+
             return cmd;
         }
 
@@ -179,30 +186,38 @@ namespace WEF.Db
         /// 创建添加DbCommand
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="values"></param>
         /// <returns></returns>
-        public DbCommand CreateInsertCommand<TEntity>(Field[] fields, object[] values)
+        public DbCommand CreateInsertCommand<TEntity>(string tableName, Field[] fields, object[] values)
             where TEntity : Entity
         {
-            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
+            if (string.IsNullOrEmpty(tableName))
+            {
+                tableName = EntityCache.GetTableName<TEntity>();
+            }
+
+            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", tableName, ") is readonly!"));
 
             if (null == fields || fields.Length == 0 || null == values || values.Length == 0)
+
                 return null;
 
             var sql = new StringBuilder();
+
             sql.Append("INSERT INTO ");
 
             if (db.DbProvider.DatabaseType == DatabaseType.PostgreSQL)
             {
-                sql.Append($"public.\"{EntityCache.GetTableName<TEntity>()}\"");
+                sql.Append($"public.\"{tableName}\"");
             }
             else
             {
-                sql.Append(db.DbProvider.BuildTableName(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>()));
+                sql.Append(db.DbProvider.BuildTableName(tableName, EntityCache.GetUserName<TEntity>()));
             }
 
-            
+
             sql.Append(" (");
 
             var identityField = EntityCache.GetIdentityField<TEntity>();
@@ -275,19 +290,21 @@ namespace WEF.Db
 
             if (null == mfields || mfields.Count == 0)
             {
-                return CreateInsertCommand<TEntity>(entity.GetFields(), entity.GetValues());
+                return CreateInsertCommand<TEntity>(entity.GetTableName(), entity.GetFields(), entity.GetValues());
             }
             else
             {
                 List<Field> fields = new List<Field>();
+
                 List<object> values = new List<object>();
+
                 foreach (ModifyField m in mfields)
                 {
                     fields.Add(m.Field);
                     values.Add(m.NewValue);
                 }
 
-                return CreateInsertCommand<TEntity>(fields.ToArray(), values.ToArray());
+                return CreateInsertCommand<TEntity>(entity.GetTableName(), fields.ToArray(), values.ToArray());
             }
         }
 

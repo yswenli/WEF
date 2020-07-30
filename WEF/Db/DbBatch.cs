@@ -143,7 +143,7 @@ namespace WEF.Db
             if (entity == null)
                 return;
 
-            batchcmd.Process(cmdCreator.CreateUpdateCommand<TEntity>(entity.GetFields(), entity.GetValues(), where));
+            batchcmd.Process(cmdCreator.CreateUpdateCommand<TEntity>(entity.GetTableName(), entity.GetFields(), entity.GetValues(), where));
         }
 
 
@@ -206,17 +206,17 @@ namespace WEF.Db
         /// 更新单个值
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="field"></param>
         /// <param name="value"></param>
         /// <param name="where"></param>
-        /// <returns></returns>
-        public void Update<TEntity>(Field field, object value, WhereOperation where)
+        public void Update<TEntity>(string tableName, Field field, object value, WhereOperation where)
             where TEntity : Entity
         {
             if (Field.IsNullOrEmpty(field))
                 return;
 
-            batchcmd.Process(cmdCreator.CreateUpdateCommand<TEntity>(new Field[] { field }, new object[] { value }, where));
+            batchcmd.Process(cmdCreator.CreateUpdateCommand<TEntity>(tableName, new Field[] { field }, new object[] { value }, where));
         }
 
 
@@ -226,10 +226,10 @@ namespace WEF.Db
         /// 更新多个值
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="fieldValue"></param>
         /// <param name="where"></param>
-        /// <returns></returns>
-        public void Update<TEntity>(Dictionary<Field, object> fieldValue, WhereOperation where)
+        public void Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, WhereOperation where)
               where TEntity : Entity
         {
             if (null == fieldValue || fieldValue.Count == 0)
@@ -248,7 +248,7 @@ namespace WEF.Db
                 i++;
             }
 
-            batchcmd.Process(cmdCreator.CreateUpdateCommand<TEntity>(fields, values, where));
+            batchcmd.Process(cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, where));
         }
 
 
@@ -256,17 +256,17 @@ namespace WEF.Db
         /// 更新
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="values"></param>
         /// <param name="where"></param>
-        /// <returns></returns>
-        public void Update<TEntity>(Field[] fields, object[] values, WhereOperation where)
+        public void Update<TEntity>(string tableName, Field[] fields, object[] values, WhereOperation where)
             where TEntity : Entity
         {
             if (null == fields || fields.Length == 0)
                 return;
 
-            batchcmd.Process(cmdCreator.CreateUpdateCommand<TEntity>(fields, values, where));
+            batchcmd.Process(cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, where));
         }
 
 
@@ -416,13 +416,13 @@ namespace WEF.Db
         /// 添加
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="values"></param>
-        /// <returns></returns>
-        public void Insert<TEntity>(Field[] fields, object[] values)
+        public void Insert<TEntity>(string tableName, Field[] fields, object[] values)
             where TEntity : Entity
         {
-            batchcmd.Process(cmdCreator.CreateInsertCommand<TEntity>(fields, values));
+            batchcmd.Process(cmdCreator.CreateInsertCommand<TEntity>(tableName, fields, values));
         }
 
         #endregion

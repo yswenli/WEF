@@ -30,12 +30,13 @@ namespace WEF.Expressions
     public class WhereBuilder<T> : WhereBuilder
         where T : Entity
     {
+        
         /// <summary>
         /// AND
         /// </summary>
         public void And(Expression<Func<T, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
+            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(base._tablename, lambdaWhere);
             And(tempWhere);
         }
         /// <summary>
@@ -43,13 +44,13 @@ namespace WEF.Expressions
         /// </summary>
         public void Or(Expression<Func<T, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
+            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(base._tablename, lambdaWhere);
             Or(tempWhere);
         }
     }
 
     /// <summary>
-    /// WhereClipBuilder
+    /// WhereBuilder
     /// </summary>
     public class WhereBuilder
     {
@@ -63,6 +64,9 @@ namespace WEF.Expressions
         /// </summary>
         private List<Parameter> parameters = new List<Parameter>();
 
+
+        protected string _tablename;
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -70,11 +74,14 @@ namespace WEF.Expressions
         { }
 
         /// <summary>
-        /// 构造函数
+        /// WhereBuilder
         /// </summary>
+        /// <param name="tableName"></param>
         /// <param name="where"></param>
-        public WhereBuilder(WhereOperation where)
+        public WhereBuilder(string tableName, WhereOperation where)
         {
+            _tablename = tableName;
+
             expressionStringBuilder.Append(where.ToString());
 
             parameters.AddRange(where.Parameters);

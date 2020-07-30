@@ -112,7 +112,7 @@ namespace WEF.Section
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        public IEnumerable<TEntity> ToEnumerable<TEntity>()
+        public IEnumerable<TEntity> ToEnumerable<TEntity>(string tableName)
         {
             IEnumerable<TEntity> result;
             using (IDataReader reader = ToDataReader())

@@ -62,7 +62,7 @@ namespace WEF
         /// <param name="trans"></param>
         /// <param name="asName"></param>
         public Search(Database database, DbTransaction trans, string asName)
-            : base(database, database.DbProvider.BuildTableName(EntityCache.GetTableName<T>(), EntityCache.GetUserName<T>()), asName, trans)
+            : base(database, database.DbProvider.BuildTableName((string.IsNullOrEmpty(asName) ? EntityCache.GetTableName<T>() : asName), EntityCache.GetUserName<T>()), asName, trans)
         {
 
         }
@@ -70,7 +70,7 @@ namespace WEF
         #region 连接  Join
         public Search<T> InnerJoin(Search fs)
         {
-            return Join(EntityCache.GetTableName<T>(), EntityCache.GetUserName<T>(), where, JoinType.InnerJoin);
+            return Join(EntityCache.GetTableName<T>(), EntityCache.GetUserName<T>(), _where, JoinType.InnerJoin);
         }
         /// <summary>
         /// Inner Join。Lambda写法：.InnerJoin&lt;Model2>((a, b) => a.ID == b.ID)
@@ -95,7 +95,7 @@ namespace WEF
         public Search<T> InnerJoin<TEntity>(Expression<Func<T, TEntity, bool>> lambdaWhere, string asName = "")
              where TEntity : Entity
         {
-            return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), ExpressionToOperation<T>.ToJoinWhere(lambdaWhere), JoinType.InnerJoin);
+            return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), ExpressionToOperation<T>.ToJoinWhere(_tableName, lambdaWhere), JoinType.InnerJoin);
         }
         /// <summary>
         /// Cross Join
@@ -140,7 +140,7 @@ namespace WEF
         public Search<T> LeftJoin<TEntity>(Expression<Func<T, TEntity, bool>> lambdaWhere)
              where TEntity : Entity
         {
-            return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), ExpressionToOperation<T>.ToJoinWhere(lambdaWhere), JoinType.LeftJoin);
+            return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), ExpressionToOperation<T>.ToJoinWhere(_tableName, lambdaWhere), JoinType.LeftJoin);
         }
         /// <summary>
         /// Full Join
@@ -222,7 +222,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Having(Expression<Func<T, bool>> lambdaHaving)
         {
-            return (Search<T>)base.Having(ExpressionToOperation<T>.ToWhereOperation(lambdaHaving));
+            return (Search<T>)base.Having(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaHaving));
         }
         /// <summary>
         /// whereclip
@@ -267,10 +267,10 @@ namespace WEF
 
                 if (whereBuilder == null)
                 {
-                    whereBuilder = new WhereBuilder(ExpressionToOperation<T>.ToWhereOperation(item));
+                    whereBuilder = new WhereBuilder(_tableName, ExpressionToOperation<T>.ToWhereOperation(_tableName, item));
                 }
                 else
-                    whereBuilder.And(ExpressionToOperation<T>.ToWhereOperation(item));
+                    whereBuilder.And(ExpressionToOperation<T>.ToWhereOperation(_tableName, item));
             }
 
             return Where(whereBuilder.ToWhereClip());
@@ -284,7 +284,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Where<T2>(Expression<Func<T, T2, bool>> lambdaWhere)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
+            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
         }
         /// <summary>
         /// 
@@ -295,7 +295,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Where<T2, T3>(Expression<Func<T, T2, T3, bool>> lambdaWhere)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
+            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
         }
         /// <summary>
         /// 
@@ -307,14 +307,14 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Where<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> lambdaWhere)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
+            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
         }
         /// <summary>
         /// 
         /// </summary>
         public Search<T> Where<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> lambdaWhere)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
+            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
         }
         /// <summary>
         /// 
@@ -328,7 +328,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Where<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> lambdaWhere)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
+            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
         }
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Select<T2>(Expression<Func<T, T2, bool>> lambdaWhere)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
+            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
         }
         /// <summary>
         /// 
@@ -350,7 +350,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Select<T2, T3>(Expression<Func<T, T2, T3, bool>> lambdaWhere)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
+            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
         }
         /// <summary>
         /// 
@@ -362,11 +362,11 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Select<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> lambdaWhere)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
+            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
         }
         public Search<T> Select<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> lambdaWhere)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
+            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
         }
         /// <summary>
         /// 
@@ -380,7 +380,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Select<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> lambdaWhere)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
+            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
         }
         /// <summary>
         /// groupby
@@ -398,7 +398,7 @@ namespace WEF
         }
         public Search<T> GroupBy(Expression<Func<T, object>> lambdaGroupBy)//new 
         {
-            return (Search<T>)base.GroupBy(ExpressionToOperation<T>.ToGroupByClip(lambdaGroupBy));
+            return (Search<T>)base.GroupBy(ExpressionToOperation<T>.ToGroupByClip(_tableName, lambdaGroupBy));
         }
         #region 2015-09-08新增
         /// <summary>
@@ -436,7 +436,7 @@ namespace WEF
         /// </summary>
         public Search<T> OrderBy(Expression<Func<T, object>> lambdaOrderBy)//new 
         {
-            return (Search<T>)base.OrderBy(ExpressionToOperation<T>.ToOrderByClip(lambdaOrderBy));
+            return (Search<T>)base.OrderBy(ExpressionToOperation<T>.ToOrderByClip(_tableName, lambdaOrderBy));
         }
         /// <summary>
         /// 
@@ -445,7 +445,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> OrderByDescending(Expression<Func<T, object>> lambdaOrderBy)
         {
-            return (Search<T>)base.OrderBy(ExpressionToOperation<T>.ToOrderByDescendingClip(lambdaOrderBy));
+            return (Search<T>)base.OrderBy(ExpressionToOperation<T>.ToOrderByDescendingClip(_tableName, lambdaOrderBy));
         }
         /// <summary>
         /// 
@@ -470,7 +470,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Select(Expression<Func<T, object>> lambdaSelect)
         {
-            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(lambdaSelect));
+            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
         }
         /// <summary>
         /// 
@@ -480,7 +480,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Select<T2>(Expression<Func<T, T2, object>> lambdaSelect)
         {
-            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(lambdaSelect));
+            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
         }
         /// <summary>
         /// 
@@ -491,7 +491,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Select<T2, T3>(Expression<Func<T, T2, T3, object>> lambdaSelect)
         {
-            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(lambdaSelect));
+            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
         }
         /// <summary>
         /// 
@@ -503,7 +503,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Select<T2, T3, T4>(Expression<Func<T, T2, T3, T4, object>> lambdaSelect)
         {
-            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(lambdaSelect));
+            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
         }
         /// <summary>
         /// 
@@ -516,7 +516,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Select<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, object>> lambdaSelect)
         {
-            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(lambdaSelect));
+            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
         }
         /// <summary>
         /// 
@@ -530,7 +530,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Select<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, object>> lambdaSelect)
         {
-            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(lambdaSelect));
+            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
         }
         /// <summary>
         /// 
@@ -539,7 +539,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Select(Expression<Func<T, bool>> lambdaSelect)
         {
-            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(lambdaSelect));
+            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
         }
         /// <summary>
         /// Distinct
@@ -579,9 +579,9 @@ namespace WEF
         private void SetDefaultOrderby()
         {
             if (!OrderByOperation.IsNullOrEmpty(this.OrderByClip)) return;
-            if (fields.Count > 0)
+            if (_fields.Count > 0)
             {
-                if (fields.Any(f => f.PropertyName.Trim().Equals("*")))
+                if (_fields.Any(f => f.PropertyName.Trim().Equals("*")))
                 {
                     setPrimarykeyOrderby();
                 }
@@ -666,6 +666,8 @@ namespace WEF
         #endregion
 
         #region 查询
+
+
         private readonly string[] _notClass = new string[] { "String" };
         /// <summary>
         /// 
@@ -675,14 +677,17 @@ namespace WEF
         public List<TResult> ToList<TResult>()
         {
             var typet = typeof(TResult);
+
             if (typet == typeof(T))
             {
                 return ToList() as List<TResult>;
             }
+
             var from = GetPagedFromSection();
+
             if (typet.IsClass && !_notClass.Contains(typet.Name))
             {
-                string cacheKey = String.Format("{0}List|{1}", dbProvider.ConnectionStringsName,
+                string cacheKey = String.Format("{0}List|{1}", _dbProvider.ConnectionStringsName,
                     formatSql(@from.SqlString, @from));
                 var cacheValue = getCache(cacheKey);
 
@@ -708,24 +713,39 @@ namespace WEF
                 throw new Exception(".ToList<" + typet.Name + ">()最多.Select()一个字段！");
             }
             {
-                var cacheKey = string.Concat(dbProvider.ConnectionStringsName, "List", "|",
+                var cacheKey = string.Concat(_dbProvider.ConnectionStringsName, "List", "|",
                     formatSql(@from.SqlString, @from));
+
                 var cacheValue = getCache(cacheKey);
 
                 if (null != cacheValue)
                 {
                     return (List<TResult>)cacheValue;
                 }
+
                 var list = new List<TResult>();
+
                 using (var reader = ToDataReader(@from))
                 {
                     while (reader.Read())
                     {
-                        list.Add(DataUtils.ConvertValue<TResult>(reader[@from.Fields[0].Name]));
+                        var t = DataUtils.ConvertValue<TResult>(reader[@from.Fields[0].Name]);
+
+                        var st = t as Entity;
+
+                        if (st != null)
+                        {
+                            st.ClearModifyFields();
+                            st.SetTableName(_tableName);
+                        }
+
+                        list.Add(t);
                     }
                     reader.Close();
                 }
+
                 setCache(list, cacheKey);
+
                 return list;
             }
         }
@@ -736,7 +756,7 @@ namespace WEF
         public List<T> ToList()
         {
             var from = GetPagedFromSection();
-            string cacheKey = String.Format("{0}List|{1}", dbProvider.ConnectionStringsName,
+            string cacheKey = String.Format("{0}List|{1}", _dbProvider.ConnectionStringsName,
                 formatSql(@from.SqlString, @from));
             var cacheValue = getCache(cacheKey);
             if (null != cacheValue)
@@ -749,10 +769,14 @@ namespace WEF
                 list = EntityUtils.ReaderToEnumerable<T>(reader).ToList();
             }
             setCache(list, cacheKey);
-            //2015-09-08
+
             foreach (var m in list)
             {
-                m.ClearModifyFields();
+                if (m != null)
+                {
+                    m.ClearModifyFields();
+                    m.SetTableName(_tableName);
+                }
             }
             return list;
         }
@@ -763,6 +787,7 @@ namespace WEF
         public IEnumerable<T> ToEnumerable()
         {
             var from = GetPagedFromSection();
+
             using (var reader = ToDataReader(from))
             {
                 var info = new EntityUtils.CacheInfo
@@ -784,7 +809,10 @@ namespace WEF
         {
             T t = this.ToFirst();
             if (t == null)
+            {
                 t = DataUtils.Create<T>();
+                t.SetTableName(_tableName);
+            }
             return t;
         }
 
@@ -804,6 +832,8 @@ namespace WEF
         {
             return ToFirst<TResult>();
         }
+
+
         /// <summary>
         /// 返回第一个实体 ，同First()。无数据返回Null。
         /// </summary>
@@ -817,7 +847,7 @@ namespace WEF
             }
             Search from = this.Top(1).GetPagedFromSection();
 
-            string cacheKey = string.Format("{0}FirstT|{1}", dbProvider.ConnectionStringsName, formatSql(from.SqlString, from));
+            string cacheKey = string.Format("{0}FirstT|{1}", _dbProvider.ConnectionStringsName, formatSql(from.SqlString, from));
             object cacheValue = getCache(cacheKey);
 
             if (null != cacheValue)
@@ -827,16 +857,30 @@ namespace WEF
 
 
             TResult t = null;
+
             using (IDataReader reader = ToDataReader(from))
             {
                 var result = EntityUtils.ReaderToEnumerable<TResult>(reader).ToArray();
+
                 if (result.Any())
                 {
                     t = result.First();
+
+                    if (t != null)
+                    {
+                        var st = t as Entity;
+
+                        if (st != null)
+                        {
+                            st.ClearModifyFields();
+                            st.SetTableName(_tableName);
+                        }
+                    }
                 }
             }
 
             setCache<TResult>(t, cacheKey);
+
             return t;
         }
         /// <summary>
@@ -847,7 +891,7 @@ namespace WEF
         {
             Search search = this.Top(1).GetPagedFromSection();
 
-            string cacheKey = string.Format("{0}FirstT|{1}", dbProvider.ConnectionStringsName, formatSql(search.SqlString, search));
+            string cacheKey = string.Format("{0}FirstT|{1}", _dbProvider.ConnectionStringsName, formatSql(search.SqlString, search));
 
             object cacheValue = getCache(cacheKey);
 
@@ -858,9 +902,11 @@ namespace WEF
 
 
             T t = null;
+
             using (IDataReader reader = ToDataReader(search))
             {
                 var result = EntityUtils.ReaderToEnumerable<T>(reader).ToArray();
+
                 if (result.Any())
                 {
                     t = result.First();
@@ -871,8 +917,10 @@ namespace WEF
 
             if (t != null)
             {
+                t.SetTableName(_tableName);
                 t.ClearModifyFields();
             }
+
             return t;
         }
 
@@ -904,11 +952,11 @@ namespace WEF
             tname.Append(EntityCache.GetTableName<T>());
 
 
-            Search<T> tmpfromSection = new Search<T>(this.database);
-            tmpfromSection.tableName = tname.ToString();
+            Search<T> tmpfromSection = new Search<T>(this._database);
+            tmpfromSection._tableName = tname.ToString();
 
-            tmpfromSection.parameters.AddRange(this.Parameters);
-            tmpfromSection.parameters.AddRange(fromSection.Parameters);
+            tmpfromSection._parameters.AddRange(this.Parameters);
+            tmpfromSection._parameters.AddRange(fromSection.Parameters);
 
             return tmpfromSection;
         }
@@ -936,11 +984,11 @@ namespace WEF
 
             tname.Append(EntityCache.GetTableName<T>());
 
-            Search<T> tmpfromSection = new Search<T>(this.database);
-            tmpfromSection.tableName = tname.ToString();
+            Search<T> tmpfromSection = new Search<T>(this._database);
+            tmpfromSection._tableName = tname.ToString();
 
-            tmpfromSection.parameters.AddRange(this.Parameters);
-            tmpfromSection.parameters.AddRange(fromSection.Parameters);
+            tmpfromSection._parameters.AddRange(this.Parameters);
+            tmpfromSection._parameters.AddRange(fromSection.Parameters);
 
             return tmpfromSection;
         }
@@ -959,9 +1007,13 @@ namespace WEF
         public PagedList<T> GetPagedList(int pageIndex, int pageSize, string order, bool asc)
         {
             var total = this.Count();
+
             var list = this.OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
+
             var pagedlist = new PagedList<T>(pageIndex, pageSize, total);
+
             pagedlist.AddRange(list);
+
             return pagedlist;
         }
 

@@ -360,121 +360,130 @@ namespace WEF.Db
         public int Update<TEntity>(TEntity entity, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return DBContext.Update<TEntity>(trans, entity, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return DBContext.Update<TEntity>(trans, entity, ExpressionToOperation<TEntity>.ToWhereOperation(entity.GetTableName(), lambdaWhere));
         }
         /// <summary>
         /// 更新单个值
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="field"></param>
         /// <param name="value"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Field field, object value, WhereOperation where)
+        public int Update<TEntity>(string tableName, Field field, object value, WhereOperation where)
             where TEntity : Entity
         {
-            return DBContext.Update<TEntity>(trans, field, value, where);
+            return DBContext.Update<TEntity>(trans, tableName, field, value, where);
         }
         /// <summary>
-        /// 
+        /// 更新单个值
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="field"></param>
         /// <param name="value"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Field field, object value, Where where)
+        public int Update<TEntity>(string tableName, Field field, object value, Where where)
             where TEntity : Entity
         {
-            return DBContext.Update<TEntity>(trans, field, value, where);
+            return DBContext.Update<TEntity>(trans, tableName, field, value, where);
         }
         /// <summary>
-        /// 
+        /// 更新单个值
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="field"></param>
         /// <param name="value"></param>
         /// <param name="lambdaWhere"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Field field, object value, Expression<Func<TEntity, bool>> lambdaWhere)
+        public int Update<TEntity>(string tableName, Field field, object value, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return DBContext.Update<TEntity>(trans, field, value, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return DBContext.Update<TEntity>(trans, tableName, field, value, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
         }
         /// <summary>
         /// 更新多个值
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="fieldValue"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Dictionary<Field, object> fieldValue, WhereOperation where)
+        public int Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, WhereOperation where)
               where TEntity : Entity
         {
-            return DBContext.Update<TEntity>(trans, fieldValue, where);
+            return DBContext.Update<TEntity>(trans, tableName, fieldValue, where);
         }
         /// <summary>
-        /// 
+        /// 更新多个值
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="fieldValue"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Dictionary<Field, object> fieldValue, Where where)
+        public int Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, Where where)
               where TEntity : Entity
         {
-            return DBContext.Update<TEntity>(trans, fieldValue, where);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="fieldValue"></param>
-        /// <param name="lambdaWhere"></param>
-        /// <returns></returns>
-        public int Update<TEntity>(Dictionary<Field, object> fieldValue, Expression<Func<TEntity, bool>> lambdaWhere)
-              where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(trans, fieldValue, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return DBContext.Update<TEntity>(trans, tableName, fieldValue, where);
         }
         /// <summary>
         /// 更新
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="fieldValue"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public int Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, Expression<Func<TEntity, bool>> lambdaWhere)
+              where TEntity : Entity
+        {
+            return DBContext.Update<TEntity>(trans, tableName, fieldValue, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
+        }
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="values"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Field[] fields, object[] values, WhereOperation where)
+        public int Update<TEntity>(string tableName, Field[] fields, object[] values, WhereOperation where)
             where TEntity : Entity
         {
-            return DBContext.Update<TEntity>(trans, fields, values, where);
+            return DBContext.Update<TEntity>(trans, tableName, fields, values, where);
         }
         /// <summary>
-        /// 
+        /// 更新
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="values"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Field[] fields, object[] values, Where where)
+        public int Update<TEntity>(string tableName, Field[] fields, object[] values, Where where)
             where TEntity : Entity
         {
-            return DBContext.Update<TEntity>(trans, fields, values, where);
+            return DBContext.Update<TEntity>(trans, tableName, fields, values, where);
         }
         /// <summary>
-        /// 
+        /// 更新
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="values"></param>
         /// <param name="lambdaWhere"></param>
         /// <returns></returns>
-        public int Update<TEntity>(Field[] fields, object[] values, Expression<Func<TEntity, bool>> lambdaWhere)
+        public int Update<TEntity>(string tableName, Field[] fields, object[] values, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return DBContext.Update<TEntity>(trans, fields, values, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return DBContext.Update<TEntity>(trans, tableName, fields, values, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
         }
 
         #endregion
@@ -513,17 +522,6 @@ namespace WEF.Db
         {
             return DBContext.Delete<TEntity>(trans, entities);
         }
-        ///// <summary>
-        /////  删除
-        ///// </summary>
-        ///// <typeparam name="TEntity"></typeparam>
-        ///// <param name="pkValues"></param>
-        ///// <returns></returns>
-        //public int Delete<TEntity>(params object[] pkValues)
-        //    where TEntity : Entity
-        //{
-        //    return DBContext.DeleteByPrimaryKey<TEntity>(trans, pkValues);
-        //}
         /// <summary>
         ///  删除
         /// </summary>
@@ -551,37 +549,40 @@ namespace WEF.Db
             return DBContext.DeleteByPrimaryKey<TEntity>(trans, pkValues);
         }
         /// <summary>
-        ///  删除
+        /// 删除
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Delete<TEntity>(WhereOperation where)
+        public int Delete<TEntity>(string tableName, WhereOperation where)
             where TEntity : Entity
         {
-            return DBContext.Delete<TEntity>(trans, where);
+            return DBContext.Delete<TEntity>(trans, tableName, where);
         }
         /// <summary>
-        /// 
+        /// 删除
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Delete<TEntity>(Where where)
+        public int Delete<TEntity>(string tableName, Where where)
             where TEntity : Entity
         {
-            return DBContext.Delete<TEntity>(trans, where.ToWhereClip());
+            return DBContext.Delete<TEntity>(trans, tableName, where.ToWhereClip());
         }
         /// <summary>
-        /// 
+        /// 删除
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="lambdaWhere"></param>
         /// <returns></returns>
-        public int Delete<TEntity>(Expression<Func<TEntity, bool>> lambdaWhere)
+        public int Delete<TEntity>(string tableName, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return DBContext.Delete<TEntity>(trans, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return DBContext.Delete<TEntity>(trans, tableName, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
         }
         #endregion
 
@@ -635,13 +636,14 @@ namespace WEF.Db
         /// 添加
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="values"></param>
         /// <returns></returns>
-        public int Insert<TEntity>(Field[] fields, object[] values)
+        public int Insert<TEntity>(string tableName, Field[] fields, object[] values)
             where TEntity : Entity
         {
-            return DBContext.Insert<TEntity>(trans, fields, values);
+            return DBContext.Insert<TEntity>(trans, tableName, fields, values);
         }
         #endregion
     }

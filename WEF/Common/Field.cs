@@ -197,7 +197,6 @@ namespace WEF.Common
             {
                 if (string.IsNullOrEmpty(tableName))
                     return tableName;
-
                 return string.Concat("{0}", tableName, "{1}");
             }
         }

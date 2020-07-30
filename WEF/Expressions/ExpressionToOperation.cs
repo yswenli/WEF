@@ -35,104 +35,68 @@ namespace WEF.Expressions
         private static Evaluator evaluator = new Evaluator();
         private static CacheEvaluator cacheEvaluator = new CacheEvaluator();
         private static FastEvaluator fastEvaluator = new FastEvaluator();
+
+
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="e"></param>
         /// <returns></returns>
-        public static WhereOperation ToJoinWhere<TEntity>(Expression<Func<T, TEntity, bool>> e)
+        public static WhereOperation ToJoinWhere<TEntity>(string tableName, Expression<Func<T, TEntity, bool>> e)
         {
-            return ToWhereOperationChild(e.Body, WhereType.JoinWhere);
+            return ToWhereOperationChild(tableName, e.Body, WhereType.JoinWhere);
         }
         /// <summary>
-        /// 
+        /// ToWhereOperation
         /// </summary>
+        /// <param name="tableName"></param>
         /// <param name="e"></param>
         /// <returns></returns>
-        public static WhereOperation ToWhereOperation(Expression<Func<T, bool>> e)
+        public static WhereOperation ToWhereOperation(string tableName, Expression<Func<T, bool>> e)
         {
-            return ToWhereOperationChild(e.Body);
+            return ToWhereOperationChild(tableName, e.Body);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T2"></typeparam>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        public static WhereOperation ToWhereOperation<T2>(Expression<Func<T, T2, bool>> e)
+
+        public static WhereOperation ToWhereOperation<T2>(string tableName, Expression<Func<T, T2, bool>> e)
         {
-            return ToWhereOperationChild(e.Body);
+            return ToWhereOperationChild(tableName, e.Body);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T2"></typeparam>
-        /// <typeparam name="T3"></typeparam>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        public static WhereOperation ToWhereOperation<T2, T3>(Expression<Func<T, T2, T3, bool>> e)
+
+        public static WhereOperation ToWhereOperation<T2, T3>(string tableName, Expression<Func<T, T2, T3, bool>> e)
         {
-            return ToWhereOperationChild(e.Body);
+            return ToWhereOperationChild(tableName, e.Body);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T2"></typeparam>
-        /// <typeparam name="T3"></typeparam>
-        /// <typeparam name="T4"></typeparam>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        public static WhereOperation ToWhereOperation<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> e)
+
+        public static WhereOperation ToWhereOperation<T2, T3, T4>(string tableName, Expression<Func<T, T2, T3, T4, bool>> e)
         {
-            return ToWhereOperationChild(e.Body);
+            return ToWhereOperationChild(tableName, e.Body);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T2"></typeparam>
-        /// <typeparam name="T3"></typeparam>
-        /// <typeparam name="T4"></typeparam>
-        /// <typeparam name="T5"></typeparam>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        public static WhereOperation ToWhereOperation<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> e)
+
+        public static WhereOperation ToWhereOperation<T2, T3, T4, T5>(string tableName, Expression<Func<T, T2, T3, T4, T5, bool>> e)
         {
-            return ToWhereOperationChild(e.Body);
+            return ToWhereOperationChild(tableName, e.Body);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T2"></typeparam>
-        /// <typeparam name="T3"></typeparam>
-        /// <typeparam name="T4"></typeparam>
-        /// <typeparam name="T5"></typeparam>
-        /// <typeparam name="T6"></typeparam>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        public static WhereOperation ToWhereOperation<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> e)
+
+        public static WhereOperation ToWhereOperation<T2, T3, T4, T5, T6>(string tableName, Expression<Func<T, T2, T3, T4, T5, T6, bool>> e)
         {
-            return ToWhereOperationChild(e.Body);
+            return ToWhereOperationChild(tableName, e.Body);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="e"></param>
-        /// <param name="wt"></param>
-        /// <returns></returns>
-        private static WhereOperation ToWhereOperationChild(System.Linq.Expressions.Expression e, WhereType wt = WhereType.Where)
+
+        private static WhereOperation ToWhereOperationChild(string tableName, System.Linq.Expressions.Expression e, WhereType wt = WhereType.Where)
         {
             if (e is BinaryExpression)
             {
-                return ConvertBinary((BinaryExpression)e, wt);
+                return ConvertBinary(tableName, (BinaryExpression)e, wt);
             }
             if (e is MethodCallExpression)
             {
-                return ConvertMethodCall((MethodCallExpression)e);
+                return ConvertMethodCall(tableName, (MethodCallExpression)e);
             }
             if (e is UnaryExpression)
             {
-                return ConvertUnary((UnaryExpression)e);
+                return ConvertUnary(tableName, (UnaryExpression)e);
             }
             if (IsBoolFieldOrProperty(e))
             {
@@ -170,98 +134,82 @@ namespace WEF.Expressions
         /// <param name="ue"></param>
         /// <param name="wtype"></param>
         /// <returns></returns>
-        private static WhereOperation ConvertUnary(UnaryExpression ue, WhereType wtype = WhereType.Where)
+        private static WhereOperation ConvertUnary(string tableName, UnaryExpression ue, WhereType wtype = WhereType.Where)
         {
             switch (ue.NodeType)
             {
                 case ExpressionType.Not:
-                    return !ToWhereOperationChild(ue.Operand, wtype);
+                    return !ToWhereOperationChild(tableName, ue.Operand, wtype);
             }
             throw new Exception("暂时不支持的NodeType(" + ue.NodeType + ") lambda写法！请使用经典写法！");
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="be"></param>
-        /// <param name="wt"></param>
-        /// <returns></returns>
-        private static WhereOperation ConvertBinary(BinaryExpression be, WhereType wt = WhereType.Where)
+
+        private static WhereOperation ConvertBinary(string tableName, BinaryExpression be, WhereType wt = WhereType.Where)
         {
             switch (be.NodeType)
             {
                 case ExpressionType.Equal:
-                    return LeftAndRight(be, QueryOperator.Equal, wt);
+                    return LeftAndRight(tableName, be, QueryOperator.Equal, wt);
                 case ExpressionType.GreaterThan:
-                    return LeftAndRight(be, QueryOperator.Greater, wt);
+                    return LeftAndRight(tableName, be, QueryOperator.Greater, wt);
                 case ExpressionType.GreaterThanOrEqual:
-                    return LeftAndRight(be, QueryOperator.GreaterOrEqual, wt);
+                    return LeftAndRight(tableName, be, QueryOperator.GreaterOrEqual, wt);
                 case ExpressionType.LessThan:
-                    return LeftAndRight(be, QueryOperator.Less, wt);
+                    return LeftAndRight(tableName, be, QueryOperator.Less, wt);
                 case ExpressionType.LessThanOrEqual:
-                    return LeftAndRight(be, QueryOperator.LessOrEqual, wt);
+                    return LeftAndRight(tableName, be, QueryOperator.LessOrEqual, wt);
                 case ExpressionType.NotEqual:
-                    return LeftAndRight(be, QueryOperator.NotEqual, wt);
+                    return LeftAndRight(tableName, be, QueryOperator.NotEqual, wt);
                 case ExpressionType.AndAlso:
-                    return ToWhereOperationChild(be.Left, wt) && ToWhereOperationChild(be.Right, wt);
+                    return ToWhereOperationChild(tableName, be.Left, wt) && ToWhereOperationChild(tableName, be.Right, wt);
                 case ExpressionType.OrElse:
-                    return ToWhereOperationChild(be.Left, wt) || ToWhereOperationChild(be.Right, wt);
+                    return ToWhereOperationChild(tableName, be.Left, wt) || ToWhereOperationChild(tableName, be.Right, wt);
                 default:
                     throw new Exception("暂时不支持的Where条件(" + be.NodeType + ")Lambda表达式写法！请使用经典写法！");
             }
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="mce"></param>
-        /// <returns></returns>
-        private static WhereOperation ConvertMethodCall(MethodCallExpression mce)
+
+
+        private static WhereOperation ConvertMethodCall(string tableName, MethodCallExpression mce)
         {
             switch (mce.Method.Name)
             {
                 case "StartsWith":
-                    return ConvertLikeCall(mce, "", "%");
+                    return ConvertLikeCall(tableName, mce, "", "%");
                 case "EndsWith":
-                    return ConvertLikeCall(mce, "%", "");
+                    return ConvertLikeCall(tableName, mce, "%", "");
                 case "Contains":
-                    return ConvertLikeCall(mce, "%", "%");
+                    return ConvertLikeCall(tableName, mce, "%", "%");
                 case "Like":
-                    return ConvertLikeCall(mce, "%", "%", true);
+                    return ConvertLikeCall(tableName, mce, "%", "%", true);
                 case "Equals":
-                    return ConvertEqualsCall(mce);
+                    return ConvertEqualsCall(tableName, mce);
                 case "In":
-                    return ConvertInCall(mce);
+                    return ConvertInCall(tableName, mce);
                 case "NotIn":
-                    return ConvertInCall(mce, true);
+                    return ConvertInCall(tableName, mce, true);
                 case "IsNull":
-                    return ConvertNull(mce, true);
+                    return ConvertNull(tableName, mce, true);
                 case "IsNotNull":
-                    return ConvertNull(mce);
+                    return ConvertNull(tableName, mce);
                     //case "Sum":
                     //    return ConvertAs(e);
             }
             throw new Exception("暂时不支持的Lambda表达式方法: " + mce.Method.Name + "！请使用经典写法！");
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="mce"></param>
-        /// <param name="isNull"></param>
-        /// <returns></returns>
-        private static WhereOperation ConvertNull(MethodCallExpression mce, bool isNull = false)
+
+
+        private static WhereOperation ConvertNull(string tableName, MethodCallExpression mce, bool isNull = false)
         {
             ColumnFunction function;
             MemberExpression member;
             var key = GetMemberName(mce.Arguments[0], out function, out member);
-            return isNull ? CreateField(key, member.Expression.Type).IsNull()
-                : CreateField(key, member.Expression.Type).IsNotNull();
+            return isNull ? CreateField(tableName, key, member.Expression.Type).IsNull()
+                : CreateField(tableName, key, member.Expression.Type).IsNotNull();
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="mce"></param>
-        /// <param name="isLike"></param>
-        /// <returns></returns>
-        private static WhereOperation ConvertEqualsCall(MethodCallExpression mce, bool isLike = false)
+
+
+        private static WhereOperation ConvertEqualsCall(string tableName, MethodCallExpression mce, bool isLike = false)
         {
             ColumnFunction function;
             MemberExpression member;
@@ -269,18 +217,14 @@ namespace WEF.Expressions
             var value = GetValue(mce.Arguments[0]);
             if (value != null)
             {
-                return new WhereOperation(CreateField(key, member.Expression.Type),
+                return new WhereOperation(CreateField(tableName, key, member.Expression.Type),
                     string.Concat(value), QueryOperator.Equal);
             }
             throw new Exception("'Like'仅支持一个参数，参数应为字符串且不允许为空");
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="mce"></param>
-        /// <param name="notIn"></param>
-        /// <returns></returns>
-        private static WhereOperation ConvertInCall(MethodCallExpression mce, bool notIn = false)
+
+
+        private static WhereOperation ConvertInCall(string tableName, MethodCallExpression mce, bool notIn = false)
         {
             ColumnFunction function;
             MemberExpression member;
@@ -295,18 +239,12 @@ namespace WEF.Expressions
             {
                 list.Add(ie);
             }
-            return notIn ? CreateField(key, member.Expression.Type).SelectNotIn(list.ToArray())
-                : CreateField(key, member.Expression.Type).SelectIn(list.ToArray());
+            return notIn ? CreateField(tableName, key, member.Expression.Type).SelectNotIn(list.ToArray())
+                : CreateField(tableName, key, member.Expression.Type).SelectIn(list.ToArray());
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="mce"></param>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <param name="isLike"></param>
-        /// <returns></returns>
-        private static WhereOperation ConvertLikeCall(MethodCallExpression mce, string left, string right, bool isLike = false)
+
+
+        private static WhereOperation ConvertLikeCall(string tableName, MethodCallExpression mce, string left, string right, bool isLike = false)
         {
             ColumnFunction function;
             MemberExpression member;
@@ -316,7 +254,7 @@ namespace WEF.Expressions
                 var value = GetValue(isLike ? mce.Arguments[1] : mce.Arguments[0]);
                 if (value != null && value is string)
                 {
-                    return new WhereOperation(CreateField(key, member.Expression.Type),
+                    return new WhereOperation(CreateField(tableName, key, member.Expression.Type),
                         string.Concat(left, value, right), QueryOperator.Like);
                 }
             }
@@ -360,14 +298,8 @@ namespace WEF.Expressions
             }
             throw new Exception("暂时不支持的Lambda表达式写法！请使用经典写法！");
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="be"></param>
-        /// <param name="co"></param>
-        /// <param name="wtype"></param>
-        /// <returns></returns>
-        private static WhereOperation LeftAndRight(BinaryExpression be, QueryOperator co, WhereType wtype = WhereType.Where)
+
+        private static WhereOperation LeftAndRight(string tableName, BinaryExpression be, QueryOperator co, WhereType wtype = WhereType.Where)
         {
             ColumnFunction leftFunction;
             ColumnFunction rightFunction;
@@ -408,11 +340,11 @@ namespace WEF.Expressions
                             var keyLeft = GetMemberName(expLeft, out functionLeft, out left);
                             if (keyRightName[0].Contains("$"))
                             {
-                                return new WhereOperation(CreateField(keyLeft, left.Expression.Type), GetValue(expRight), co);
+                                return new WhereOperation(CreateField(tableName, keyLeft, left.Expression.Type), GetValue(expRight), co);
                             }
                             else
                             {
-                                return new WhereOperation(CreateField(keyRightName, rightMe.Expression.Type), CreateField(keyLeft, left.Expression.Type), co);
+                                return new WhereOperation(CreateField(tableName, keyRightName, rightMe.Expression.Type), CreateField(tableName, keyLeft, left.Expression.Type), co);
                             }
                         }
                     }
@@ -426,13 +358,13 @@ namespace WEF.Expressions
                         return new WhereOperation(" 1=1 ");
                     }
                     if (value != null)
-                        return new WhereOperation(CreateField(keyRightName, rightMe.Expression.Type), value, co);
+                        return new WhereOperation(CreateField(tableName, keyRightName, rightMe.Expression.Type), value, co);
                     switch (co)
                     {
                         case QueryOperator.Equal:
-                            return CreateField(keyRightName, rightMe.Expression.Type).IsNull();
+                            return CreateField(tableName, keyRightName, rightMe.Expression.Type).IsNull();
                         case QueryOperator.NotEqual:
-                            return CreateField(keyRightName, rightMe.Expression.Type).IsNotNull();
+                            return CreateField(tableName, keyRightName, rightMe.Expression.Type).IsNotNull();
                     }
                     throw new Exception("null值只支持等于或不等于！出错比较符：" + co.ToString());
                 }
@@ -462,8 +394,8 @@ namespace WEF.Expressions
                         ColumnFunction functionRight;
                         var keyRight = GetMemberName(expRight, out functionRight, out right);
                         return new WhereOperation(
-                            CreateField(key, leftMe.Expression.Type),
-                            CreateField(keyRight, right.Expression.Type)
+                            CreateField(tableName, key, leftMe.Expression.Type),
+                            CreateField(tableName, keyRight, right.Expression.Type)
                             , co);
                     }
                 }
@@ -472,15 +404,15 @@ namespace WEF.Expressions
                 {
                     if (co == QueryOperator.Equal)
                     {
-                        return CreateField(key, leftMe.Expression.Type).IsNull();
+                        return CreateField(tableName, key, leftMe.Expression.Type).IsNull();
                     }
                     if (co == QueryOperator.NotEqual)
                     {
-                        return CreateField(key, leftMe.Expression.Type).IsNotNull();
+                        return CreateField(tableName, key, leftMe.Expression.Type).IsNotNull();
                     }
                     throw new Exception("null值只支持等于或不等于！");
                 }
-                return new WhereOperation(CreateField(key, leftMe.Expression.Type), value, co);
+                return new WhereOperation(CreateField(tableName, key, leftMe.Expression.Type), value, co);
             }
         }
         /// <summary>
@@ -492,27 +424,19 @@ namespace WEF.Expressions
         {
             return fastEvaluator.Eval(right);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="expr"></param>
-        /// <returns></returns>
-        public static GroupByOperation ToGroupByClip(Expression<Func<T, object>> expr)
+
+        public static GroupByOperation ToGroupByClip(string tableName, Expression<Func<T, object>> expr)
         {
-            return ToGroupByClipChild(expr.Body);
+            return ToGroupByClipChild(tableName, expr.Body);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="exprBody"></param>
-        /// <returns></returns>
-        private static GroupByOperation ToGroupByClipChild(System.Linq.Expressions.Expression exprBody)
+
+        private static GroupByOperation ToGroupByClipChild(string tableName, System.Linq.Expressions.Expression exprBody)
         {
             if (exprBody is MemberExpression)
             {
                 var e = (MemberExpression)exprBody;
                 var filedProp = GetFieldName(e.Member);
-                return new GroupByOperation(CreateField(filedProp, e.Expression.Type));
+                return new GroupByOperation(CreateField(tableName, filedProp, e.Expression.Type));
             }
             if (exprBody is NewExpression)
             {
@@ -520,40 +444,28 @@ namespace WEF.Expressions
                 var type = exNew.Constructor.DeclaringType;
                 var list = new List<string>(exNew.Arguments.Count);
                 return exNew.Arguments.Cast<MemberExpression>().Aggregate(GroupByOperation.None, (current, member)
-                    => current && CreateField(GetFieldName(member.Member), member.Expression.Type).GroupBy);
+                    => current && CreateField(tableName, GetFieldName(member.Member), member.Expression.Type).GroupBy);
             }
             if (exprBody is UnaryExpression)
             {
                 var exNew = (UnaryExpression)exprBody;
-                return ToGroupByClipChild(exNew.Operand);
+                return ToGroupByClipChild(tableName, exNew.Operand);
             }
 
             throw new Exception("暂时不支持的Group by lambda写法！请使用经典写法！");
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="expr"></param>
-        /// <returns></returns>
-        public static OrderByOperation ToOrderByClip(Expression<Func<T, object>> expr)
+
+        public static OrderByOperation ToOrderByClip(string tableName, Expression<Func<T, object>> expr)
         {
-            return ToOrderByClipChild(expr.Body, OrderByOperater.ASC);
+            return ToOrderByClipChild(tableName, expr.Body, OrderByOperater.ASC);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="expr"></param>
-        /// <returns></returns>
-        public static OrderByOperation ToOrderByDescendingClip(Expression<Func<T, object>> expr)
+
+        public static OrderByOperation ToOrderByDescendingClip(string tableName, Expression<Func<T, object>> expr)
         {
-            return ToOrderByClipChild(expr.Body, OrderByOperater.DESC);
-        }/// <summary>
-         /// 
-         /// </summary>
-         /// <param name="exprBody"></param>
-         /// <param name="orderBy"></param>
-         /// <returns></returns>
-        private static OrderByOperation ToOrderByClipChild(System.Linq.Expressions.Expression exprBody, OrderByOperater orderBy)
+            return ToOrderByClipChild(tableName, expr.Body, OrderByOperater.DESC);
+        }
+
+        private static OrderByOperation ToOrderByClipChild(string tableName, System.Linq.Expressions.Expression exprBody, OrderByOperater orderBy)
         {
             if (exprBody is MemberExpression)
             {
@@ -562,11 +474,11 @@ namespace WEF.Expressions
                 var filedProp = GetFieldName(e.Member);
                 if (orderBy == OrderByOperater.DESC)
                 {
-                    gb = gb && CreateField(filedProp, e.Expression.Type).Desc;
+                    gb = gb && CreateField(tableName, filedProp, e.Expression.Type).Desc;
                 }
                 else
                 {
-                    gb = gb && CreateField(filedProp, e.Expression.Type).Asc;
+                    gb = gb && CreateField(tableName, filedProp, e.Expression.Type).Asc;
                 }
                 return gb;
             }
@@ -581,11 +493,11 @@ namespace WEF.Expressions
                     var filedProp = GetFieldName(member.Member);
                     if (orderBy == OrderByOperater.DESC)
                     {
-                        gb = gb && CreateField(filedProp, member.Expression.Type).Desc;
+                        gb = gb && CreateField(tableName, filedProp, member.Expression.Type).Desc;
                     }
                     else
                     {
-                        gb = gb && CreateField(filedProp, member.Expression.Type).Asc;
+                        gb = gb && CreateField(tableName, filedProp, member.Expression.Type).Asc;
                     }
                 }
                 return gb;
@@ -593,51 +505,29 @@ namespace WEF.Expressions
             if (exprBody is UnaryExpression)
             {
                 var ueEx = (UnaryExpression)exprBody;
-                return ToOrderByClipChild(ueEx.Operand, orderBy);
+                return ToOrderByClipChild(tableName, ueEx.Operand, orderBy);
             }
             throw new Exception("暂时不支持的Order by lambda写法！请使用经典写法！");
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="expr"></param>
-        /// <returns></returns>
-        public static Field[] ToSelect(Expression<Func<T, object>> expr)
+
+        public static Field[] ToSelect(string tableName, Expression<Func<T, object>> expr)
         {
-            return ToSelectChild(expr.Body);
+            return ToSelectChild(tableName, expr.Body);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T2"></typeparam>
-        /// <param name="expr"></param>
-        /// <returns></returns>
-        public static Field[] ToSelect<T2>(Expression<Func<T, T2, object>> expr)
+
+        public static Field[] ToSelect<T2>(string tableName, Expression<Func<T, T2, object>> expr)
         {
-            return ToSelectChild(expr.Body);
+            return ToSelectChild(tableName, expr.Body);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T2"></typeparam>
-        /// <typeparam name="T3"></typeparam>
-        /// <param name="expr"></param>
-        /// <returns></returns>
-        public static Field[] ToSelect<T2, T3>(Expression<Func<T, T2, T3, object>> expr)
+
+        public static Field[] ToSelect<T2, T3>(string tableName, Expression<Func<T, T2, T3, object>> expr)
         {
-            return ToSelectChild(expr.Body);
+            return ToSelectChild(tableName, expr.Body);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T2"></typeparam>
-        /// <typeparam name="T3"></typeparam>
-        /// <typeparam name="T4"></typeparam>
-        /// <param name="expr"></param>
-        /// <returns></returns>
-        public static Field[] ToSelect<T2, T3, T4>(Expression<Func<T, T2, T3, T4, object>> expr)
+
+        public static Field[] ToSelect<T2, T3, T4>(string tableName, Expression<Func<T, T2, T3, T4, object>> expr)
         {
-            return ToSelectChild(expr.Body);
+            return ToSelectChild(tableName, expr.Body);
         }
         /// <summary>
         /// 
@@ -648,45 +538,29 @@ namespace WEF.Expressions
         /// <typeparam name="T5"></typeparam>
         /// <param name="expr"></param>
         /// <returns></returns>
-        public static Field[] ToSelect<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, object>> expr)
+        public static Field[] ToSelect<T2, T3, T4, T5>(string tableName, Expression<Func<T, T2, T3, T4, T5, object>> expr)
         {
-            return ToSelectChild(expr.Body);
+            return ToSelectChild(tableName, expr.Body);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T2"></typeparam>
-        /// <typeparam name="T3"></typeparam>
-        /// <typeparam name="T4"></typeparam>
-        /// <typeparam name="T5"></typeparam>
-        /// <typeparam name="T6"></typeparam>
-        /// <param name="expr"></param>
-        /// <returns></returns>
-        public static Field[] ToSelect<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, object>> expr)
+
+        public static Field[] ToSelect<T2, T3, T4, T5, T6>(string tableName, Expression<Func<T, T2, T3, T4, T5, T6, object>> expr)
         {
-            return ToSelectChild(expr.Body);
+            return ToSelectChild(tableName, expr.Body);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="expr"></param>
-        /// <returns></returns>
-        public static Field[] ToSelect(Expression<Func<T, bool>> expr)
+
+        public static Field[] ToSelect(string tableName, Expression<Func<T, bool>> expr)
         {
-            return ToSelectChild(expr.Body);
+            return ToSelectChild(tableName, expr.Body);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="exprBody"></param>
-        /// <returns></returns>
-        private static Field[] ToSelectChild(System.Linq.Expressions.Expression exprBody)
+
+
+        private static Field[] ToSelectChild(string tableName, System.Linq.Expressions.Expression exprBody)
         {
             if (exprBody is MemberExpression)
             {
                 var e = (MemberExpression)exprBody;
                 var filedProp = GetFieldName(e.Member);
-                return new[] { CreateField(filedProp, e.Expression.Type) };
+                return new[] { CreateField(tableName, filedProp, e.Expression.Type) };
             }
             if (exprBody is MethodCallExpression)
             {
@@ -694,9 +568,9 @@ namespace WEF.Expressions
                 switch (e.Method.Name)
                 {
                     case "As":
-                        return ConvertAs(e);
+                        return ConvertAs(tableName, e);
                     default:
-                        return ConvertFun(e);
+                        return ConvertFun(tableName, e);
                 }
                 throw new Exception("暂时不支持的Select lambda写法！请使用经典写法！");
             }
@@ -721,17 +595,17 @@ namespace WEF.Expressions
                         }
                         else if ((filedProp[0] == filedProp[1] && filedProp[0] != aliasName) || (filedProp[0] != aliasName && filedProp[1] != aliasName))
                         {
-                            f[i] = CreateField(filedProp, member.Expression.Type, aliasName);
+                            f[i] = CreateField(tableName, filedProp, member.Expression.Type, aliasName);
                         }
                         else
                         {
-                            f[i] = CreateField(filedProp, member.Expression.Type);
+                            f[i] = CreateField(tableName, filedProp, member.Expression.Type);
                         }
                     }
                     else if (item is MethodCallExpression)
                     {
                         var member = (MethodCallExpression)item;
-                        f[i] = ConvertFun(member, aliasName)[0];
+                        f[i] = ConvertFun(tableName, member, aliasName)[0];
                     }
                     i++;
                 }
@@ -743,25 +617,21 @@ namespace WEF.Expressions
                 switch (expr.NodeType)
                 {
                     case ExpressionType.Convert:
-                        return ToSelectChild(expr.Operand);
+                        return ToSelectChild(tableName, expr.Operand);
                 }
             }
             throw new Exception("暂时不支持的Select lambda写法！请使用经典写法！");
-        }/// <summary>
-         /// 
-         /// </summary>
-         /// <param name="e"></param>
-         /// <param name="aliasName"></param>
-         /// <returns></returns>
-        private static Field[] ConvertFun(MethodCallExpression e, string aliasName = null)
+        }
+
+        private static Field[] ConvertFun(string tableName, MethodCallExpression e, string aliasName = null)
         {
             ColumnFunction function;
             MemberExpression member;
             var key = GetMemberName(e.Arguments[0], out function, out member);
             Field f;
             f = string.IsNullOrWhiteSpace(aliasName)
-                ? CreateField(key, member.Expression.Type)
-                : CreateField(key, member.Expression.Type, aliasName);
+                ? CreateField(tableName, key, member.Expression.Type)
+                : CreateField(tableName, key, member.Expression.Type, aliasName);
             switch (e.Method.Name)
             {
                 case "Sum":
@@ -775,12 +645,10 @@ namespace WEF.Expressions
                 default:
                     throw new Exception("暂时不支持的Lambda表达式写法(" + e.Method.Name + ")！请使用经典写法！");
             }
-        }/// <summary>
-         /// 
-         /// </summary>
-         /// <param name="e"></param>
-         /// <returns></returns>
-        private static Field[] ConvertAs(MethodCallExpression e)
+        }
+
+
+        private static Field[] ConvertAs(string tableName, MethodCallExpression e)
         {
             ColumnFunction function;
             MemberExpression member;
@@ -790,67 +658,92 @@ namespace WEF.Expressions
                 object value = GetValue(e.Arguments[1]);
                 if (value != null && value is string)
                 {
-                    return new[] { CreateField(key, member.Expression.Type, value.ToString()) };
+                    return new[] { CreateField(tableName, key, member.Expression.Type, value.ToString()) };
                 }
             }
             throw new Exception("'As'仅支持一个参数，参数应为字符串且不允许为空");
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
+
+
         private static string GetTableName(Type type)
         {
             var tbl = type.GetCustomAttribute<Table>(false);
 
             return tbl != null ? tbl.GetTableName() : type.Name;
-        }/// <summary>
-         /// 
-         /// </summary>
-         /// <param name="type"></param>
-         /// <returns></returns>
+        }
+
         private static string[] GetFieldName(MemberInfo type)
         {
             var tbl = type.GetCustomAttribute<FieldAttribute>(false);
             return new string[] { tbl != null ? tbl.Field : type.Name, type.Name };
-            //return tbl != null ? tbl.Field : type.Name;
         }
         /// <summary>
-        /// 
+        /// CreateField
         /// </summary>
+        /// <param name="tableName"></param>
         /// <param name="mi"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        private static Field CreateField(MemberInfo mi, Type t)
+        private static Field CreateField(string tableName, MemberInfo mi, Type t)
         {
             var filedProp = GetFieldName(mi);
-            return new Field(filedProp[0], GetTableName(t), null, null, null, filedProp[1] == filedProp[0] ? null : filedProp[1]);
-        }/// <summary>
-         /// 
-         /// </summary>
-         /// <param name="filedProp"></param>
-         /// <param name="t"></param>
-         /// <returns></returns>
-        private static Field CreateField(string[] filedProp, Type t)
+            return new Field(filedProp[0], tableName ?? GetTableName(t), null, null, null, filedProp[1] == filedProp[0] ? null : filedProp[1]);
+        }
+
+        /// <summary>
+        /// CreateField
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="filedProp"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        private static Field CreateField(string tableName, string[] filedProp, Type t)
         {
             if (filedProp[0] == "All")
             {
                 filedProp[0] = "*";
             }
-            return new Field(filedProp[0], GetTableName(t));
-            //return new Field(filedProp[0], GetTableName(t), null, null, null, filedProp[1] == filedProp[0] ? null : filedProp[1]);
+
+            if (string.IsNullOrEmpty(tableName))
+            {
+                tableName = GetTableName(t);
+            }
+            if (tableName.IndexOf("`") > -1)
+            {
+                tableName = tableName.Replace("`", "");
+            }
+            if (tableName.IndexOf("'") > -1)
+            {
+                tableName = tableName.Replace("'", "");
+            }
+
+            return new Field(filedProp[0], tableName);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filedProp"></param>
-        /// <param name="t"></param>
-        /// <param name="asName"></param>
-        /// <returns></returns>
-        private static Field CreateField(string[] filedProp, Type t, string asName)
+
+        private static Field CreateField(string tableName, string[] filedProp, Type t, string aliasName)
         {
-            return new Field(filedProp[0], GetTableName(t), null, null, null, asName);
+            if (filedProp[0] == "All")
+            {
+                filedProp[0] = "*";
+            }
+            if (filedProp[0] == "All")
+            {
+                filedProp[0] = "*";
+            }
+
+            if (string.IsNullOrEmpty(tableName))
+            {
+                tableName = GetTableName(t);
+            }
+            if (tableName.IndexOf("`") > -1)
+            {
+                tableName = tableName.Replace("`", "");
+            }
+            if (tableName.IndexOf("'") > -1)
+            {
+                tableName = tableName.Replace("'", "");
+            }
+            return new Field(filedProp[0], tableName, null, null, null, aliasName);
         }
     }
 }

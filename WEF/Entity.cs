@@ -35,21 +35,21 @@ namespace WEF
         [XmlIgnore]
         [NonSerialized]
         [ScriptIgnore]
-        private string _tableName;
+        protected string _tableName;
         /// <summary>
         /// 
         /// </summary>
         [XmlIgnore]
         [NonSerialized]
         [ScriptIgnore]
-        private string _userName;
+        protected string _userName;
         /// <summary>
         /// 别名
         /// </summary>
         [XmlIgnore]
         [NonSerialized]
         [ScriptIgnore]
-        private string _tableAsName;
+        protected string _tableAsName;
         /// <summary>
         /// 是否
         /// </summary>
@@ -288,6 +288,8 @@ namespace WEF
         {
             return _modifyFieldsStr.Distinct().ToList();
         }
+
+
         private class ModelComparer : IEqualityComparer<ModifyField>
         {
             public bool Equals(ModifyField x, ModifyField y)
@@ -312,6 +314,27 @@ namespace WEF
         public string GetTableName()
         {
             return _tableName;
+        }
+
+        /// <summary>
+        /// 设置表名
+        /// </summary>
+        /// <param name="tableName"></param>
+        public void SetTableName(string tableName)
+        {
+            if (string.IsNullOrEmpty(tableName)) return;
+
+            _tableName = tableName;
+
+            if (_tableName.IndexOf("`") > -1)
+            {
+                _tableName = _tableName.Replace("`", "");
+            }
+
+            if (_tableName.IndexOf("'") > -1)
+            {
+                _tableName = _tableName.Replace("'", "");
+            }
         }
         /// <summary>
         /// 获取表名

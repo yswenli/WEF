@@ -655,15 +655,6 @@ namespace WEF.Common
 
 
 
-        /// <summary>
-        ///// 
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="reader"></param>
-        /// <param name="startBound"></param>
-        /// <param name="length"></param>
-        /// <param name="returnNullIfFirstMissing"></param>
-        /// <returns></returns>
         public static Func<IDataReader, object> GetDeserializer(Type type, IDataReader reader, int startBound, int length, bool returnNullIfFirstMissing)
         {
             if (type == typeof(object)
@@ -678,7 +669,6 @@ namespace WEF.Common
             }
             return GetStructDeserializer(type, startBound);
         }
-
 
         /// <summary>
         /// 
@@ -825,15 +815,8 @@ namespace WEF.Common
                 getItem = typeof(IDataRecord).GetProperties(BindingFlags.Instance | BindingFlags.Public)
                     .Where(p => p.GetIndexParameters().Any() && p.GetIndexParameters()[0].ParameterType == typeof(int))
                     .Select(p => p.GetGetMethod()).First();
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="reader"></param>
-        /// <param name="startBound"></param>
-        /// <param name="length"></param>
-        /// <param name="returnNullIfFirstMissing"></param>
-        /// <returns></returns>
+
+
         public static Func<IDataReader, object> GetTypeDeserializer(Type type, IDataReader reader, int startBound = 0, int length = -1, bool returnNullIfFirstMissing = false)
         {
             var dm = new DynamicMethod(string.Format("Deserialize{0}", Guid.NewGuid()), typeof(object), new[] { typeof(IDataReader) }, true);
@@ -858,13 +841,11 @@ namespace WEF.Common
 
             var names = new List<string>();
 
-            #region 2016-09-27 暂时修改:将循环改写成从properties获取names
             for (int i = startBound; i < startBound + length; i++)
             {
                 names.Add(reader.GetName(i));
             }
-            //names = properties.Select(d => d.Name).ToList();
-            #endregion
+
             var setters = (
                             from n in names
                             let prop = properties.FirstOrDefault(p => string.Equals(p.Name, n, StringComparison.Ordinal))
@@ -888,10 +869,18 @@ namespace WEF.Common
             }
             else
             {
-                il.Emit(OpCodes.Newobj, type.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, Type.EmptyTypes, null));
+
+                var cr = type.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                    null,
+                    Type.EmptyTypes,
+                    null);
+
+                il.Emit(OpCodes.Newobj, cr);
                 il.Emit(OpCodes.Stloc_1);
             }
+
             il.BeginExceptionBlock();
+
             if (type.IsValueType)
             {
                 il.Emit(OpCodes.Ldloca_S, (byte)1);
@@ -900,8 +889,11 @@ namespace WEF.Common
             {
                 il.Emit(OpCodes.Ldloc_1);
             }
+
             bool first = true;
+
             var allDone = il.DefineLabel();
+
             foreach (var item in setters)
             {
                 if (item.Property != null || item.Field != null)
@@ -923,11 +915,6 @@ namespace WEF.Common
                         il.EmitCall(OpCodes.Call, typeof(DataUtils).GetMethod(
                             memberType == typeof(char) ? "ReadChar" : "ReadNullableChar", BindingFlags.Static | BindingFlags.Public), null);
                     }
-                    //else if (memberType == typeof(bool) || memberType == typeof(bool?))
-                    //{
-                    //    il.EmitCall(OpCodes.Call, typeof(SqlMapper).GetMethod(
-                    //        memberType == typeof(bool) ? "ReadBoolean" : "ReadNullableBoolean", BindingFlags.Static | BindingFlags.Public), null);
-                    //}
                     else
                     {
                         il.Emit(OpCodes.Dup);
@@ -1313,8 +1300,13 @@ namespace WEF.Common
                      return FastExpando.Attach(row);
                  };
         }
+
+
         private static int collect;
+
         private const int COLLECT_PER_ITEMS = 1000, COLLECT_HIT_COUNT_MIN = 0;
+
+
         public class CacheInfo
         {
             public Func<IDataReader, object> Deserializer
@@ -1339,19 +1331,18 @@ namespace WEF.Common
                 Interlocked.Increment(ref hitCount);
             }
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+
         public static IEnumerable<T> ReaderToEnumerable<T>(IDataReader reader)
         {
             var info = new CacheInfo
             {
                 Deserializer = GetDeserializer(typeof(T), reader, 0, -1, false)
             };
+
             while (reader.Read())
             {
                 dynamic next = info.Deserializer(reader);
+
                 yield return (T)next;
             }
         }

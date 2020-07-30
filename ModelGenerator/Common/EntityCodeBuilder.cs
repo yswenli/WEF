@@ -380,12 +380,13 @@ namespace WEF.ModelGenerator.Common
 
             plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 获取实体");
-            plus.AppendSpaceLine(2, "/// <param name=\"pageIndex\">分页第几页</param>");
-            plus.AppendSpaceLine(2, "/// <param name=\"pageSize\">分页一页取值</param>");
+            plus.AppendSpaceLine(2, $"/// <param name=\"{identityColumn.Name}\">{identityColumn.Name}</param>");
+            plus.AppendSpaceLine(2, "/// <param name=\"tableName\">表名</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public " + ClassName + " Get" + ClassName + $"({identityColumn.DataTypeName} {identityColumn.Name})");
+            plus.AppendSpaceLine(2, "/// <returns></returns>");
+            plus.AppendSpaceLine(2, "public " + ClassName + " Get" + ClassName + $"({identityColumn.DataTypeName} {identityColumn.Name}, string tableName = \"\")");
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, $"return Search().Where(b => b.{identityColumn.Name} == {identityColumn.Name}).First();");
+            plus.AppendSpaceLine(3, $"return Search(tableName).Where(b => b.{identityColumn.Name} == {identityColumn.Name}).First();");
             plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");
@@ -393,6 +394,7 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, "/// <param name=\"pageIndex\">分页第几页</param>");
             plus.AppendSpaceLine(2, "/// <param name=\"pageSize\">分页一页取值</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
+            plus.AppendSpaceLine(2, "/// <returns></returns>");
             plus.AppendSpaceLine(2, "public List<" + ClassName + "> GetList(int pageIndex, int pageSize)");
             plus.AppendSpaceLine(2, "{");
             plus.AppendSpaceLine(3, "return this.Search().Page(pageIndex, pageSize).ToList();");
@@ -404,6 +406,7 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, "/// <param name=\"pageIndex\">分页第几页</param>");
             plus.AppendSpaceLine(2, "/// <param name=\"pageSize\">分页一页取值</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
+            plus.AppendSpaceLine(2, "/// <returns></returns>");
             plus.AppendSpaceLine(2, "public List<" + ClassName + "> GetList(string tableName, int pageIndex=1, int pageSize=12)");
             plus.AppendSpaceLine(2, "{");
             plus.AppendSpaceLine(3, "return this.Search(tableName).Page(pageIndex, pageSize).ToList();");
@@ -440,11 +443,12 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 删除实体");
             plus.AppendSpaceLine(2, $"/// <param name=\"{identityColumn.Name}\">{identityColumn.Name}</param>");
+            plus.AppendSpaceLine(2, "/// <param name=\"tableName\">tableName</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, $"public int Delete({identityColumn.DataTypeName} {identityColumn.Name})");
+            plus.AppendSpaceLine(2, $"public int Delete({identityColumn.DataTypeName} {identityColumn.Name}, string tableName = \"\")");
 
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, $"var entity = Search().Where(b => b.{identityColumn.Name} == {identityColumn.Name}).First();");
+            plus.AppendSpaceLine(3, $"var entity = Search(tableName).Where(b => b.{identityColumn.Name} == {identityColumn.Name}).First();");
             plus.AppendSpaceLine(3, "if (entity == null) return -1;");
             plus.AppendSpaceLine(3, "entity.Attach(EntityState.Deleted);");
             plus.AppendSpaceLine(3, "return db.Save(entity);");

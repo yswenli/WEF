@@ -36,54 +36,54 @@ namespace WEF
         /// <summary>
         /// 
         /// </summary>
-        protected WhereOperation where = WhereOperation.All;
+        protected WhereOperation _where = WhereOperation.All;
         /// <summary>
         /// 
         /// </summary>
-        protected WhereOperation havingWhere = WhereOperation.All;
+        protected WhereOperation _havingWhere = WhereOperation.All;
         /// <summary>
         /// 
         /// </summary>
-        protected OrderByOperation orderBy = OrderByOperation.None;
+        protected OrderByOperation _orderBy = OrderByOperation.None;
         /// <summary>
         /// 
         /// </summary>
-        protected GroupByOperation groupBy = GroupByOperation.None;
+        protected GroupByOperation _groupBy = GroupByOperation.None;
         /// <summary>
         /// 
         /// </summary>
-        protected string tableName;
+        protected string _tableName;
         ///// <summary>
         ///// 
         ///// </summary>
-        protected string asName;
+        protected string _asName;
 
 
-        protected List<Parameter> parameters = new List<Parameter>();
+        protected List<Parameter> _parameters = new List<Parameter>();
         /// <summary>
         /// 
         /// </summary>
-        protected List<Field> fields = new List<Field>();
+        protected List<Field> _fields = new List<Field>();
         /// <summary>
         /// 
         /// </summary>
-        protected DbProvider dbProvider;
+        protected DbProvider _dbProvider;
         /// <summary>
         /// 
         /// </summary>
-        protected Dictionary<string, KeyValuePair<string, WhereOperation>> joins = new Dictionary<string, KeyValuePair<string, WhereOperation>>();
+        protected Dictionary<string, KeyValuePair<string, WhereOperation>> _joins = new Dictionary<string, KeyValuePair<string, WhereOperation>>();
         /// <summary>
         /// 
         /// </summary>
-        protected Database database;
+        protected Database _database;
         /// <summary>
         /// 
         /// </summary>
-        protected string distinctString;
+        protected string _distinctString;
         /// <summary>
         /// 
         /// </summary>
-        protected string prefixString;
+        protected string _prefixString;
 
 
 
@@ -141,14 +141,14 @@ namespace WEF
         /// </summary>
         public DbProvider DbProvider
         {
-            get { return dbProvider; }
+            get { return _dbProvider; }
         }
         /// <summary>
         /// DbProvider。
         /// </summary>
         public Database Database
         {
-            get { return database; }
+            get { return _database; }
         }
         /// <summary>
         /// 设置 distinct
@@ -157,7 +157,7 @@ namespace WEF
         {
             set
             {
-                distinctString = value;
+                _distinctString = value;
             }
         }
 
@@ -168,7 +168,7 @@ namespace WEF
         {
             set
             {
-                prefixString = value;
+                _prefixString = value;
             }
         }
         /// <summary>
@@ -196,13 +196,13 @@ namespace WEF
             {
                 StringBuilder sql = new StringBuilder();
 
-                if (GroupByOperation.IsNullOrEmpty(groupBy) && string.IsNullOrEmpty(distinctString))
+                if (GroupByOperation.IsNullOrEmpty(_groupBy) && string.IsNullOrEmpty(_distinctString))
                 {
                     sql.Append(" SELECT count(*) as r_cnt FROM ");
                     sql.Append(FromString);
-                    if (!WhereOperation.IsNullOrEmpty(where))
+                    if (!WhereOperation.IsNullOrEmpty(_where))
                     {
-                        sql.Append(where.WhereString);
+                        sql.Append(_where.WhereString);
                     }
                 }
                 else
@@ -229,26 +229,26 @@ namespace WEF
                 StringBuilder sql = new StringBuilder();
 
                 sql.Append(" SELECT ");
-                sql.Append(distinctString);
+                sql.Append(_distinctString);
                 sql.Append(" ");
-                sql.Append(prefixString);
+                sql.Append(_prefixString);
                 sql.Append(" ");
                 sql.Append(ColumnsString);
                 sql.Append(" FROM ");
                 sql.Append(FromString);
                 sql.Append(" ");
 
-                if (!WhereOperation.IsNullOrEmpty(where))
+                if (!WhereOperation.IsNullOrEmpty(_where))
                 {
-                    sql.Append(where.WhereString);
+                    sql.Append(_where.WhereString);
                 }
-                if (!GroupByOperation.IsNullOrEmpty(groupBy))
+                if (!GroupByOperation.IsNullOrEmpty(_groupBy))
                 {
                     sql.Append(GroupByString);
-                    if (!WhereOperation.IsNullOrEmpty(havingWhere))
+                    if (!WhereOperation.IsNullOrEmpty(_havingWhere))
                     {
                         sql.Append(" HAVING ");
-                        sql.Append(havingWhere.ToString());
+                        sql.Append(_havingWhere.ToString());
                     }
                 }
                 return sql.ToString();
@@ -265,11 +265,11 @@ namespace WEF
                 StringBuilder fromstring = new StringBuilder();
 
                 //处理ACCESS 的多表联合查询
-                if (database.DbProvider is MsAccessProvider)
+                if (_database.DbProvider is MsAccessProvider)
                 {
-                    fromstring.Append('(', joins.Count);
-                    fromstring.Append(tableName);
-                    foreach (KeyValuePair<string, KeyValuePair<string, WhereOperation>> kv in joins)
+                    fromstring.Append('(', _joins.Count);
+                    fromstring.Append(_tableName);
+                    foreach (KeyValuePair<string, KeyValuePair<string, WhereOperation>> kv in _joins)
                     {
                         fromstring.Append(" ");
                         fromstring.Append(kv.Value.Key);
@@ -282,8 +282,8 @@ namespace WEF
                 }
                 else
                 {
-                    fromstring.Append(tableName);
-                    foreach (KeyValuePair<string, KeyValuePair<string, WhereOperation>> kv in joins)
+                    fromstring.Append(_tableName);
+                    foreach (KeyValuePair<string, KeyValuePair<string, WhereOperation>> kv in _joins)
                     {
                         fromstring.Append(" ");
                         fromstring.Append(kv.Value.Key);
@@ -306,11 +306,11 @@ namespace WEF
         {
             get
             {
-                return joins;
+                return _joins;
             }
             set
             {
-                joins = value;
+                _joins = value;
             }
         }
 
@@ -324,26 +324,26 @@ namespace WEF
                 StringBuilder sql = new StringBuilder();
 
                 sql.Append(" SELECT ");
-                sql.Append(distinctString);
+                sql.Append(_distinctString);
                 sql.Append(" ");
-                sql.Append(prefixString);
+                sql.Append(_prefixString);
                 sql.Append(" ");
                 sql.Append(ColumnsString);
                 sql.Append(" FROM ");
                 sql.Append(FromString);
                 sql.Append(" ");
 
-                if (!WhereOperation.IsNullOrEmpty(where))
+                if (!WhereOperation.IsNullOrEmpty(_where))
                 {
-                    sql.Append(where.WhereString);
+                    sql.Append(_where.WhereString);
                 }
-                if (!GroupByOperation.IsNullOrEmpty(groupBy))
+                if (!GroupByOperation.IsNullOrEmpty(_groupBy))
                 {
                     sql.Append(GroupByString);
-                    if (!WhereOperation.IsNullOrEmpty(havingWhere))
+                    if (!WhereOperation.IsNullOrEmpty(_havingWhere))
                     {
                         sql.Append(" HAVING ");
-                        sql.Append(havingWhere.ToString());
+                        sql.Append(_havingWhere.ToString());
                     }
                 }
 
@@ -361,13 +361,13 @@ namespace WEF
         {
             get
             {
-                return tableName;
+                return _tableName;
             }
             internal set
             {
-                tableName = value;
+                _tableName = value;
 
-                this.joins = new Dictionary<string, KeyValuePair<string, WhereOperation>>();
+                this._joins = new Dictionary<string, KeyValuePair<string, WhereOperation>>();
             }
         }
 
@@ -379,11 +379,11 @@ namespace WEF
         {
             get
             {
-                return orderBy;
+                return _orderBy;
             }
             internal set
             {
-                orderBy = value;
+                _orderBy = value;
             }
         }
 
@@ -394,14 +394,14 @@ namespace WEF
         {
             get
             {
-                if (OrderByOperation.IsNullOrEmpty(orderBy))
+                if (OrderByOperation.IsNullOrEmpty(_orderBy))
                     return string.Empty;
 
-                if ((tableName.IndexOf('(') >= 0 || tableName.IndexOf(')') >= 0 || tableName.IndexOf(" FROM ", StringComparison.OrdinalIgnoreCase) >= 0 || tableName.IndexOf(" AS ", StringComparison.OrdinalIgnoreCase) >= 0)
+                if ((_tableName.IndexOf('(') >= 0 || _tableName.IndexOf(')') >= 0 || _tableName.IndexOf(" FROM ", StringComparison.OrdinalIgnoreCase) >= 0 || _tableName.IndexOf(" AS ", StringComparison.OrdinalIgnoreCase) >= 0)
                     && !FromString.Contains(" LEFT OUTER JOIN ") //2018-04-09 新增一个&&条件
                     )
-                    return orderBy.RemovePrefixTableName().OrderByString;
-                return orderBy.OrderByString;
+                    return _orderBy.RemovePrefixTableName().OrderByString;
+                return _orderBy.OrderByString;
             }
         }
 
@@ -412,11 +412,11 @@ namespace WEF
         {
             get
             {
-                return groupBy;
+                return _groupBy;
             }
             internal set
             {
-                groupBy = value;
+                _groupBy = value;
             }
         }
 
@@ -427,11 +427,11 @@ namespace WEF
         {
             get
             {
-                if (GroupByOperation.IsNullOrEmpty(groupBy))
+                if (GroupByOperation.IsNullOrEmpty(_groupBy))
                     return string.Empty;
-                if (tableName.IndexOf('(') >= 0 || tableName.IndexOf(')') >= 0 || tableName.IndexOf(" FROM ", StringComparison.OrdinalIgnoreCase) >= 0 || tableName.IndexOf(" AS ", StringComparison.OrdinalIgnoreCase) >= 0)
-                    return groupBy.RemovePrefixTableName().GroupByString;
-                return groupBy.GroupByString;
+                if (_tableName.IndexOf('(') >= 0 || _tableName.IndexOf(')') >= 0 || _tableName.IndexOf(" FROM ", StringComparison.OrdinalIgnoreCase) >= 0 || _tableName.IndexOf(" AS ", StringComparison.OrdinalIgnoreCase) >= 0)
+                    return _groupBy.RemovePrefixTableName().GroupByString;
+                return _groupBy.GroupByString;
             }
         }
 
@@ -440,7 +440,7 @@ namespace WEF
         /// </summary>
         public WhereOperation GetWhereClip()
         {
-            return where;
+            return _where;
         }
 
         /// <summary>
@@ -452,20 +452,20 @@ namespace WEF
             {
                 List<Parameter> ps = new List<Parameter>();
 
-                if (!WhereOperation.IsNullOrEmpty(where))
-                    ps.AddRange(where.Parameters);
+                if (!WhereOperation.IsNullOrEmpty(_where))
+                    ps.AddRange(_where.Parameters);
 
                 //处理groupby的having
-                if (!GroupByOperation.IsNullOrEmpty(groupBy) && !WhereOperation.IsNullOrEmpty(havingWhere))
-                    ps.AddRange(havingWhere.Parameters);
+                if (!GroupByOperation.IsNullOrEmpty(_groupBy) && !WhereOperation.IsNullOrEmpty(_havingWhere))
+                    ps.AddRange(_havingWhere.Parameters);
 
-                ps.AddRange(parameters);
+                ps.AddRange(_parameters);
 
                 return ps;
             }
             internal set
             {
-                this.parameters = value;
+                this._parameters = value;
             }
 
 
@@ -478,11 +478,11 @@ namespace WEF
         {
             get
             {
-                if (fields.Count == 0)
+                if (_fields.Count == 0)
                     return "*";
 
                 StringBuilder columns = new StringBuilder();
-                foreach (Field filed in fields)
+                foreach (Field filed in _fields)
                 {
                     columns.Append(",");
                     columns.Append(filed.FullName);
@@ -500,7 +500,7 @@ namespace WEF
         {
             get
             {
-                return this.fields;
+                return this._fields;
             }
         }
 
@@ -540,11 +540,11 @@ namespace WEF
             Check.Require(tableName, "tableName", Check.NotNullOrEmpty);
 
             this.trans = trans;
-            this.dbProvider = database.DbProvider;
-            this.database = database;
-            this.tableName = tableName;
-            this.asName = asName;
-            this.typeTableName = tableName.Trim(dbProvider.LeftToken, dbProvider.RightToken);
+            this._dbProvider = database.DbProvider;
+            this._database = database;
+            this._tableName = tableName;
+            this._asName = asName;
+            this.typeTableName = tableName.Trim(_dbProvider.LeftToken, _dbProvider.RightToken);
         }
 
         #endregion
@@ -558,10 +558,10 @@ namespace WEF
         /// <returns></returns>
         protected bool isTurnonCache()
         {
-            if (null == dbProvider.CacheConfig)
+            if (null == _dbProvider.CacheConfig)
                 return false;
 
-            return dbProvider.CacheConfig.Enable;
+            return _dbProvider.CacheConfig.Enable;
 
         }
 
@@ -616,7 +616,7 @@ namespace WEF
         /// <returns></returns>
         public Search Where(WhereOperation where)
         {
-            this.where = where;
+            this._where = where;
             return this;
         }
 
@@ -628,7 +628,7 @@ namespace WEF
         /// <returns></returns>
         public Search GroupBy(GroupByOperation groupBy)
         {
-            this.groupBy = groupBy;
+            this._groupBy = groupBy;
             return this;
         }
 
@@ -640,7 +640,7 @@ namespace WEF
         /// <returns></returns>
         public Search Having(WhereOperation havingWhere)
         {
-            this.havingWhere = havingWhere;
+            this._havingWhere = havingWhere;
             return this;
         }
 
@@ -653,7 +653,7 @@ namespace WEF
         {
             if (null == fields || fields.Length <= 0) return this;
             var tempgroupby = fields.Aggregate(GroupByOperation.None, (current, f) => current && f.GroupBy);
-            this.groupBy = tempgroupby;
+            this._groupBy = tempgroupby;
             return this;
         }
 
@@ -664,7 +664,7 @@ namespace WEF
         /// <returns></returns>
         public Search OrderBy(OrderByOperation orderBy)
         {
-            this.orderBy = orderBy;
+            this._orderBy = orderBy;
             return this;
         }
 
@@ -678,7 +678,7 @@ namespace WEF
         {
             if (null == orderBys || orderBys.Length <= 0) return this;
             var temporderby = orderBys.Aggregate(OrderByOperation.None, (current, ob) => current && ob);
-            this.orderBy = temporderby;
+            this._orderBy = temporderby;
             return this;
         }
 
@@ -690,7 +690,7 @@ namespace WEF
         /// <returns></returns>
         public Search Select(params Field[] fields)
         {
-            this.fields.Clear();
+            this._fields.Clear();
             return AddSelect(fields);
         }
 
@@ -718,9 +718,9 @@ namespace WEF
 
             Check.Require(Search.Fields.Count == 1 && !Search.Fields[0].PropertyName.Equals("*"), "Search's fields must be only one!");
 
-            this.fields.Add(new Field(string.Concat("(", Search.SqlString, ")")).As(aliasName));
+            this._fields.Add(new Field(string.Concat("(", Search.SqlString, ")")).As(aliasName));
 
-            this.parameters.AddRange(Search.Parameters);
+            this._parameters.AddRange(Search.Parameters);
 
             return this;
         }
@@ -737,9 +737,9 @@ namespace WEF
             {
                 foreach (Field field in fields)
                 {
-                    Field f = this.fields.Find(fi => fi.Name.Equals(field.Name) && fi.TableName.Equals(field.TableName));
+                    Field f = this._fields.Find(fi => fi.Name.Equals(field.Name) && fi.TableName.Equals(field.TableName));
                     if (Field.IsNullOrEmpty(f))
-                        this.fields.Add(field);
+                        this._fields.Add(field);
                 }
             }
             return this;
@@ -751,7 +751,7 @@ namespace WEF
         /// <returns></returns>
         public Search Distinct()
         {
-            this.distinctString = " DISTINCT ";
+            this._distinctString = " DISTINCT ";
             return this;
         }
 
@@ -803,7 +803,7 @@ namespace WEF
         /// <returns></returns>
         protected string formatSql(string sql, Search from)
         {
-            string tempSql = DataUtils.FormatSQL(sql, from.dbProvider.LeftToken, from.dbProvider.RightToken);
+            string tempSql = DataUtils.FormatSQL(sql, from._dbProvider.LeftToken, from._dbProvider.RightToken);
             List<Parameter> listPara = from.Parameters;
             foreach (Parameter p in listPara)
             {
@@ -833,22 +833,22 @@ namespace WEF
         /// <returns></returns>
         internal int Count(Search from)
         {
-            string cacheKey = string.Format("{0}COUNT|{1}", dbProvider.ConnectionStringsName, formatSql(from.CountSqlString, from));
+            string cacheKey = string.Format("{0}COUNT|{1}", _dbProvider.ConnectionStringsName, formatSql(from.CountSqlString, from));
             object cacheValue = getCache(cacheKey);
             if (null != cacheValue)
             {
                 return (int)cacheValue;
             }
 
-            DbCommand dbCommand = database.GetSqlStringCommand(from.CountSqlString);
+            DbCommand dbCommand = _database.GetSqlStringCommand(from.CountSqlString);
 
-            database.AddCommandParameter(dbCommand, from.Parameters.ToArray());
+            _database.AddCommandParameter(dbCommand, from.Parameters.ToArray());
 
             int returnValue;
             if (trans == null)
-                returnValue = DataUtils.ConvertValue<int>(database.ExecuteScalar(dbCommand));
+                returnValue = DataUtils.ConvertValue<int>(_database.ExecuteScalar(dbCommand));
             else
-                returnValue = DataUtils.ConvertValue<int>(database.ExecuteScalar(dbCommand, trans));
+                returnValue = DataUtils.ConvertValue<int>(_database.ExecuteScalar(dbCommand, trans));
 
             setCache<int>(returnValue, cacheKey);
 
@@ -884,17 +884,17 @@ namespace WEF
             {
                 if (isTurnonCache())
                 {
-                    string entityCacheKey = string.Concat(dbProvider.ConnectionStringsName, typeTableName);
-                    if (dbProvider.EntitiesCache.ContainsKey(entityCacheKey))
+                    string entityCacheKey = string.Concat(_dbProvider.ConnectionStringsName, typeTableName);
+                    if (_dbProvider.EntitiesCache.ContainsKey(entityCacheKey))
                     {
-                        int? temptimeOut = dbProvider.EntitiesCache[entityCacheKey].TimeOut;
+                        int? temptimeOut = _dbProvider.EntitiesCache[entityCacheKey].TimeOut;
                         if (temptimeOut.HasValue)
                         {
                             Cache.Cache.Default.AddCacheSlidingExpiration(cacheKey, value, temptimeOut.Value);
                         }
                         else
                         {
-                            Cache.Cache.Default.AddCacheDependency(cacheKey, value, 0, new CacheDependency(dbProvider.EntitiesCache[entityCacheKey].FilePath));
+                            Cache.Cache.Default.AddCacheDependency(cacheKey, value, 0, new CacheDependency(_dbProvider.EntitiesCache[entityCacheKey].FilePath));
                         }
                     }
                 }
@@ -910,7 +910,7 @@ namespace WEF
         {
             Search from = GetPagedFromSection();
 
-            string cacheKey = string.Format("{0}DataSet|{1}", dbProvider.ConnectionStringsName, formatSql(from.SqlString, from));
+            string cacheKey = string.Format("{0}DataSet|{1}", _dbProvider.ConnectionStringsName, formatSql(from.SqlString, from));
             object cacheValue = getCache(cacheKey);
             if (null != cacheValue)
             {
@@ -919,9 +919,9 @@ namespace WEF
 
             DataSet ds;
             if (trans == null)
-                ds = database.ExecuteDataSet(CreateDbCommand(from));
+                ds = _database.ExecuteDataSet(CreateDbCommand(from));
             else
-                ds = database.ExecuteDataSet(CreateDbCommand(from), trans);
+                ds = _database.ExecuteDataSet(CreateDbCommand(from), trans);
 
             setCache<DataSet>(ds, cacheKey);
 
@@ -937,7 +937,7 @@ namespace WEF
             if (startIndex > 0 && endIndex > 0 && !isPageFromSection)
             {
                 isPageFromSection = true;
-                return dbProvider.CreatePageFromSection(this, startIndex, endIndex);
+                return _dbProvider.CreatePageFromSection(this, startIndex, endIndex);
             }
             return this;
         }
@@ -948,8 +948,8 @@ namespace WEF
         /// <returns></returns>
         protected DbCommand CreateDbCommand(Search from)
         {
-            var dbCommand = database.GetSqlStringCommand(from.SqlString);
-            database.AddCommandParameter(dbCommand, from.Parameters.ToArray());
+            var dbCommand = _database.GetSqlStringCommand(from.SqlString);
+            _database.AddCommandParameter(dbCommand, from.Parameters.ToArray());
             return dbCommand;
         }
 
@@ -970,8 +970,8 @@ namespace WEF
         protected IDataReader ToDataReader(Search from)
         {
             return trans == null
-                ? database.ExecuteReader(CreateDbCommand(@from))
-                : database.ExecuteReader(CreateDbCommand(@from), trans);
+                ? _database.ExecuteReader(CreateDbCommand(@from))
+                : _database.ExecuteReader(CreateDbCommand(@from), trans);
         }
 
         /// <summary>
@@ -989,12 +989,12 @@ namespace WEF
         /// <returns></returns>
         public object ToScalar()
         {
-            Check.Require(this.fields.Count == 1, "fields must be one!");
-            Check.Require(!this.fields[0].PropertyName.Trim().Equals("*"), "fields cound not be * !");
+            Check.Require(this._fields.Count == 1, "fields must be one!");
+            Check.Require(!this._fields[0].PropertyName.Trim().Equals("*"), "fields cound not be * !");
 
             Search from = GetPagedFromSection();
 
-            string cacheKey = string.Format("{0}Scalar|{1}", dbProvider.ConnectionStringsName, formatSql(from.SqlString, from));
+            string cacheKey = string.Format("{0}Scalar|{1}", _dbProvider.ConnectionStringsName, formatSql(from.SqlString, from));
             object cacheValue = getCache(cacheKey);
             if (null != cacheValue)
             {
@@ -1004,9 +1004,9 @@ namespace WEF
             object returnValue;
 
             if (trans == null)
-                returnValue = database.ExecuteScalar(CreateDbCommand(from));
+                returnValue = _database.ExecuteScalar(CreateDbCommand(from));
             else
-                returnValue = database.ExecuteScalar(CreateDbCommand(from), trans);
+                returnValue = _database.ExecuteScalar(CreateDbCommand(from), trans);
 
             setCache<object>(returnValue, cacheKey);
 
@@ -1043,7 +1043,7 @@ namespace WEF
             if (string.IsNullOrEmpty(tableName) || WhereOperation.IsNullOrEmpty(where))
                 return this;
 
-            tableName = dbProvider.BuildTableName(tableName, userName);
+            tableName = _dbProvider.BuildTableName(tableName, userName);
 
             {
                 string joinString = string.Empty;
@@ -1069,19 +1069,19 @@ namespace WEF
                         break;
                 }
 
-                if (joins.ContainsKey(tableName))
+                if (_joins.ContainsKey(tableName))
                 {
-                    var index = (joins.Keys.Count(d => d.StartsWith(tableName)) + 1).ToString();
+                    var index = (_joins.Keys.Count(d => d.StartsWith(tableName)) + 1).ToString();
                     var realTableName = tableName.Substring(1, tableName.Length - 2);
                     tableName += " as " + tableName.Insert(tableName.Length - 1, index);
                     where.expressionString = where.expressionString.Replace(realTableName, realTableName + index);
                 }
 
 
-                joins.Add(tableName, new KeyValuePair<string, WhereOperation>(joinString, where));
+                _joins.Add(tableName, new KeyValuePair<string, WhereOperation>(joinString, where));
 
                 if (where.Parameters.Count > 0)
-                    parameters.AddRange(where.Parameters);
+                    _parameters.AddRange(where.Parameters);
             }
 
             return this;
@@ -1178,15 +1178,15 @@ namespace WEF
 
             tname.Append(") tempuniontable ");
 
-            Search tmpSearch = new Search(this.database, tname.ToString());
+            Search tmpSearch = new Search(this._database, tname.ToString());
             tmpSearch.typeTableName = this.typeTableName;
             tmpSearch.timeout = this.timeout;
             tmpSearch.cacheDep = this.cacheDep;
             tmpSearch.isRefresh = this.isRefresh;
 
 
-            tmpSearch.parameters.AddRange(this.Parameters);
-            tmpSearch.parameters.AddRange(Search.Parameters);
+            tmpSearch._parameters.AddRange(this.Parameters);
+            tmpSearch._parameters.AddRange(Search.Parameters);
 
             return tmpSearch;
         }
@@ -1210,14 +1210,14 @@ namespace WEF
 
             tname.Append(") tempuniontable ");
 
-            Search tmpSearch = new Search(this.database, tname.ToString());
+            Search tmpSearch = new Search(this._database, tname.ToString());
             tmpSearch.typeTableName = this.typeTableName;
             tmpSearch.timeout = this.timeout;
             tmpSearch.cacheDep = this.cacheDep;
             tmpSearch.isRefresh = this.isRefresh;
 
-            tmpSearch.parameters.AddRange(this.Parameters);
-            tmpSearch.parameters.AddRange(Search.Parameters);
+            tmpSearch._parameters.AddRange(this.Parameters);
+            tmpSearch._parameters.AddRange(Search.Parameters);
 
             return tmpSearch;
         }

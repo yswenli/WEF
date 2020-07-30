@@ -24,6 +24,10 @@ namespace WEF.Test
     {
         static void Main(string[] args)
         {
+            MutiTablesTest.InsertAndGet();
+
+
+
             //new DBTicketOrderRepository().Search().Where(b => b.C_id == "123sdf4asdfsadfgrewfdg5498432165").OrderBy(b=>b.C_price).ToFirst();
 
 

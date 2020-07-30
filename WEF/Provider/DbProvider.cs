@@ -280,12 +280,12 @@ namespace WEF.Provider
         /// <summary>
         /// Builds the name of the table.
         /// </summary>
-        /// <param name="name">The name.</param>
+        /// <param name="tableName">The name.</param>
         /// <param name="userName">The name.</param>
         /// <returns></returns>
-        public virtual string BuildTableName(string name, string userName)
+        public virtual string BuildTableName(string tableName, string userName)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(tableName))
             {
                 return "";
             }
@@ -293,11 +293,11 @@ namespace WEF.Provider
             {
                 if (string.IsNullOrWhiteSpace(userName))
                 {
-                    return string.Concat(leftToken.ToString(), name.Trim(leftToken, rightToken), rightToken.ToString());
+                    return string.Concat(leftToken.ToString(), tableName.Trim(leftToken, rightToken), rightToken.ToString());
                 }
                 return string.Concat(leftToken.ToString(), userName.Trim(leftToken, rightToken), rightToken.ToString())
                     + "."
-                    + string.Concat(leftToken.ToString(), name.Trim(leftToken, rightToken), rightToken.ToString());
+                    + string.Concat(leftToken.ToString(), tableName.Trim(leftToken, rightToken), rightToken.ToString());
             }
         }
 

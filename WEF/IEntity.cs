@@ -38,6 +38,7 @@ namespace WEF
         string GetSequence();
         string GetTableAsName();
         string GetTableName();
+        void SetTableName(string tableName);
         string GetUserName();
         object[] GetValues();
         bool IsModify();
