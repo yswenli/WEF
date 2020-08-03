@@ -1053,5 +1053,49 @@ namespace WEF
             return pagedlist;
         }
 
+        /// <summary>
+        /// 获取分页
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="order"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public PagedList<T> GetPagedList(Expression<Func<T, bool>> lambdaWhere, int pageIndex, int pageSize, string order, bool asc)
+        {
+            var total = this.Where(lambdaWhere).Count();
+
+            var list = this.Where(lambdaWhere).OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
+
+            var pagedlist = new PagedList<T>(pageIndex, pageSize, total);
+
+            pagedlist.AddRange(list);
+
+            return pagedlist;
+        }
+
+        /// <summary>
+        /// 获取分页
+        /// </summary>
+        /// <param name="where"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="order"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public PagedList<T> GetPagedList(Where where, int pageIndex, int pageSize, string order, bool asc)
+        {
+            var total = this.Where(where).Count();
+
+            var list = this.Where(where).OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
+
+            var pagedlist = new PagedList<T>(pageIndex, pageSize, total);
+
+            pagedlist.AddRange(list);
+
+            return pagedlist;
+        }
+
     }
 }

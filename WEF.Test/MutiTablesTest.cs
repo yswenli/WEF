@@ -68,7 +68,7 @@ namespace WEF.Test
 
             st11.name = "update";
 
-            rr.Update(st11);
+            rr.Update(st11);            
 
             st1 = rr.Search("rules1").Where(b => b.enabled == true).First();
 
