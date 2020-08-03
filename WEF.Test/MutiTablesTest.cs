@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Text;
 using WEF.Common;
@@ -34,9 +35,9 @@ namespace WEF.Test
 
             var rr = new RulesRepository();
 
-            rr.Insert(new Rules("rules1")
+            rr.Insert(new Rules("rules")
             {
-                name = "MutiTablesTest4",
+                name = "MutiTablesTest1",
                 created = DateTime.Now,
                 enabled = true,
                 json = "",
@@ -47,13 +48,19 @@ namespace WEF.Test
 
             var list1 = rr.Search().Where(b => b.enabled == true).ToList();
 
+            var count1 = rr.Search().Count();
+
+            var count2 = rr.Search().Where(b => b.id > 0).Count(b => b.id);
+
             var list2 = rr.Search("rules1").Where(b => b.enabled == true).ToList();
+
+
 
             var list3 = rr.Search("rules1").Where(b => b.enabled == true).GetPagedList(1, 20, "id", true);
 
             var st1 = rr.Search("rules1").Where(b => b.enabled == true).First();
 
-            var st2 = rr.Search().Where(b => b.enabled == true).First();            
+            var st2 = rr.Search().Where(b => b.enabled == true).First();
 
             var st11 = new Rules("rules1");
 
@@ -61,11 +68,11 @@ namespace WEF.Test
 
             st11.name = "update";
 
-            rr.Update(st11); 
+            rr.Update(st11);
 
             st1 = rr.Search("rules1").Where(b => b.enabled == true).First();
 
-            rr.Delete(st1); 
+            rr.Delete(st1);
 
             Console.ReadLine();
         }
@@ -350,6 +357,18 @@ namespace WEF.Test
         {
             db = new DBContext(dbType, connStr);
         }
+
+        /// <summary>
+        /// 总数
+        /// </summary>
+        /// <returns></returns>
+        public int Total
+        {
+            get
+            {
+                return Search().Count();
+            }
+        }
         /// <summary>
         /// 当前db操作上下文
         /// </summary>
@@ -465,6 +484,7 @@ namespace WEF.Test
         {
             return db.Save<Rules>(tran, entities);
         }
+
         /// <summary>
         /// 执行sql语句
         /// <param name="sql"></param>
@@ -481,6 +501,8 @@ namespace WEF.Test
         {
             return db.FromProc(procName);
         }
+
+        
     }
 
 

@@ -108,6 +108,42 @@ namespace WEF
         {
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, JoinType.CrossJoin);
         }
+
+        /// <summary>
+        /// count
+        /// </summary>
+        /// <returns></returns>
+        public int Count()
+        {
+            return Count(GetPagedFromSection());
+        }
+
+        /// <summary>
+        /// Count
+        /// </summary>
+        /// <param name="lambdaSelect"></param>
+        /// <returns></returns>
+        public int Count(Expression<Func<T, object>> lambdaSelect)
+        {
+            return Count(GetPagedFromSection(lambdaSelect));
+        }
+
+        /// <summary>
+        /// 获取分页过的FromSection
+        /// </summary>
+        /// <param name="lambdaSelect"></param>
+        /// <returns></returns>
+        internal Search GetPagedFromSection(Expression<Func<T, object>> lambdaSelect)
+        {
+            if (startIndex > 0 && endIndex > 0 && !isPageFromSection)
+            {
+                isPageFromSection = true;
+                var s = this.Select(lambdaSelect);
+                return _dbProvider.CreatePageFromSection(s, startIndex, endIndex);
+            }
+            return this;
+        }
+
         /// <summary>
         /// Right Join
         /// </summary>

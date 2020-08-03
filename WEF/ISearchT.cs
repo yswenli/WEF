@@ -12,6 +12,10 @@ namespace WEF
         Search<T> AddSelect(Search fromSection);
         Search<T> AddSelect(Search fromSection, string aliasName);
         Search<T> CrossJoin<TEntity>(WhereOperation where) where TEntity : Entity;
+
+        int Count();
+
+        int Count(Expression<Func<T, object>> lambdaSelect);
         Search<T> Distinct();
         T First();
         TResult First<TResult>() where TResult : class;

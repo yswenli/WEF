@@ -307,25 +307,6 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(1, "public partial class " + ClassName + "Repository: IRepository<" + ClassName + ">");
             plus.AppendSpaceLine(1, "{");
             plus.AppendSpaceLine(2, "DBContext db;");
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 当前实体查询上下文");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public ISearch<" + ClassName + "> Search(string tableName=\"\")");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "if (string.IsNullOrEmpty(tableName))");
-            plus.AppendSpaceLine(3, "{");
-            plus.AppendSpaceLine(4, "tableName=\"" + TableName + "\";");
-            plus.AppendSpaceLine(3, "}");
-            plus.AppendSpaceLine(4, "return db.Search<" + ClassName + ">(tableName);");
-            plus.AppendSpaceLine(2, "}");
-
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 当前实体查询上下文");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public ISearch<" + ClassName + "> Search(" + ClassName + " entity)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(4, "return db.Search<" + ClassName + ">(entity);");
-            plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 构造方法");
@@ -372,6 +353,38 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(3, "{");
             plus.AppendSpaceLine(4, "return db;");
             plus.AppendSpaceLine(3, "}");
+            plus.AppendSpaceLine(2, "}");
+
+            plus.AppendSpaceLine(2, "/// <summary>");
+            plus.AppendSpaceLine(2, "/// 总数");
+            plus.AppendSpaceLine(2, "/// </summary>");
+            plus.AppendSpaceLine(2, "/// <returns></returns>");
+            plus.AppendSpaceLine(2, "public int Total");
+            plus.AppendSpaceLine(2, "{");
+            plus.AppendSpaceLine(3, "get");
+            plus.AppendSpaceLine(3, "{");
+            plus.AppendSpaceLine(4, "return Search().Count();");
+            plus.AppendSpaceLine(3, "}");
+            plus.AppendSpaceLine(2, "}");
+
+            plus.AppendSpaceLine(2, "/// <summary>");
+            plus.AppendSpaceLine(2, "/// 当前实体查询上下文");
+            plus.AppendSpaceLine(2, "/// </summary>");
+            plus.AppendSpaceLine(2, "public ISearch<" + ClassName + "> Search(string tableName=\"\")");
+            plus.AppendSpaceLine(2, "{");
+            plus.AppendSpaceLine(3, "if (string.IsNullOrEmpty(tableName))");
+            plus.AppendSpaceLine(3, "{");
+            plus.AppendSpaceLine(4, "tableName=\"" + TableName + "\";");
+            plus.AppendSpaceLine(3, "}");
+            plus.AppendSpaceLine(4, "return db.Search<" + ClassName + ">(tableName);");
+            plus.AppendSpaceLine(2, "}");
+
+            plus.AppendSpaceLine(2, "/// <summary>");
+            plus.AppendSpaceLine(2, "/// 当前实体查询上下文");
+            plus.AppendSpaceLine(2, "/// </summary>");
+            plus.AppendSpaceLine(2, "public ISearch<" + ClassName + "> Search(" + ClassName + " entity)");
+            plus.AppendSpaceLine(2, "{");
+            plus.AppendSpaceLine(4, "return db.Search<" + ClassName + ">(entity);");
             plus.AppendSpaceLine(2, "}");
 
             ColumnInfo identityColumn = Columns.Find(delegate (ColumnInfo col) { return col.IsPrimaryKey; });

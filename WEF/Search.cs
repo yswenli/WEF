@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Web.Caching;
 using WEF.Common;
@@ -824,7 +825,7 @@ namespace WEF
         public int Count()
         {
             return Count(GetPagedFromSection());
-        }
+        }        
 
         /// <summary>
         /// 获取记录数(内部使用)
@@ -941,6 +942,7 @@ namespace WEF
             }
             return this;
         }
+        
 
         /// <summary>
         /// 创建  查询的DbCommand
