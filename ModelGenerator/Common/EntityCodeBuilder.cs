@@ -128,6 +128,7 @@ namespace WEF.ModelGenerator.Common
             plus.AppendLine("using WEF;");
             plus.AppendLine("using WEF.Common;");
             plus.AppendLine("using WEF.Section;");
+            plus.AppendLine("using WEF.MvcPager;");
 
             plus.AppendLine();
             plus.AppendLine("namespace " + NameSpace);
@@ -423,6 +424,21 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, "public List<" + ClassName + "> GetList(string tableName, int pageIndex=1, int pageSize=12)");
             plus.AppendSpaceLine(2, "{");
             plus.AppendSpaceLine(3, "return this.Search(tableName).Page(pageIndex, pageSize).ToList();");
+            plus.AppendSpaceLine(2, "}");
+
+
+            plus.AppendSpaceLine(2, "/// <summary>");
+            plus.AppendSpaceLine(2, "/// 分页查询");
+            plus.AppendSpaceLine(2, "/// <param name=\"lambdaWhere\">查询表达式</param>");
+            plus.AppendSpaceLine(2, "/// <param name=\"pageIndex\">分页第几页</param>");
+            plus.AppendSpaceLine(2, "/// <param name=\"pageSize\">分页一页取值</param>");
+            plus.AppendSpaceLine(2, "/// <param name=\"orderBy\">排序</param>");
+            plus.AppendSpaceLine(2, "/// <param name=\"asc\">升降</param>");
+            plus.AppendSpaceLine(2, "/// </summary>");
+            plus.AppendSpaceLine(2, "/// <returns></returns>");
+            plus.AppendSpaceLine(2, $"public PagedList<{ClassName}> GetPagedList(Expression<Func<{ClassName}, bool>> lambdaWhere,string tableName=\"\", int pageIndex=1, int pageSize=12, string orderBy=\"{identityColumn.Name}\", bool asc=true)");
+            plus.AppendSpaceLine(2, "{");
+            plus.AppendSpaceLine(3, "return this.Search(tableName).GetPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);");
             plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");

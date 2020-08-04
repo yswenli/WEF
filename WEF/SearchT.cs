@@ -1046,11 +1046,7 @@ namespace WEF
 
             var list = this.OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
 
-            var pagedlist = new PagedList<T>(pageIndex, pageSize, total);
-
-            pagedlist.AddRange(list);
-
-            return pagedlist;
+            return new PagedList<T>(list, pageIndex, pageSize, total);
         }
 
         /// <summary>
@@ -1059,20 +1055,16 @@ namespace WEF
         /// <param name="lambdaWhere"></param>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
-        /// <param name="order"></param>
+        /// <param name="orderBy"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public PagedList<T> GetPagedList(Expression<Func<T, bool>> lambdaWhere, int pageIndex, int pageSize, string order, bool asc)
+        public PagedList<T> GetPagedList(Expression<Func<T, bool>> lambdaWhere, int pageIndex, int pageSize, string orderBy, bool asc)
         {
             var total = this.Where(lambdaWhere).Count();
 
-            var list = this.Where(lambdaWhere).OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
+            var list = this.Where(lambdaWhere).OrderBy(new OrderByOperation(orderBy, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
 
-            var pagedlist = new PagedList<T>(pageIndex, pageSize, total);
-
-            pagedlist.AddRange(list);
-
-            return pagedlist;
+            return new PagedList<T>(list, pageIndex, pageSize, total);
         }
 
         /// <summary>
@@ -1081,20 +1073,16 @@ namespace WEF
         /// <param name="where"></param>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
-        /// <param name="order"></param>
+        /// <param name="orderBy"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public PagedList<T> GetPagedList(Where where, int pageIndex, int pageSize, string order, bool asc)
+        public PagedList<T> GetPagedList(Where where, int pageIndex, int pageSize, string orderBy, bool asc)
         {
             var total = this.Where(where).Count();
 
-            var list = this.Where(where).OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
+            var list = this.Where(where).OrderBy(new OrderByOperation(orderBy, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
 
-            var pagedlist = new PagedList<T>(pageIndex, pageSize, total);
-
-            pagedlist.AddRange(list);
-
-            return pagedlist;
+            return new PagedList<T>(list, pageIndex, pageSize, total);
         }
 
     }
