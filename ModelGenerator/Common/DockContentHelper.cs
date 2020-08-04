@@ -101,61 +101,75 @@ namespace WEF.ModelGenerator.Common
 
         public static bool Load(DockPanel dockPanel)
         {
-            _dockPanel = dockPanel;
-
-            if (File.Exists(_tempFile))
+            try
             {
-                var json = File.ReadAllText(_tempFile);
+                _dockPanel = dockPanel;
 
-                _connections = WEFExtention.JsonDeserialize<List<Connection>>(json);
+                if (File.Exists(_tempFile))
+                {
+                    var json = File.ReadAllText(_tempFile);
+
+                    _connections = WEFExtention.JsonDeserialize<List<Connection>>(json);
+                }
+
+                var content = new DeserializeDockContent(GetContentFromPersistString);
+
+                if (File.Exists(_configFile))
+                {
+                    dockPanel.LoadFromXml(_configFile, content);
+
+                    return true;
+                }
             }
-
-            var content = new DeserializeDockContent(GetContentFromPersistString);
-
-            if (File.Exists(_configFile))
+            catch
             {
-                dockPanel.LoadFromXml(_configFile, content);
 
-                return true;
             }
-
             return false;
         }
 
+        /// <summary>
+        /// 保存界面状态
+        /// </summary>
+        /// <param name="dockPanel"></param>
         public static void Save(DockPanel dockPanel)
         {
-            _dockPanel = dockPanel;
-
-            var contents = dockPanel.Contents;
-
-            if (contents != null && contents.Any())
+            try
             {
-                List<Connection> connections = new List<Connection>();
+                _dockPanel = dockPanel;
 
-                foreach (var content in contents)
+                var contents = dockPanel.Contents;
+
+                if (contents != null && contents.Any())
                 {
-                    if (content is SQLForm)
+                    List<Connection> connections = new List<Connection>();
+
+                    foreach (var content in contents)
                     {
-                        var sqlForm = (SQLForm)content;
+                        if (content is SQLForm)
+                        {
+                            var sqlForm = (SQLForm)content;
 
-                        sqlForm.ConnectionModel.Sql = sqlForm.AutoTextBox.TextBox.Text;
+                            sqlForm.ConnectionModel.Sql = sqlForm.AutoTextBox.TextBox.Text;
 
-                        connections.Add(sqlForm.ConnectionModel);
+                            connections.Add(sqlForm.ConnectionModel);
+                        }
+                        if (content is ContentForm)
+                        {
+                            var contentForm = (ContentForm)content;
+
+                            connections.Add(contentForm.ConnectionModel);
+                        }
                     }
-                    if (content is ContentForm)
-                    {
-                        var contentForm = (ContentForm)content;
 
-                        connections.Add(contentForm.ConnectionModel);
-                    }
+                    var json = WEFExtention.JsonSerialize(connections);
+
+                    File.WriteAllText(_tempFile, json, Encoding.UTF8);
                 }
 
-                var json = WEFExtention.JsonSerialize(connections);
-
-                File.WriteAllText(_tempFile, json, Encoding.UTF8);
+                dockPanel.SaveAsXml(_configFile);
             }
-
-            dockPanel.SaveAsXml(_configFile);
+            catch { }            
         }
     }
 }
