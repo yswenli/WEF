@@ -36,16 +36,16 @@ namespace WEF.Test
 
             var rr = new RulesRepository();
 
-            rr.Insert(new Rules("rules")
-            {
-                name = "MutiTablesTest2",
-                created = DateTime.Now,
-                enabled = true,
-                json = "",
-                ruleType = -1,
-                score = 0,
-                updated = DateTime.Now
-            });
+            //rr.Insert(new Rules("rules")
+            //{
+            //    name = "MutiTablesTest4",
+            //    created = DateTime.Now,
+            //    enabled = true,
+            //    json = "",
+            //    ruleType = -1,
+            //    score = 0,
+            //    updated = DateTime.Now
+            //});
 
             var list1 = rr.Search().Where(b => b.enabled == true).ToList();
 
@@ -54,6 +54,41 @@ namespace WEF.Test
             var count2 = rr.Search().Where(b => b.id > 0).Count(b => b.id);
 
             var pagedlist = rr.GetPagedList(b => b.id > 0);
+
+            //sql转自定义实体
+            var rrt1 = rr.ExecuteSQL("select * from rules where id=?id").AddInParameter("?id", System.Data.DbType.Int32, 1).ToList<RR>();
+
+            var rrt2 = rr.ExecuteSQL("select * from rules").ToList<RR>();
+
+
+            #region test
+
+            var uid = "5626094170055838";
+
+            var pageIndex = 1;
+
+            var pageSize = 12;
+
+            var count = 0;
+
+            var dbContext=  new DBContext();
+
+            var sql = $"select user_recoreds.uid, sum(score) Score from rules right join user_recoreds on rules.id=user_recoreds.rid where uid=?uid1 group by user_recoreds.uid order by Score desc limit {(pageIndex - 1) * pageSize},{pageSize}";
+
+            var sqlCount = "select count(a.uid) from (select user_recoreds.uid, sum(score) Score from rules right join user_recoreds on rules.id=user_recoreds.rid where uid=?uid1 group by user_recoreds.uid) a";
+
+            var userScoreModels1 = dbContext.FromSql(sql).AddInParameter("?uid1", System.Data.DbType.StringFixedLength, 250, uid).ToList<UserScoreModel>();
+
+            var p = dbContext.CreateParameter("?uid1", System.Data.DbType.StringFixedLength, 250, uid);
+
+            int.TryParse(dbContext.ExecuteScalar(sqlCount, p)?.ToString(), out count);
+
+            var sql2 = $"select user_recoreds.uid, sum(score) Score from rules right join user_recoreds on rules.id=user_recoreds.rid group by user_recoreds.uid order by Score desc limit {(pageIndex - 1) * pageSize},{pageSize}";
+
+            var userScoreModels2 = dbContext.FromSql(sql).AddInParameter("?uid1", System.Data.DbType.StringFixedLength, 250, uid).ToList<UserScoreModel>();
+
+            #endregion
+
 
             var list2 = rr.Search("rules1").Where(b => b.enabled == true).ToList();
 
@@ -78,6 +113,16 @@ namespace WEF.Test
             Console.ReadLine();
         }
 
+    }
+
+    public class RR
+    {
+        public int ID
+        {
+            get; set;
+        }
+
+        public string Name { get; set; }
     }
 
     #region MyRegion
@@ -529,7 +574,20 @@ namespace WEF.Test
     }
 
 
-
+    [DataContract]
+    public class UserScoreModel
+    {
+        /// <summary>
+        /// 通行证用户
+        /// </summary>
+        [DataMember]
+        public string Uid { get; set; }
+        /// <summary>
+        /// 积分
+        /// </summary>
+        [DataMember]
+        public long Score { get; set; }
+    }
 
 
     #endregion
