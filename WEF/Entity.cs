@@ -330,10 +330,17 @@ namespace WEF
             {
                 _tableName = _tableName.Replace("`", "");
             }
-
             if (_tableName.IndexOf("'") > -1)
             {
                 _tableName = _tableName.Replace("'", "");
+            }
+            if (_tableName.IndexOf("[") > -1)
+            {
+                _tableName = _tableName.Replace("[", "");
+            }
+            if (_tableName.IndexOf("]") > -1)
+            {
+                _tableName = _tableName.Replace("]", "");
             }
         }
         /// <summary>

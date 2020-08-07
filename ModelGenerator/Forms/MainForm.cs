@@ -150,13 +150,18 @@ namespace WEF.ModelGenerator
 
         private void shutDownToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DockContentHelper.Save(dpleft);
-
-            if (MessageBox.Show("确定要退出WEF数据库工具吗？", "WEF数据库工具", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            try
             {
-                notifyIcon1.Dispose();
-                Environment.Exit(0);
+                DockContentHelper.Save(dpleft);
+
+                if (MessageBox.Show("确定要退出WEF数据库工具吗？", "WEF数据库工具", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    notifyIcon1.Dispose();
+                    Application.Exit();
+                    Environment.Exit(0);
+                }
             }
+            catch { }
         }
 
         #endregion

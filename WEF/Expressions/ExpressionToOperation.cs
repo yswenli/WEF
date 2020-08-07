@@ -694,6 +694,14 @@ namespace WEF.Expressions
             {
                 result = result.Replace("'", "");
             }
+            if (result.IndexOf("[") > -1)
+            {
+                result = result.Replace("[", "");
+            }
+            if (result.IndexOf("]") > -1)
+            {
+                result = result.Replace("]", "");
+            }
             return result;
         }
 
