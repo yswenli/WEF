@@ -853,6 +853,15 @@ namespace WEF
         }
 
         /// <summary>
+        /// 同ToFirstDefault， 返回第一个实体  如果为null，则默认实例化一个
+        /// </summary>
+        /// <returns></returns>
+        public T FirstDefault()
+        {
+            return ToFirstDefault();
+        }
+
+        /// <summary>
         /// 返回第一个实体，同ToFirst()。无数据返回Null。
         /// </summary>
         /// <returns></returns>
