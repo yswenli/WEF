@@ -53,6 +53,7 @@
             this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.jsonToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sQL查询ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -143,6 +144,7 @@
             this.newDBConnectToolStripMenuItem,
             this.runToolStripMenuItem,
             this.logsToolStripMenuItem,
+            this.jsonToolToolStripMenuItem,
             this.关于ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(4, 32);
             this.menuStrip1.Name = "menuStrip1";
@@ -177,6 +179,13 @@
             this.关于ToolStripMenuItem.Size = new System.Drawing.Size(60, 21);
             this.关于ToolStripMenuItem.Text = "(&A)关于";
             this.关于ToolStripMenuItem.Click += new System.EventHandler(this.关于ToolStripMenuItem_Click);
+            // 
+            // jsonToolToolStripMenuItem
+            // 
+            this.jsonToolToolStripMenuItem.Name = "jsonToolToolStripMenuItem";
+            this.jsonToolToolStripMenuItem.Size = new System.Drawing.Size(83, 21);
+            this.jsonToolToolStripMenuItem.Text = "(&J)Json工具";
+            this.jsonToolToolStripMenuItem.Click += new System.EventHandler(this.jsonToolToolStripMenuItem_Click);
             // 
             // sQL查询ToolStripMenuItem
             // 
@@ -256,6 +265,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem displayUIToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem shutDownToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem jsonToolToolStripMenuItem;
     }
 }
 

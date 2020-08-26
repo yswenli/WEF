@@ -66,6 +66,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Data.SQLite, Version=1.0.104.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.104.0\lib\net40\System.Data.SQLite.dll</HintPath>
@@ -99,6 +100,15 @@
     </Compile>
     <Compile Include="Controls\AutoTextBox.Designer.cs">
       <DependentUpon>AutoTextBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MyTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MyTextBox.designer.cs">
+      <DependentUpon>MyTextBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TextBoxE.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="DbSelect\DBMongo.cs">
       <SubType>Form</SubType>
@@ -166,6 +176,12 @@
     <Compile Include="Forms\DatabaseSelect.Designer.cs">
       <DependentUpon>DatabaseSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\JsonClassGeneratorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\JsonClassGeneratorForm.Designer.cs">
+      <DependentUpon>JsonClassGeneratorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\LeftPanelForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -208,12 +224,29 @@
     <Compile Include="Forms\SQLTemplateForm.Designer.cs">
       <DependentUpon>SQLTemplateForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="JsonTools\CodeWriters\CSharpCodeWriter.cs" />
+    <Compile Include="JsonTools\CodeWriters\JavaCodeWriter.cs" />
+    <Compile Include="JsonTools\CodeWriters\TypeScriptCodeWriter.cs" />
+    <Compile Include="JsonTools\CodeWriters\VisualBasicCodeWriter.cs" />
+    <Compile Include="JsonTools\FieldInfo.cs" />
+    <Compile Include="JsonTools\ICodeWriter.cs" />
+    <Compile Include="JsonTools\IJsonClassGeneratorConfig.cs" />
+    <Compile Include="JsonTools\JsonClassGenerator.cs" />
+    <Compile Include="JsonTools\JsonClassHelper.cs" />
+    <Compile Include="JsonTools\JsonType.cs" />
+    <Compile Include="JsonTools\JsonTypeEnum.cs" />
     <Compile Include="Model\Connection.cs" />
     <Compile Include="Model\Sysconfig.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Controls\AutoTextBox.resx">
       <DependentUpon>AutoTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MyTextBox.resx">
+      <DependentUpon>MyTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MyTextBox.zh-CN.resx">
+      <DependentUpon>MyTextBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DbSelect\DBMongo.resx">
       <DependentUpon>DBMongo.cs</DependentUpon>
@@ -247,6 +280,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DatabaseSelect.resx">
       <DependentUpon>DatabaseSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\JsonClassGeneratorForm.resx">
+      <DependentUpon>JsonClassGeneratorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\LeftPanelForm.resx">
       <DependentUpon>LeftPanelForm.cs</DependentUpon>
@@ -311,6 +347,10 @@
     <Content Include="Dlls\CSkin.dll" />
     <Content Include="Dlls\WeifenLuo.WinFormsUI.Docking.dll" />
     <Content Include="favourite.ico" />
+    <None Include="Resources\JsonClassHelper" />
+    <None Include="Resources\VR.jpg" />
+    <None Include="Resources\HR.jpg" />
+    <None Include="Resources\help.png" />
     <None Include="Resources\0616152d52f214c689f01819eefb836d.gif" />
     <None Include="Resources\WEF.jpg" />
   </ItemGroup>

@@ -117,6 +117,15 @@ namespace WEF.ModelGenerator
         {
             lp.ShowLogs();
         }
+        /// <summary>
+        /// json工具
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void jsonToolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new JsonClassGeneratorForm().ShowDialog(this);
+        }
 
         private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -164,8 +173,9 @@ namespace WEF.ModelGenerator
             catch { }
         }
 
+
         #endregion
 
-
+       
     }
 }
