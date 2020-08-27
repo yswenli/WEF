@@ -17,8 +17,6 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
 
@@ -34,6 +32,7 @@ namespace WEF.ModelGenerator.Controls
         public MyTextBox()
         {
             InitializeComponent();
+
             timer1 = new Timer
             {
                 Interval = 50
@@ -129,8 +128,7 @@ namespace WEF.ModelGenerator.Controls
             if (txtRow.Lines.Length > 0)
             {
                 var s = txtRow.CreateGraphics().MeasureString(txtRow.Lines[txtRow.Lines.Length - 1], txtRow.Font);
-                txtRow.Width = (int)s.Width + 25;
-                txtRow.Width = 43;
+                //txtRow.Width = (int)s.Width + 25;
             }
         }
 
@@ -286,6 +284,7 @@ namespace WEF.ModelGenerator.Controls
             for (var i = 0; i < _pageLine; i++)
                 lin[i] = (i + firstLine + 1).ToString();
             txtRow.Lines = lin;
+            txtRow.Width = 43;
         }
 
         #endregion

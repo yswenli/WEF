@@ -125,9 +125,6 @@
   <data name="txtRow.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 3</value>
   </data>
-  <data name="txtContent.Multiline" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
   <data name="vScrollBar1.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
@@ -183,6 +180,9 @@
   <data name="txtRow.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
     <value>Center</value>
   </data>
+  <data name="&gt;&gt;txtContent.Name" xml:space="preserve">
+    <value>txtContent</value>
+  </data>
   <data name="txtRow.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left</value>
   </data>
@@ -210,8 +210,8 @@
   <data name="txtContent.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>On</value>
   </data>
-  <data name="&gt;&gt;txtContent.Name" xml:space="preserve">
-    <value>txtContent</value>
+  <data name="txtContent.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="&gt;&gt;txtContent.Parent" xml:space="preserve">
     <value>$this</value>

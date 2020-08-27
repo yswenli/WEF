@@ -138,7 +138,7 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="txtRow.Size" type="System.Drawing.Size, System.Drawing">
-    <value>41, 223</value>
+    <value>43, 223</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="txtRow.TabIndex" type="System.Int32, mscorlib">
@@ -151,13 +151,13 @@
     <value>Segoe UI Symbol, 10.5pt</value>
   </data>
   <data name="txtContent.Location" type="System.Drawing.Point, System.Drawing">
-    <value>42, 3</value>
+    <value>46, 3</value>
   </data>
   <data name="txtContent.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms">
     <value>Vertical</value>
   </data>
   <data name="txtContent.Size" type="System.Drawing.Size, System.Drawing">
-    <value>513, 223</value>
+    <value>506, 223</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
     <value>555, 229</value>

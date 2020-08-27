@@ -62,6 +62,7 @@ namespace WEF.ModelGenerator.Controls
             // 
             resources.ApplyResources(this.txtRow, "txtRow");
             this.txtRow.AllowDrop = true;
+            this.txtRow.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtRow.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.txtRow.ForeColor = System.Drawing.Color.Gray;
             this.txtRow.Name = "txtRow";
@@ -76,7 +77,8 @@ namespace WEF.ModelGenerator.Controls
             this.txtContent.AcceptsTab = true;
             resources.ApplyResources(this.txtContent, "txtContent");
             this.txtContent.AllowDrop = true;
-            this.txtContent.BackColor = System.Drawing.Color.Linen;
+            this.txtContent.BackColor = System.Drawing.Color.Honeydew;
+            this.txtContent.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtContent.Name = "txtContent";
             this.txtContent.SizeChanged += new System.EventHandler(this.txtContent_SizeChanged);
             // 
