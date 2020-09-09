@@ -96,10 +96,10 @@ namespace WEF.Db
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
-        public void UpdateAll<TEntity>(params TEntity[] entities)
+        public void UpdateAll<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : Entity
         {
-            if (null == entities || entities.Length == 0)
+            if (null == entities || !entities.Any())
                 return;
 
             foreach (TEntity entity in entities)
@@ -152,10 +152,10 @@ namespace WEF.Db
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
-        public void Update<TEntity>(params TEntity[] entities)
+        public void UpdateList<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : Entity
         {
-            if (null == entities || entities.Length == 0)
+            if (null == entities || !entities.Any())
                 return;
 
             foreach (TEntity entity in entities)
@@ -181,7 +181,7 @@ namespace WEF.Db
 
             Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
 
-            Update<TEntity>(entity, where);
+            Update(entity, where);
         }
 
 
@@ -290,27 +290,25 @@ namespace WEF.Db
             WhereOperation where = DataUtils.GetPrimaryKeyWhere(entity);
 
             Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
+
             Delete<TEntity>(where);
-            //2015-08-20注释
-            //Delete<TEntity>(entity, where);
         }
-
-
-        //2015-08-20注释
-        ///// <summary>
-        /////  删除
-        ///// </summary>
-        ///// <typeparam name="TEntity"></typeparam>
-        ///// <param name="pkValues"></param>
-        ///// <returns></returns>
-        //public void Delete<TEntity>(params object[] pkValues)
-        //    where TEntity : Entity
-        //{
-        //    Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
-
-        //    batchcmd.Process(cmdCreator.CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), DataUtils.GetPrimaryKeyWhere<TEntity>(pkValues)));
-        //}
-
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
+        public void DeleteList<TEntity>(IEnumerable<TEntity> entities)
+                    where TEntity : Entity
+        {
+            if (entities != null && entities.Any())
+            {
+                foreach (var item in entities)
+                {
+                    Delete(item);
+                }
+            }
+        }
         /// <summary>
         ///  删除
         /// </summary>
@@ -388,15 +386,15 @@ namespace WEF.Db
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public void Insert<TEntity>(params TEntity[] entities)
+        public void InsertList<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : Entity
         {
-            if (null == entities || entities.Length == 0)
+            if (null == entities || !entities.Any())
                 return;
 
             foreach (TEntity entity in entities)
             {
-                Insert<TEntity>(entity);
+                Insert(entity);
             }
         }
 

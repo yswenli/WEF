@@ -24,6 +24,10 @@ namespace WEF.Test
     {
         static void Main(string[] args)
         {
+
+            BatchTest.Test();
+
+
             MutiTablesTest.Test();
 
 
@@ -373,7 +377,7 @@ namespace WEF.Test
             #endregion
 
 
-            var batch = ur.DBContext.BeginBatchConnection();
+            var batch = ur.DBContext.CreateBatch();
 
             batch.Insert<User>(ut);
 

@@ -452,12 +452,30 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");
+            plus.AppendSpaceLine(2, "/// 批量添加实体");
+            plus.AppendSpaceLine(2, "/// <param name=\"entities\">传进的实体列表</param>");
+            plus.AppendSpaceLine(2, "/// </summary>");
+            plus.AppendSpaceLine(2, "public int Insert(IEnumerable<" + ClassName + "> entities)");
+            plus.AppendSpaceLine(2, "{");
+            plus.AppendSpaceLine(3, "return db.Insert(entities);");
+            plus.AppendSpaceLine(2, "}");
+
+            plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 更新实体");
             plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
             plus.AppendSpaceLine(2, "public int Update(" + ClassName + " entity)");
             plus.AppendSpaceLine(2, "{");
             plus.AppendSpaceLine(3, "return db.Update(entity);");
+            plus.AppendSpaceLine(2, "}");
+
+            plus.AppendSpaceLine(2, "/// <summary>");
+            plus.AppendSpaceLine(2, "/// 更新实体");
+            plus.AppendSpaceLine(2, "/// <param name=\"entities\">传进的实体</param>");
+            plus.AppendSpaceLine(2, "/// </summary>");
+            plus.AppendSpaceLine(2, "public int Update(IEnumerable<" + ClassName + "> entities)");
+            plus.AppendSpaceLine(2, "{");
+            plus.AppendSpaceLine(3, "return db.Update(entities);");
             plus.AppendSpaceLine(2, "}");
 
 

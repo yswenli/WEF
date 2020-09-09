@@ -1332,7 +1332,7 @@ namespace WEF.Common
             }
         }
 
-        public static IEnumerable<T> ReaderToEnumerable<T>(IDataReader reader)
+        public static IEnumerable<T> ReaderToEnumerable<T>(this IDataReader reader)
         {
             var info = new CacheInfo
             {

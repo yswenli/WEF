@@ -1127,48 +1127,17 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public static DataTable EntityArrayToDataTable<TEntity>(this List<TEntity> entities)
+        public static DataTable EntitiesToDataTable<TEntity>(this IEnumerable<TEntity> entities)
             where TEntity : Entity
         {
             DataTable dt = new DataTable();
 
             if (entities == null || !entities.Any()) return dt;
 
-            Field[] fields = entities[0].GetFields();
+            Field[] fields = entities.First().GetFields();
+
             int fieldLength = fields.Length;
-            foreach (Field field in fields)
-            {
-                dt.Columns.Add(field.Name);
-            }
 
-            foreach (TEntity entity in entities)
-            {
-                DataRow dtRow = dt.NewRow();
-                object[] values = entity.GetValues();
-
-                for (int i = 0; i < fieldLength; i++)
-                {
-                    dtRow[fields[i].Name] = values[i];
-                }
-                dt.Rows.Add(dtRow);
-            }
-            return dt;
-        }
-
-        /// <summary>
-        /// 从Entity数组转换成DataTable
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public static DataTable EntityArrayToDataTable<TEntity>(this TEntity[] entities)
-            where TEntity : Entity
-        {
-            DataTable dt = new DataTable();
-            if (entities == null || entities.Length == 0) return dt;
-
-            Field[] fields = entities[0].GetFields();
-            int fieldLength = fields.Length;
             foreach (Field field in fields)
             {
                 dt.Columns.Add(field.Name);
@@ -1218,31 +1187,19 @@ namespace WEF
             }
             return local2;
         }
-
-        /// <summary>
-        /// DataTable转化为TEntity[]
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="dt"></param>
-        /// <returns></returns>
-        public static TEntity[] DataTableToEntityArray<TEntity>(this DataTable dt) where TEntity : Entity
-        {
-            return DataTableToEntityList<TEntity>(dt).ToArray();
-        }
-
+        
         /// <summary>
         /// DataTable转化为 List
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="dt"></param>
         /// <returns></returns>
-        public static List<TEntity> DataTableToEntityList<TEntity>(this DataTable dt) where TEntity : Entity
+        public static IEnumerable<TEntity> DataTableToEntityList<TEntity>(this DataTable dt) where TEntity : Entity
         {
             List<TEntity> list = new List<TEntity>();
 
             if ((dt == null) || (dt.Rows.Count == 0))
                 return list;
-
 
             foreach (DataRow row in dt.Rows)
             {

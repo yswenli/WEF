@@ -328,6 +328,7 @@
     <Compile Include="MvcPager\PageLinqExtensions.cs" />
     <Compile Include="MvcPager\PagerItem.cs" />
     <Compile Include="MvcPager\PagerOptions.cs" />
+    <Compile Include="MvcPager\WebDataBaseExtention.cs" />
     <Compile Include="Provider\PostgreSqlProvider.cs" />
     <Compile Include="SearchT.cs" />
     <Compile Include="WEFExtention.cs" />
