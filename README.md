@@ -90,6 +90,21 @@ db.Search<Area>(tableName)    //Model.table1类通过<a href="https://github.com
 
 ```
 
+## 执行sql
+
+```CSharp
+            #region 无实体sql操作，自定义参数            
+
+            var dt1 = new DBContext().FromSql("select * from tb_task where taskid=@taskID").AddInParameter("@taskID", System.Data.DbType.String, 200, "10B676E5BC852464DE0533C5610ACC53").ToFirst<DBTask>();
+
+            var count = new DBContext().Search<DBTask>().Where(b => b.Crc32.Avg() > 1).Count();
+
+            var dt2=new DBContext().ToList<DBTask>("select * from tb_task");
+
+            #endregion
+
+```
+
 
 ## WEF数据库工具
 
