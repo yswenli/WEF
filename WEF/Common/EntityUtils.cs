@@ -1346,5 +1346,16 @@ namespace WEF.Common
                 yield return (T)next;
             }
         }
+
+        /// <summary>
+        /// 转换成List
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static List<T> ToList<T>(this IDataReader reader)
+        {
+            return reader.ReaderToEnumerable<T>().ToList();
+        }
     }
 }

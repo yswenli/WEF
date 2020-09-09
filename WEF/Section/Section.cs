@@ -26,6 +26,10 @@ namespace WEF.Section
         protected DbCommand _dbCommand;
         protected DbTransaction _dbTransaction = null;
 
+        /// <summary>
+        /// Section
+        /// </summary>
+        /// <param name="dbContext"></param>
         public Section(DBContext dbContext)
         {
             Check.Require(dbContext, "dbContext", Check.NotNullOrEmpty);
@@ -68,16 +72,10 @@ namespace WEF.Section
         /// <returns></returns>
         public TEntity ToFirst<TEntity>()
         {
-            TEntity t = default(TEntity);
             using (IDataReader reader = ToDataReader())
             {
-                var result = EntityUtils.ReaderToEnumerable<TEntity>(reader).ToArray();
-                if (result.Any())
-                {
-                    t = result.First();
-                }
+                return reader.ReaderToEnumerable<TEntity>().FirstOrDefault();
             }
-            return t;
         }
 
         /// <summary>
@@ -104,7 +102,7 @@ namespace WEF.Section
         {
             using (IDataReader reader = ToDataReader())
             {
-                return EntityUtils.ReaderToEnumerable<TEntity>(reader).ToList();
+                return reader.ToList<TEntity>();
             }
         }
         /// <summary>
@@ -114,18 +112,9 @@ namespace WEF.Section
         /// <returns></returns>
         public IEnumerable<TEntity> ToEnumerable<TEntity>(string tableName)
         {
-            IEnumerable<TEntity> result;
             using (IDataReader reader = ToDataReader())
             {
-                var info = new EntityUtils.CacheInfo()
-                {
-                    Deserializer = EntityUtils.GetDeserializer(typeof(TEntity), reader, 0, -1, false)
-                };
-                while (reader.Read())
-                {
-                    dynamic next = info.Deserializer(reader);
-                    yield return (TEntity)next;
-                }
+                return reader.ReaderToEnumerable<TEntity>();
             }
         }
 
@@ -154,7 +143,7 @@ namespace WEF.Section
         /// <returns></returns>
         public DataTable ToDataTable()
         {
-            return this.ToDataSet().Tables[0];
+            return ToDataSet().Tables[0];
         }
 
         /// <summary>

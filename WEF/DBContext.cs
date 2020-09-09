@@ -2267,15 +2267,6 @@ namespace WEF
 
         #region sql语句
 
-        /// <summary>
-        /// sql查询
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        public SqlSection FromSql(string sql)
-        {
-            return new SqlSection(this, sql);
-        }
 
         /// <summary>
         /// 执行ExecuteDataTable
@@ -2289,6 +2280,8 @@ namespace WEF
             if (ds != null && ds.Tables.Count > 0) return ds.Tables[0];
             return null;
         }
+
+
         /// <summary>
         /// ExecuteDataSet
         /// </summary>
@@ -2332,6 +2325,28 @@ namespace WEF
         public IDataReader ExecuteReader(string sql, params DbParameter[] dbParameters)
         {
             return db.ExecuteReader(sql, dbParameters);
+        }
+
+        /// <summary>
+        /// 从sql中获取实体列表
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public List<T> ToList<T>(string sql, params DbParameter[] dbParameters)
+        {
+            return ExecuteReader(sql, dbParameters).ToList<T>();
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public SqlSection FromSql(string sql)
+        {
+            return new SqlSection(this, sql);
         }
 
         #endregion
