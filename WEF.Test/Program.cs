@@ -377,11 +377,12 @@ namespace WEF.Test
             #endregion
 
 
-            var batch = ur.DBContext.CreateBatch();
+            using (var batch = ur.DBContext.CreateBatch())
+            {
+                batch.Insert(ut);
+            }
 
-            batch.Insert<User>(ut);
-
-            batch.Execute();
+                
 
 
 

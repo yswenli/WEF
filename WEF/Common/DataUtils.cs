@@ -331,15 +331,15 @@ namespace WEF.Common
             return appRandom.Value.Next();
         }
 
-        public static int paramCount = 0;
+        public static long paramCount = 0;
 
         /// <summary>
         /// 生成下一个参数
         /// </summary>
         /// <returns></returns>
-        public static int GetNewParamCount()
+        public static long GetNewParamCount()
         {
-            if (paramCount >= 999999)
+            if (paramCount >= long.MaxValue)
             {
                 Interlocked.Exchange(ref paramCount, 0);
             }

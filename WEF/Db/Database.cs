@@ -189,8 +189,6 @@ namespace WEF.Db
         {
             try
             {
-                WriteLog(command);
-
                 return command.ExecuteScalar();
             }
             catch (Exception ex)
@@ -209,8 +207,6 @@ namespace WEF.Db
                     return 0;
                 }
 
-                WriteLog(command);
-
                 return command.ExecuteNonQuery();
             }
             catch (Exception ex)
@@ -221,9 +217,6 @@ namespace WEF.Db
 
         private IDataReader DoExecuteReader(DbCommand command, CommandBehavior cmdBehavior)
         {
-
-            WriteLog(command);
-
             try
             {
                 return command.ExecuteReader(cmdBehavior);
@@ -253,7 +246,6 @@ namespace WEF.Db
             Check.Require(connection != null, "connection could not be null.");
 
             command.Connection = connection;
-
             dbProvider.PrepareCommand(command);
 
         }
@@ -1445,13 +1437,6 @@ namespace WEF.Db
             batchCommander = null;
         }
 
-        /// <summary>
-        /// Executes the pending batch operations.
-        /// </summary>
-        public void ExecutePendingBatchOperations()
-        {
-            batchCommander.ExecuteBatch();
-        }
 
         #endregion
 

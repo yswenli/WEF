@@ -34,7 +34,7 @@ namespace WEF.Test
 
             var list = new List<Rule>();
 
-            for (int i = 2 * count; i < 3 * count; i++)
+            for (int i = 0; i < count; i++)
             {
                 list.Add(new Rule()
                 {
@@ -50,6 +50,8 @@ namespace WEF.Test
 
             var rr = new RuleRepository();
 
+            rr.ExecuteSQL("TRUNCATE TABLE Rules").ToScalar();
+
             var sw = Stopwatch.StartNew();
 
             rr.DBContext.Insert(list);
@@ -59,9 +61,8 @@ namespace WEF.Test
             Console.WriteLine("多次insert测试完成,cost:" + sw.ElapsedMilliseconds);
 
             list.Clear();
-            list = new List<Rule>();
 
-            for (int i = 3 * count; i < count * 4; i++)
+            for (int i = 1 * count; i < 2 * count; i++)
             {
                 list.Add(new Rule()
                 {
@@ -79,11 +80,10 @@ namespace WEF.Test
 
             sw = Stopwatch.StartNew();
 
-            var batch = rr.DBContext.CreateBatch();
-
-            batch.InsertList(list);
-
-            batch.Execute();
+            using (var batch = rr.DBContext.CreateBatch(1000))
+            {
+                batch.Insert<Rule>(list);
+            }
 
             sw.Stop();
 

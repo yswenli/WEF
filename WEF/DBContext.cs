@@ -135,18 +135,11 @@ namespace WEF
         #region batch
 
         /// <summary>
-        /// 开始批处理，默认10条sql组合
-        /// </summary>
-        public DbBatch CreateBatch()
-        {
-            return CreateBatch(10);
-        }
-
-        /// <summary>
         /// 开始批处理
         /// </summary>
-        /// <param name="batchSize">sql组合条数</param>
-        public DbBatch CreateBatch(int batchSize)
+        /// <param name="batchSize">1000</param>
+        /// <returns></returns>
+        public DbBatch CreateBatch(int batchSize = 1000)
         {
             return new DbBatch(cmdCreator, new BatchCommander(db, batchSize));
         }
@@ -1816,7 +1809,7 @@ namespace WEF
             int count = 0;
             foreach (TEntity entity in entities)
             {
-                var tcount = insertExecute<TEntity>(cmdCreator.CreateInsertCommand<TEntity>(entity), tran);
+                var tcount = insertExecute<TEntity>(cmdCreator.CreateInsertCommand(entity), tran);
                 if (tcount > 1)
                     count = tcount;
                 else
@@ -1996,14 +1989,13 @@ namespace WEF
 
         public void BulkInsert<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity
         {
-            var batch = CreateBatch();
-
-            foreach (var item in entities)
+            using (var batch = CreateBatch())
             {
-                batch.Insert<TEntity>(item);
+                foreach (var item in entities)
+                {
+                    batch.Insert<TEntity>(item);
+                }
             }
-
-            batch.Execute();
         }
         /// <summary>
         /// 批量更新
@@ -2012,14 +2004,13 @@ namespace WEF
         /// <param name="entities"></param>
         public void BulkUpdate<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity
         {
-            var batch = CreateBatch();
-
-            foreach (var item in entities)
+            using (var batch = CreateBatch())
             {
-                batch.Update<TEntity>(item);
+                foreach (var item in entities)
+                {
+                    batch.Update<TEntity>(item);
+                }
             }
-
-            batch.Execute();
         }
         /// <summary>
         /// 批量删除
@@ -2028,14 +2019,13 @@ namespace WEF
         /// <param name="entities"></param>
         public void BulkDelete<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity
         {
-            var batch = CreateBatch();
-
-            foreach (var item in entities)
+            using (var batch = CreateBatch())
             {
-                batch.Delete<TEntity>(item);
+                foreach (var item in entities)
+                {
+                    batch.Delete<TEntity>(item);
+                }
             }
-
-            batch.Execute();
         }
 
         #endregion
@@ -2385,7 +2375,7 @@ namespace WEF
             return CreateParameter(name, dbType, size, ParameterDirection.Input, true, 0, 0, String.Empty, DataRowVersion.Default, value);
         }
         #endregion
-        
+
 
         #region 数据导入导出
         /// <summary>

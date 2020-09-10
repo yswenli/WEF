@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Text;
 using WEF.Common;
 using WEF.Provider;
@@ -19,23 +20,36 @@ using WEF.Provider;
 namespace WEF.Db
 {
     /// <summary>
-    /// BatchCommander is used to execute batch queries.
+    /// BatchCommander
     /// </summary>
     public sealed class BatchCommander
     {
         #region Private Members
 
-        private Database db;
-        private int batchSize;
-        private DbTransaction tran;
-        private List<DbCommand> batchCommands;
-        private bool isUsingOutsideTransaction = false;
+        private Database _db;
 
+        private int _batchSize;
+
+        private DbTransaction _tran;
+
+        private List<DbCommand> _batchCommands;
+
+        private bool _isUsingOutsideTransaction = false;
+
+
+        /// <summary>
+        /// ∫œ≤¢√¸¡Ó
+        /// </summary>
+        /// <returns></returns>
         private DbCommand MergeCommands()
         {
-            DbCommand cmd = db.GetSqlStringCommand("init");
+            if (_batchCommands == null || !_batchCommands.Any()) return null;
+
+            DbCommand cmd = _db.GetSqlStringCommand("init");
+
             StringBuilder sb = new StringBuilder();
-            foreach (DbCommand item in batchCommands)
+
+            foreach (DbCommand item in _batchCommands)
             {
                 if (item.CommandType == CommandType.Text)
                 {
@@ -44,14 +58,13 @@ namespace WEF.Db
                         DbParameter p = (DbParameter)((ICloneable)dbPara).Clone();
                         cmd.Parameters.Add(p);
                     }
-                    sb.Append(item.CommandText);
-                    sb.Append(";");
+                    sb.Append(item.CommandText + ";");
                 }
             }
 
             if (sb.Length > 0)
             {
-                if (db.DbProvider is OracleProvider)
+                if (_db.DbProvider is OracleProvider)
                 {
                     sb.Insert(0, "begin ");
                     sb.Append(" end;");
@@ -59,6 +72,7 @@ namespace WEF.Db
             }
 
             cmd.CommandText = sb.ToString();
+
             return cmd;
         }
 
@@ -70,31 +84,31 @@ namespace WEF.Db
         /// <summary>
         /// ÷¥––
         /// </summary>
-        public void ExecuteBatch()
+        void ExecuteBatch()
         {
             DbCommand cmd = MergeCommands();
 
+            if (cmd == null) return;
+
             if (cmd.CommandText.Trim().Length > 0)
             {
-                if (tran != null)
+                if (_tran != null)
                 {
-                    cmd.Connection = tran.Connection;
-                    cmd.Transaction = tran;
+                    cmd.Connection = _tran.Connection;
+                    cmd.Transaction = _tran;
 
                 }
                 else
                 {
-                    cmd.Connection = db.GetConnection();
+                    cmd.Connection = _db.GetConnection();
                 }
 
-                db.DbProvider.PrepareCommand(cmd);
-
-                db.WriteLog(cmd);
+                _db.DbProvider.PrepareCommand(cmd);
 
                 cmd.ExecuteNonQuery();
             }
 
-            batchCommands.Clear();
+            _batchCommands.Clear();
         }
 
         /// <summary>
@@ -106,7 +120,7 @@ namespace WEF.Db
         public BatchCommander(Database db, int batchSize, IsolationLevel il)
             : this(db, batchSize, db.BeginTransaction(il))
         {
-            isUsingOutsideTransaction = false;
+            _isUsingOutsideTransaction = false;
         }
 
         /// <summary>
@@ -120,17 +134,15 @@ namespace WEF.Db
             Check.Require(db != null, "db could not be null.");
             Check.Require(batchSize > 0, "Arguments error - batchSize should > 0.");
 
-            this.db = db;
-            this.batchSize = batchSize;
-            batchCommands = new List<DbCommand>(batchSize);
-            this.tran = tran;
+            this._db = db;
+            this._batchSize = batchSize;
+            _batchCommands = new List<DbCommand>(batchSize);
+            this._tran = tran;
             if (tran != null)
             {
-                isUsingOutsideTransaction = true;
+                _isUsingOutsideTransaction = true;
             }
-
         }
-
 
 
         /// <summary>
@@ -141,7 +153,7 @@ namespace WEF.Db
         public BatchCommander(Database db, int batchSize)
             : this(db, batchSize, db.BeginTransaction())
         {
-            isUsingOutsideTransaction = false;
+            _isUsingOutsideTransaction = false;
         }
 
         /// <summary>
@@ -156,12 +168,12 @@ namespace WEF.Db
             }
 
             cmd.Transaction = null;
+
             cmd.Connection = null;
 
+            _batchCommands.Add(cmd);
 
-            batchCommands.Add(cmd);
-
-            if (!db.DbProvider.SupportBatch || batchCommands.Count >= batchSize)
+            if (!_db.DbProvider.SupportBatch || _batchCommands.Count >= _batchSize)
             {
                 try
                 {
@@ -169,9 +181,9 @@ namespace WEF.Db
                 }
                 catch
                 {
-                    if (tran != null && (!isUsingOutsideTransaction))
+                    if (_tran != null && (!_isUsingOutsideTransaction))
                     {
-                        tran.Rollback();
+                        _tran.Rollback();
                     }
 
                     throw;
@@ -188,25 +200,25 @@ namespace WEF.Db
             {
                 ExecuteBatch();
 
-                if (tran != null && (!isUsingOutsideTransaction))
+                if (_tran != null && (!_isUsingOutsideTransaction))
                 {
-                    tran.Commit();
+                    _tran.Commit();
                 }
             }
             catch
             {
-                if (tran != null && (!isUsingOutsideTransaction))
+                if (_tran != null && (!_isUsingOutsideTransaction))
                 {
-                    tran.Rollback();
+                    _tran.Rollback();
                 }
 
                 throw;
             }
             finally
             {
-                if (tran != null && (!isUsingOutsideTransaction))
+                if (_tran != null && (!_isUsingOutsideTransaction))
                 {
-                    db.CloseConnection(tran);
+                    _db.CloseConnection(_tran);
                 }
             }
         }

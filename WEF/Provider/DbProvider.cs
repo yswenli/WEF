@@ -49,7 +49,7 @@ namespace WEF.Provider
         /// <summary>
         /// The db provider factory.
         /// </summary>
-        protected System.Data.Common.DbProviderFactory dbProviderFactory;
+        protected DbProviderFactory dbProviderFactory;
         /// <summary>
         /// The db connection string builder
         /// </summary>
@@ -150,7 +150,7 @@ namespace WEF.Provider
         /// Gets the db provider factory.
         /// </summary>
         /// <value>The db provider factory.</value>
-        public System.Data.Common.DbProviderFactory DbProviderFactory
+        public DbProviderFactory DbProviderFactory
         {
             get
             {
@@ -471,6 +471,7 @@ namespace WEF.Provider
                 }
 
                 object value = p.Value;
+
                 DbType dbType = p.DbType;
 
                 if (value == DBNull.Value)

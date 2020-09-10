@@ -109,9 +109,6 @@ namespace WEF.Provider
                 }
             }
 
-
-
-
             //replace mysql specific function names in cmd.CommandText
             cmd.CommandText = cmd.CommandText
                 .Replace("len(", "length(")

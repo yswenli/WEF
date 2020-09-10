@@ -11,7 +11,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
 using System.Text;
 using WEF.Common;
 using WEF.Expressions;
@@ -25,16 +24,22 @@ namespace WEF.Db
     public class CommandCreator
     {
 
-        private Database db;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Database _db;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="db"></param>
         public CommandCreator(Database db)
         {
-            this.db = db;
+            this._db = db;
         }
 
 
         #region 更新
-
         /// <summary>
         /// 创建更新DbCommand
         /// </summary>
@@ -43,6 +48,19 @@ namespace WEF.Db
         /// <param name="where"></param>
         /// <returns></returns>
         public DbCommand CreateUpdateCommand<TEntity>(TEntity entity, WhereOperation where)
+            where TEntity : Entity
+        {
+            return CreateUpdateCommand<TEntity>(entity.GetTableName(), entity, where);
+        }
+        /// <summary>
+        /// 创建更新DbCommand
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="talbeName"></param>
+        /// <param name="entity"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public DbCommand CreateUpdateCommand<TEntity>(string talbeName, TEntity entity, WhereOperation where)
             where TEntity : Entity
         {
             var mfields = entity.GetModifyFields();
@@ -57,9 +75,22 @@ namespace WEF.Db
                 values[i] = mf.NewValue;
                 i++;
             }
-            return CreateUpdateCommand<TEntity>(entity.GetTableName(), fields, values, where);
+            return CreateUpdateCommand<TEntity>(talbeName, fields, values, where);
         }
-
+        /// <summary>
+        /// 创建更新DbCommand
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="fields"></param>
+        /// <param name="values"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public DbCommand CreateUpdateCommand<TEntity>(Field[] fields, object[] values, WhereOperation where)
+            where TEntity : Entity
+        {
+            var tableName = _db.DbProvider.BuildTableName(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>());
+            return CreateUpdateCommand<TEntity>(tableName, fields, values, where);
+        }
         /// <summary>
         /// 创建更新DbCommand
         /// </summary>
@@ -72,12 +103,7 @@ namespace WEF.Db
         public DbCommand CreateUpdateCommand<TEntity>(string tableName, Field[] fields, object[] values, WhereOperation where)
             where TEntity : Entity
         {
-            if (string.IsNullOrEmpty(tableName))
-            {
-                tableName = EntityCache.GetTableName<TEntity>();
-            }
-
-            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", tableName, ") is readonly!"));
+            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
 
             if (null == fields || fields.Length == 0 || null == values || values.Length == 0)
                 return null;
@@ -91,7 +117,8 @@ namespace WEF.Db
 
             var sql = new StringBuilder();
             sql.Append("UPDATE ");
-            sql.Append(db.DbProvider.BuildTableName(tableName, EntityCache.GetUserName<TEntity>()));
+            tableName = string.IsNullOrEmpty(tableName) ? _db.DbProvider.BuildTableName(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>()) : tableName;
+            sql.Append(tableName);
             sql.Append(" SET ");
 
             var identityField = EntityCache.GetIdentityField<TEntity>();
@@ -125,7 +152,6 @@ namespace WEF.Db
                 else
                 {
                     var pname = DataUtils.MakeUniqueKey(fields[i]);
-                    //var pname = string.Concat("@", fields[i].Name, i);
                     colums.Append(pname);
                     var p = new Parameter(pname, values[i], fields[i].ParameterDbType, fields[i].ParameterSize);
                     list.Add(p);
@@ -135,10 +161,9 @@ namespace WEF.Db
             sql.Append(where.WhereString);
             list.AddRange(where.Parameters);
 
-            var cmd = db.GetSqlStringCommand(sql.ToString());
+            var cmd = _db.GetSqlStringCommand(sql.ToString());
 
-            db.AddCommandParameter(cmd, list.ToArray());
-
+            _db.AddCommandParameter(cmd, list.ToArray());
             return cmd;
         }
 
@@ -157,12 +182,13 @@ namespace WEF.Db
         {
             if (WhereOperation.IsNullOrEmpty(where))
                 throw new Exception("请传入删除条件，删除整表数据请使用.DeleteAll<T>()方法。");
+
             StringBuilder sql = new StringBuilder();
             sql.Append("DELETE FROM ");
-            sql.Append(db.DbProvider.BuildTableName(tableName, userName));
+            sql.Append(_db.DbProvider.BuildTableName(tableName, userName));
             sql.Append(where.WhereString);
-            DbCommand cmd = db.GetSqlStringCommand(sql.ToString());
-            db.AddCommandParameter(cmd, where.Parameters.ToArray());
+            DbCommand cmd = _db.GetSqlStringCommand(sql.ToString());
+            _db.AddCommandParameter(cmd, where.Parameters.ToArray());
 
             return cmd;
         }
@@ -181,6 +207,18 @@ namespace WEF.Db
         #endregion
 
         #region 添加
+        /// <summary>
+        /// 创建添加DbCommand
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="fields"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public DbCommand CreateInsertCommand<TEntity>(Field[] fields, object[] values)
+            where TEntity : Entity
+        {
+            return CreateInsertCommand<TEntity>(_db.DbProvider.BuildTableName(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>()), fields, values);
+        }
 
         /// <summary>
         /// 创建添加DbCommand
@@ -193,38 +231,22 @@ namespace WEF.Db
         public DbCommand CreateInsertCommand<TEntity>(string tableName, Field[] fields, object[] values)
             where TEntity : Entity
         {
-            if (string.IsNullOrEmpty(tableName))
-            {
-                tableName = EntityCache.GetTableName<TEntity>();
-            }
-
-            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", tableName, ") is readonly!"));
+            Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
 
             if (null == fields || fields.Length == 0 || null == values || values.Length == 0)
-
                 return null;
 
             var sql = new StringBuilder();
-
             sql.Append("INSERT INTO ");
-
-            if (db.DbProvider.DatabaseType == DatabaseType.PostgreSQL)
-            {
-                sql.Append($"public.\"{tableName}\"");
-            }
-            else
-            {
-                sql.Append(db.DbProvider.BuildTableName(tableName, EntityCache.GetUserName<TEntity>()));
-            }
-
-
+            tableName = string.IsNullOrEmpty(tableName) ? _db.DbProvider.BuildTableName(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>()) : tableName;
+            sql.Append(tableName);
             sql.Append(" (");
 
             var identityField = EntityCache.GetIdentityField<TEntity>();
             var identityExist = !Field.IsNullOrEmpty(identityField);
             var isSequence = false;
 
-            if (db.DbProvider is OracleProvider)
+            if (_db.DbProvider is OracleProvider)
             {
                 if (!string.IsNullOrEmpty(EntityCache.GetSequence<TEntity>()))
                     isSequence = true;
@@ -248,6 +270,7 @@ namespace WEF.Db
                     }
                 }
                 string panme = DataUtils.MakeUniqueKey(fields[i]);
+                //var panme = string.Concat("@", fields[i].Name, i);
                 insertFields.Add(fields[i].FieldName, panme);
                 var p = new Parameter(panme, values[i], fields[i].ParameterDbType, fields[i].ParameterSize);
                 parameters.Add(p);
@@ -269,8 +292,9 @@ namespace WEF.Db
             sql.Append(ps.ToString().Substring(1));
             sql.Append(")");
 
-            var cmd = db.GetSqlStringCommand(sql.ToString());
-            db.AddCommandParameter(cmd, parameters.ToArray());
+            var cmd = _db.GetSqlStringCommand(sql.ToString());
+
+            _db.AddCommandParameter(cmd, parameters.ToArray());
             return cmd;
         }
 
@@ -283,31 +307,41 @@ namespace WEF.Db
         public DbCommand CreateInsertCommand<TEntity>(TEntity entity)
             where TEntity : Entity
         {
+            return CreateInsertCommand(entity.GetTableName(), entity);
+        }
+
+        /// <summary>
+        /// 创建添加DbCommand
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public DbCommand CreateInsertCommand<TEntity>(string tableName, TEntity entity)
+           where TEntity : Entity
+        {
             if (null == entity)
                 return null;
-
             var mfields = entity.GetModifyFields();
 
             if (null == mfields || mfields.Count == 0)
             {
-                return CreateInsertCommand<TEntity>(entity.GetTableName(), entity.GetFields(), entity.GetValues());
+                return CreateInsertCommand<TEntity>(tableName, entity.GetFields(), entity.GetValues());
             }
             else
             {
                 List<Field> fields = new List<Field>();
-
                 List<object> values = new List<object>();
-
                 foreach (ModifyField m in mfields)
                 {
                     fields.Add(m.Field);
                     values.Add(m.NewValue);
                 }
 
-                return CreateInsertCommand<TEntity>(entity.GetTableName(), fields.ToArray(), values.ToArray());
+                return CreateInsertCommand<TEntity>(tableName, fields.ToArray(), values.ToArray());
             }
         }
-
         #endregion
     }
+
 }

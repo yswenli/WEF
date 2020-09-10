@@ -239,12 +239,11 @@ namespace WEF.Test
 
             #endregion
 
-
-            var batch = ur.DBContext.BeginBatchConnection();
-
-            batch.Insert<User>(ut);
-
-            batch.Execute();
+            //批量操作
+            using (var batch = ur.DBContext.CreateBatch())
+            {
+                batch.Insert(ut);
+            }
 
 
 

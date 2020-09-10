@@ -8,18 +8,14 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
-using WEF.Common;
-using WEF.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Data;
+using WEF.Common;
+using WEF.Expressions;
 
 namespace WEF.Db
 {
-    /// <summary>
-    /// 批处理(事务)
-    /// </summary>
     /// <summary>
     /// 批处理
     /// </summary>
@@ -28,12 +24,12 @@ namespace WEF.Db
         /// <summary>
         /// DbCommand生成器
         /// </summary>
-        private CommandCreator cmdCreator;
+        private CommandCreator _cmdCreator;
 
         /// <summary>
         /// 批处理
         /// </summary>
-        private BatchCommander batchcmd;
+        private BatchCommander _batchcmd;
 
 
         /// <summary>
@@ -49,24 +45,14 @@ namespace WEF.Db
         public DbBatch(CommandCreator cmdCreator, BatchCommander batchcmd)
         {
             Check.Require(cmdCreator, "cmdCreator", Check.NotNull);
+
             Check.Require(batchcmd, "batchcmd", Check.NotNull);
 
-            this.cmdCreator = cmdCreator;
+            _cmdCreator = cmdCreator;
 
-            this.batchcmd = batchcmd;
-
+            _batchcmd = batchcmd;
 
         }
-
-
-        /// <summary>
-        /// 立即执行已挂起的批处理
-        /// </summary>
-        public void Execute()
-        {
-            batchcmd.ExecuteBatch();
-        }
-
 
         /// <summary>
         /// 关闭
@@ -75,8 +61,7 @@ namespace WEF.Db
         {
             if (isClose)
                 return;
-
-            batchcmd.Close();
+            _batchcmd.Close();
             isClose = true;
         }
 
@@ -143,7 +128,7 @@ namespace WEF.Db
             if (entity == null)
                 return;
 
-            batchcmd.Process(cmdCreator.CreateUpdateCommand<TEntity>(entity.GetTableName(), entity.GetFields(), entity.GetValues(), where));
+            _batchcmd.Process(_cmdCreator.CreateUpdateCommand<TEntity>(entity.GetFields(), entity.GetValues(), where));
         }
 
 
@@ -152,7 +137,7 @@ namespace WEF.Db
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
-        public void UpdateList<TEntity>(IEnumerable<TEntity> entities)
+        public void Update<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : Entity
         {
             if (null == entities || !entities.Any())
@@ -181,7 +166,7 @@ namespace WEF.Db
 
             Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
 
-            Update(entity, where);
+            Update<TEntity>(entity, where);
         }
 
 
@@ -198,7 +183,7 @@ namespace WEF.Db
             if (!entity.IsModify())
                 return;
 
-            batchcmd.Process(cmdCreator.CreateUpdateCommand<TEntity>(entity, where));
+            _batchcmd.Process(_cmdCreator.CreateUpdateCommand<TEntity>(entity, where));
         }
 
 
@@ -206,17 +191,17 @@ namespace WEF.Db
         /// 更新单个值
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
         /// <param name="field"></param>
         /// <param name="value"></param>
         /// <param name="where"></param>
-        public void Update<TEntity>(string tableName, Field field, object value, WhereOperation where)
+        /// <returns></returns>
+        public void Update<TEntity>(Field field, object value, WhereOperation where)
             where TEntity : Entity
         {
             if (Field.IsNullOrEmpty(field))
                 return;
 
-            batchcmd.Process(cmdCreator.CreateUpdateCommand<TEntity>(tableName, new Field[] { field }, new object[] { value }, where));
+            _batchcmd.Process(_cmdCreator.CreateUpdateCommand<TEntity>(new Field[] { field }, new object[] { value }, where));
         }
 
 
@@ -226,10 +211,10 @@ namespace WEF.Db
         /// 更新多个值
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
         /// <param name="fieldValue"></param>
         /// <param name="where"></param>
-        public void Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, WhereOperation where)
+        /// <returns></returns>
+        public void Update<TEntity>(Dictionary<Field, object> fieldValue, WhereOperation where)
               where TEntity : Entity
         {
             if (null == fieldValue || fieldValue.Count == 0)
@@ -248,7 +233,7 @@ namespace WEF.Db
                 i++;
             }
 
-            batchcmd.Process(cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, where));
+            _batchcmd.Process(_cmdCreator.CreateUpdateCommand<TEntity>(fields, values, where));
         }
 
 
@@ -256,17 +241,17 @@ namespace WEF.Db
         /// 更新
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="values"></param>
         /// <param name="where"></param>
-        public void Update<TEntity>(string tableName, Field[] fields, object[] values, WhereOperation where)
+        /// <returns></returns>
+        public void Update<TEntity>(Field[] fields, object[] values, WhereOperation where)
             where TEntity : Entity
         {
             if (null == fields || fields.Length == 0)
                 return;
 
-            batchcmd.Process(cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, where));
+            _batchcmd.Process(_cmdCreator.CreateUpdateCommand<TEntity>(fields, values, where));
         }
 
 
@@ -290,25 +275,10 @@ namespace WEF.Db
             WhereOperation where = DataUtils.GetPrimaryKeyWhere(entity);
 
             Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
-
             Delete<TEntity>(where);
         }
-        /// <summary>
-        /// 删除
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities"></param>
-        public void DeleteList<TEntity>(IEnumerable<TEntity> entities)
-                    where TEntity : Entity
-        {
-            if (entities != null && entities.Any())
-            {
-                foreach (var item in entities)
-                {
-                    Delete(item);
-                }
-            }
-        }
+
+
         /// <summary>
         ///  删除
         /// </summary>
@@ -320,7 +290,7 @@ namespace WEF.Db
         {
             Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
 
-            batchcmd.Process(cmdCreator.CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), DataUtils.GetPrimaryKeyWhere<TEntity>(pkValues.ToArray())));
+            _batchcmd.Process(_cmdCreator.CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), DataUtils.GetPrimaryKeyWhere<TEntity>(pkValues.ToArray())));
         }
         /// <summary>
         ///  删除
@@ -333,7 +303,7 @@ namespace WEF.Db
         {
             Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
 
-            batchcmd.Process(cmdCreator.CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), DataUtils.GetPrimaryKeyWhere<TEntity>(pkValues.ToArray())));
+            _batchcmd.Process(_cmdCreator.CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), DataUtils.GetPrimaryKeyWhere<TEntity>(pkValues.ToArray())));
         }
         /// <summary>
         ///  删除
@@ -346,7 +316,7 @@ namespace WEF.Db
         {
             Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
 
-            batchcmd.Process(cmdCreator.CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), DataUtils.GetPrimaryKeyWhere<TEntity>(pkValues.ToArray())));
+            _batchcmd.Process(_cmdCreator.CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), DataUtils.GetPrimaryKeyWhere<TEntity>(pkValues.ToArray())));
         }
         /// <summary>
         ///  删除
@@ -359,7 +329,7 @@ namespace WEF.Db
         {
             Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
 
-            batchcmd.Process(cmdCreator.CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), DataUtils.GetPrimaryKeyWhere<TEntity>(pkValues.ToArray())));
+            _batchcmd.Process(_cmdCreator.CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), DataUtils.GetPrimaryKeyWhere<TEntity>(pkValues.ToArray())));
         }
         /// <summary>
         ///  删除
@@ -372,7 +342,7 @@ namespace WEF.Db
         {
             Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
 
-            batchcmd.Process(cmdCreator.CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where));
+            _batchcmd.Process(_cmdCreator.CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where));
         }
 
         #endregion
@@ -386,7 +356,7 @@ namespace WEF.Db
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public void InsertList<TEntity>(IEnumerable<TEntity> entities)
+        public void Insert<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : Entity
         {
             if (null == entities || !entities.Any())
@@ -394,7 +364,7 @@ namespace WEF.Db
 
             foreach (TEntity entity in entities)
             {
-                Insert(entity);
+                Insert<TEntity>(entity);
             }
         }
 
@@ -407,21 +377,23 @@ namespace WEF.Db
         public void Insert<TEntity>(TEntity entity)
             where TEntity : Entity
         {
-            batchcmd.Process(cmdCreator.CreateInsertCommand<TEntity>(entity));
+            _batchcmd.Process(_cmdCreator.CreateInsertCommand<TEntity>(entity));
         }
 
         /// <summary>
         /// 添加
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="values"></param>
-        public void Insert<TEntity>(string tableName, Field[] fields, object[] values)
+        /// <returns></returns>
+        public void Insert<TEntity>(Field[] fields, object[] values)
             where TEntity : Entity
         {
-            batchcmd.Process(cmdCreator.CreateInsertCommand<TEntity>(tableName, fields, values));
+            _batchcmd.Process(_cmdCreator.CreateInsertCommand<TEntity>(fields, values));
         }
+
+
 
         #endregion
     }
