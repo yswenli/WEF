@@ -24,7 +24,7 @@ namespace WEF.Provider
     {
         #region Private Members
 
-        private static ConcurrentDictionary<string, DbProvider> providerCache = new ConcurrentDictionary<string, DbProvider>();        
+        private static ConcurrentDictionary<string, DbProvider> _providerCache = new ConcurrentDictionary<string, DbProvider>();        
 
         private ProviderFactory()
         {
@@ -48,9 +48,9 @@ namespace WEF.Provider
 
             string cacheKey = string.Concat(assemblyName, className, connectionString);
 
-            if (providerCache.ContainsKey(cacheKey))
+            if (_providerCache.ContainsKey(cacheKey))
             {
-                return providerCache[cacheKey];
+                return _providerCache[cacheKey];
             }
             else
             {
@@ -147,7 +147,7 @@ namespace WEF.Provider
                     retProvider.DatabaseType = databaseType.Value;
                 }
 
-                providerCache.TryAdd(cacheKey, retProvider);
+                _providerCache.TryAdd(cacheKey, retProvider);
 
                 return retProvider;
             }

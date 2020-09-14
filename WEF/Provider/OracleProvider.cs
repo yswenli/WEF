@@ -11,7 +11,7 @@
 using System;
 using System.Data;
 using System.Data.Common;
-using System.Data.OracleClient;
+using Oracle.DataAccess.Client;
 using WEF.Common;
 using WEF.Expressions;
 
@@ -109,14 +109,14 @@ namespace WEF.Provider
 
                 if (oracleParam.DbType != DbType.Guid && type == typeof(Guid))
                 {
-                    oracleParam.OracleType = OracleType.Char;
+                    oracleParam.OracleDbType = OracleDbType.Char;
                     oracleParam.Size = 36;
                     continue;
                 }
 
                 if ((p.DbType == DbType.Time || p.DbType == DbType.DateTime) && type == typeof(TimeSpan))
                 {
-                    oracleParam.OracleType = OracleType.Double;
+                    oracleParam.OracleDbType = OracleDbType.Double;
                     oracleParam.Value = ((TimeSpan)value).TotalDays;
                     continue;
                 }
@@ -126,34 +126,34 @@ namespace WEF.Provider
                     case DbType.Binary:
                         if (((byte[])value).Length > 2000)
                         {
-                            oracleParam.OracleType = OracleType.Blob;
+                            oracleParam.OracleDbType = OracleDbType.Blob;
                         }
                         break;
                     case DbType.Time:
-                        oracleParam.OracleType = OracleType.DateTime;
+                        oracleParam.OracleDbType = OracleDbType.TimeStamp;
                         break;
                     case DbType.DateTime:
-                        oracleParam.OracleType = OracleType.DateTime;
+                        oracleParam.OracleDbType = OracleDbType.Date;
                         break;
                     case DbType.AnsiString:
                         if (value.ToString().Length > 4000)
                         {
-                            oracleParam.OracleType = OracleType.Clob;
+                            oracleParam.OracleDbType = OracleDbType.Clob;
                         }
                         break;
                     case DbType.String:
                         if (value.ToString().Length > 2000)
                         {
-                            oracleParam.OracleType = OracleType.NClob;
+                            oracleParam.OracleDbType = OracleDbType.NClob;
                         }
                         break;
                     case DbType.Object:
-                        oracleParam.OracleType = OracleType.NClob;
+                        oracleParam.OracleDbType = OracleDbType.NClob;
                         p.Value = SerializationManager.Serialize(value);
                         break;
                     //2015-12-31  新增
                     case DbType.Guid:
-                        oracleParam.OracleType = OracleType.Char;//AnsiStringFixedLength  
+                        oracleParam.OracleDbType = OracleDbType.Char;//AnsiStringFixedLength  
                         p.Value = SerializationManager.Serialize(value);
                         break;
                 }

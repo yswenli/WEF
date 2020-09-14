@@ -1130,11 +1130,13 @@ namespace WEF
         public static DataTable EntitiesToDataTable<TEntity>(this IEnumerable<TEntity> entities)
             where TEntity : Entity
         {
-            DataTable dt = new DataTable();
+            if (entities == null || !entities.Any()) return null;
 
-            if (entities == null || !entities.Any()) return dt;
+            var first = entities.First();
 
-            Field[] fields = entities.First().GetFields();
+            DataTable dt = new DataTable(first.GetTableName());
+
+            Field[] fields = first.GetFields();
 
             int fieldLength = fields.Length;
 
@@ -1146,6 +1148,7 @@ namespace WEF
             foreach (TEntity entity in entities)
             {
                 DataRow dtRow = dt.NewRow();
+
                 object[] values = entity.GetValues();
 
                 for (int i = 0; i < fieldLength; i++)

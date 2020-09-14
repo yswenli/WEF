@@ -201,12 +201,6 @@ namespace WEF.Db
         {
             try
             {
-                if (IsBatchConnection)
-                {
-                    batchCommander.Process(command);
-                    return 0;
-                }
-
                 return command.ExecuteNonQuery();
             }
             catch (Exception ex)
@@ -332,7 +326,7 @@ namespace WEF.Db
         /// <param name="command">The command.</param>
         public void CloseConnection(DbCommand command)
         {
-            if (command != null && command.Connection.State != ConnectionState.Closed && batchConnection == null)
+            if (command != null && command.Connection.State != ConnectionState.Closed)
             {
                 if (command.Transaction == null)
                 {
@@ -382,14 +376,7 @@ namespace WEF.Db
         /// <returns></returns>
         public DbConnection GetConnection()
         {
-            if (batchConnection == null)
-            {
-                return CreateConnection();
-            }
-            else
-            {
-                return batchConnection;
-            }
+            return CreateConnection();
         }
 
         /// <summary>
@@ -399,14 +386,7 @@ namespace WEF.Db
         /// <returns></returns>
         public DbConnection GetConnection(bool tryOpen)
         {
-            if (batchConnection == null)
-            {
-                return CreateConnection(tryOpen);
-            }
-            else
-            {
-                return batchConnection;
-            }
+            return CreateConnection(tryOpen);
         }
 
         /// <summary>
@@ -948,18 +928,10 @@ namespace WEF.Db
         {
             command.CommandTimeout = _timeout;
 
-            if (IsBatchConnection)
+            using (DbConnection connection = GetConnection(true))
             {
-                PrepareCommand(command, GetConnection(true));
+                PrepareCommand(command, connection);
                 return DoExecuteNonQuery(command);
-            }
-            else
-            {
-                using (DbConnection connection = GetConnection(true))
-                {
-                    PrepareCommand(command, connection);
-                    return DoExecuteNonQuery(command);
-                }
             }
         }
 
@@ -976,18 +948,11 @@ namespace WEF.Db
             using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
             {
                 command.CommandTimeout = _timeout;
-                if (IsBatchConnection)
+
+                using (DbConnection connection = GetConnection(true))
                 {
-                    PrepareCommand(command, GetConnection(true));
+                    PrepareCommand(command, connection);
                     return DoExecuteNonQuery(command);
-                }
-                else
-                {
-                    using (DbConnection connection = GetConnection(true))
-                    {
-                        PrepareCommand(command, connection);
-                        return DoExecuteNonQuery(command);
-                    }
                 }
             }
         }
@@ -1004,29 +969,16 @@ namespace WEF.Db
             using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
             {
                 command.CommandTimeout = _timeout;
-                if (IsBatchConnection)
+
+                using (DbConnection connection = GetConnection(true))
                 {
-                    PrepareCommand(command, GetConnection(true));
+                    PrepareCommand(command, connection);
 
                     if (dbParameters != null && dbParameters.Any())
                     {
                         command.Parameters.AddRange(dbParameters);
                     }
-
                     return DoExecuteNonQuery(command);
-                }
-                else
-                {
-                    using (DbConnection connection = GetConnection(true))
-                    {
-                        PrepareCommand(command, connection);
-
-                        if (dbParameters != null && dbParameters.Any())
-                        {
-                            command.Parameters.AddRange(dbParameters);
-                        }
-                        return DoExecuteNonQuery(command);
-                    }
                 }
             }
         }
@@ -1362,81 +1314,6 @@ namespace WEF.Db
 
             return command;
         }
-
-        #endregion
-
-        #region Batch Database
-
-        private DbConnection batchConnection = null;
-
-        private BatchCommander batchCommander = null;
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is batch connection.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is batch connection; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsBatchConnection
-        {
-            get
-            {
-                return (batchConnection != null);
-            }
-        }
-
-        /// <summary>
-        /// Begins the batch connection.   the default size of the batch is 10.
-        /// </summary>
-        public void BeginBatchConnection()
-        {
-            BeginBatchConnection(10);
-        }
-
-        /// <summary>
-        /// Begins the batch connection.
-        /// </summary>
-        /// <param name="batchSize">Size of the batch.</param>
-        public void BeginBatchConnection(int batchSize)
-        {
-            BeginBatchConnection(batchSize, (DbTransaction)null);
-        }
-
-        /// <summary>
-        /// Begins the batch connection.
-        /// </summary>
-        /// <param name="batchSize">Size of the batch.</param>
-        /// <param name="tran">The tran.</param>
-        public void BeginBatchConnection(int batchSize, DbTransaction tran)
-        {
-            batchConnection = CreateConnection(true);
-
-            batchCommander = new BatchCommander(this, batchSize, tran);
-        }
-
-        /// <summary>
-        /// Begins the batch connection.
-        /// </summary>
-        /// <param name="batchSize">Size of the batch.</param>
-        /// <param name="il">The il.</param>
-        public void BeginBatchConnection(int batchSize, IsolationLevel il)
-        {
-            batchConnection = CreateConnection(true);
-
-            batchCommander = new BatchCommander(this, batchSize, il);
-        }
-
-        /// <summary>
-        /// Ends the batch connection.
-        /// </summary>
-        public void EndBatchConnection()
-        {
-            batchCommander.Close();
-            CloseConnection(batchConnection);
-            batchConnection = null;
-            batchCommander = null;
-        }
-
 
         #endregion
 

@@ -89,11 +89,6 @@ namespace WEF.Provider
                 }
             }
 
-
-
-
-
-            //replace msaccess specific function names in cmd.CommandText
             cmd.CommandText = cmd.CommandText
                 .Replace("substring(", "substr(")
                 .Replace("len(", "length(")

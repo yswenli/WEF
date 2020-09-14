@@ -19,6 +19,9 @@ using System.Reflection;
 
 namespace WEF.Common
 {
+    /// <summary>
+    /// CommonExpand
+    /// </summary>
     public static class CommonExpand
     {
         private static Dictionary<MemberInfo, Object> _micache1 = new Dictionary<MemberInfo, Object>();

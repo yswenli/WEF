@@ -21,6 +21,7 @@ namespace WEF.Provider
         public MsAccessProvider(string connectionString)
             : base(connectionString, OleDbFactory.Instance, '[', ']', '@', '*')
         {
+            
         }
 
         public override string RowAutoID

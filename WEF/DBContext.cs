@@ -25,6 +25,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
+using WEF.Batcher;
 using WEF.Cache;
 using WEF.Common;
 using WEF.Db;
@@ -139,32 +140,10 @@ namespace WEF
         /// </summary>
         /// <param name="batchSize">1000</param>
         /// <returns></returns>
-        public DbBatch CreateBatch(int batchSize = 1000)
+        public IBatcher<T> CreateBatch<T>() where T : Entity
         {
-            return new DbBatch(cmdCreator, new BatchCommander(db, batchSize));
+            return BatcherFactory.CreateBatcher<T>(db.DbProvider);
         }
-
-        /// <summary>
-        /// 开始批处理
-        /// </summary>
-        /// <param name="batchSize">sql组合条数</param>
-        /// <param name="tran">事务</param>
-        public DbBatch CreateBatch(int batchSize, DbTransaction tran)
-        {
-            return new DbBatch(cmdCreator, new BatchCommander(db, batchSize, tran));
-        }
-
-        /// <summary>
-        /// 开始批处理
-        /// </summary>
-        /// <param name="batchSize">sql组合条数</param>
-        /// <param name="il">事务</param>
-        public DbBatch CreateBatch(int batchSize, IsolationLevel il)
-        {
-            return new DbBatch(cmdCreator, new BatchCommander(db, batchSize, il));
-        }
-
-
         #endregion
 
         private static DbProvider CreateDbProvider(DatabaseType dt, string connStr)
@@ -1989,45 +1968,12 @@ namespace WEF
 
         public void BulkInsert<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity
         {
-            using (var batch = CreateBatch())
+            using (var batch = CreateBatch<TEntity>())
             {
-                foreach (var item in entities)
-                {
-                    batch.Insert<TEntity>(item);
-                }
+                batch.Insert(entities);
+                batch.Execute();
             }
         }
-        /// <summary>
-        /// 批量更新
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities"></param>
-        public void BulkUpdate<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity
-        {
-            using (var batch = CreateBatch())
-            {
-                foreach (var item in entities)
-                {
-                    batch.Update<TEntity>(item);
-                }
-            }
-        }
-        /// <summary>
-        /// 批量删除
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities"></param>
-        public void BulkDelete<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity
-        {
-            using (var batch = CreateBatch())
-            {
-                foreach (var item in entities)
-                {
-                    batch.Delete<TEntity>(item);
-                }
-            }
-        }
-
         #endregion
 
         #region Save操作

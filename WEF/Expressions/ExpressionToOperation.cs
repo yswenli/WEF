@@ -16,13 +16,13 @@
  * 创建人：Wenli
  * 创建说明：
  *****************************************************************************************************/
-using WEF.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Linq;
+using WEF.Common;
 
 namespace WEF.Expressions
 {
@@ -681,7 +681,7 @@ namespace WEF.Expressions
             }
             else
             {
-                var tbl = type.GetCustomAttribute<TableAttribute>(false);
+                var tbl = CommonExpand.GetCustomAttribute<TableAttribute>(type, false);
 
                 result = tbl != null ? tbl.GetTableName() : type.Name;
             }
@@ -707,7 +707,7 @@ namespace WEF.Expressions
 
         private static string[] GetFieldName(MemberInfo type)
         {
-            var tbl = type.GetCustomAttribute<FieldAttribute>(false);
+            var tbl = CustomAttributeExtensions.GetCustomAttribute<FieldAttribute>(type, false);
             return new string[] { tbl != null ? tbl.Field : type.Name, type.Name };
         }
         /// <summary>
