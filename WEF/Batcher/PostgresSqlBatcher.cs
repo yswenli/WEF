@@ -33,7 +33,7 @@ namespace WEF.Batcher
 
         List<T> _list;
 
-        PostgreSqlProvider _psProvider;
+        DbProvider _psProvider;
 
         DataTable _dataTable;
 
@@ -41,7 +41,7 @@ namespace WEF.Batcher
         /// PostgresSqlBatcher
         /// </summary>
         /// <param name="psProvider"></param>
-        public PostgresSqlBatcher(PostgreSqlProvider psProvider)
+        public PostgresSqlBatcher(DbProvider psProvider)
         {
             _list = new List<T>();
 
@@ -76,11 +76,13 @@ namespace WEF.Batcher
         {
             NpgsqlConnection newConnection = (NpgsqlConnection)_psProvider.DbProviderFactory.CreateConnection();
 
+            newConnection.ConnectionString = _psProvider.ConnectionString;
+
             try
             {
                 _dataTable = _list.EntitiesToDataTable();
 
-                if (_dataTable == null) return;
+                if (_dataTable == null || _dataTable.Rows.Count == 0) return;
 
                 var commandFormat = string.Format(CultureInfo.InvariantCulture, "COPY {0} FROM STDIN BINARY", _dataTable.TableName);
 
@@ -91,7 +93,6 @@ namespace WEF.Batcher
                     foreach (DataRow item in _dataTable.Rows)
                         writer.WriteRow(item.ItemArray);
                 }
-
             }
             catch (Exception ex)
             {
@@ -101,6 +102,7 @@ namespace WEF.Batcher
             {
                 if (newConnection.State == ConnectionState.Open)
                     newConnection.Close();
+                _list.Clear();
             }
         }
 
@@ -109,7 +111,7 @@ namespace WEF.Batcher
         /// </summary>
         public void Dispose()
         {
-            _list.Clear();
+            Execute();
         }
     }
 }

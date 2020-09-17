@@ -32,17 +32,16 @@ namespace WEF.Batcher
     /// <typeparam name="T"></typeparam>
     public class MsSqlBatcher<T> : IBatcher<T> where T : Entity
     {
-
         List<T> _list;
 
-        SqlServer9Provider _sqlServer9Provider;
+        DbProvider _sqlServer9Provider;
 
         DataTable _dataTable;
 
         /// <summary>
         /// MsSqlBatcher
         /// </summary>
-        public MsSqlBatcher(SqlServer9Provider sqlServer9Provider)
+        public MsSqlBatcher(DbProvider sqlServer9Provider)
         {
             _list = new List<T>();
 
@@ -77,11 +76,13 @@ namespace WEF.Batcher
         {
             SqlConnection newConnection = (SqlConnection)_sqlServer9Provider.DbProviderFactory.CreateConnection();
 
+            newConnection.ConnectionString = _sqlServer9Provider.ConnectionString;
+
             try
             {
                 _dataTable = _list.EntitiesToDataTable();
 
-                if (_dataTable == null) return;
+                if (_dataTable == null || _dataTable.Rows.Count == 0) return;
 
                 var sbc = new SqlBulkCopy(newConnection);
 
@@ -109,6 +110,7 @@ namespace WEF.Batcher
             {
                 if (newConnection.State == ConnectionState.Open)
                     newConnection.Close();
+                _list.Clear();
             }
         }
 
@@ -117,7 +119,7 @@ namespace WEF.Batcher
         /// </summary>
         public void Dispose()
         {
-            _list.Clear();
+            this.Execute();           
         }
     }
 }

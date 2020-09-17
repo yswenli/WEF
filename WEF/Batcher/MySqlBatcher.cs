@@ -34,7 +34,7 @@ namespace WEF.Batcher
 
         List<T> _list;
 
-        MySqlProvider _mysqlProvider;
+        DbProvider _mysqlProvider;
 
         DataTable _dataTable;
 
@@ -42,7 +42,7 @@ namespace WEF.Batcher
         /// MySqlBatcher
         /// </summary>
         /// <param name="mysqlProvider"></param>
-        public MySqlBatcher(MySqlProvider mysqlProvider)
+        public MySqlBatcher(DbProvider mysqlProvider)
         {
             _list = new List<T>();
 
@@ -77,13 +77,17 @@ namespace WEF.Batcher
         {
             MySqlConnection newConnection = (MySqlConnection)_mysqlProvider.DbProviderFactory.CreateConnection();
 
+            newConnection.ConnectionString = _mysqlProvider.ConnectionString;
+
             try
             {
                 _dataTable = _list.EntitiesToDataTable();
 
-                if (_dataTable == null) return;
+                if (_dataTable == null || _dataTable.Rows.Count == 0) return;
 
-                string tmpPath = Directory.GetCurrentDirectory() + "\\UpTemp";
+                string tmpPath = Path.Combine(Directory.GetCurrentDirectory(), _dataTable.TableName + ".csv");
+
+                DBContext.WriteToCSV(_dataTable, tmpPath);
 
                 MySqlBulkLoader bulk = new MySqlBulkLoader(newConnection)
                 {
@@ -114,6 +118,7 @@ namespace WEF.Batcher
             {
                 if (newConnection.State == ConnectionState.Open)
                     newConnection.Close();
+                _list.Clear();
             }
         }
 
@@ -122,7 +127,7 @@ namespace WEF.Batcher
         /// </summary>
         public void Dispose()
         {
-            _list.Clear();
+            Execute();
         }
     }
 }

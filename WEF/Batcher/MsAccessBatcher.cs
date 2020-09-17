@@ -32,14 +32,14 @@ namespace WEF.Batcher
 
         List<T> _list;
 
-        MsAccessProvider _msAccessProvider;
+        DbProvider _msAccessProvider;
 
         DataTable _dataTable;
 
         /// <summary>
         /// MsAccessBatcher
         /// </summary>
-        public MsAccessBatcher(MsAccessProvider msAccessProvider)
+        public MsAccessBatcher(DbProvider msAccessProvider)
         {
             _list = new List<T>();
 
@@ -74,13 +74,15 @@ namespace WEF.Batcher
         {
             DBEngine dbEngine = new DBEngine();
 
-            Database db = dbEngine.OpenDatabase(_msAccessProvider.ConnectionString);
+            Database db = null;
 
             try
             {
+                db = dbEngine.OpenDatabase(_msAccessProvider.ConnectionString);
+
                 _dataTable = _list.EntitiesToDataTable();
 
-                if (_dataTable == null) return;
+                if (_dataTable == null || _dataTable.Rows.Count == 0) return;
 
                 Recordset rs = db.OpenRecordset(_dataTable.TableName);
 
@@ -111,7 +113,8 @@ namespace WEF.Batcher
             }
             finally
             {
-                db.Close();
+                db?.Close();
+                _list.Clear();
             }
         }
 
@@ -120,7 +123,7 @@ namespace WEF.Batcher
         /// </summary>
         public void Dispose()
         {
-            _list.Clear();
+            this.Execute();
         }
     }
 }

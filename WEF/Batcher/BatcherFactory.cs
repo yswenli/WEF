@@ -37,14 +37,16 @@ namespace WEF.Batcher
             {
                 case DatabaseType.SqlServer:
                 case DatabaseType.SqlServer9:
-                    return new MsSqlBatcher<T>((SqlServer9Provider)dbProvider);
+                    return new MsSqlBatcher<T>(dbProvider);
+                case DatabaseType.MsAccess:
+                    return new MsAccessBatcher<T>(dbProvider);
                 case DatabaseType.MySql:
                 case DatabaseType.MariaDB:
-                    return new MySqlBatcher<T>((MySqlProvider)dbProvider);
+                    return new MySqlBatcher<T>(dbProvider);
                 case DatabaseType.Oracle:
-                    return new OracleBatcher<T>((OracleProvider)dbProvider);
+                    return new OracleBatcher<T>(dbProvider);
                 case DatabaseType.PostgreSQL:
-                    return new PostgresSqlBatcher<T>((PostgreSqlProvider)dbProvider);
+                    return new PostgresSqlBatcher<T>(dbProvider);
                 default:
                     throw new Exception("不支持的数据库类型：" + dbProvider.DatabaseType.ToString());
 

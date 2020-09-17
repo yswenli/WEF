@@ -30,7 +30,7 @@ namespace WEF.Test
         {
             Console.WriteLine("多次insert测试");
 
-            var count = 10000;
+            var count = 100000;
 
             var list = new List<Rule>();
 
@@ -83,6 +83,8 @@ namespace WEF.Test
             using (var batch = rr.DBContext.CreateBatch<Rule>())
             {
                 batch.Insert(list);
+
+                batch.Execute();
             }
 
             sw.Stop();

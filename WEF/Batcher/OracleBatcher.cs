@@ -32,14 +32,14 @@ namespace WEF.Batcher
 
         List<T> _list;
 
-        OracleProvider _oracleProvider;
+        DbProvider _oracleProvider;
 
         DataTable _dataTable;
 
         /// <summary>
         /// MsSqlBatcher
         /// </summary>
-        public OracleBatcher(OracleProvider oracleProvider)
+        public OracleBatcher(DbProvider oracleProvider)
         {
             _list = new List<T>();
 
@@ -74,11 +74,13 @@ namespace WEF.Batcher
         {
             OracleConnection newConnection = (OracleConnection)_oracleProvider.DbProviderFactory.CreateConnection();
 
+            newConnection.ConnectionString = _oracleProvider.ConnectionString;
+
             try
             {
                 _dataTable = _list.EntitiesToDataTable();
 
-                if (_dataTable == null) return;
+                if (_dataTable == null || _dataTable.Rows.Count == 0) return;
 
                 var sbc = new OracleBulkCopy(newConnection);
 
@@ -106,6 +108,7 @@ namespace WEF.Batcher
             {
                 if (newConnection.State == ConnectionState.Open)
                     newConnection.Close();
+                _list.Clear();
             }
         }
 
@@ -114,7 +117,7 @@ namespace WEF.Batcher
         /// </summary>
         public void Dispose()
         {
-            _list.Clear();
+            Execute();
         }
     }
 }
