@@ -83,8 +83,6 @@ namespace WEF.Test
             using (var batch = rr.DBContext.CreateBatch<Rule>())
             {
                 batch.Insert(list);
-
-                batch.Execute();
             }
 
             sw.Stop();
