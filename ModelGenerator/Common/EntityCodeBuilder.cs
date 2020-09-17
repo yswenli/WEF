@@ -489,20 +489,6 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 删除实体");
-            plus.AppendSpaceLine(2, $"/// <param name=\"{identityColumn.Name}\">{identityColumn.Name}</param>");
-            plus.AppendSpaceLine(2, "/// <param name=\"tableName\">tableName</param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, $"public int Delete({identityColumn.DataTypeName} {identityColumn.Name}, string tableName = \"\")");
-
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, $"var entity = Search(tableName).Where(b => b.{identityColumn.Name} == {identityColumn.Name}).First();");
-            plus.AppendSpaceLine(3, "if (entity == null) return -1;");
-            plus.AppendSpaceLine(3, "entity.Attach(EntityState.Deleted);");
-            plus.AppendSpaceLine(3, "return db.Save(entity);");
-            plus.AppendSpaceLine(2, "}");
-
-            plus.AppendSpaceLine(2, "/// <summary>");
             plus.AppendSpaceLine(2, "/// 批量删除实体");
             plus.AppendSpaceLine(2, "/// <param name=\"obj\">传进的实体列表</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
