@@ -1117,7 +1117,7 @@ namespace WEF
         #endregion
 
 
-       
+
 
         #region DataTable 与 Entity互相转换
 
@@ -1140,9 +1140,14 @@ namespace WEF
 
             int fieldLength = fields.Length;
 
-            foreach (Field field in fields)
+            var vals = first.GetValues();
+
+            for (int i = 0; i < fieldLength; i++)
             {
-                dt.Columns.Add(field.Name);
+                if (vals[i] != null)
+                    dt.Columns.Add(fields[i].Name);
+                else
+                    dt.Columns.Add(fields[i].Name, vals[i].GetType());
             }
 
             foreach (TEntity entity in entities)
@@ -1190,7 +1195,7 @@ namespace WEF
             }
             return local2;
         }
-        
+
         /// <summary>
         /// DataTable转化为 List
         /// </summary>
@@ -1312,13 +1317,13 @@ namespace WEF
 
         #endregion
 
-            #region 连接字符串处理
+        #region 连接字符串处理
 
-            /// <summary>
-            /// 将sql连接符串转换成dictionary
-            /// </summary>
-            /// <param name="connStr"></param>
-            /// <returns></returns>
+        /// <summary>
+        /// 将sql连接符串转换成dictionary
+        /// </summary>
+        /// <param name="connStr"></param>
+        /// <returns></returns>
         public static Dictionary<string, string> ToConnectParmaDic(this string connStr)
         {
             Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
