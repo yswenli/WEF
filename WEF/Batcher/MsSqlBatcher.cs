@@ -74,6 +74,10 @@ namespace WEF.Batcher
         /// <param name="timeout"></param>
         public void Execute(int batchSize = 10000, int timeout = 10 * 1000)
         {
+            if (_list == null || !_list.Any()) return;
+
+            if (_sqlServer9Provider == null) return;
+
             SqlConnection newConnection = (SqlConnection)_sqlServer9Provider.DbProviderFactory.CreateConnection();
 
             newConnection.ConnectionString = _sqlServer9Provider.ConnectionString;
@@ -82,7 +86,7 @@ namespace WEF.Batcher
             {
                 _dataTable = _list.EntitiesToDataTable();
 
-                if (_dataTable == null || _dataTable.Rows.Count == 0) return;
+                if (_dataTable == null || _dataTable.Rows == null || _dataTable.Rows.Count == 0) return;
 
                 var sbc = new SqlBulkCopy(newConnection);
 
@@ -119,7 +123,8 @@ namespace WEF.Batcher
         /// </summary>
         public void Dispose()
         {
-            this.Execute();           
+            Execute();
+            _list = null;
         }
     }
 }

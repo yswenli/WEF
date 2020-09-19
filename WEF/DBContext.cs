@@ -1968,10 +1968,11 @@ namespace WEF
 
         public void BulkInsert<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity
         {
+            if (entities == null || !entities.Any()) return;
+
             using (var batch = CreateBatch<TEntity>())
             {
                 batch.Insert(entities);
-                batch.Execute();
             }
         }
         #endregion
