@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using WEF.Provider;
 
 namespace WEF.Batcher
 {
@@ -29,31 +28,23 @@ namespace WEF.Batcher
     /// MySqlBatcher
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class MySqlBatcher<T> : IBatcher<T> where T : Entity
+    public class MySqlBatcher<T> : BatcherBase<T>, IBatcher<T> where T : Entity
     {
-
-        List<T> _list;
-
-        DbProvider _mysqlProvider;
-
-        DataTable _dataTable;
 
         /// <summary>
         /// MySqlBatcher
         /// </summary>
-        /// <param name="mysqlProvider"></param>
-        public MySqlBatcher(DbProvider mysqlProvider)
+        /// <param name="database"></param>
+        public MySqlBatcher(WEF.Db.Database database) : base(database)
         {
-            _list = new List<T>();
 
-            _mysqlProvider = mysqlProvider;
         }
 
         /// <summary>
         /// 插入实体
         /// </summary>
         /// <param name="t"></param>
-        public void Insert(T t)
+        public override void Insert(T t)
         {
             _list.Add(t);
         }
@@ -62,7 +53,7 @@ namespace WEF.Batcher
         /// 插入实体集合
         /// </summary>
         /// <param name="data"></param>
-        public void Insert(IEnumerable<T> data)
+        public override void Insert(IEnumerable<T> data)
         {
             _list.AddRange(data);
         }
@@ -73,15 +64,13 @@ namespace WEF.Batcher
         /// </summary>
         /// <param name="batchSize"></param>
         /// <param name="timeout"></param>
-        public void Execute(int batchSize = 10000, int timeout = 10 * 1000)
+        public override void Execute(int batchSize = 10000, int timeout = 10 * 1000)
         {
-            MySqlConnection newConnection = (MySqlConnection)_mysqlProvider.DbProviderFactory.CreateConnection();
-
-            newConnection.ConnectionString = _mysqlProvider.ConnectionString;
+            MySqlConnection newConnection = (MySqlConnection)_database.CreateConnection();
 
             try
             {
-                _dataTable = _list.EntitiesToDataTable();
+                _dataTable = ToDataTable(_list); 
 
                 if (_dataTable == null || _dataTable.Rows.Count == 0) return;
 
@@ -125,7 +114,7 @@ namespace WEF.Batcher
         /// <summary>
         /// Dispose
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
             Execute();
         }

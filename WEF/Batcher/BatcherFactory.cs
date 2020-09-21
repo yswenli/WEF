@@ -16,7 +16,7 @@
 *描    述：
 *****************************************************************************/
 using System;
-using WEF.Provider;
+using WEF.Db;
 
 namespace WEF.Batcher
 {
@@ -29,26 +29,26 @@ namespace WEF.Batcher
         /// 创建一个批量对象
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="dbProvider"></param>
+        /// <param name="database"></param>
         /// <returns></returns>
-        public static IBatcher<T> CreateBatcher<T>(DbProvider dbProvider) where T : Entity
+        public static IBatcher<T> CreateBatcher<T>(Database database) where T : Entity
         {
-            switch (dbProvider.DatabaseType)
+            switch (database.DbProvider.DatabaseType)
             {
                 case DatabaseType.SqlServer:
                 case DatabaseType.SqlServer9:
-                    return new MsSqlBatcher<T>(dbProvider);
+                    return new MsSqlBatcher<T>(database);
                 case DatabaseType.MsAccess:
-                    return new MsAccessBatcher<T>(dbProvider);
+                    return new MsAccessBatcher<T>(database);
                 case DatabaseType.MySql:
                 case DatabaseType.MariaDB:
-                    return new MySqlBatcher<T>(dbProvider);
+                    return new MySqlBatcher<T>(database);
                 case DatabaseType.Oracle:
-                    return new OracleBatcher<T>(dbProvider);
+                    return new OracleBatcher<T>(database);
                 case DatabaseType.PostgreSQL:
-                    return new PostgresSqlBatcher<T>(dbProvider);
+                    return new PostgresSqlBatcher<T>(database);
                 default:
-                    throw new Exception("不支持的数据库类型：" + dbProvider.DatabaseType.ToString());
+                    throw new Exception("不支持的数据库类型：" + database.DbProvider.DatabaseType.ToString());
 
             }
         }

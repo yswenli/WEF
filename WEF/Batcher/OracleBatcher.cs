@@ -19,7 +19,6 @@ using Oracle.DataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using WEF.Provider;
 
 namespace WEF.Batcher
 {
@@ -27,30 +26,22 @@ namespace WEF.Batcher
     /// OracleBatcher
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class OracleBatcher<T> : IBatcher<T> where T : Entity
+    public class OracleBatcher<T> : BatcherBase<T>, IBatcher<T> where T : Entity
     {
-
-        List<T> _list;
-
-        DbProvider _oracleProvider;
-
-        DataTable _dataTable;
-
         /// <summary>
-        /// MsSqlBatcher
+        /// OracleBatcher
         /// </summary>
-        public OracleBatcher(DbProvider oracleProvider)
+        /// <param name="database"></param>
+        public OracleBatcher(WEF.Db.Database database) : base(database)
         {
-            _list = new List<T>();
 
-            _oracleProvider = oracleProvider;
         }
 
         /// <summary>
         /// 插入实体
         /// </summary>
         /// <param name="t"></param>
-        public void Insert(T t)
+        public override void Insert(T t)
         {
             _list.Add(t);
         }
@@ -59,7 +50,7 @@ namespace WEF.Batcher
         /// 插入实体集合
         /// </summary>
         /// <param name="data"></param>
-        public void Insert(IEnumerable<T> data)
+        public override void Insert(IEnumerable<T> data)
         {
             _list.AddRange(data);
         }
@@ -70,15 +61,13 @@ namespace WEF.Batcher
         /// </summary>
         /// <param name="batchSize"></param>
         /// <param name="timeout"></param>
-        public void Execute(int batchSize = 10000, int timeout = 10 * 1000)
+        public override void Execute(int batchSize = 10000, int timeout = 10 * 1000)
         {
-            OracleConnection newConnection = (OracleConnection)_oracleProvider.DbProviderFactory.CreateConnection();
-
-            newConnection.ConnectionString = _oracleProvider.ConnectionString;
+            OracleConnection newConnection = (OracleConnection)_database.CreateConnection();
 
             try
             {
-                _dataTable = _list.EntitiesToDataTable();
+                _dataTable = ToDataTable(_list);
 
                 if (_dataTable == null || _dataTable.Rows.Count == 0) return;
 
@@ -115,7 +104,7 @@ namespace WEF.Batcher
         /// <summary>
         /// Dispose
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
             Execute();
         }

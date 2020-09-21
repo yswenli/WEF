@@ -46,7 +46,7 @@ namespace WEF
         /// <summary>
         /// 
         /// </summary>
-        private Database db;
+        private Database _db;
 
         /// <summary>
         /// 
@@ -64,7 +64,7 @@ namespace WEF
         {
             get
             {
-                return db.DbProvider.LeftToken.ToString();
+                return _db.DbProvider.LeftToken.ToString();
             }
         }
 
@@ -77,7 +77,7 @@ namespace WEF
         {
             get
             {
-                return db.DbProvider.RightToken.ToString();
+                return _db.DbProvider.RightToken.ToString();
             }
         }
 
@@ -89,7 +89,7 @@ namespace WEF
         {
             get
             {
-                return db.DbProvider.ParamPrefix.ToString();
+                return _db.DbProvider.ParamPrefix.ToString();
             }
         }
 
@@ -113,9 +113,9 @@ namespace WEF
         /// </summary>
         public void TurnOnCache()
         {
-            if (null != db.DbProvider.CacheConfig)
+            if (null != _db.DbProvider.CacheConfig)
             {
-                db.DbProvider.CacheConfig.Enable = true;
+                _db.DbProvider.CacheConfig.Enable = true;
             }
         }
 
@@ -125,9 +125,9 @@ namespace WEF
         /// </summary>
         public void TurnOffCache()
         {
-            if (null != db.DbProvider.CacheConfig)
+            if (null != _db.DbProvider.CacheConfig)
             {
-                db.DbProvider.CacheConfig.Enable = false;
+                _db.DbProvider.CacheConfig.Enable = false;
             }
         }
 
@@ -142,7 +142,7 @@ namespace WEF
         /// <returns></returns>
         public IBatcher<T> CreateBatch<T>() where T : Entity
         {
-            return BatcherFactory.CreateBatcher<T>(db.DbProvider);
+            return BatcherFactory.CreateBatcher<T>(_db);
         }
         #endregion
 
@@ -186,39 +186,39 @@ namespace WEF
 
         private void initDbSesion()
         {
-            cmdCreator = new CommandCreator(db);
+            cmdCreator = new CommandCreator(_db);
 
-            if (db.DbProvider.CacheConfig == null)
+            if (_db.DbProvider.CacheConfig == null)
             {
                 object cacheConfig = System.Configuration.ConfigurationManager.GetSection("WEFCacheConfig");
 
                 if (cacheConfig != null)
                 {
-                    db.DbProvider.CacheConfig = (CacheConfiguration)cacheConfig;
+                    _db.DbProvider.CacheConfig = (CacheConfiguration)cacheConfig;
 
                     ConcurrentDictionary<string, CacheInfo> entitiesCache = new ConcurrentDictionary<string, CacheInfo>();
 
                     //获取缓存配制
 
-                    foreach (string key in db.DbProvider.CacheConfig.Entities.AllKeys)
+                    foreach (string key in _db.DbProvider.CacheConfig.Entities.AllKeys)
                     {
                         if (key.IndexOf('.') > 0)
                         {
                             string[] splittedKey = key.Split('.');
 
-                            if (splittedKey[0].Trim() == db.DbProvider.ConnectionStringsName)
+                            if (splittedKey[0].Trim() == _db.DbProvider.ConnectionStringsName)
                             {
                                 int expireSeconds = 0;
                                 CacheInfo cacheInfo = new CacheInfo();
 
-                                if (int.TryParse(db.DbProvider.CacheConfig.Entities[key].Value, out expireSeconds))
+                                if (int.TryParse(_db.DbProvider.CacheConfig.Entities[key].Value, out expireSeconds))
 
                                 {
                                     cacheInfo.TimeOut = expireSeconds;
                                 }
                                 else
                                 {
-                                    string tempFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, db.DbProvider.CacheConfig.Entities[key].Value);
+                                    string tempFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _db.DbProvider.CacheConfig.Entities[key].Value);
 
                                     if (File.Exists(tempFilePath))
                                     {
@@ -228,7 +228,7 @@ namespace WEF
 
                                 if (!cacheInfo.IsNullOrEmpty())
                                 {
-                                    string entityName = string.Concat(db.DbProvider.ConnectionStringsName, splittedKey[1].Trim());
+                                    string entityName = string.Concat(_db.DbProvider.ConnectionStringsName, splittedKey[1].Trim());
 
                                     entitiesCache[entityName] = cacheInfo;
                                 }
@@ -236,7 +236,7 @@ namespace WEF
                         }
                     }
 
-                    db.DbProvider.EntitiesCache = entitiesCache;
+                    _db.DbProvider.EntitiesCache = entitiesCache;
                 }
 
             }
@@ -248,7 +248,7 @@ namespace WEF
         /// <param name="timeOut"></param>
         public DBContext(int timeOut = 30)
         {
-            db = Database.Default;
+            _db = Database.Default;
 
             initDbSesion();
 
@@ -262,8 +262,8 @@ namespace WEF
         /// <param name="timeout"></param>
         public DBContext(string connStrName, int timeout = 30)
         {
-            this.db = new Database(ProviderFactory.CreateDbProvider(connStrName), timeout);
-            this.db.DbProvider.ConnectionStringsName = connStrName;
+            this._db = new Database(ProviderFactory.CreateDbProvider(connStrName), timeout);
+            this._db.DbProvider.ConnectionStringsName = connStrName;
             initDbSesion();
             CallContext.LogicalSetData(CONTEXTKEY, this);
         }
@@ -276,7 +276,7 @@ namespace WEF
         /// <param name="timeout"></param>
         public DBContext(Database db, int timeout = 30)
         {
-            this.db = db;
+            this._db = db;
 
             initDbSesion();
 
@@ -293,7 +293,7 @@ namespace WEF
         {
             DbProvider provider = CreateDbProvider(dt, connStr);
 
-            this.db = new Database(provider, timeout);
+            this._db = new Database(provider, timeout);
 
             initDbSesion();
 
@@ -316,9 +316,9 @@ namespace WEF
                     assemblyName, className, connStr));
             }
 
-            this.db = new Database(provider, timeout);
+            this._db = new Database(provider, timeout);
 
-            cmdCreator = new CommandCreator(db);
+            cmdCreator = new CommandCreator(_db);
 
             CallContext.LogicalSetData(CONTEXTKEY, this);
         }
@@ -336,7 +336,7 @@ namespace WEF
         public ISearch<TEntity> Search<TEntity>(string tableName = "")
             where TEntity : Entity
         {
-            return new Search<TEntity>(db, null, tableName);
+            return new Search<TEntity>(_db, null, tableName);
         }
 
         /// <summary>
@@ -346,7 +346,7 @@ namespace WEF
         /// <returns></returns>
         public ISearch Search(string tableName)
         {
-            return new Search(db, tableName);
+            return new Search(_db, tableName);
         }
 
 
@@ -359,7 +359,7 @@ namespace WEF
         public ISearch<TEntity> Search<TEntity>(TEntity entity)
            where TEntity : Entity
         {
-            return new Search<TEntity>(db, null, entity.GetTableName());
+            return new Search<TEntity>(_db, null, entity.GetTableName());
         }
 
 
@@ -790,7 +790,7 @@ namespace WEF
         /// <param name="handler">The handler.</param>
         public void RegisterSqlLogger(LogHandler handler)
         {
-            db.OnLog += handler;
+            _db.OnLog += handler;
         }
 
         /// <summary>
@@ -799,7 +799,7 @@ namespace WEF
         /// <param name="handler">The handler.</param>
         public void UnregisterSqlLogger(LogHandler handler)
         {
-            db.OnLog -= handler;
+            _db.OnLog -= handler;
         }
 
         /// <summary>
@@ -810,7 +810,7 @@ namespace WEF
         {
             get
             {
-                return this.db;
+                return this._db;
             }
         }
 
@@ -820,7 +820,7 @@ namespace WEF
         /// <returns>The begined transaction.</returns>
         public DbTrans BeginTransaction()
         {
-            return new DbTrans(db.BeginTransaction(), this);
+            return new DbTrans(_db.BeginTransaction(), this);
         }
 
         /// <summary>
@@ -830,7 +830,7 @@ namespace WEF
         /// <returns>The begined transaction.</returns>
         public DbTrans BeginTransaction(System.Data.IsolationLevel il)
         {
-            return new DbTrans(db.BeginTransaction(il), this);
+            return new DbTrans(_db.BeginTransaction(il), this);
         }
 
         /// <summary>
@@ -839,7 +839,7 @@ namespace WEF
         /// <param name="tran">The tran.</param>
         public void CloseTransaction(DbTransaction tran)
         {
-            db.CloseConnection(tran);
+            _db.CloseConnection(tran);
         }
 
         /// <summary>
@@ -851,7 +851,7 @@ namespace WEF
         {
             Check.Require(name, "name", Check.NotNullOrEmpty);
 
-            return db.DbProvider.BuildParameterName(name);
+            return _db.DbProvider.BuildParameterName(name);
         }
 
 
@@ -1895,13 +1895,13 @@ namespace WEF
                         ExecuteNonQuery(cmd);
                         scalarValue =
                             ExecuteScalar(
-                                db.GetSqlStringCommand(string.Format("select max({0}) from {1}", identity.FieldName,
+                                _db.GetSqlStringCommand(string.Format("select max({0}) from {1}", identity.FieldName,
                                     identity.TableName))); //Max<TEntity, int>(identity, WhereClip.All) + 1;
                     }
                     else
                     {
                         ExecuteNonQuery(cmd, tran);
-                        scalarValue = ExecuteScalar(db.GetSqlStringCommand(string.Format("select max({0}) from {1}", identity.FieldName, identity.TableName)), tran); //Max<TEntity, int>(identity, WhereClip.All) + 1;
+                        scalarValue = ExecuteScalar(_db.GetSqlStringCommand(string.Format("select max({0}) from {1}", identity.FieldName, identity.TableName)), tran); //Max<TEntity, int>(identity, WhereClip.All) + 1;
                     }
 
                 }
@@ -1912,13 +1912,13 @@ namespace WEF
                         ExecuteNonQuery(cmd);
                         scalarValue =
                             ExecuteScalar(
-                                db.GetSqlStringCommand(string.Format(db.DbProvider.RowAutoID,
+                                _db.GetSqlStringCommand(string.Format(_db.DbProvider.RowAutoID,
                                     EntityCache.GetSequence<TEntity>())));
                     }
                     else
                     {
                         ExecuteNonQuery(cmd, tran);
-                        scalarValue = ExecuteScalar(db.GetSqlStringCommand(string.Format(db.DbProvider.RowAutoID, EntityCache.GetSequence<TEntity>())), tran);
+                        scalarValue = ExecuteScalar(_db.GetSqlStringCommand(string.Format(_db.DbProvider.RowAutoID, EntityCache.GetSequence<TEntity>())), tran);
                     }
                 }
                 else
@@ -1927,12 +1927,12 @@ namespace WEF
                     {
                         if (tran == null)
                         {
-                            cmd.CommandText = string.Concat(cmd.CommandText, ";", db.DbProvider.RowAutoID);
+                            cmd.CommandText = string.Concat(cmd.CommandText, ";", _db.DbProvider.RowAutoID);
                             scalarValue = ExecuteScalar(cmd);
                         }
                         else
                         {
-                            cmd.CommandText = string.Concat(cmd.CommandText, ";", db.DbProvider.RowAutoID);
+                            cmd.CommandText = string.Concat(cmd.CommandText, ";", _db.DbProvider.RowAutoID);
                             scalarValue = ExecuteScalar(cmd, tran);
                         }
                     }
@@ -1941,12 +1941,12 @@ namespace WEF
                         if (tran == null)
                         {
                             ExecuteNonQuery(cmd);
-                            scalarValue = ExecuteScalar(db.GetSqlStringCommand(Db.DbProvider.RowAutoID));
+                            scalarValue = ExecuteScalar(_db.GetSqlStringCommand(Db.DbProvider.RowAutoID));
                         }
                         else
                         {
                             ExecuteNonQuery(cmd, tran);
-                            scalarValue = ExecuteScalar(db.GetSqlStringCommand(Db.DbProvider.RowAutoID), tran);
+                            scalarValue = ExecuteScalar(_db.GetSqlStringCommand(Db.DbProvider.RowAutoID), tran);
                         }
                     }
                 }
@@ -2091,7 +2091,7 @@ namespace WEF
             if (null == cmd)
                 return 0;
 
-            return db.ExecuteNonQuery(cmd);
+            return _db.ExecuteNonQuery(cmd);
         }
 
         /// <summary>
@@ -2104,7 +2104,7 @@ namespace WEF
         {
             if (null == cmd)
                 return 0;
-            return db.ExecuteNonQuery(cmd, tran);
+            return _db.ExecuteNonQuery(cmd, tran);
         }
 
         /// <summary>
@@ -2118,7 +2118,7 @@ namespace WEF
             if (null == cmd)
                 return null;
 
-            return db.ExecuteScalar(cmd, tran);
+            return _db.ExecuteScalar(cmd, tran);
         }
 
         /// <summary>
@@ -2131,7 +2131,7 @@ namespace WEF
             if (null == cmd)
                 return null;
 
-            return db.ExecuteScalar(cmd);
+            return _db.ExecuteScalar(cmd);
         }
 
         /// <summary>
@@ -2143,7 +2143,7 @@ namespace WEF
         {
             if (null == cmd)
                 return null;
-            return db.ExecuteReader(cmd);
+            return _db.ExecuteReader(cmd);
         }
 
         /// <summary>
@@ -2156,7 +2156,7 @@ namespace WEF
         {
             if (null == cmd)
                 return null;
-            return db.ExecuteReader(cmd, tran);
+            return _db.ExecuteReader(cmd, tran);
         }
 
         /// <summary>
@@ -2168,7 +2168,7 @@ namespace WEF
         {
             if (null == cmd)
                 return null;
-            return db.ExecuteDataSet(cmd);
+            return _db.ExecuteDataSet(cmd);
         }
 
         /// <summary>
@@ -2181,12 +2181,10 @@ namespace WEF
         {
             if (null == cmd)
                 return null;
-            return db.ExecuteDataSet(cmd, tran);
+            return _db.ExecuteDataSet(cmd, tran);
         }
 
         #endregion
-
-
 
         #region 存储过程
 
@@ -2213,7 +2211,7 @@ namespace WEF
         /// <returns></returns>
         public DataTable ExecuteDataTable(string sql, params DbParameter[] dbParameters)
         {
-            var ds = db.ExecuteDataSet(sql, dbParameters);
+            var ds = _db.ExecuteDataSet(sql, dbParameters);
             if (ds != null && ds.Tables.Count > 0) return ds.Tables[0];
             return null;
         }
@@ -2227,7 +2225,7 @@ namespace WEF
         /// <returns></returns>
         public DataSet ExecuteDataSet(string sql, params DbParameter[] dbParameters)
         {
-            return db.ExecuteDataSet(sql, dbParameters);
+            return _db.ExecuteDataSet(sql, dbParameters);
         }
 
         /// <summary>
@@ -2238,7 +2236,7 @@ namespace WEF
         /// <returns></returns>
         public int ExecuteNonQuery(string sql, params DbParameter[] dbParameters)
         {
-            return db.ExecuteNonQuery(sql, dbParameters);
+            return _db.ExecuteNonQuery(sql, dbParameters);
         }
 
 
@@ -2250,7 +2248,7 @@ namespace WEF
         /// <returns></returns>
         public object ExecuteScalar(string sql, params DbParameter[] dbParameters)
         {
-            return db.ExecuteScalar(sql, dbParameters);
+            return _db.ExecuteScalar(sql, dbParameters);
         }
 
         /// <summary>
@@ -2261,7 +2259,7 @@ namespace WEF
         /// <returns></returns>
         public IDataReader ExecuteReader(string sql, params DbParameter[] dbParameters)
         {
-            return db.ExecuteReader(sql, dbParameters);
+            return _db.ExecuteReader(sql, dbParameters);
         }
 
         /// <summary>
@@ -2306,7 +2304,7 @@ namespace WEF
         /// <returns></returns>
         public DbParameter CreateParameter(string name, DbType dbType, int size, ParameterDirection direction, bool nullable, byte precision, byte scale, string sourceColumn, DataRowVersion sourceVersion, object value)
         {
-            return db.CreateParameter(name, dbType, size, direction, nullable, precision, scale, sourceColumn, sourceVersion, value);
+            return _db.CreateParameter(name, dbType, size, direction, nullable, precision, scale, sourceColumn, sourceVersion, value);
         }
 
         /// <summary>
@@ -2322,7 +2320,6 @@ namespace WEF
             return CreateParameter(name, dbType, size, ParameterDirection.Input, true, 0, 0, String.Empty, DataRowVersion.Default, value);
         }
         #endregion
-
 
         #region 数据导入导出
         /// <summary>
@@ -2474,7 +2471,6 @@ namespace WEF
         }
 
         #endregion
-
 
         /// <summary>
         /// 释放资源

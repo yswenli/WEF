@@ -28,9 +28,15 @@ namespace WEF.Test
     {
         public static void Test()
         {
+            Test2();
+
+        }
+
+        public static void Test1()
+        {
             Console.WriteLine("多次insert测试");
 
-            var count = 100000;
+            var count = 1000;
 
             var list = new List<Rule>();
 
@@ -93,6 +99,35 @@ namespace WEF.Test
 
             Console.ReadLine();
 
+        }
+
+
+
+        public static void Test2()
+        {
+            var sw = Stopwatch.StartNew();
+
+            var list = new List<LiveLog>();
+
+            for (int i = 0; i < 1000; i++)
+            {
+                list.Add(new LiveLog()
+                {
+                    ID = i,
+                    Datetime = DateTime.Now
+                });
+
+            }
+
+            var rr = new LiveLogRepository(DatabaseType.SqlServer9, "Data Source=.;Initial Catalog=student;Integrated Security=True");
+
+            rr.DBContext.BulkInsert(list);
+
+            sw.Stop();
+
+            Console.WriteLine("批量insert测试完成,cost:" + sw.ElapsedMilliseconds);
+
+            Console.ReadLine();
         }
     }
 }

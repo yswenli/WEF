@@ -35,7 +35,7 @@ namespace WEF
 
         public DataTable GetMap(string tableName)
         {
-            return db.GetMap(tableName);
+            return _db.GetMap(tableName);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace WEF
         public int UpdateModel(int? id, string tableName, NameValueCollection collection, EnumOperation operation)
         {
             int error = 0;
-            DataTable Column = db.GetMap(tableName.ToString());
+            DataTable Column = _db.GetMap(tableName.ToString());
             string sqlStr = operation + " [" + tableName + "] ";
             if (operation == EnumOperation.Insert)
             {

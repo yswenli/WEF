@@ -28,31 +28,22 @@ namespace WEF.Batcher
     /// PostgresSqlBatcher
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class PostgresSqlBatcher<T> : IBatcher<T> where T : Entity
+    public class PostgresSqlBatcher<T> : BatcherBase<T>, IBatcher<T> where T : Entity
     {
-
-        List<T> _list;
-
-        DbProvider _psProvider;
-
-        DataTable _dataTable;
-
         /// <summary>
         /// PostgresSqlBatcher
         /// </summary>
-        /// <param name="psProvider"></param>
-        public PostgresSqlBatcher(DbProvider psProvider)
+        /// <param name="database"></param>
+        public PostgresSqlBatcher(WEF.Db.Database database) : base(database)
         {
-            _list = new List<T>();
 
-            _psProvider = psProvider;
         }
 
         /// <summary>
         /// 插入实体
         /// </summary>
         /// <param name="t"></param>
-        public void Insert(T t)
+        public override void Insert(T t)
         {
             _list.Add(t);
         }
@@ -61,7 +52,7 @@ namespace WEF.Batcher
         /// 插入实体集合
         /// </summary>
         /// <param name="data"></param>
-        public void Insert(IEnumerable<T> data)
+        public override void Insert(IEnumerable<T> data)
         {
             _list.AddRange(data);
         }
@@ -72,21 +63,19 @@ namespace WEF.Batcher
         /// </summary>
         /// <param name="batchSize"></param>
         /// <param name="timeout"></param>
-        public void Execute(int batchSize = 10000, int timeout = 10 * 1000)
+        public override void Execute(int batchSize = 10000, int timeout = 10 * 1000)
         {
-            NpgsqlConnection newConnection = (NpgsqlConnection)_psProvider.DbProviderFactory.CreateConnection();
-
-            newConnection.ConnectionString = _psProvider.ConnectionString;
+            NpgsqlConnection newConnection = (NpgsqlConnection)_database.CreateConnection();
 
             try
             {
-                _dataTable = _list.EntitiesToDataTable();
+                _dataTable = ToDataTable(_list);
 
                 if (_dataTable == null || _dataTable.Rows.Count == 0) return;
 
                 var commandFormat = string.Format(CultureInfo.InvariantCulture, "COPY {0} FROM STDIN BINARY", _dataTable.TableName);
 
-                newConnection.Open();                
+                newConnection.Open();
 
                 using (var writer = newConnection.BeginBinaryImport(commandFormat))
                 {
@@ -109,7 +98,7 @@ namespace WEF.Batcher
         /// <summary>
         /// Dispose
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
             Execute();
         }

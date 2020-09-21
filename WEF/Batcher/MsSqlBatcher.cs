@@ -18,11 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using WEF.Provider;
 
 namespace WEF.Batcher
 {
@@ -30,29 +27,22 @@ namespace WEF.Batcher
     /// MsSqlBatcher
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class MsSqlBatcher<T> : IBatcher<T> where T : Entity
+    public class MsSqlBatcher<T> : BatcherBase<T>, IBatcher<T> where T : Entity
     {
-        List<T> _list;
-
-        DbProvider _sqlServer9Provider;
-
-        DataTable _dataTable;
-
         /// <summary>
         /// MsSqlBatcher
         /// </summary>
-        public MsSqlBatcher(DbProvider sqlServer9Provider)
+        /// <param name="database"></param>
+        public MsSqlBatcher(WEF.Db.Database database) : base(database)
         {
-            _list = new List<T>();
 
-            _sqlServer9Provider = sqlServer9Provider;
         }
 
         /// <summary>
         /// 插入实体
         /// </summary>
         /// <param name="t"></param>
-        public void Insert(T t)
+        public override void Insert(T t)
         {
             _list.Add(t);
         }
@@ -61,7 +51,7 @@ namespace WEF.Batcher
         /// 插入实体集合
         /// </summary>
         /// <param name="data"></param>
-        public void Insert(IEnumerable<T> data)
+        public override void Insert(IEnumerable<T> data)
         {
             _list.AddRange(data);
         }
@@ -72,19 +62,15 @@ namespace WEF.Batcher
         /// </summary>
         /// <param name="batchSize"></param>
         /// <param name="timeout"></param>
-        public void Execute(int batchSize = 10000, int timeout = 10 * 1000)
+        public override void Execute(int batchSize = 10000, int timeout = 10 * 1000)
         {
             if (_list == null || !_list.Any()) return;
 
-            if (_sqlServer9Provider == null) return;
-
-            SqlConnection newConnection = (SqlConnection)_sqlServer9Provider.DbProviderFactory.CreateConnection();
-
-            newConnection.ConnectionString = _sqlServer9Provider.ConnectionString;
+            SqlConnection newConnection = (SqlConnection)_database.CreateConnection();
 
             try
             {
-                _dataTable = _list.EntitiesToDataTable();
+                _dataTable = ToDataTable(_list);
 
                 if (_dataTable == null || _dataTable.Rows == null || _dataTable.Rows.Count == 0) return;
 
@@ -121,7 +107,7 @@ namespace WEF.Batcher
         /// <summary>
         /// Dispose
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
             Execute();
             _list = null;

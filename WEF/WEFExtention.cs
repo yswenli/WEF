@@ -1144,7 +1144,7 @@ namespace WEF
 
             for (int i = 0; i < fieldLength; i++)
             {
-                if (vals[i] != null)
+                if (vals[i] == null)
                     dt.Columns.Add(fields[i].Name);
                 else
                     dt.Columns.Add(fields[i].Name, vals[i].GetType());
