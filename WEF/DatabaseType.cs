@@ -22,6 +22,10 @@ namespace WEF
     public enum DatabaseType
     {
         /// <summary>
+        /// 未定义
+        /// </summary>
+        Undefined = -1,
+        /// <summary>
         /// SQL Server 2000
         /// </summary>
         SqlServer = 0,

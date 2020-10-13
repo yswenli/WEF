@@ -160,6 +160,7 @@ namespace WEF
                 case DatabaseType.Oracle:
                     provider = ProviderFactory.CreateDbProvider(null, typeof(OracleProvider).FullName, connStr, dt);
                     break;
+                case DatabaseType.MariaDB:
                 case DatabaseType.MySql:
                     provider = ProviderFactory.CreateDbProvider(null, typeof(MySqlProvider).FullName, connStr, dt);
                     break;

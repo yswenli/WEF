@@ -359,6 +359,9 @@
     <Compile Include="MvcPager\PagerItem.cs" />
     <Compile Include="MvcPager\PagerOptions.cs" />
     <Compile Include="MvcPager\WebDataBaseExtention.cs" />
+    <Compile Include="Persists\ClassifiedDataPersistence.cs" />
+    <Compile Include="Persists\DataPersistence.cs" />
+    <Compile Include="Persists\IClassifiedDataPersistence.cs" />
     <Compile Include="Provider\PostgreSqlProvider.cs" />
     <Compile Include="SearchT.cs" />
     <Compile Include="WEFExtention.cs" />
