@@ -1339,7 +1339,7 @@ namespace WEF.Db
         /// <summary>
         /// 获取表结构
         /// </summary>
-        /// <param name="tableName"></param>
+        /// <param name="tableName"></param>k
         /// <returns></returns>
         public DataTable GetMap(string tableName)
         {
