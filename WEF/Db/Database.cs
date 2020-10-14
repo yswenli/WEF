@@ -1355,7 +1355,7 @@ namespace WEF.Db
                 tableName = tableName.Replace("[", "").Replace("]", "");
             }
 
-            var sql = "select * from " + tableName + "";
+            var sql = "select * from " + tableName + " where 1=2";
 
             using (DbConnection connection = GetConnection(true))
             {
