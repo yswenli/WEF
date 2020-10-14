@@ -22,11 +22,6 @@ namespace WEF.Persists
     /// </summary>
     public interface IClassifiedDataPersistence
     {
-        /// <summary>
-        /// Insert
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="t"></param>
-        void Insert<T>(T t) where T : Entity;
+
     }
 }

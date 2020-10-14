@@ -1344,9 +1344,22 @@ namespace WEF.Db
         public DataTable GetMap(string tableName)
         {
             Check.Require(tableName, "tableName", Check.NotNullOrEmpty);
+
+            if (tableName.IndexOf("`") > -1)
+            {
+                tableName = tableName.Replace("`", "");
+            }
+
+            if (tableName.IndexOf("[") > -1)
+            {
+                tableName = tableName.Replace("[", "").Replace("]", "");
+            }
+
+            var sql = "select * from " + tableName + "";
+
             using (DbConnection connection = GetConnection(true))
             {
-                using (DbCommand command = CreateCommandByCommandType(CommandType.Text, "select * from [" + tableName + "]"))
+                using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
                 {
                     command.CommandTimeout = _timeout;
                     PrepareCommand(command, connection);

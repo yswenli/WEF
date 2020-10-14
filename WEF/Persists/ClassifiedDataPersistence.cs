@@ -38,8 +38,6 @@ namespace WEF.Persists
 
         int _timeout = 60 * 1000, _maxcount = 100000;
 
-        string _type = "";
-
         DatabaseType _databaseType;
 
         string _connectStr;
@@ -86,8 +84,6 @@ namespace WEF.Persists
             _bag = new ConcurrentBag<T>();
 
             _stopwatch = Stopwatch.StartNew();
-
-            _type = typeof(T).Name;
 
             Task.Factory.StartNew(Process, TaskCreationOptions.LongRunning);
         }

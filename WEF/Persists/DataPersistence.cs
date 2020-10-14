@@ -39,7 +39,7 @@ namespace WEF.Persists
         /// OnError
         /// </summary>
         public static event EventHandler<Exception> OnError;
-        
+
 
         /// <summary>
         /// 创建持久化类
@@ -50,13 +50,13 @@ namespace WEF.Persists
         /// <param name="timeout"></param>
         /// <param name="maxCount"></param>
         /// <returns></returns>
-        public static IClassifiedDataPersistence Create<T>(DatabaseType databaseType = DatabaseType.Undefined, string connectStr = "", int timeout = 10 * 1000, int maxCount = 10000) where T : Entity
+        public static ClassifiedDataPersistence<T> Create<T>(DatabaseType databaseType = DatabaseType.Undefined, string connectStr = "", int timeout = 10 * 1000, int maxCount = 10000) where T : Entity
         {
-            return _dic.GetOrAdd(typeof(T).Name, (k) =>
+            return (ClassifiedDataPersistence<T>)_dic.GetOrAdd(typeof(T).Name, (k) =>
             {
                 var ct = new ClassifiedDataPersistence<T>(databaseType, connectStr, timeout, maxCount);
                 ct.OnError += Ct_OnError;
-                return ct;
+                return (IClassifiedDataPersistence)ct;
             });
         }
 
@@ -72,6 +72,8 @@ namespace WEF.Persists
 
             cdp.Insert(t);
         }
+
+
 
         private static void Ct_OnError(object sender, Exception e)
         {

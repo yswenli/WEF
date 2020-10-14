@@ -28,7 +28,9 @@ namespace WEF.Test
     {
         public static void Test()
         {
-            Test2();
+            Test1();
+
+            //Test2();
 
         }
 
@@ -36,7 +38,7 @@ namespace WEF.Test
         {
             Console.WriteLine("多次insert测试");
 
-            var count = 1000;
+            var count = 100000;
 
             var list = new List<Rule>();
 
