@@ -90,10 +90,16 @@ namespace WEF.Test
 
             sw = Stopwatch.StartNew();
 
+            //rr.DBContext.BulkInsert(list);
+
+
             using (var batch = rr.DBContext.CreateBatch<Rule>())
             {
                 batch.Insert(list);
             }
+
+
+            
 
             sw.Stop();
 

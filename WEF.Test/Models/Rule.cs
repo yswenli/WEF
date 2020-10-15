@@ -369,6 +369,14 @@ namespace WEF.Test.Models
             return db.Insert(entity);
         }
         /// <summary>
+		/// 批量添加实体
+		/// <param name="entities">传进的实体列表</param>
+		/// </summary>
+		public void BulkInsert(IEnumerable<LiveLog> entities)
+        {
+            db.BulkInsert(entities);
+        }
+        /// <summary>
         /// 更新实体
         /// <param name="entity">传进的实体</param>
         /// </summary>
