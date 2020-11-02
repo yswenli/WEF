@@ -123,10 +123,10 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="vScrollBar1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>532, 4</value>
+    <value>526, 0</value>
   </data>
   <data name="vScrollBar1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>20, 220</value>
+    <value>28, 229</value>
   </data>
   <data name="txtRow.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI Symbol, 10.5pt</value>
@@ -138,7 +138,7 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="txtRow.Size" type="System.Drawing.Size, System.Drawing">
-    <value>43, 223</value>
+    <value>40, 223</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="txtRow.TabIndex" type="System.Int32, mscorlib">
@@ -148,7 +148,7 @@
     <value>Right</value>
   </data>
   <data name="txtContent.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI Symbol, 10.5pt</value>
+    <value>Microsoft YaHei UI, 10.5pt</value>
   </data>
   <data name="txtContent.Location" type="System.Drawing.Point, System.Drawing">
     <value>46, 3</value>
@@ -157,7 +157,7 @@
     <value>Vertical</value>
   </data>
   <data name="txtContent.Size" type="System.Drawing.Size, System.Drawing">
-    <value>506, 223</value>
+    <value>503, 223</value>
   </data>
   <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
     <value>555, 229</value>

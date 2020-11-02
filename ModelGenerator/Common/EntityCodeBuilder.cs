@@ -124,12 +124,12 @@ namespace WEF.ModelGenerator.Common
             plus.AppendLine("using System;");
             plus.AppendLine("using System.Collections.Generic;");
             plus.AppendLine("using System.Data.Common;");
-            plus.AppendLine("using System.Runtime.Serialization;");
             plus.AppendLine("using System.Linq.Expressions;");
+            plus.AppendLine("using System.Runtime.Serialization;");            
             plus.AppendLine("using WEF;");
-            plus.AppendLine("using WEF.Common;");
-            plus.AppendLine("using WEF.Section;");
+            plus.AppendLine("using WEF.Common;");            
             plus.AppendLine("using WEF.MvcPager;");
+            plus.AppendLine("using WEF.Section;");
 
             plus.AppendLine();
             plus.AppendLine("namespace " + NameSpace);
