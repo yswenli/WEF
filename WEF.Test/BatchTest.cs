@@ -37,6 +37,7 @@ namespace WEF.Test
         public static void Test1()
         {
             Console.WriteLine("多次insert测试");
+            Console.ReadLine();
 
             var count = 100000;
 
@@ -69,7 +70,7 @@ namespace WEF.Test
             sw.Stop();
 
             Console.WriteLine("多次insert测试完成,cost:" + sw.ElapsedMilliseconds);
-
+            Console.ReadLine();
             list.Clear();
 
             for (int i = 1 * count; i < 2 * count; i++)
