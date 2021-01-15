@@ -59,6 +59,8 @@ namespace WEF.Test
 
             var rr = new RuleRepository();
 
+            var flist = rr.Search().OrderByDescending(b=>b.Name).From(1, 2).ToList();
+
             var ic = rr.ExecuteSQL("select count(id) from Rules").ToScalar<string>();
 
             rr.ExecuteSQL("TRUNCATE TABLE Rules").ToScalar();
