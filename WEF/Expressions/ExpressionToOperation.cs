@@ -642,6 +642,10 @@ namespace WEF.Expressions
                     return new[] { f.Len() };
                 case "Count":
                     return new[] { f.Count() };
+                case "Max":
+                    return new[] { f.Max() };
+                case "Min":
+                    return new[] { f.Min() };
                 default:
                     throw new Exception("暂时不支持的Lambda表达式写法(" + e.Method.Name + ")！请使用经典写法！");
             }

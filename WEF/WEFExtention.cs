@@ -105,6 +105,27 @@ namespace WEF
             throw new Exception(string.Format(Tips, "Count"));
         }
         /// <summary>
+        /// Max
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static T Max<T>(this T key)
+        {
+            throw new Exception(string.Format(Tips, "Max"));
+        }
+        /// <summary>
+        /// Min
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static T Min<T>(this T key)
+        {
+            throw new Exception(string.Format(Tips, "Min"));
+        }
+
+        /// <summary>
         /// Avg
         /// </summary>
         public static decimal Avg(this object key)
