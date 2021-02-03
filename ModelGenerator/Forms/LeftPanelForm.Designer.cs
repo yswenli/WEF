@@ -52,10 +52,11 @@
             this.生成代码ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sQL查询ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyFieldNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripOneMongoDB = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.contextMenuStripTop.SuspendLayout();
             this.contextMenuStripDatabase.SuspendLayout();
@@ -219,9 +220,10 @@
             this.生成代码ToolStripMenuItem,
             this.sQL查询ToolStripMenuItem,
             this.copyFieldNameToolStripMenuItem,
-            this.exportDataToolStripMenuItem});
+            this.exportDataToolStripMenuItem,
+            this.deleteTableToolStripMenuItem});
             this.contextMenuStripTable.Name = "contextMenuStripOneDataBase";
-            this.contextMenuStripTable.Size = new System.Drawing.Size(181, 114);
+            this.contextMenuStripTable.Size = new System.Drawing.Size(181, 136);
             // 
             // 生成代码ToolStripMenuItem
             // 
@@ -243,6 +245,13 @@
             this.copyFieldNameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.copyFieldNameToolStripMenuItem.Text = "复制表名";
             this.copyFieldNameToolStripMenuItem.Click += new System.EventHandler(this.copyFieldNameToolStripMenuItem_Click);
+            // 
+            // exportDataToolStripMenuItem
+            // 
+            this.exportDataToolStripMenuItem.Name = "exportDataToolStripMenuItem";
+            this.exportDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportDataToolStripMenuItem.Text = "导出数据";
+            this.exportDataToolStripMenuItem.Click += new System.EventHandler(this.exportDataToolStripMenuItem_Click);
             // 
             // contextMenuStripOneMongoDB
             // 
@@ -266,12 +275,12 @@
             this.toolStripMenuItem2.Text = "查询";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
-            // exportDataToolStripMenuItem
+            // deleteTableToolStripMenuItem
             // 
-            this.exportDataToolStripMenuItem.Name = "exportDataToolStripMenuItem";
-            this.exportDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exportDataToolStripMenuItem.Text = "导出数据";
-            this.exportDataToolStripMenuItem.Click += new System.EventHandler(this.exportDataToolStripMenuItem_Click);
+            this.deleteTableToolStripMenuItem.Name = "deleteTableToolStripMenuItem";
+            this.deleteTableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteTableToolStripMenuItem.Text = "删除表";
+            this.deleteTableToolStripMenuItem.Click += new System.EventHandler(this.deleteTableToolStripMenuItem_Click);
             // 
             // LeftPanelForm
             // 
@@ -327,5 +336,6 @@
         private System.Windows.Forms.ToolStripMenuItem viewConnectStringToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyFieldNameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportDataToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteTableToolStripMenuItem;
     }
 }

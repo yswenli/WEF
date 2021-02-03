@@ -11,6 +11,14 @@ namespace WEF.DbDAL
         /// <param name="tableName">表名</param>
         /// <returns>删除成功否</returns>
         bool DeleteTable(string dbName, string tableName);
+
+        /// <summary>
+        /// 删除视图
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <param name="viewName"></param>
+        /// <returns></returns>
+        bool DeleteView(string dbName, string viewName);
         /// <summary>
         /// 执行SQL语句
         /// </summary>

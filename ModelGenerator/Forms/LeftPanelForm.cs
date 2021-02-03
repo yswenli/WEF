@@ -23,7 +23,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WEF.DbDAL;
 using WEF.ModelGenerator.Common;
-using WEF.ModelGenerator.DbSelect;
 using WEF.ModelGenerator.Forms;
 using WEF.ModelGenerator.Model;
 using WEF.NoSql;
@@ -655,16 +654,16 @@ namespace WEF.ModelGenerator
         /// <summary>
         /// 获取数据表信息
         /// </summary>
-        /// <param name="databaseNodel"></param>
+        /// <param name="databaseNode"></param>
         /// <param name="tables"></param>
         /// <param name="views"></param>
-        private void ShowTablesAndViews(TreeNode databaseNodel, DataTable tables, DataTable views)
+        private void ShowTablesAndViews(TreeNode databaseNode, DataTable tables, DataTable views)
         {
-            if (databaseNodel.Level == 3)
+            if (databaseNode.Level == 3)
             {
-                if (databaseNodel.Text == "数据表")
+                if (databaseNode.Text == "数据表")
                 {
-                    databaseNodel.ContextMenuStrip = contextMenuStripOneDataBase;
+                    databaseNode.ContextMenuStrip = contextMenuStripOneDataBase;
 
                     if (null != tables && tables.Rows.Count > 0)
                     {
@@ -674,14 +673,14 @@ namespace WEF.ModelGenerator
                             TreeNode tnode = new TreeNode(tablesDR[0].ToString(), 4, 4);
                             tnode.Tag = "T";
                             tnode.ContextMenuStrip = contextMenuStripTable;
-                            databaseNodel.Nodes.Add(tnode);
+                            databaseNode.Nodes.Add(tnode);
                         }
                     }
                 }
 
-                if (databaseNodel.Text == "视图")
+                if (databaseNode.Text == "视图")
                 {
-                    databaseNodel.ContextMenuStrip = contextMenuStripOneDataBase;
+                    databaseNode.ContextMenuStrip = contextMenuStripOneDataBase;
 
                     DataRow[] viewsdrs = views.Select("", "name asc");
 
@@ -690,7 +689,7 @@ namespace WEF.ModelGenerator
                         TreeNode tnode = new TreeNode(viewsDR[0].ToString(), 4, 4);
                         tnode.Tag = "V";
                         tnode.ContextMenuStrip = contextMenuStripTable;
-                        databaseNodel.Nodes.Add(tnode);
+                        databaseNode.Nodes.Add(tnode);
                     }
                 }
             }
@@ -711,7 +710,7 @@ namespace WEF.ModelGenerator
                         tableNode.Nodes.Add(tnode);
                     }
                 }
-                databaseNodel.Nodes.Add(tableNode);
+                databaseNode.Nodes.Add(tableNode);
 
                 TreeNode viewNode = new TreeNode("视图", 2, 3);
 
@@ -726,7 +725,7 @@ namespace WEF.ModelGenerator
                     tnode.ContextMenuStrip = contextMenuStripTable;
                     viewNode.Nodes.Add(tnode);
                 }
-                databaseNodel.Nodes.Add(viewNode);
+                databaseNode.Nodes.Add(viewNode);
             }
         }
 
@@ -797,6 +796,56 @@ namespace WEF.ModelGenerator
                 conModel.Database = Treeview.SelectedNode.Parent.Parent.Text;
                 conModel.IsView = Treeview.SelectedNode.Tag.ToString().Equals("V");
                 newcontentForm(conModel);
+            }
+        }
+
+        /// <summary>
+        /// 删除表/视图
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void deleteTableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                TreeNode node = Treeview.SelectedNode;
+
+                if (node != null && node.Level == 4)
+                {
+                    if (MessageBox.Show(this, "确定要删除表/视图", "WEF数据库工具", MessageBoxButtons.YesNo) == DialogResult.No)
+                    {
+                        return;
+                    }
+
+                    var tableName = node.Text;
+                    var conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
+                    conModel.Database = node.Parent.Parent.Text;
+                    WEF.DbDAL.IDbObject dbObject = DBObjectHelper.GetDBObject(conModel);
+
+                    var result = false;
+
+                    if (node.Parent.Text == "数据表")
+                    {
+                        result = dbObject.DeleteTable(conModel.Database, tableName);
+                    }
+                    else if (node.Parent.Text == "视图")
+                    {
+                        result = dbObject.DeleteView(conModel.Database, tableName);
+                    }
+
+                    if (result)
+                    {
+                        MessageBox.Show(this, "删除表/视图操作成功", "WEF数据库工具");
+                        Treeview.Nodes.Remove(node);
+                        return;
+                    }
+                    MessageBox.Show(this, "删除表/视图操作失败", "WEF数据库工具");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "删除表操作失败,Error:" + ex.Message, "WEF数据库工具");
             }
         }
 
@@ -1052,8 +1101,7 @@ namespace WEF.ModelGenerator
         }
 
 
-        #endregion
 
-
+        #endregion        
     }
 }

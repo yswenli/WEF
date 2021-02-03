@@ -125,6 +125,28 @@ namespace WEF.DbDAL.SQL2005
             }
         }
 
+        /// <summary>
+        /// 删除视图
+        /// </summary>
+        /// <param name="DbName"></param>
+        /// <param name="TableName"></param>
+        /// <returns></returns>
+        public bool DeleteView(string DbName, string TableName)
+        {
+            try
+            {
+                SqlCommand dbCommand = OpenDB(DbName);
+                dbCommand.CommandText = "DROP VIEW " + TableName + "";
+                dbCommand.ExecuteNonQuery();
+                return true;
+            }
+            catch//(System.Exception ex)
+            {
+                //string str=ex.Message;	
+                return false;
+            }
+        }
+
         public int ExecuteSql(string DbName, string SQLString)
         {
             using (SqlCommand command = this.OpenDB(DbName))

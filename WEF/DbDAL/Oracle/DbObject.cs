@@ -45,6 +45,27 @@ namespace WEF.DbDAL.Oracle
             }
         }
 
+        /// <summary>
+        /// 删除视图
+        /// </summary>
+        /// <param name="DbName"></param>
+        /// <param name="viewName"></param>
+        /// <returns></returns>
+        public bool DeleteView(string DbName, string viewName)
+        {
+            try
+            {
+                string text1 = "DROP VIEW " + viewName + "";
+                this.ExecuteSql(DbName, viewName);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
         public int ExecuteSql(string DbName, string SQLString)
         {
             using (var oracleCon = new OracleConnection(_dbconnectStr))

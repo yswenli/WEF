@@ -200,6 +200,26 @@ namespace WEF.DbDAL.PostgreSQL
             }
         }
 
+        /// <summary>
+        /// 删除视图
+        /// </summary>
+        /// <param name="DbName"></param>
+        /// <param name="TableName"></param>
+        /// <returns></returns>
+        public bool DeleteView(string DbName, string TableName)
+        {
+            try
+            {
+                string text1 = "DROP VIEW " + TableName + "";
+                this.ExecuteSql(DbName, TableName);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool RenameTable(string DbName, string OldName, string NewName)
         {
             return false;

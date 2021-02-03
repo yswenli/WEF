@@ -976,6 +976,27 @@ namespace WEF.DbDAL.MySql
                 return false;
             }
         }
+        /// <summary>
+        /// 删除视图
+        /// </summary>
+        /// <param name="DbName"></param>
+        /// <param name="TableName"></param>
+        /// <returns></returns>
+        public bool DeleteView(string DbName, string TableName)
+        {
+            try
+            {
+                MySqlCommand dbCommand = OpenDB(DbName);
+                dbCommand.CommandText = "DROP VIEW " + TableName + "";
+                dbCommand.ExecuteNonQuery();
+                return true;
+            }
+            catch//(System.Exception ex)
+            {
+                //string str=ex.Message;	
+                return false;
+            }
+        }
 
         /// <summary>
         /// 得到版本号
