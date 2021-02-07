@@ -39,11 +39,11 @@ namespace WEF.ModelGenerator
             Treeview.ExpandAll();
         }
 
-        public delegate void NewContentForm(Connection conModel);
+        public delegate void NewContentForm(ConnectionModel conModel);
 
         public event NewContentForm newcontentForm;
 
-        public event Action<Connection> newsqlForm;
+        public event Action<ConnectionModel, string> newsqlForm;
 
         /// <summary>
         /// 新建数据库连接
@@ -126,7 +126,7 @@ namespace WEF.ModelGenerator
         /// <summary>
         /// 连接
         /// </summary>
-        List<Connection> _ConnectList;
+        List<ConnectionModel> _ConnectList;
 
         /// <summary>
         /// 加载
@@ -157,7 +157,7 @@ namespace WEF.ModelGenerator
 
             node.ContextMenuStrip = contextMenuStripTop;
 
-            foreach (Connection connection in _ConnectList)
+            foreach (ConnectionModel connection in _ConnectList)
             {
                 TreeNode nnode = new TreeNode(connection.Name, 0, 0);
                 nnode.ContextMenuStrip = contextMenuStripDatabase;
@@ -192,7 +192,7 @@ namespace WEF.ModelGenerator
             {
                 if (null != newcontentForm)
                 {
-                    Connection conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(Treeview.SelectedNode.Parent.Parent.Parent.Tag.ToString()); });
+                    ConnectionModel conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(Treeview.SelectedNode.Parent.Parent.Parent.Tag.ToString()); });
 
                     if (conModel.DbType.Equals(DatabaseType.MongoDB.ToString()))
                     {
@@ -247,11 +247,11 @@ namespace WEF.ModelGenerator
         /// </summary>
         private void refreshConnectionList()
         {
-            List<Connection> connList = UtilsHelper.GetConnectionList();
+            List<ConnectionModel> connList = UtilsHelper.GetConnectionList();
 
-            foreach (Connection conn in connList)
+            foreach (ConnectionModel conn in connList)
             {
-                Connection tempconn = _ConnectList.Find(delegate (Connection connin) { return conn.ID.ToString().Equals(connin.ID.ToString()); });
+                ConnectionModel tempconn = _ConnectList.Find(delegate (ConnectionModel connin) { return conn.ID.ToString().Equals(connin.ID.ToString()); });
                 if (null == tempconn)
                 {
                     TreeNode nnode = new TreeNode(conn.Name, 0, 0);
@@ -283,7 +283,7 @@ namespace WEF.ModelGenerator
             {
                 string stringid = Treeview.SelectedNode.Tag.ToString();
                 UtilsHelper.DeleteConnection(stringid);
-                Connection tempconn = _ConnectList.Find(delegate (Connection conn) { return conn.ID.ToString().Equals(stringid); });
+                ConnectionModel tempconn = _ConnectList.Find(delegate (ConnectionModel conn) { return conn.ID.ToString().Equals(stringid); });
                 if (null != tempconn)
                     _ConnectList.Remove(tempconn);
                 Treeview.Nodes.Remove(Treeview.SelectedNode);
@@ -312,7 +312,7 @@ namespace WEF.ModelGenerator
         private void viewConnectStringToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TreeNode node = Treeview.SelectedNode;
-            var conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Tag.ToString()); });
+            var conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Tag.ToString()); });
             conConnectionString = conModel.ConnectionString;
             Clipboard.SetText(conConnectionString);
             MessageBox.Show($"已复制到剪切板，conConnectionString：\r\n{conConnectionString}", "WEF数据库工具", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
@@ -332,11 +332,11 @@ namespace WEF.ModelGenerator
                 try
                 {
 
-                    Connection conModel = null;
+                    ConnectionModel conModel = null;
 
                     this.Invoke(new Action(() =>
                     {
-                        conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Tag.ToString()); });
+                        conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Tag.ToString()); });
                     }));
 
 
@@ -786,8 +786,8 @@ namespace WEF.ModelGenerator
         {
             if (null != newcontentForm)
             {
-                Connection conModel = _ConnectList.Find(
-                    delegate (Connection con)
+                ConnectionModel conModel = _ConnectList.Find(
+                    delegate (ConnectionModel con)
                     {
                         return con.ID.ToString().Equals(Treeview.SelectedNode.Parent.Parent.Parent.Tag.ToString());
                     });
@@ -819,7 +819,7 @@ namespace WEF.ModelGenerator
                     }
 
                     var tableName = node.Text;
-                    var conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
+                    var conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
                     conModel.Database = node.Parent.Parent.Text;
                     WEF.DbDAL.IDbObject dbObject = DBObjectHelper.GetDBObject(conModel);
 
@@ -869,10 +869,10 @@ namespace WEF.ModelGenerator
 
             node.Nodes.Clear();
 
-            Connection conModel = null;
+            ConnectionModel conModel = null;
             try
             {
-                conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
+                conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
 
                 IDbObject dbObject;
 
@@ -928,17 +928,17 @@ namespace WEF.ModelGenerator
         private void 批量生成ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TreeNode node = Treeview.SelectedNode;
-            Connection conModel = null;
+            ConnectionModel conModel = null;
             try
             {
-                conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
+                conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
             }
             catch { }
             try
             {
                 if (conModel == null)
                 {
-                    conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Parent.Tag.ToString()); });
+                    conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Tag.ToString()); });
                 }
             }
             catch { }
@@ -953,7 +953,16 @@ namespace WEF.ModelGenerator
         }
         private void sQL查询ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ShowSQLForm();
+            var tableName = "";
+
+            TreeNode node = Treeview.SelectedNode;
+
+            if (node != null && node.Level == 4)
+            {
+                tableName = node.Text;
+            }
+
+            ShowSQLForm(tableName);
         }
 
         private void copyFieldNameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -972,25 +981,25 @@ namespace WEF.ModelGenerator
         }
         #endregion
 
-        public void ShowSQLForm()
+        public void ShowSQLForm(string tableName = "")
         {
             TreeNode node = Treeview.SelectedNode;
 
-            Connection conModel = null;
+            ConnectionModel conModel = null;
 
             switch (node.Level)
             {
                 case 3:
-                    conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Parent.Tag.ToString()); });
+                    conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Tag.ToString()); });
                     conModel.Database = node.Parent.Text;
                     break;
                 case 4:
-                    conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
+                    conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
                     conModel.Database = node.Parent.Parent.Text;
 
                     break;
                 default:
-                    conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
+                    conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
                     conModel.Database = node.Text;
                     break;
             }
@@ -1013,16 +1022,16 @@ namespace WEF.ModelGenerator
 
             #endregion
 
-            newsqlForm?.Invoke(conModel);
+            newsqlForm?.Invoke(conModel, tableName);
         }
 
         public void ShowSQLExportForm()
         {
             TreeNode node = Treeview.SelectedNode;
 
-            Connection conModel = null;
+            ConnectionModel conModel = null;
 
-            conModel = _ConnectList.Find(delegate (Connection con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
+            conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
             conModel.Database = node.Parent.Parent.Text;
 
             #region mysql

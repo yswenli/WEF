@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Forms;
+using WEF.ModelGenerator.Model;
 
 namespace WEF.ModelGenerator
 {
@@ -63,7 +64,7 @@ namespace WEF.ModelGenerator
         /// </summary>
         /// <param name="conModel"></param>
         /// <param name="tableName"></param>
-        void lp_newcontentForm(WEF.ModelGenerator.Model.Connection conModel)
+        void lp_newcontentForm(ConnectionModel conModel)
         {
             ContentForm s = new ContentForm();
             s.Text = "(" + conModel.Database + ")" + conModel.TableName;
@@ -74,9 +75,9 @@ namespace WEF.ModelGenerator
             s.Show(dpleft);
         }
 
-        void lp_newsqlForm(WEF.ModelGenerator.Model.Connection conModel)
+        void lp_newsqlForm(ConnectionModel conModel,string tableName)
         {
-            SQLForm s = new SQLForm();
+            SQLForm s = new SQLForm(tableName);
             s.Text = "(" + conModel.Database + ")SQL查询窗口";
             s.ConnectionModel = conModel;
             s.Show(dpleft);

@@ -27,9 +27,9 @@ namespace WEF.ModelGenerator
             set { content = value; }
         }
 
-        private Model.Connection connectionModel;
+        private Model.ConnectionModel connectionModel;
 
-        public Model.Connection ConnectionModel
+        public Model.ConnectionModel ConnectionModel
         {
             set { connectionModel = value; }
             get { return connectionModel; }

@@ -91,7 +91,7 @@ namespace WEF.ModelGenerator.DbSelect
 
             }
 
-            Model.Connection connModel = new WEF.ModelGenerator.Model.Connection();
+            Model.ConnectionModel connModel = new WEF.ModelGenerator.Model.ConnectionModel();
 
             if (rbdatabaseselect.Checked)
             {

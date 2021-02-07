@@ -107,7 +107,7 @@ namespace WEF.ModelGenerator.DbSelect
             }
 
 
-            Connection connectionModel = new Connection();
+            ConnectionModel connectionModel = new ConnectionModel();
             connectionModel.Database = serviceName;
             connectionModel.ID = Guid.NewGuid();
             connectionModel.Name = serviceName + "(Oracle)";

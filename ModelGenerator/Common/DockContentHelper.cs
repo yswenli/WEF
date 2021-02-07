@@ -32,7 +32,7 @@ namespace WEF.ModelGenerator.Common
 
         static string _tempFile = string.Empty;
 
-        static List<Connection> _connections;
+        static List<ConnectionModel> _connections;
 
         static DockPanel _dockPanel = null;
 
@@ -42,7 +42,7 @@ namespace WEF.ModelGenerator.Common
 
             _tempFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Config", "wefTemp.config");
 
-            _connections = new List<Connection>();
+            _connections = new List<ConnectionModel>();
         }
 
         static IDockContent GetContentFromPersistString(string persistString)
@@ -80,7 +80,7 @@ namespace WEF.ModelGenerator.Common
                 return null;
         }
 
-        private static void Lf_newcontentForm(Connection conModel)
+        private static void Lf_newcontentForm(ConnectionModel conModel)
         {
             ContentForm s = new ContentForm();
             s.Text = "(" + conModel.Database + ")" + conModel.TableName;
@@ -91,9 +91,9 @@ namespace WEF.ModelGenerator.Common
             s.Show(_dockPanel);
         }
 
-        private static void Lf_newsqlForm(Connection conModel)
+        private static void Lf_newsqlForm(ConnectionModel conModel, string tableName)
         {
-            SQLForm s = new SQLForm();
+            SQLForm s = new SQLForm(tableName);
             s.Text = "(" + conModel.Database + ")SQL查询窗口";
             s.ConnectionModel = conModel;
             s.Show(_dockPanel);
@@ -109,7 +109,7 @@ namespace WEF.ModelGenerator.Common
                 {
                     var json = File.ReadAllText(_tempFile);
 
-                    _connections = WEFExtention.JsonDeserialize<List<Connection>>(json);
+                    _connections = WEFExtention.JsonDeserialize<List<ConnectionModel>>(json);
                 }
 
                 var content = new DeserializeDockContent(GetContentFromPersistString);
@@ -142,7 +142,7 @@ namespace WEF.ModelGenerator.Common
 
                 if (contents != null && contents.Any())
                 {
-                    List<Connection> connections = new List<Connection>();
+                    List<ConnectionModel> connections = new List<ConnectionModel>();
 
                     foreach (var content in contents)
                     {
@@ -169,7 +169,7 @@ namespace WEF.ModelGenerator.Common
 
                 dockPanel.SaveAsXml(_configFile);
             }
-            catch { }            
+            catch { }
         }
     }
 }

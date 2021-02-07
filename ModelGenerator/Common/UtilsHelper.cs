@@ -43,9 +43,9 @@ namespace WEF.ModelGenerator.Common
         /// 获取连接
         /// </summary>
         /// <returns></returns>
-        public static List<Connection> GetConnectionList()
+        public static List<ConnectionModel> GetConnectionList()
         {
-            List<Connection> list = new List<Connection>();
+            List<ConnectionModel> list = new List<ConnectionModel>();
             XmlDocument doc = getXmlDocument();
             XmlNodeList xmlNodeList = doc.SelectNodes("servers/server");
             if (null != xmlNodeList && xmlNodeList.Count > 0)
@@ -54,7 +54,7 @@ namespace WEF.ModelGenerator.Common
                 {
                     if (!node.HasChildNodes)
                         continue;
-                    Connection connection = new Connection();
+                    ConnectionModel connection = new ConnectionModel();
                     connection.ID = new Guid(node.Attributes["id"].Value);
                     connection.Name = node.Attributes["name"].Value;
                     connection.Database = node.Attributes["database"].Value;
@@ -118,7 +118,7 @@ namespace WEF.ModelGenerator.Common
         /// 添加
         /// </summary>
         /// <param name="conection"></param>
-        public static void AddConnection(Connection conection)
+        public static void AddConnection(ConnectionModel conection)
         {
             XmlDocument doc = getXmlDocument();
 
@@ -147,9 +147,9 @@ namespace WEF.ModelGenerator.Common
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static Connection GetConnectionModel(string id)
+        public static ConnectionModel GetConnectionModel(string id)
         {
-            Connection connModel = null;
+            ConnectionModel connModel = null;
             if (string.IsNullOrEmpty(id))
                 return connModel;
 
@@ -159,7 +159,7 @@ namespace WEF.ModelGenerator.Common
             XmlNode xmlNode = doc.SelectSingleNode("servers/server[@id='" + id.ToString() + "']");
             if (null != xmlNode)
             {
-                connModel = new Connection();
+                connModel = new ConnectionModel();
                 connModel.ID = new Guid(xmlNode.Attributes["id"].Value);
                 connModel.Name = xmlNode.Attributes["name"].Value;
                 connModel.Database = xmlNode.Attributes["database"].Value;

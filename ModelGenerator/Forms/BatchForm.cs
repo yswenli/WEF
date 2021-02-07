@@ -20,8 +20,8 @@ namespace WEF.ModelGenerator
             set { databaseName = value; }
         }
 
-        private Connection connectionModel;
-        public Connection ConnectionModel
+        private ConnectionModel connectionModel;
+        public ConnectionModel ConnectionModel
         {
             get { return connectionModel; }
             set { connectionModel = value; }
@@ -33,7 +33,7 @@ namespace WEF.ModelGenerator
 
 
 
-        public BatchForm(string _databaseName, Connection _ConnectionModel)
+        public BatchForm(string _databaseName, ConnectionModel _ConnectionModel)
         {
             InitializeComponent();
             this.DatabaseName = _databaseName;

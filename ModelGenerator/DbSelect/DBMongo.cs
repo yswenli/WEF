@@ -97,7 +97,7 @@ namespace WEF.ModelGenerator.DbSelect
 
                     this.Invoke(new Action(() =>
                     {
-                        Connection connectionModel = new Connection();
+                        ConnectionModel connectionModel = new ConnectionModel();
                         connectionModel.Database = dataBaseName;
                         connectionModel.ID = Guid.NewGuid();
                         connectionModel.Name = mongoTool.ServerInfo + "(MongoDB)[" + connectionModel.Database + "]";

@@ -24,7 +24,7 @@ namespace WEF.ModelGenerator.Forms
             get; set;
         }
 
-        public Connection Connection
+        public ConnectionModel Connection
         {
             get; set;
         }
@@ -39,7 +39,7 @@ namespace WEF.ModelGenerator.Forms
             DataTable = dataTable;
         }
 
-        public SQLExportForm(Connection cnn, string tableName) : this()
+        public SQLExportForm(ConnectionModel cnn, string tableName) : this()
         {
             Connection = cnn;
             TableName = tableName;

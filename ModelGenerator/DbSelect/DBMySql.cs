@@ -135,7 +135,7 @@ namespace WEF.ModelGenerator.DbSelect
 
                 
 
-                Connection connectionModel = new Connection();
+                ConnectionModel connectionModel = new ConnectionModel();
                 connectionModel.Database = keyValuePairs["database"];
                 connectionModel.ID = Guid.NewGuid();
                 connectionModel.Name = keyValuePairs["server"] + "(MySql)[" + connectionModel.Database + "]";
@@ -188,7 +188,7 @@ namespace WEF.ModelGenerator.DbSelect
 
                 }
 
-                Connection connectionModel = new Connection();
+                ConnectionModel connectionModel = new ConnectionModel();
                 connectionModel.Database = cbbDatabase.SelectedIndex == 0 ? "all" : cbbDatabase.Text;
                 connectionModel.ID = Guid.NewGuid();
                 connectionModel.Name = cbbServer.Text + "(MySql)[" + connectionModel.Database + "]";

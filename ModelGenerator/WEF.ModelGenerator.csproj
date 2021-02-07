@@ -235,7 +235,7 @@
     <Compile Include="JsonTools\JsonClassHelper.cs" />
     <Compile Include="JsonTools\JsonType.cs" />
     <Compile Include="JsonTools\JsonTypeEnum.cs" />
-    <Compile Include="Model\Connection.cs" />
+    <Compile Include="Model\ConnectionModel.cs" />
     <Compile Include="Model\Sysconfig.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

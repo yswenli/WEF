@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Controls;
+using WEF.ModelGenerator.Model;
 
 namespace WEF.ModelGenerator.Forms
 {
@@ -36,7 +37,15 @@ namespace WEF.ModelGenerator.Forms
             InitializeComponent();
         }
 
-        public Model.Connection ConnectionModel
+        public SQLForm(string tableName) : this()
+        {
+            if (!string.IsNullOrEmpty(tableName))
+            {
+                AutoTextBox.TextBox.Text = "select * from " + tableName;
+            }
+        }
+
+        public ConnectionModel ConnectionModel
         {
             get; set;
         }
@@ -139,7 +148,7 @@ namespace WEF.ModelGenerator.Forms
                             {
                                 var dt = ds.Tables[0];
 
-                                if (dt != null && dt.Rows.Count > 0)
+                                if (dt != null)
                                 {
                                     var count = dt.Rows.Count;
 
@@ -213,7 +222,7 @@ namespace WEF.ModelGenerator.Forms
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     this.Invoke(new Action(() =>
                     {

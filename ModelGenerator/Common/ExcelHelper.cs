@@ -78,7 +78,7 @@ namespace WEF.ModelGenerator.Common
         }
 
 
-        public static void DataTableToExcel(Connection cnn,string tableName,string fileName)
+        public static void DataTableToExcel(ConnectionModel cnn,string tableName,string fileName)
         {
             //todo
         }

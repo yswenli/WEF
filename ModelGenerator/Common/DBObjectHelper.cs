@@ -35,7 +35,7 @@ namespace WEF.ModelGenerator.Common
         /// </summary>
         /// <param name="cnn"></param>
         /// <returns></returns>
-        public static IDbObject GetDBObject(Connection cnn)
+        public static IDbObject GetDBObject(ConnectionModel cnn)
         {
             IDbObject dbObject = null;
 
@@ -84,7 +84,7 @@ namespace WEF.ModelGenerator.Common
         /// <param name="cnn"></param>
         /// <param name="dataBaseName"></param>
         /// <returns></returns>
-        public static string GetCnnString(Connection cnn, string dataBaseName = "")
+        public static string GetCnnString(ConnectionModel cnn, string dataBaseName = "")
         {
             var cnnStr = cnn.ConnectionString;
 

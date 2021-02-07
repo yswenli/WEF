@@ -96,7 +96,7 @@ namespace WEF.ModelGenerator.Common
         /// <param name="fileName"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static Task CSV(Connection cnn, string tableName, string fileName, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task CSV(ConnectionModel cnn, string tableName, string fileName, CancellationToken cancellationToken = default(CancellationToken))
         {
             return Task.Run(() =>
             {

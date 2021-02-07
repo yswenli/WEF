@@ -2,7 +2,7 @@
 
 namespace WEF.ModelGenerator.Model
 {
-    public class Connection
+    public class ConnectionModel
     {
         private Guid id;
         public Guid ID { get { return id; } set { id = value; } }
