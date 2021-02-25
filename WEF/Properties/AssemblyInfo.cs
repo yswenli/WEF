@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("yswenli")]
 [assembly: AssemblyProduct("WEF.ORM")]
-[assembly: AssemblyCopyright("Copyright yswenli ©  2020")]
+[assembly: AssemblyCopyright("Copyright yswenli ©  2021")]
 [assembly: AssemblyTrademark("WEF")]
 [assembly: AssemblyCulture("")]
 
