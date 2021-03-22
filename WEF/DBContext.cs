@@ -2431,7 +2431,7 @@ namespace WEF
 
             using (FileStream fs = new FileStream(path + "\\" + name, FileMode.Create))
             {
-                using (StreamWriter sw = new StreamWriter(new BufferedStream(fs), System.Text.Encoding.Default))
+                using (StreamWriter sw = new StreamWriter(new BufferedStream(fs), Encoding.UTF8))
                 {
                     sw.Write(csvStr);
                 }

@@ -1,6 +1,1 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<servers>
-  <server id="6f3797b8-3fcc-4ff8-9167-69c7c8c874b5" name="WENLI-PC\SQLSERVER2016(SQL Server2012及以上版本)[Im.MarketingSDK.Manager]" database="Im.MarketingSDK.Manager" dbtype="SqlServer9">
-    <connectionstring><![CDATA[Data Source=WENLI-PC\SQLSERVER2016;Initial Catalog=Im.MarketingSDK.Manager;Integrated Security=True]]></connectionstring>
-  </server>
-</servers>
+﻿

@@ -16,6 +16,7 @@
 *描    述：
 *****************************************************************************/
 using MySql.Data.MySqlClient;
+using MySql.Data.Types;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -117,7 +118,7 @@ namespace WEF.Batcher
                         }
                         if (values[i] != null && values[i].GetType().Name == "DateTime")
                         {
-                            dtRow[fields[i].Name] = new MySql.Data.Types.MySqlDateTime(values[i].ToString());
+                            dtRow[fields[i].Name] = new MySqlDateTime(values[i].ToString());
                         }
                         else
                             dtRow[fields[i].Name] = values[i];

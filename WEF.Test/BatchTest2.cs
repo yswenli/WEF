@@ -17,13 +17,10 @@
 *****************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using WEF;
 using WEF.Common;
 using WEF.MvcPager;
 using WEF.Section;
@@ -41,18 +38,23 @@ namespace WEF.Test
 
             var list = new List<DBGiftbatchadd>();
 
-            for (int i = 0; i < 10000; i++)
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            for (int i = 0; i < 300000; i++)
             {
                 list.Add(new DBGiftbatchadd()
                 {
                     Uid = i.ToString(),
-                    Createtime = DateTime.Now
+                    Createtime = DateTime.Now,
+                    Operuserid = "中文行不行"
                 });
             }
 
             rep.BulkInsert(list);
 
-            Console.WriteLine("test!");
+            stopwatch.Stop();
+
+            Console.WriteLine($"test!,ms:{stopwatch.ElapsedMilliseconds}");
             Console.ReadLine();
         }
 
