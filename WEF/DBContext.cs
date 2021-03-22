@@ -1971,10 +1971,11 @@ namespace WEF
         {
             if (entities == null || !entities.Any()) return;
 
-            using (var batch = CreateBatch<TEntity>())
-            {
-                batch.Insert(entities);
-            }
+            var batch = CreateBatch<TEntity>();
+            
+            batch.Insert(entities);
+
+            batch.Execute();
         }
         #endregion
 
@@ -2406,40 +2407,34 @@ namespace WEF
             FileInfo fi = new FileInfo(filePath);
             string path = fi.DirectoryName;
             string name = fi.Name;
-            //\/:*?"<>|
-            name = name.Replace(@"\", "＼");
-            name = name.Replace(@"/", "／");
-            name = name.Replace(@":", "：");
-            name = name.Replace(@"*", "＊");
-            name = name.Replace(@"?", "？");
-            name = name.Replace(@"<", "＜");
-            name = name.Replace(@">", "＞");
-            name = name.Replace(@"|", "｜");
-            string title = "";
+
+            StringBuilder sb = new StringBuilder();
+
+            DataColumn colum;
+
+            foreach (DataRow row in table.Rows)
+            {
+                for (int i = 0; i < table.Columns.Count; i++)
+                {
+                    colum = table.Columns[i];
+                    if (i != 0) sb.Append(",");
+                    if (colum.DataType == typeof(string) && row[colum].ToString().Contains(","))
+                    {
+                        sb.Append("\"" + row[colum].ToString().Replace("\"", "\"\"") + "\"");
+                    }
+                    else sb.Append(row[colum].ToString());
+                }
+                sb.AppendLine();
+            }
+
+            var csvStr = sb.ToString();
 
             using (FileStream fs = new FileStream(path + "\\" + name, FileMode.Create))
             {
                 using (StreamWriter sw = new StreamWriter(new BufferedStream(fs), System.Text.Encoding.Default))
                 {
-                    for (int i = 0; i < table.Columns.Count; i++)
-                    {
-                        title += table.Columns[i].ColumnName + ",";
-                    }
-                    title = title.Substring(0, title.Length - 1) + "\n";
-                    sw.Write(title);
-                    foreach (DataRow row in table.Rows)
-                    {
-                        if (row.RowState == DataRowState.Deleted) continue;
-                        string line = "";
-                        for (int i = 0; i < table.Columns.Count; i++)
-                        {
-                            line += row[i].ToString().Replace(",", "") + ",";
-                        }
-                        line = line.Substring(0, line.Length - 1) + "\n";
-                        sw.Write(line);
-                    }
+                    sw.Write(csvStr);
                 }
-
             }
         }
 

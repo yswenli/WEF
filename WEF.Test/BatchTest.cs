@@ -64,8 +64,8 @@ namespace WEF.Test
             var ic = rr.ExecuteSQL("select count(id) from Rules").ToScalar<string>();
 
             var max = rr.Search().Select(b => b.Id.Max()).ToFirstDefault().Id;
-            var cou= rr.Search().Select(b => b.Id.Count()).ToFirstDefault().Id;
-            var sum= rr.Search().Select(b => b.Id.Sum()).ToFirstDefault().Id;
+            var cou = rr.Search().Select(b => b.Id.Count()).ToFirstDefault().Id;
+            var sum = rr.Search().Select(b => b.Id.Sum()).ToFirstDefault().Id;
             var avg = rr.Search().Select(b => b.Id.Avg()).ToFirstDefault().Id;
 
             rr.ExecuteSQL("TRUNCATE TABLE Rules").ToScalar();
@@ -101,10 +101,11 @@ namespace WEF.Test
             //rr.DBContext.BulkInsert(list);
 
 
-            using (var batch = rr.DBContext.CreateBatch<Rule>())
-            {
-                batch.Insert(list);
-            }
+            var batch = rr.DBContext.CreateBatch<Rule>();
+
+            batch.Insert(list);
+
+            batch.Execute();
 
 
 

@@ -66,7 +66,7 @@ namespace WEF.Provider
         protected DbProvider(string connectionString, DbProviderFactory dbProviderFactory, char leftToken, char rightToken, char paramPrefixToken)
         {
             dbConnStrBuilder = new DbConnectionStringBuilder();
-            dbConnStrBuilder.ConnectionString = connectionString;
+            dbConnStrBuilder.ConnectionString = RepairedMySqlConnStr(connectionString);
             this.dbProviderFactory = dbProviderFactory;
             this.leftToken = leftToken;
             this.rightToken = rightToken;
@@ -84,12 +84,32 @@ namespace WEF.Provider
         protected DbProvider(string connectionString, DbProviderFactory dbProviderFactory, char leftToken, char rightToken, char paramPrefixToken, char likeToken = '%')
         {
             dbConnStrBuilder = new DbConnectionStringBuilder();
-            dbConnStrBuilder.ConnectionString = connectionString;
+            dbConnStrBuilder.ConnectionString = RepairedMySqlConnStr(connectionString);
             this.dbProviderFactory = dbProviderFactory;
             this.leftToken = leftToken;
             this.rightToken = rightToken;
             this.paramPrefixToken = paramPrefixToken;
             this.likeToken = likeToken;
+        }
+
+        string RepairedMySqlConnStr(string mysqlConnStr)
+        {
+            if (!string.IsNullOrEmpty(mysqlConnStr))
+            {
+                if ((dbProviderFactory != null && dbProviderFactory.GetType().Name.IndexOf("mysql", StringComparison.OrdinalIgnoreCase) > -1)
+                    || mysqlConnStr.IndexOf("port=3306", StringComparison.OrdinalIgnoreCase) > -1)
+                {
+                    if (mysqlConnStr.IndexOf("Convert Zero Datetime=True", StringComparison.OrdinalIgnoreCase) == -1
+                   && mysqlConnStr.IndexOf("Allow Zero Datetime=True", StringComparison.OrdinalIgnoreCase) == -1)
+                    {
+                        if (mysqlConnStr.LastIndexOf(";") == mysqlConnStr.Length - 1)
+                            mysqlConnStr += "Convert Zero Datetime=True; Allow Zero Datetime=True";
+                        else
+                            mysqlConnStr += ";Convert Zero Datetime=True; Allow Zero Datetime=True;";
+                    }
+                }
+            }
+            return mysqlConnStr;
         }
         #endregion
 

@@ -1319,7 +1319,8 @@ namespace WEF.Db
 
 
         #region Extiond
-        private DataTable DoLoadMap(DbCommand command, string tableName)
+
+        DataTable LoadMap(DbCommand command, string tableName)
         {
             Check.Require(tableName != null && tableName.Length > 0, "tableNames could not be null or empty.");
 
@@ -1363,7 +1364,46 @@ namespace WEF.Db
                 {
                     command.CommandTimeout = _timeout;
                     PrepareCommand(command, connection);
-                    return DoLoadMap(command, "Table");
+                    return LoadMap(command, tableName);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取最大自增长主键值
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="idName"></param>
+        /// <returns></returns>
+        public int GetMaxId(string tableName, string idName)
+        {
+            Check.Require(tableName, "tableName", Check.NotNullOrEmpty);
+
+            if (tableName.IndexOf("`") > -1)
+            {
+                tableName = tableName.Replace("`", "");
+            }
+
+            if (tableName.IndexOf("[") > -1)
+            {
+                tableName = tableName.Replace("[", "").Replace("]", "");
+            }
+
+            var sql = "select max(" + idName + ") from " + tableName;
+
+            using (DbConnection connection = GetConnection(true))
+            {
+                using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
+                {
+                    command.CommandTimeout = _timeout;
+                    PrepareCommand(command, connection);
+                    var result = command.ExecuteScalar();
+
+                    if (result != null && int.TryParse(result.ToString(), out int maxId))
+                    {
+                        return maxId;
+                    }
+                    return 0;
                 }
             }
         }

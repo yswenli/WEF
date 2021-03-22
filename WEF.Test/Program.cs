@@ -25,6 +25,10 @@ namespace WEF.Test
         static void Main(string[] args)
         {
 
+            BatchTest2.Test();
+
+            Console.ReadLine();
+
             BatchTest.Test();
 
 

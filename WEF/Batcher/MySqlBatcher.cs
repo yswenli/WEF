@@ -60,6 +60,79 @@ namespace WEF.Batcher
 
 
         /// <summary>
+        /// ToDataTable
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public new DataTable ToDataTable<TEntity>(IEnumerable<TEntity> entities)
+            where TEntity : Entity
+        {
+            if (entities == null || !entities.Any()) return null;
+
+            var first = entities.First();
+
+            var fields = first.GetFields();
+
+            var tableName = first.GetTableName();
+
+            var dt = _database.GetMap(tableName);
+
+            var maxId = 0;
+
+            var autoIncrementName = "";
+
+            for (int i = 0; i < dt.Columns.Count; i++)
+            {
+                if (dt.Columns[i].AutoIncrement)
+                {
+                    autoIncrementName = dt.Columns[i].ColumnName;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(autoIncrementName))
+            {
+                maxId = _database.GetMaxId(tableName, autoIncrementName);
+            }
+
+            foreach (TEntity entity in entities)
+            {
+                DataRow dtRow = dt.NewRow();
+
+                object[] values = entity.GetValues();
+
+                for (int i = 0; i < dt.Columns.Count; i++)
+                {
+                    if (dt.Columns[i].AutoIncrement)
+                    {
+                        maxId++;
+                        dtRow[fields[i].Name] = maxId;
+                    }
+                    else
+                    {
+                        if (dt.Columns[i].AllowDBNull)
+                        {
+                            if (values[i] == null)
+                                continue;
+                        }
+                        if (values[i] != null && values[i].GetType().Name == "DateTime")
+                        {
+                            dtRow[fields[i].Name] = new MySql.Data.Types.MySqlDateTime(values[i].ToString());
+                        }
+                        else
+                            dtRow[fields[i].Name] = values[i];
+
+                    }
+
+                }
+                dt.Rows.Add(dtRow);
+            }
+            return dt;
+        }
+
+
+
+        /// <summary>
         /// 批量执行
         /// </summary>
         /// <param name="batchSize"></param>
@@ -70,7 +143,7 @@ namespace WEF.Batcher
 
             try
             {
-                _dataTable = ToDataTable(_list); 
+                _dataTable = ToDataTable(_list);
 
                 if (_dataTable == null || _dataTable.Rows.Count == 0) return;
 
@@ -78,33 +151,45 @@ namespace WEF.Batcher
 
                 DBContext.WriteToCSV(_dataTable, tmpPath);
 
-                MySqlBulkLoader bulk = new MySqlBulkLoader(newConnection)
-                {
-                    FieldTerminator = ",",
-                    FieldQuotationCharacter = '"',
-                    EscapeCharacter = '"',
-                    LineTerminator = "\r\n",
-                    FileName = tmpPath,
-                    NumberOfLinesToSkip = 0,
-                    TableName = _dataTable.TableName,
-                };
+                newConnection.Open();
 
-                var columns = _dataTable.Columns.Cast<DataColumn>().Select(_columns => _columns.ColumnName).ToList();
-
-                if (newConnection.State != ConnectionState.Open)
+                using (MySqlTransaction tran = newConnection.BeginTransaction())
                 {
-                    newConnection.Open();
+                    MySqlBulkLoader bulk = new MySqlBulkLoader(newConnection)
+                    {
+                        FieldTerminator = ",",
+                        FieldQuotationCharacter = '"',
+                        EscapeCharacter = '"',
+                        LineTerminator = "\r\n",
+                        FileName = tmpPath,
+                        Local = true,
+                        NumberOfLinesToSkip = 0,
+                        TableName = _dataTable.TableName,
+                        CharacterSet = "utf8"
+                    };
+                    try
+                    {
+                        bulk.Columns.AddRange(_dataTable.Columns.Cast<DataColumn>().Select(colum => colum.ColumnName).ToList());
+                        var size = bulk.Load();
+                        tran.Commit();
+                    }
+                    catch (MySqlException ex)
+                    {
+                        if (tran != null)
+                            tran.Rollback();
+
+                        throw ex;
+                    }
+                    finally
+                    {
+                        File.Delete(tmpPath);
+                    }
                 }
+            }
 
-                bulk.Columns.AddRange(columns);
-                bulk.Load();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
             finally
             {
+
                 if (newConnection.State == ConnectionState.Open)
                     newConnection.Close();
                 _list.Clear();

@@ -59,7 +59,7 @@ namespace WEF.Batcher
 
             var fields = first.GetFields();
 
-            DataTable dt = _database.GetMap(first.GetTableName());
+            var dt = _database.GetMap(first.GetTableName());
 
             foreach (TEntity entity in entities)
             {
