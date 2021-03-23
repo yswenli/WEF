@@ -391,7 +391,7 @@ namespace WEF.ModelGenerator
             // 
             // btnOpen
             // 
-            this.btnOpen.Location = new System.Drawing.Point(390, 262);
+            this.btnOpen.Location = new System.Drawing.Point(83, 203);
             this.btnOpen.Name = "btnOpen";
             this.btnOpen.Size = new System.Drawing.Size(40, 25);
             this.btnOpen.TabIndex = 7;
@@ -401,9 +401,9 @@ namespace WEF.ModelGenerator
             // 
             // btnDecode
             // 
-            this.btnDecode.Location = new System.Drawing.Point(349, 331);
+            this.btnDecode.Location = new System.Drawing.Point(361, 208);
             this.btnDecode.Name = "btnDecode";
-            this.btnDecode.Size = new System.Drawing.Size(94, 25);
+            this.btnDecode.Size = new System.Drawing.Size(94, 36);
             this.btnDecode.TabIndex = 4;
             this.btnDecode.Text = "解码";
             this.btnDecode.UseVisualStyleBackColor = true;
@@ -411,19 +411,21 @@ namespace WEF.ModelGenerator
             // 
             // txtDecodedData
             // 
-            this.txtDecodedData.Location = new System.Drawing.Point(44, 264);
+            this.txtDecodedData.Location = new System.Drawing.Point(8, 252);
+            this.txtDecodedData.Multiline = true;
             this.txtDecodedData.Name = "txtDecodedData";
-            this.txtDecodedData.Size = new System.Drawing.Size(344, 21);
+            this.txtDecodedData.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtDecodedData.Size = new System.Drawing.Size(449, 142);
             this.txtDecodedData.TabIndex = 6;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(9, 267);
+            this.label6.Location = new System.Drawing.Point(6, 210);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(29, 12);
+            this.label6.Size = new System.Drawing.Size(77, 12);
             this.label6.TabIndex = 5;
-            this.label6.Text = "地址";
+            this.label6.Text = "请选择二维码";
             // 
             // picDecode
             // 
@@ -468,12 +470,12 @@ namespace WEF.ModelGenerator
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(101, 26);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.saveToolStripMenuItem.Text = "保存";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
