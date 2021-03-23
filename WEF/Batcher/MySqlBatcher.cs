@@ -150,7 +150,7 @@ namespace WEF.Batcher
 
                 string tmpPath = Path.Combine(Directory.GetCurrentDirectory(), _dataTable.TableName + ".csv");
 
-                DBContext.WriteToCSV(_dataTable, tmpPath);
+                DBContext.WriteToCSV(_dataTable, tmpPath, false);
 
                 newConnection.Open();
 

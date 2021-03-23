@@ -52,6 +52,10 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.2.0.246, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.2.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Leigh.Wen.QRCode, Version=1.0.7495.20585, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leigh.Wen.QRCode.dll</HintPath>
+    </Reference>
     <Reference Include="NPOI, Version=2.5.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.5.1\lib\net45\NPOI.dll</HintPath>
     </Reference>
@@ -206,6 +210,12 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\QrCodeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\QrCodeForm.designer.cs">
+      <DependentUpon>QrCodeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SQLExportForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -296,6 +306,9 @@
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\QrCodeForm.resx">
+      <DependentUpon>QrCodeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\SQLExportForm.resx">
       <DependentUpon>SQLExportForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -345,6 +358,7 @@
     </Content>
     <Content Include="db.ico" />
     <Content Include="Dlls\CSkin.dll" />
+    <Content Include="Dlls\Leigh.Wen.QRCode.dll" />
     <Content Include="Dlls\WeifenLuo.WinFormsUI.Docking.dll" />
     <Content Include="favourite.ico" />
     <None Include="Resources\JsonClassHelper" />

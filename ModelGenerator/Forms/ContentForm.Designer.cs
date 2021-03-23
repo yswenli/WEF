@@ -50,12 +50,12 @@
             this.tp2 = new System.Windows.Forms.TabPage();
             this.txtContent = new System.Windows.Forms.RichTextBox();
             this.contextMenuStripSave = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.保存ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.cnnTxt = new System.Windows.Forms.TextBox();
             this.saveEntity = new System.Windows.Forms.SaveFileDialog();
-            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tp1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridColumns)).BeginInit();
@@ -275,11 +275,27 @@
             // contextMenuStripSave
             // 
             this.contextMenuStripSave.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.selectAllToolStripMenuItem,
             this.copyToolStripMenuItem1,
+            this.selectAllToolStripMenuItem,
             this.保存ToolStripMenuItem});
             this.contextMenuStripSave.Name = "contextMenuStripSave";
-            this.contextMenuStripSave.Size = new System.Drawing.Size(193, 70);
+            this.contextMenuStripSave.Size = new System.Drawing.Size(193, 92);
+            // 
+            // selectAllToolStripMenuItem
+            // 
+            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+            this.selectAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.selectAllToolStripMenuItem.Text = "全选";
+            this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+            // 
+            // copyToolStripMenuItem1
+            // 
+            this.copyToolStripMenuItem1.Name = "copyToolStripMenuItem1";
+            this.copyToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.copyToolStripMenuItem1.Size = new System.Drawing.Size(192, 22);
+            this.copyToolStripMenuItem1.Text = "复制";
+            this.copyToolStripMenuItem1.Click += new System.EventHandler(this.copyToolStripMenuItem1_Click);
             // 
             // 保存ToolStripMenuItem
             // 
@@ -305,22 +321,6 @@
             this.cnnTxt.ReadOnly = true;
             this.cnnTxt.Size = new System.Drawing.Size(720, 21);
             this.cnnTxt.TabIndex = 7;
-            // 
-            // selectAllToolStripMenuItem
-            // 
-            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            this.selectAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
-            this.selectAllToolStripMenuItem.Text = "全选";
-            this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
-            // 
-            // copyToolStripMenuItem1
-            // 
-            this.copyToolStripMenuItem1.Name = "copyToolStripMenuItem1";
-            this.copyToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyToolStripMenuItem1.Size = new System.Drawing.Size(192, 22);
-            this.copyToolStripMenuItem1.Text = "复制";
-            this.copyToolStripMenuItem1.Click += new System.EventHandler(this.copyToolStripMenuItem1_Click);
             // 
             // ContentForm
             // 

@@ -1972,7 +1972,7 @@ namespace WEF
             if (entities == null || !entities.Any()) return;
 
             var batch = CreateBatch<TEntity>();
-            
+
             batch.Insert(entities);
 
             batch.Execute();
@@ -2324,20 +2324,20 @@ namespace WEF
         #endregion
 
         #region 数据导入导出
+
         /// <summary>
         /// 读取CSV文件
         /// </summary>
         /// <param name="filePath"></param>
+        /// <param name="withHeader"></param>
         /// <returns></returns>
         public static DataTable ReadFromCSV(string filePath)
         {
-            Encoding encoding = Encoding.GetEncoding("utf-8");
-
             DataTable dt = new DataTable();
 
             using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                using (StreamReader sr = new StreamReader(fs, encoding))
+                using (StreamReader sr = new StreamReader(fs, new UTF8Encoding(false)))
                 {
                     //记录每次读取的一行记录
                     string strLine = "";
@@ -2351,16 +2351,16 @@ namespace WEF
                     int columnCount = 0;
 
                     //标示是否是读取的第一行
-                    bool IsFirst = true;
+                    bool isFirst = true;
 
                     //逐行读取CSV中的数据
                     while ((strLine = sr.ReadLine()) != null)
                     {
-                        if (IsFirst == true)
+                        if (isFirst == true)
                         {
                             tableHead = strLine.Split(',');
 
-                            IsFirst = false;
+                            isFirst = false;
 
                             columnCount = tableHead.Length;
 
@@ -2396,13 +2396,14 @@ namespace WEF
             }
             return dt;
         }
+
         /// <summary>
         /// 写入CSV文件
         /// </summary>
         /// <param name="table"></param>
         /// <param name="filePath"></param>
-        /// <param name="titlee"></param>
-        public static void WriteToCSV(DataTable table, string filePath)
+        /// <param name="withHeader"></param>
+        public static void WriteToCSV(DataTable table, string filePath, bool withHeader = true)
         {
             FileInfo fi = new FileInfo(filePath);
             string path = fi.DirectoryName;
@@ -2411,6 +2412,18 @@ namespace WEF
             StringBuilder sb = new StringBuilder();
 
             DataColumn colum;
+
+            if (withHeader)
+            {
+                foreach (DataColumn column in table.Columns)
+                {
+                    if (column == table.Columns[0])
+                        sb.Append(column.ColumnName);
+                    else
+                        sb.Append("," + column.ColumnName);
+                }
+                sb.AppendLine();
+            }
 
             foreach (DataRow row in table.Rows)
             {
@@ -2431,7 +2444,7 @@ namespace WEF
 
             using (FileStream fs = new FileStream(path + "\\" + name, FileMode.Create))
             {
-                using (StreamWriter sw = new StreamWriter(new BufferedStream(fs), Encoding.UTF8))
+                using (StreamWriter sw = new StreamWriter(fs, new UTF8Encoding(false)))
                 {
                     sw.Write(csvStr);
                 }
@@ -2457,13 +2470,14 @@ namespace WEF
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="filePath"></param>
-        public void Export<TEntity>(string filePath) where TEntity : Entity
+        /// <param name="withHeader"></param>
+        public void Export<TEntity>(string filePath, bool withHeader = false) where TEntity : Entity
         {
             var list = Search<TEntity>().ToList();
 
             var dataTable = list.EntitiesToDataTable();
 
-            WriteToCSV(dataTable, filePath);
+            WriteToCSV(dataTable, filePath, withHeader);
         }
 
         #endregion

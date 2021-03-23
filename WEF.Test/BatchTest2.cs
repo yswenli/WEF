@@ -40,13 +40,14 @@ namespace WEF.Test
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            for (int i = 0; i < 300000; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 list.Add(new DBGiftbatchadd()
                 {
                     Uid = i.ToString(),
+                    Parentid = Guid.NewGuid().ToString("N"),
                     Createtime = DateTime.Now,
-                    Operuserid = "中文行不行"
+                    Remark = "中文行不行"
                 });
             }
 
@@ -59,7 +60,6 @@ namespace WEF.Test
         }
 
     }
-
 
 
     /// <summary>
@@ -77,7 +77,7 @@ namespace WEF.Test
         private int? _Sendstatus;
         private string _IsOperSuc;
         private string _ErrorMsg;
-        private string _Operuserid;
+        private string _Operuser;
         private DateTime? _Createtime;
         private string _Remark;
         private decimal? _Addgiftvalue;
@@ -138,16 +138,16 @@ namespace WEF.Test
             }
         }
         /// <summary>
-        /// Operuserid 
+        /// Operuser 
         /// </summary>
         [DataMember]
-        public string Operuserid
+        public string Operuser
         {
-            get { return _Operuserid; }
+            get { return _Operuser; }
             set
             {
-                this.OnPropertyValueChange(_.Operuserid, _Operuserid, value);
-                this._Operuserid = value;
+                this.OnPropertyValueChange(_.Operuser, _Operuser, value);
+                this._Operuser = value;
             }
         }
         /// <summary>
@@ -269,7 +269,7 @@ namespace WEF.Test
                 _.Sendstatus,
                 _.IsOperSuc,
                 _.ErrorMsg,
-                _.Operuserid,
+                _.Operuser,
                 _.Createtime,
                 _.Remark,
                 _.Addgiftvalue,
@@ -288,7 +288,7 @@ namespace WEF.Test
                 this._Sendstatus,
                 this._IsOperSuc,
                 this._ErrorMsg,
-                this._Operuserid,
+                this._Operuser,
                 this._Createtime,
                 this._Remark,
                 this._Addgiftvalue,
@@ -326,9 +326,9 @@ namespace WEF.Test
             /// </summary>
             public readonly static Field ErrorMsg = new Field("ErrorMsg", m_tableName, "ErrorMsg");
             /// <summary>
-            /// Operuserid 
+            /// Operuser 
             /// </summary>
-            public readonly static Field Operuserid = new Field("operuserid", m_tableName, "operuserid");
+            public readonly static Field Operuser = new Field("Operuser", m_tableName, "Operuser");
             /// <summary>
             /// Createtime 
             /// </summary>
@@ -581,6 +581,10 @@ namespace WEF.Test
             return db.FromProc(procName);
         }
     }
+
+
+
+
 
 }
 

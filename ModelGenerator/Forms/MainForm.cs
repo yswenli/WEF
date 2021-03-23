@@ -15,6 +15,7 @@
 *版 本 号： V1.0.0.0
 *描    述：
 *****************************************************************************/
+using CCWin;
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -24,7 +25,7 @@ using WEF.ModelGenerator.Model;
 
 namespace WEF.ModelGenerator
 {
-    public partial class MainForm : CCWin.Skin_Mac
+    public partial class MainForm : Skin_Mac
     {
         public MainForm()
         {
@@ -128,6 +129,16 @@ namespace WEF.ModelGenerator
             new JsonClassGeneratorForm().ShowDialog(this);
         }
 
+        /// <summary>
+        /// 二维码
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void qRCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new QrCodeForm().ShowDialog(this);
+        }
+
         private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AboutForm().ShowDialog(this);
@@ -175,8 +186,9 @@ namespace WEF.ModelGenerator
         }
 
 
+
         #endregion
 
-       
+        
     }
 }

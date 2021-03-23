@@ -52,8 +52,9 @@
             this.newDBConnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.jsonToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.qRCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sQL查询ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -145,6 +146,7 @@
             this.runToolStripMenuItem,
             this.logsToolStripMenuItem,
             this.jsonToolToolStripMenuItem,
+            this.qRCodeToolStripMenuItem,
             this.关于ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(4, 32);
             this.menuStrip1.Name = "menuStrip1";
@@ -162,8 +164,8 @@
             // runToolStripMenuItem
             // 
             this.runToolStripMenuItem.Name = "runToolStripMenuItem";
-            this.runToolStripMenuItem.Size = new System.Drawing.Size(83, 21);
-            this.runToolStripMenuItem.Text = "(&R)执行SQL";
+            this.runToolStripMenuItem.Size = new System.Drawing.Size(104, 21);
+            this.runToolStripMenuItem.Text = "(&R)执行SQL(F5)";
             this.runToolStripMenuItem.Click += new System.EventHandler(this.runToolStripMenuItem_Click);
             // 
             // logsToolStripMenuItem
@@ -173,6 +175,13 @@
             this.logsToolStripMenuItem.Text = "(&L)异常日志";
             this.logsToolStripMenuItem.Click += new System.EventHandler(this.logsToolStripMenuItem_Click);
             // 
+            // jsonToolToolStripMenuItem
+            // 
+            this.jsonToolToolStripMenuItem.Name = "jsonToolToolStripMenuItem";
+            this.jsonToolToolStripMenuItem.Size = new System.Drawing.Size(83, 21);
+            this.jsonToolToolStripMenuItem.Text = "(&J)Json工具";
+            this.jsonToolToolStripMenuItem.Click += new System.EventHandler(this.jsonToolToolStripMenuItem_Click);
+            // 
             // 关于ToolStripMenuItem
             // 
             this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
@@ -180,12 +189,12 @@
             this.关于ToolStripMenuItem.Text = "(&A)关于";
             this.关于ToolStripMenuItem.Click += new System.EventHandler(this.关于ToolStripMenuItem_Click);
             // 
-            // jsonToolToolStripMenuItem
+            // qRCodeToolStripMenuItem
             // 
-            this.jsonToolToolStripMenuItem.Name = "jsonToolToolStripMenuItem";
-            this.jsonToolToolStripMenuItem.Size = new System.Drawing.Size(83, 21);
-            this.jsonToolToolStripMenuItem.Text = "(&J)Json工具";
-            this.jsonToolToolStripMenuItem.Click += new System.EventHandler(this.jsonToolToolStripMenuItem_Click);
+            this.qRCodeToolStripMenuItem.Name = "qRCodeToolStripMenuItem";
+            this.qRCodeToolStripMenuItem.Size = new System.Drawing.Size(98, 21);
+            this.qRCodeToolStripMenuItem.Text = "(&Q)二维码工具";
+            this.qRCodeToolStripMenuItem.Click += new System.EventHandler(this.qRCodeToolStripMenuItem_Click);
             // 
             // sQL查询ToolStripMenuItem
             // 
@@ -266,6 +275,7 @@
         private System.Windows.Forms.ToolStripMenuItem displayUIToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem shutDownToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem jsonToolToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem qRCodeToolStripMenuItem;
     }
 }
 

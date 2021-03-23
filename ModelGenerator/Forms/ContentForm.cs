@@ -223,11 +223,17 @@ namespace WEF.ModelGenerator
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             txtContent.SelectAll();
+            txtContent.Focus();
         }
 
         private void copyToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(txtContent.Text);
+            var txt = txtContent.SelectedText;
+
+            if (!string.IsNullOrEmpty(txt))
+            {
+                Clipboard.SetText(txt);
+            }
         }
 
         /// <summary>
@@ -238,6 +244,7 @@ namespace WEF.ModelGenerator
         private void 保存ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveEntity.FileName = txtClassName.Text;
+
             saveEntity.Filter = "CS 文件|*.cs";
 
             if (saveEntity.ShowDialog() == DialogResult.OK)
@@ -339,8 +346,8 @@ namespace WEF.ModelGenerator
 
                     Clipboard.SetText(sb.ToString());
                 }
-            }           
+            }
         }
-       
+
     }
 }
