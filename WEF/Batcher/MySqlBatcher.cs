@@ -147,8 +147,8 @@ namespace WEF.Batcher
                 _dataTable = ToDataTable(_list);
 
                 if (_dataTable == null || _dataTable.Rows.Count == 0) return;
-
-                string tmpPath = Path.Combine(Directory.GetCurrentDirectory(), _dataTable.TableName + ".csv");
+                
+                string tmpPath = Path.Combine(Path.GetTempPath(), _dataTable.TableName + ".csv");
 
                 DBContext.WriteToCSV(_dataTable, tmpPath, false);
 
