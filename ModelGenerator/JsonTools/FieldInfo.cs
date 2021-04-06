@@ -2,7 +2,7 @@
 // Power By Leigh.Wen @2015
 using System.Collections.Generic;
 using System.Linq;
-using WEF.Common.Newtonsoft.Json;
+using WEFInternal.Newtonsoft.Json;
 
 namespace WEF.ModelGenerator.JsonTools
 {

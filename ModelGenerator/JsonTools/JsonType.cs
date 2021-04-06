@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WEF.Common.Newtonsoft.Json.Linq;
+using WEFInternal.Newtonsoft.Json.Linq;
 
 namespace WEF.ModelGenerator.JsonTools
 {

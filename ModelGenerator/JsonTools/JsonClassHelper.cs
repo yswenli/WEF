@@ -4,8 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WEF.Common.Newtonsoft.Json;
-using WEF.Common.Newtonsoft.Json.Linq;
+using WEFInternal.Newtonsoft.Json;
+using WEFInternal.Newtonsoft.Json.Linq;
 
 namespace JsonCSharpClassGenerator
 {

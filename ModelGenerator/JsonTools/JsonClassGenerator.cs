@@ -7,8 +7,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using WEF.Common.Newtonsoft.Json;
-using WEF.Common.Newtonsoft.Json.Linq;
+using WEFInternal.Newtonsoft.Json;
+using WEFInternal.Newtonsoft.Json.Linq;
 using WEF.ModelGenerator.JsonTools.CodeWriters;
 
 namespace WEF.ModelGenerator.JsonTools
