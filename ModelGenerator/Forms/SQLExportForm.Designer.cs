@@ -81,6 +81,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SQLExportForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "导出数据";
             this.TopMost = true;
             this.ResumeLayout(false);

@@ -55,7 +55,7 @@
             this.txtport.Location = new System.Drawing.Point(312, 19);
             this.txtport.Name = "txtport";
             this.txtport.Size = new System.Drawing.Size(40, 21);
-            this.txtport.TabIndex = 47;
+            this.txtport.TabIndex = 2;
             this.txtport.Text = "3306";
             // 
             // cbbServer
@@ -64,7 +64,7 @@
             this.cbbServer.Location = new System.Drawing.Point(107, 20);
             this.cbbServer.Name = "cbbServer";
             this.cbbServer.Size = new System.Drawing.Size(163, 20);
-            this.cbbServer.TabIndex = 45;
+            this.cbbServer.TabIndex = 1;
             this.cbbServer.Text = "127.0.0.1";
             // 
             // cbbDatabase
@@ -74,7 +74,7 @@
             this.cbbDatabase.Location = new System.Drawing.Point(106, 121);
             this.cbbDatabase.Name = "cbbDatabase";
             this.cbbDatabase.Size = new System.Drawing.Size(246, 20);
-            this.cbbDatabase.TabIndex = 44;
+            this.cbbDatabase.TabIndex = 5;
             // 
             // label4
             // 
@@ -90,7 +90,7 @@
             this.txtUserName.Location = new System.Drawing.Point(107, 51);
             this.txtUserName.Name = "txtUserName";
             this.txtUserName.Size = new System.Drawing.Size(246, 21);
-            this.txtUserName.TabIndex = 42;
+            this.txtUserName.TabIndex = 3;
             this.txtUserName.Text = "root";
             // 
             // label2
@@ -118,7 +118,7 @@
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(246, 21);
-            this.txtPassword.TabIndex = 41;
+            this.txtPassword.TabIndex = 4;
             // 
             // label3
             // 
@@ -143,7 +143,7 @@
             this.button1.Location = new System.Drawing.Point(117, 422);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(100, 32);
-            this.button1.TabIndex = 48;
+            this.button1.TabIndex = 8;
             this.button1.Text = "连接测试";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -154,7 +154,7 @@
             this.button2.Location = new System.Drawing.Point(223, 422);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 32);
-            this.button2.TabIndex = 49;
+            this.button2.TabIndex = 9;
             this.button2.Text = "确定";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -164,7 +164,7 @@
             this.button3.Location = new System.Drawing.Point(304, 422);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 32);
-            this.button3.TabIndex = 50;
+            this.button3.TabIndex = 10;
             this.button3.Text = "取消";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
@@ -175,7 +175,7 @@
             this.checkBox1.Location = new System.Drawing.Point(20, 217);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(96, 16);
-            this.checkBox1.TabIndex = 51;
+            this.checkBox1.TabIndex = 6;
             this.checkBox1.Text = "从连接字符串";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
@@ -213,7 +213,7 @@
             this.skinWaterTextBox1.Name = "skinWaterTextBox1";
             this.skinWaterTextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.skinWaterTextBox1.Size = new System.Drawing.Size(345, 158);
-            this.skinWaterTextBox1.TabIndex = 0;
+            this.skinWaterTextBox1.TabIndex = 7;
             this.skinWaterTextBox1.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
             this.skinWaterTextBox1.WaterText = "请输mysql连接字符串";
             // 

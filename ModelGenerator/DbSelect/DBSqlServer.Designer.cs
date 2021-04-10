@@ -57,7 +57,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(22, 19);
+            this.label1.Location = new System.Drawing.Point(35, 20);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(47, 12);
             this.label1.TabIndex = 0;
@@ -86,7 +86,7 @@
             this.button1.Location = new System.Drawing.Point(219, 363);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(104, 23);
-            this.button1.TabIndex = 7;
+            this.button1.TabIndex = 8;
             this.button1.Text = "连接测试";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -94,7 +94,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(-2, 63);
+            this.label2.Location = new System.Drawing.Point(11, 65);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(71, 12);
             this.label2.TabIndex = 4;
@@ -117,7 +117,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 105);
+            this.label3.Location = new System.Drawing.Point(23, 106);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 12);
             this.label3.TabIndex = 6;
@@ -139,7 +139,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(22, 145);
+            this.label4.Location = new System.Drawing.Point(35, 148);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(47, 12);
             this.label4.TabIndex = 8;
@@ -148,7 +148,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(33, 187);
+            this.label5.Location = new System.Drawing.Point(46, 191);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(35, 12);
             this.label5.TabIndex = 9;
@@ -181,7 +181,7 @@
             this.cbbDatabase.Location = new System.Drawing.Point(109, 392);
             this.cbbDatabase.Name = "cbbDatabase";
             this.cbbDatabase.Size = new System.Drawing.Size(214, 20);
-            this.cbbDatabase.TabIndex = 6;
+            this.cbbDatabase.TabIndex = 9;
             // 
             // button2
             // 
@@ -189,7 +189,7 @@
             this.button2.Location = new System.Drawing.Point(186, 475);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 31);
-            this.button2.TabIndex = 8;
+            this.button2.TabIndex = 10;
             this.button2.Text = "确定";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -199,7 +199,7 @@
             this.button3.Location = new System.Drawing.Point(267, 475);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 31);
-            this.button3.TabIndex = 9;
+            this.button3.TabIndex = 11;
             this.button3.Text = "取消";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
@@ -224,7 +224,7 @@
             this.checkBox1.Location = new System.Drawing.Point(8, 250);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(96, 16);
-            this.checkBox1.TabIndex = 14;
+            this.checkBox1.TabIndex = 6;
             this.checkBox1.Text = "从连接字符串";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
@@ -248,7 +248,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBox1.Size = new System.Drawing.Size(292, 57);
-            this.textBox1.TabIndex = 0;
+            this.textBox1.TabIndex = 7;
             this.textBox1.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
             this.textBox1.WaterFont = new System.Drawing.Font("微软雅黑", 8.5F);
             this.textBox1.WaterText = "请输入连接字符串";

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Model;
 
@@ -296,11 +296,6 @@ namespace WEF.ModelGenerator.DbSelect
                     MessageBox.Show("连接失败!\n\r" + ex.Message);
                 }
             });
-
-
-
-
-
 
         }
 

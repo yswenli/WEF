@@ -1,17 +1,16 @@
-﻿using WEF.ModelGenerator.Common;
-using WEF.ModelGenerator.Model;
-using WEF;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
+
+using CCWin;
+
+using WEF.ModelGenerator.Common;
+using WEF.ModelGenerator.Model;
 
 namespace WEF.ModelGenerator.DbSelect
 {
-    public partial class DBMySql : CCWin.Skin_Mac
+    public partial class DBMySql : Skin_Mac
     {
         public DBMySql()
         {

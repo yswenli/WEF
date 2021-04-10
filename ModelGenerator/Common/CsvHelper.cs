@@ -22,6 +22,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
 using WEF.ModelGenerator.Model;
 
 namespace WEF.ModelGenerator.Common
@@ -32,8 +33,9 @@ namespace WEF.ModelGenerator.Common
         public static event Action<long, long> OnRunning;
         public static event Action OnStop;
 
-        public static void CSV(DataTable dt, string filename)
+        public static async Task CSV(DataTable dt, string filename)
         {
+            await Task.Yield();
             OnStart?.Invoke();
             using (StringWriter sw = new StringWriter())
             {
@@ -67,7 +69,7 @@ namespace WEF.ModelGenerator.Common
                 {
                     using (StreamWriter ssw = new StreamWriter(fs))
                     {
-                        ssw.Write(sb.ToString());
+                        await ssw.WriteAsync(sb.ToString());
                     }
                 }
             }
@@ -96,76 +98,73 @@ namespace WEF.ModelGenerator.Common
         /// <param name="fileName"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static Task CSV(ConnectionModel cnn, string tableName, string fileName, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task CSV(ConnectionModel cnn, string tableName, string fileName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return Task.Run(() =>
+            OnStart?.Invoke();
+
+            var dbObj = DBObjectHelper.GetDBObject(cnn);
+
+            var reader = dbObj.GetDataReader(cnn.Database, $"select * from {tableName}");
+
+            var header = new List<string>();
+
+            var filedCount = reader.FieldCount;
+
+            if (filedCount > 0)
             {
-                OnStart?.Invoke();
-
-                var dbObj = DBObjectHelper.GetDBObject(cnn);
-
-                var reader = dbObj.GetDataReader(cnn.Database, $"select * from {tableName}");
-
-                var header = new List<string>();
-
-                var filedCount = reader.FieldCount;
-
-                if (filedCount > 0)
+                for (int i = 0; i < filedCount; i++)
                 {
-                    for (int i = 0; i < filedCount; i++)
-                    {
-                        header.Add(reader.GetName(i));
-                    }
+                    header.Add(reader.GetName(i));
                 }
+            }
 
-                using (StringWriter sw = new StringWriter())
+            using (StringWriter sw = new StringWriter())
+            {
+                StringBuilder sb = new StringBuilder();
+
+                char c = ',';
+
+                for (int i = 0; i < filedCount; i++)
                 {
-                    StringBuilder sb = new StringBuilder();
+                    sb.Append(header[i] + c);
+                }
+                sb.Append("\r\n");
 
-                    char c = ',';
+                var rowCount = 1;
 
-                    for (int i = 0; i < filedCount; i++)
+                while (reader.Read())
+                {
+                    rowCount++;
+
+                    for (int j = 0; j < filedCount; j++)
                     {
-                        sb.Append(header[i] + c);
+                        try
+                        {
+                            sb.Append(ConvertToSaveCell(reader[j]));
+
+                            OnRunning?.Invoke(filedCount * j + rowCount, filedCount * rowCount);
+                        }
+                        catch
+                        {
+                            sb.Append(c);
+                        }
                     }
                     sb.Append("\r\n");
+                }
 
-                    var rowCount = 1;
+                sw.Write(Encoding.UTF8.GetString(new byte[] { (byte)0xEF, (byte)0xBB, (byte)0xBF }));
 
-                    while (reader.Read())
+                sw.Write(sb);
+
+                using (var fs = File.Open(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+                {
+                    using (StreamWriter ssw = new StreamWriter(fs))
                     {
-                        rowCount++;
-
-                        for (int j = 0; j < filedCount; j++)
-                        {
-                            try
-                            {
-                                sb.Append(ConvertToSaveCell(reader[j]));
-
-                                OnRunning?.Invoke(filedCount * j + rowCount, filedCount * rowCount);
-                            }
-                            catch
-                            {
-                                sb.Append(c);
-                            }
-                        }
-                        sb.Append("\r\n");
-                    }
-
-                    sw.Write(Encoding.UTF8.GetString(new byte[] { (byte)0xEF, (byte)0xBB, (byte)0xBF }));
-
-                    sw.Write(sb);
-
-                    using (var fs = File.Open(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
-                    {
-                        using (StreamWriter ssw = new StreamWriter(fs))
-                        {
-                            ssw.Write(sb.ToString());
-                        }
+                        await ssw.WriteAsync(sb.ToString());
                     }
                 }
-                OnStop?.Invoke();
-            }, cancellationToken);
+            }
+            OnStop?.Invoke();
         }
     }
 }

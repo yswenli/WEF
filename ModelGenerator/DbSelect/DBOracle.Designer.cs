@@ -51,7 +51,7 @@
             this.button3.Location = new System.Drawing.Point(281, 373);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 32);
-            this.button3.TabIndex = 8;
+            this.button3.TabIndex = 9;
             this.button3.Text = "取消";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
@@ -62,7 +62,7 @@
             this.button2.Location = new System.Drawing.Point(200, 373);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 32);
-            this.button2.TabIndex = 7;
+            this.button2.TabIndex = 8;
             this.button2.Text = "确定";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -72,7 +72,7 @@
             this.txtPassword.Location = new System.Drawing.Point(79, 142);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(251, 21);
-            this.txtPassword.TabIndex = 3;
+            this.txtPassword.TabIndex = 4;
             // 
             // label5
             // 
@@ -97,7 +97,7 @@
             this.button1.Location = new System.Drawing.Point(90, 373);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(104, 32);
-            this.button1.TabIndex = 6;
+            this.button1.TabIndex = 7;
             this.button1.Text = "连接测试";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -108,14 +108,14 @@
             this.cbbService.Location = new System.Drawing.Point(79, 53);
             this.cbbService.Name = "cbbService";
             this.cbbService.Size = new System.Drawing.Size(251, 20);
-            this.cbbService.TabIndex = 1;
+            this.cbbService.TabIndex = 2;
             // 
             // txtUserName
             // 
             this.txtUserName.Location = new System.Drawing.Point(79, 98);
             this.txtUserName.Name = "txtUserName";
             this.txtUserName.Size = new System.Drawing.Size(251, 21);
-            this.txtUserName.TabIndex = 2;
+            this.txtUserName.TabIndex = 3;
             // 
             // label1
             // 
@@ -132,7 +132,7 @@
             this.chbConnectString.Location = new System.Drawing.Point(39, 233);
             this.chbConnectString.Name = "chbConnectString";
             this.chbConnectString.Size = new System.Drawing.Size(84, 16);
-            this.chbConnectString.TabIndex = 4;
+            this.chbConnectString.TabIndex = 5;
             this.chbConnectString.Text = "连接字符串";
             this.chbConnectString.UseVisualStyleBackColor = true;
             this.chbConnectString.CheckedChanged += new System.EventHandler(this.chbConnectString_CheckedChanged);
@@ -148,7 +148,7 @@
             this.txtConnectString.Name = "txtConnectString";
             this.txtConnectString.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtConnectString.Size = new System.Drawing.Size(317, 103);
-            this.txtConnectString.TabIndex = 5;
+            this.txtConnectString.TabIndex = 6;
             this.txtConnectString.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
             this.txtConnectString.WaterFont = new System.Drawing.Font("微软雅黑", 8.5F);
             this.txtConnectString.WaterText = "请输入连接字符串";
