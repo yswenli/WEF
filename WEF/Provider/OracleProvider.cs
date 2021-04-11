@@ -11,7 +11,9 @@
 using System;
 using System.Data;
 using System.Data.Common;
-using Oracle.DataAccess.Client;
+
+using Oracle.ManagedDataAccess.Client;
+
 using WEF.Common;
 using WEF.Expressions;
 

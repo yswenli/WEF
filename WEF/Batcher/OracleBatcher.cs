@@ -15,10 +15,11 @@
 *版 本 号： V1.0.0.0
 *描    述：
 *****************************************************************************/
-using Oracle.DataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
+
+using Oracle.ManagedDataAccess.Client;
 
 namespace WEF.Batcher
 {
