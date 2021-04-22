@@ -93,7 +93,11 @@ namespace WEF.Provider
                         databaseType = DatabaseType.SqlServer;
                     }
                 }
-                else if (String.Compare(className, "WEF.SqlServer9", StringComparison.OrdinalIgnoreCase) == 0 || className.IndexOf("SqlServer9", StringComparison.OrdinalIgnoreCase) >= 0 || className.IndexOf("sqlserver2005", StringComparison.OrdinalIgnoreCase) >= 0 || className.IndexOf("sql2005", StringComparison.OrdinalIgnoreCase) >= 0)
+                else if (String.Compare(className, "WEF.SqlServer9", StringComparison.OrdinalIgnoreCase) == 0
+                    || String.Compare(className, "WEF.Provider.SqlServerProvider", StringComparison.OrdinalIgnoreCase) == 0
+                    || className.IndexOf("SqlServer9", StringComparison.OrdinalIgnoreCase) >= 0
+                    || className.IndexOf("sqlserver2005", StringComparison.OrdinalIgnoreCase) >= 0
+                    || className.IndexOf("sql2005", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     className = typeof(SqlServer9Provider).ToString();
                     if (databaseType == null)
