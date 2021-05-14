@@ -1301,10 +1301,10 @@ namespace WEF
         /// <param name="entity"></param>
         /// <param name="target"></param>
         /// <param name="convertMatchType"></param>
-        /// <param name="allowNull"></param>
-        public static bool FillFrom<T>(this IEntity entity, T target, ConvertMatchType convertMatchType = ConvertMatchType.IgnoreCase, bool allowNull = true) where T : class
+        /// <param name="allowNull">是否填空值</param>
+        public static bool FillFrom<T>(this IEntity entity, T target, ConvertMatchType convertMatchType = ConvertMatchType.IgnoreCase, bool allowNull = false) where T : class
         {
-            var s = target.ConvertTo<IEntity>(convertMatchType);
+            var s = (IEntity)target.ConvertTo(entity.GetType(), convertMatchType);
 
             return FillModel(s, ref entity, allowNull);
         }

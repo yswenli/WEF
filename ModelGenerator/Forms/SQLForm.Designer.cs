@@ -33,9 +33,9 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.contextMenuStripCopy = new CCWin.SkinControl.SkinContextMenuStrip();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lbl_execute = new System.Windows.Forms.Label();
-            this.exportDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStripCopy.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -47,24 +47,28 @@
             // 
             this.cnnTxt.Dock = System.Windows.Forms.DockStyle.Top;
             this.cnnTxt.Location = new System.Drawing.Point(0, 0);
+            this.cnnTxt.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cnnTxt.Name = "cnnTxt";
             this.cnnTxt.ReadOnly = true;
-            this.cnnTxt.Size = new System.Drawing.Size(848, 21);
+            this.cnnTxt.Size = new System.Drawing.Size(1131, 25);
             this.cnnTxt.TabIndex = 999;
             // 
             // dataGridView1
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedHeaders;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.ContextMenuStrip = this.contextMenuStripCopy;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 23;
-            this.dataGridView1.Size = new System.Drawing.Size(848, 344);
+            this.dataGridView1.Size = new System.Drawing.Size(1131, 430);
             this.dataGridView1.TabIndex = 10;
             // 
             // contextMenuStripCopy
@@ -76,6 +80,7 @@
             this.contextMenuStripCopy.DropDownImageSeparator = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(197)))), ((int)(((byte)(197)))));
             this.contextMenuStripCopy.Fore = System.Drawing.Color.Black;
             this.contextMenuStripCopy.HoverFore = System.Drawing.Color.White;
+            this.contextMenuStripCopy.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripCopy.ItemAnamorphosis = true;
             this.contextMenuStripCopy.ItemBorder = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
             this.contextMenuStripCopy.ItemBorderShow = true;
@@ -89,7 +94,7 @@
             this.contextMenuStripCopy.ItemSplitter = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
             this.contextMenuStripCopy.Name = "contextMenuStripCopy";
             this.contextMenuStripCopy.RadiusStyle = CCWin.SkinClass.RoundStyle.All;
-            this.contextMenuStripCopy.Size = new System.Drawing.Size(181, 70);
+            this.contextMenuStripCopy.Size = new System.Drawing.Size(139, 52);
             this.contextMenuStripCopy.SkinAllColor = true;
             this.contextMenuStripCopy.TitleAnamorphosis = true;
             this.contextMenuStripCopy.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(228)))), ((int)(((byte)(236)))));
@@ -99,53 +104,57 @@
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
             this.copyToolStripMenuItem.Text = "复制";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            // 
+            // exportDataToolStripMenuItem
+            // 
+            this.exportDataToolStripMenuItem.Name = "exportDataToolStripMenuItem";
+            this.exportDataToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.exportDataToolStripMenuItem.Text = "导出数据";
+            this.exportDataToolStripMenuItem.Click += new System.EventHandler(this.exportDataToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(0, 27);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 34);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.dataGridView1);
-            this.splitContainer1.Size = new System.Drawing.Size(848, 693);
-            this.splitContainer1.SplitterDistance = 345;
+            this.splitContainer1.Size = new System.Drawing.Size(1131, 866);
+            this.splitContainer1.SplitterDistance = 431;
+            this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 11;
             // 
             // lbl_execute
             // 
             this.lbl_execute.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lbl_execute.AutoSize = true;
-            this.lbl_execute.Location = new System.Drawing.Point(5, 723);
+            this.lbl_execute.Location = new System.Drawing.Point(7, 904);
+            this.lbl_execute.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_execute.Name = "lbl_execute";
-            this.lbl_execute.Size = new System.Drawing.Size(29, 12);
+            this.lbl_execute.Size = new System.Drawing.Size(37, 15);
             this.lbl_execute.TabIndex = 12;
             this.lbl_execute.Text = "就绪";
             // 
-            // exportDataToolStripMenuItem
-            // 
-            this.exportDataToolStripMenuItem.Name = "exportDataToolStripMenuItem";
-            this.exportDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exportDataToolStripMenuItem.Text = "导出数据";
-            this.exportDataToolStripMenuItem.Click += new System.EventHandler(this.exportDataToolStripMenuItem_Click);
-            // 
             // SQLForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(848, 740);
+            this.ClientSize = new System.Drawing.Size(1131, 925);
             this.Controls.Add(this.lbl_execute);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.cnnTxt);
             this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "SQLForm";
             this.Text = "SQLForm";
             this.Load += new System.EventHandler(this.SQLForm_Load);
