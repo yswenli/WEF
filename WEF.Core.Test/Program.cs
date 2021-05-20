@@ -11,7 +11,9 @@ namespace WEF.Core.Test
         {
             Console.Title = "WEF.Core.Test";
 
-            var userInfoRepository = new DBUserInfoRepository(DatabaseType.MySql, "server=127.0.0.1;user id=root; password=yswenli; Port=3306;database=test; pooling=true");
+            //var userInfoRepository = new DBUserInfoRepository(DatabaseType.MySql, "server=127.0.0.1;user id=root; password=yswenli; Port=3306;database=test; pooling=true");
+
+            var userInfoRepository = new DBUserInfoRepository(DatabaseType.SqlServer, "Data Source=192.168.11.77;Initial Catalog=OceaniaJobMonitor;User Id=Test77Ur;Password=Test77Ur");
 
             var userInfo = new DBUserInfo()
             {
@@ -21,6 +23,7 @@ namespace WEF.Core.Test
                 Created = DateTime.Now
             };
 
+            var list= userInfoRepository.DBContext.FromSql("select * from db", 1, 20).ToList<DBUserInfo>();
 
             var iResult = userInfoRepository.Insert(userInfo);
 

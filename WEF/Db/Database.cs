@@ -158,6 +158,27 @@ namespace WEF.Db
             return command;
         }
 
+        private DbCommand CreateCommandByCommandType(CommandType commandType, string commandText, int pageIndex, int pageSize, string orderBy, bool asc = true)
+        {
+            if (dbProvider.DbProviderFactory.GetType().Name == "SqlClientFactory")
+            {
+                commandText = $"SELECT * FROM(SELECT ROW_NUMBER() over(order by {orderBy} {(asc ? "asc" : "desc")}) rowNO, * From({commandText}) queryData) pagerows WHERE pagerows.rowNO>={(pageIndex - 1) * pageSize + 1} and pagerows.rowNO<= {pageIndex * pageSize}";
+            }
+            else if (dbProvider.DbProviderFactory.GetType().Name == "OracleClientFactory")
+            {
+                commandText = $"SELECT * FROM (SELECT queryData.*, ROWNUM rowNO FROM ({commandText} order by {orderBy} {(asc ? "asc" : "desc")}) queryData WHERE rowNO <= {pageIndex * pageSize}) WHERE rowNO >= {(pageIndex - 1) * pageSize + 1}";
+            }
+            else
+            {
+                commandText = $"{commandText} order by {orderBy} {(asc ? "asc" : "desc")} limit {pageSize} offset {(pageIndex - 1) * pageSize}";
+            }
+            DbCommand command = dbProvider.DbProviderFactory.CreateCommand();
+            command.CommandType = commandType;
+            command.CommandText = commandText;
+            command.CommandTimeout = _timeout;
+            return command;
+        }
+
         private void DoLoadDataSet(DbCommand command, DataSet dataSet, string[] tableNames)
         {
             Check.Require(tableNames != null && tableNames.Length > 0, "tableNames could not be null or empty.");
@@ -463,6 +484,22 @@ namespace WEF.Db
             Check.Require(!string.IsNullOrEmpty(query), "query could not be null.");
 
             return CreateCommandByCommandType(CommandType.Text, query);
+        }
+
+        /// <summary>
+        /// 创建Command
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public DbCommand GetSqlStringCommand(string query, int pageIndex, int pageSize, string orderBy, bool asc = true)
+        {
+            Check.Require(!string.IsNullOrEmpty(query), "query could not be null.");
+
+            return CreateCommandByCommandType(CommandType.Text, query, pageIndex, pageSize, orderBy, asc);
         }
 
         /// <summary>

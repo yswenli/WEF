@@ -306,258 +306,259 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(1, "/// <summary>");
             plus.AppendSpaceLine(1, "/// 实体类" + ClassName + "操作类");
             plus.AppendSpaceLine(1, "/// </summary>");
-            plus.AppendSpaceLine(1, "public partial class " + ClassName + "Repository: IRepository<" + ClassName + ">");
+            //plus.AppendSpaceLine(1, "public partial class " + ClassName + "Repository: IRepository<" + ClassName + ">");
+            plus.AppendSpaceLine(1, "public partial class " + ClassName + "Repository: BaseRepository<" + ClassName + ">");
             plus.AppendSpaceLine(1, "{");
-            plus.AppendSpaceLine(2, "DBContext db;");
+            //plus.AppendSpaceLine(2, "DBContext db;");
 
             plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 构造方法");
+            plus.AppendSpaceLine(2, $"/// {ClassName}构造方法");
             plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public " + ClassName + "Repository()");
+            plus.AppendSpaceLine(2, "public " + ClassName + "Repository() : base()");
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "db = new DBContext();");
+            plus.AppendSpaceLine(3, "_db = new DBContext();");
             plus.AppendSpaceLine(2, "}");
 
 
             plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 构造方法");
+            plus.AppendSpaceLine(2, $"/// {ClassName}构造方法");
             plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public " + ClassName + "Repository(DBContext dbContext)");
+            plus.AppendSpaceLine(2, "public " + ClassName + "Repository(DBContext dbContext) : base(dbContext)");
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "db = dbContext;");
+            plus.AppendSpaceLine(3, "_db = dbContext;");
             plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 构造方法");
+            plus.AppendSpaceLine(2, $"/// {ClassName}构造方法");
             plus.AppendSpaceLine(2, "/// <param name=\"connStrName\">连接字符串中的名称</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public " + ClassName + "Repository(string connStrName)");
+            plus.AppendSpaceLine(2, "public " + ClassName + "Repository(string connStrName) : base(connStrName)");
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "db = new DBContext(connStrName);");
+            plus.AppendSpaceLine(3, "_db = new DBContext(connStrName);");
             plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 构造方法");
+            plus.AppendSpaceLine(2, $"/// {ClassName}构造方法");
             plus.AppendSpaceLine(2, "/// <param name=\"dbType\">数据库类型</param>");
             plus.AppendSpaceLine(2, "/// <param name=\"connStr\">连接字符串</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public " + ClassName + "Repository(DatabaseType dbType, string connStr)");
+            plus.AppendSpaceLine(2, "public " + ClassName + "Repository(DatabaseType dbType, string connStr) : base(dbType, connStr)");
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "db = new DBContext(dbType, connStr);");
+            plus.AppendSpaceLine(3, "_db = new DBContext(dbType, connStr);");
             plus.AppendSpaceLine(2, "}");
 
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 当前db操作上下文");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public DBContext DBContext");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "get");
-            plus.AppendSpaceLine(3, "{");
-            plus.AppendSpaceLine(4, "return db;");
-            plus.AppendSpaceLine(3, "}");
-            plus.AppendSpaceLine(2, "}");
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 当前db操作上下文");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "public DBContext DBContext");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "get");
+            //plus.AppendSpaceLine(3, "{");
+            //plus.AppendSpaceLine(4, "return db;");
+            //plus.AppendSpaceLine(3, "}");
+            //plus.AppendSpaceLine(2, "}");
 
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 总数");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "/// <returns></returns>");
-            plus.AppendSpaceLine(2, "public int Total");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "get");
-            plus.AppendSpaceLine(3, "{");
-            plus.AppendSpaceLine(4, "return Search().Count();");
-            plus.AppendSpaceLine(3, "}");
-            plus.AppendSpaceLine(2, "}");
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 总数");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "/// <returns></returns>");
+            //plus.AppendSpaceLine(2, "public int Total");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "get");
+            //plus.AppendSpaceLine(3, "{");
+            //plus.AppendSpaceLine(4, "return Search().Count();");
+            //plus.AppendSpaceLine(3, "}");
+            //plus.AppendSpaceLine(2, "}");
 
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 当前实体查询上下文");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public ISearch<" + ClassName + "> Search(string tableName=\"\")");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "if (string.IsNullOrEmpty(tableName))");
-            plus.AppendSpaceLine(3, "{");
-            plus.AppendSpaceLine(4, "tableName=\"" + TableName + "\";");
-            plus.AppendSpaceLine(3, "}");
-            plus.AppendSpaceLine(4, "return db.Search<" + ClassName + ">(tableName);");
-            plus.AppendSpaceLine(2, "}");
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 当前实体查询上下文");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "public ISearch<" + ClassName + "> Search(string tableName=\"\")");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "if (string.IsNullOrEmpty(tableName))");
+            //plus.AppendSpaceLine(3, "{");
+            //plus.AppendSpaceLine(4, "tableName=\"" + TableName + "\";");
+            //plus.AppendSpaceLine(3, "}");
+            //plus.AppendSpaceLine(4, "return db.Search<" + ClassName + ">(tableName);");
+            //plus.AppendSpaceLine(2, "}");
 
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 当前实体查询上下文");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public ISearch<" + ClassName + "> Search(" + ClassName + " entity)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(4, "return db.Search<" + ClassName + ">(entity);");
-            plus.AppendSpaceLine(2, "}");
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 当前实体查询上下文");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "public ISearch<" + ClassName + "> Search(" + ClassName + " entity)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(4, "return db.Search<" + ClassName + ">(entity);");
+            //plus.AppendSpaceLine(2, "}");
 
-            ColumnInfo identityColumn = Columns.Find(delegate (ColumnInfo col) { return col.IsPrimaryKey; });
+            //ColumnInfo identityColumn = Columns.Find(delegate (ColumnInfo col) { return col.IsPrimaryKey; });
 
-            if (identityColumn == null) return string.Empty;
+            //if (identityColumn == null) return string.Empty;
 
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 获取实体");
-            plus.AppendSpaceLine(2, $"/// <param name=\"{identityColumn.Name}\">{identityColumn.Name}</param>");
-            plus.AppendSpaceLine(2, "/// <param name=\"tableName\">表名</param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "/// <returns></returns>");
-            plus.AppendSpaceLine(2, "public " + ClassName + " Get" + ClassName + $"({identityColumn.DataTypeName} {identityColumn.Name}, string tableName = \"\")");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, $"return Search(tableName).Where(b => b.{identityColumn.Name} == {identityColumn.Name}).First();");
-            plus.AppendSpaceLine(2, "}");
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 获取实体");
+            //plus.AppendSpaceLine(2, $"/// <param name=\"{identityColumn.Name}\">{identityColumn.Name}</param>");
+            //plus.AppendSpaceLine(2, "/// <param name=\"tableName\">表名</param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "/// <returns></returns>");
+            //plus.AppendSpaceLine(2, "public " + ClassName + " Get" + ClassName + $"({identityColumn.DataTypeName} {identityColumn.Name}, string tableName = \"\")");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, $"return Search(tableName).Where(b => b.{identityColumn.Name} == {identityColumn.Name}).First();");
+            //plus.AppendSpaceLine(2, "}");
 
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 获取列表");
-            plus.AppendSpaceLine(2, "/// <param name=\"pageIndex\">分页第几页</param>");
-            plus.AppendSpaceLine(2, "/// <param name=\"pageSize\">分页一页取值</param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "/// <returns></returns>");
-            plus.AppendSpaceLine(2, "public List<" + ClassName + "> GetList(int pageIndex, int pageSize)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return this.Search().Page(pageIndex, pageSize).ToList();");
-            plus.AppendSpaceLine(2, "}");
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 获取列表");
+            //plus.AppendSpaceLine(2, "/// <param name=\"pageIndex\">分页第几页</param>");
+            //plus.AppendSpaceLine(2, "/// <param name=\"pageSize\">分页一页取值</param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "/// <returns></returns>");
+            //plus.AppendSpaceLine(2, "public List<" + ClassName + "> GetList(int pageIndex, int pageSize)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "return this.Search().Page(pageIndex, pageSize).ToList();");
+            //plus.AppendSpaceLine(2, "}");
 
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 获取列表");
-            plus.AppendSpaceLine(2, "/// <param name=\"tableName\">表名</param>");
-            plus.AppendSpaceLine(2, "/// <param name=\"pageIndex\">分页第几页</param>");
-            plus.AppendSpaceLine(2, "/// <param name=\"pageSize\">分页一页取值</param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "/// <returns></returns>");
-            plus.AppendSpaceLine(2, "public List<" + ClassName + "> GetList(string tableName, int pageIndex=1, int pageSize=12)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return this.Search(tableName).Page(pageIndex, pageSize).ToList();");
-            plus.AppendSpaceLine(2, "}");
-
-
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 分页查询");
-            plus.AppendSpaceLine(2, "/// <param name=\"lambdaWhere\">查询表达式</param>");
-            plus.AppendSpaceLine(2, "/// <param name=\"pageIndex\">分页第几页</param>");
-            plus.AppendSpaceLine(2, "/// <param name=\"pageSize\">分页一页取值</param>");
-            plus.AppendSpaceLine(2, "/// <param name=\"orderBy\">排序</param>");
-            plus.AppendSpaceLine(2, "/// <param name=\"asc\">升降</param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "/// <returns></returns>");
-            plus.AppendSpaceLine(2, $"public PagedList<{ClassName}> GetPagedList(Expression<Func<{ClassName}, bool>> lambdaWhere,string tableName=\"\", int pageIndex=1, int pageSize=12, string orderBy=\"{identityColumn.Name}\", bool asc=true)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return this.Search(tableName).GetPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);");
-            plus.AppendSpaceLine(2, "}");
-
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 添加实体");
-            plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public int Insert(" + ClassName + " entity)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return db.Insert(entity);");
-            plus.AppendSpaceLine(2, "}");
-
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 批量添加实体");
-            plus.AppendSpaceLine(2, "/// <param name=\"entities\">传进的实体列表</param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public void BulkInsert(IEnumerable<" + ClassName + "> entities)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "db.BulkInsert(entities);");
-            plus.AppendSpaceLine(2, "}");
-
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 更新实体");
-            plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public int Update(" + ClassName + " entity)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return db.Update(entity);");
-            plus.AppendSpaceLine(2, "}");
-
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 更新实体");
-            plus.AppendSpaceLine(2, "/// <param name=\"entities\">传进的实体</param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public int Update(IEnumerable<" + ClassName + "> entities)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return db.Update(entities);");
-            plus.AppendSpaceLine(2, "}");
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 获取列表");
+            //plus.AppendSpaceLine(2, "/// <param name=\"tableName\">表名</param>");
+            //plus.AppendSpaceLine(2, "/// <param name=\"pageIndex\">分页第几页</param>");
+            //plus.AppendSpaceLine(2, "/// <param name=\"pageSize\">分页一页取值</param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "/// <returns></returns>");
+            //plus.AppendSpaceLine(2, "public List<" + ClassName + "> GetList(string tableName, int pageIndex=1, int pageSize=12)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "return this.Search(tableName).Page(pageIndex, pageSize).ToList();");
+            //plus.AppendSpaceLine(2, "}");
 
 
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 删除实体");
-            plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public int Delete(" + ClassName + " entity)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return db.Delete(entity);");
-            plus.AppendSpaceLine(2, "}");
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 分页查询");
+            //plus.AppendSpaceLine(2, "/// <param name=\"lambdaWhere\">查询表达式</param>");
+            //plus.AppendSpaceLine(2, "/// <param name=\"pageIndex\">分页第几页</param>");
+            //plus.AppendSpaceLine(2, "/// <param name=\"pageSize\">分页一页取值</param>");
+            //plus.AppendSpaceLine(2, "/// <param name=\"orderBy\">排序</param>");
+            //plus.AppendSpaceLine(2, "/// <param name=\"asc\">升降</param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "/// <returns></returns>");
+            //plus.AppendSpaceLine(2, $"public PagedList<{ClassName}> GetPagedList(Expression<Func<{ClassName}, bool>> lambdaWhere,string tableName=\"\", int pageIndex=1, int pageSize=12, string orderBy=\"{identityColumn.Name}\", bool asc=true)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "return this.Search(tableName).GetPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);");
+            //plus.AppendSpaceLine(2, "}");
 
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 批量删除实体");
-            plus.AppendSpaceLine(2, "/// <param name=\"obj\">传进的实体列表</param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public int Deletes(List<" + ClassName + "> entities)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return db.Delete<" + ClassName + ">(entities);");
-            plus.AppendSpaceLine(2, "}");
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 添加实体");
+            //plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "public int Insert(" + ClassName + " entity)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "return db.Insert(entity);");
+            //plus.AppendSpaceLine(2, "}");
 
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 批量添加实体");
+            //plus.AppendSpaceLine(2, "/// <param name=\"entities\">传进的实体列表</param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "public void BulkInsert(IEnumerable<" + ClassName + "> entities)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "db.BulkInsert(entities);");
+            //plus.AppendSpaceLine(2, "}");
 
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 持久化实体");
-            plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public int Save(" + ClassName + " entity)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(entity);");
-            plus.AppendSpaceLine(2, "}");
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 更新实体");
+            //plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "public int Update(" + ClassName + " entity)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "return db.Update(entity);");
+            //plus.AppendSpaceLine(2, "}");
 
-
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 批量持久化实体");
-            plus.AppendSpaceLine(2, "/// <param name=\"entities\">传进的实体列表</param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public int Save(List<" + ClassName + "> entities)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(entities);");
-            plus.AppendSpaceLine(2, "}");
-
-
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 持久化实体");
-            plus.AppendSpaceLine(2, "/// <param name=\"tran\">事务</param>");
-            plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public int Save(DbTransaction tran," + ClassName + " entity)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(tran, entity);");
-            plus.AppendSpaceLine(2, "}");
-
-
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 批量持久化实体");
-            plus.AppendSpaceLine(2, "/// <param name=\"tran\">事务</param>");
-            plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体列表</param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public int Save(DbTransaction tran, List<" + ClassName + "> entities)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(tran, entities);");
-            plus.AppendSpaceLine(2, "}");
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 更新实体");
+            //plus.AppendSpaceLine(2, "/// <param name=\"entities\">传进的实体</param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "public int Update(IEnumerable<" + ClassName + "> entities)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "return db.Update(entities);");
+            //plus.AppendSpaceLine(2, "}");
 
 
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 执行sql语句");
-            plus.AppendSpaceLine(2, "/// <param name=\"sql\"></param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public SqlSection ExecuteSQL(string sql)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return db.FromSql(sql);");
-            plus.AppendSpaceLine(2, "}");
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 删除实体");
+            //plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "public int Delete(" + ClassName + " entity)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "return db.Delete(entity);");
+            //plus.AppendSpaceLine(2, "}");
+
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 批量删除实体");
+            //plus.AppendSpaceLine(2, "/// <param name=\"obj\">传进的实体列表</param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "public int Deletes(List<" + ClassName + "> entities)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "return db.Delete<" + ClassName + ">(entities);");
+            //plus.AppendSpaceLine(2, "}");
 
 
-            plus.AppendSpaceLine(2, "/// <summary>");
-            plus.AppendSpaceLine(2, "/// 执行存储过程");
-            plus.AppendSpaceLine(2, "/// <param name=\"sql\"></param>");
-            plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public ProcSection ExcuteProc(string procName)");
-            plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "return db.FromProc(procName);");
-            plus.AppendSpaceLine(2, "}");
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 持久化实体");
+            //plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "public int Save(" + ClassName + " entity)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(entity);");
+            //plus.AppendSpaceLine(2, "}");
+
+
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 批量持久化实体");
+            //plus.AppendSpaceLine(2, "/// <param name=\"entities\">传进的实体列表</param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "public int Save(List<" + ClassName + "> entities)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(entities);");
+            //plus.AppendSpaceLine(2, "}");
+
+
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 持久化实体");
+            //plus.AppendSpaceLine(2, "/// <param name=\"tran\">事务</param>");
+            //plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "public int Save(DbTransaction tran," + ClassName + " entity)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(tran, entity);");
+            //plus.AppendSpaceLine(2, "}");
+
+
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 批量持久化实体");
+            //plus.AppendSpaceLine(2, "/// <param name=\"tran\">事务</param>");
+            //plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体列表</param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "public int Save(DbTransaction tran, List<" + ClassName + "> entities)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(tran, entities);");
+            //plus.AppendSpaceLine(2, "}");
+
+
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 执行sql语句");
+            //plus.AppendSpaceLine(2, "/// <param name=\"sql\"></param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "public SqlSection FromSql(string sql)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "return db.FromSql(sql);");
+            //plus.AppendSpaceLine(2, "}");
+
+
+            //plus.AppendSpaceLine(2, "/// <summary>");
+            //plus.AppendSpaceLine(2, "/// 执行存储过程");
+            //plus.AppendSpaceLine(2, "/// <param name=\"procName\"></param>");
+            //plus.AppendSpaceLine(2, "/// </summary>");
+            //plus.AppendSpaceLine(2, "public ProcSection FromProc(string procName)");
+            //plus.AppendSpaceLine(2, "{");
+            //plus.AppendSpaceLine(3, "return db.FromProc(procName);");
+            //plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(1, "}");
             return plus.ToString();

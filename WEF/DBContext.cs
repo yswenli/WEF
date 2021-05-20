@@ -16,15 +16,14 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
+
 using WEF.Batcher;
 using WEF.Cache;
 using WEF.Common;
@@ -2284,6 +2283,19 @@ namespace WEF
         public SqlSection FromSql(string sql)
         {
             return new SqlSection(this, sql);
+        }
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public SqlSection FromSql(string sql, int pageIndex, int pageSize, string orderBy, bool asc = true)
+        {
+            return new SqlSection(this, sql, pageIndex, pageSize, orderBy, asc);
         }
 
         #endregion

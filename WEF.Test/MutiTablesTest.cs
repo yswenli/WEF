@@ -56,9 +56,9 @@ namespace WEF.Test
             var pagedlist = rr.GetPagedList(b => b.id > 0);
 
             //sql转自定义实体
-            var rrt1 = rr.ExecuteSQL("select * from rules where id=?id").AddInParameter("?id", System.Data.DbType.Int32, 1).ToList<RR>();
+            var rrt1 = rr.FromSql("select * from rules where id=?id").AddInParameter("?id", System.Data.DbType.Int32, 1).ToList<RR>();
 
-            var rrt2 = rr.ExecuteSQL("select * from rules").ToList<RR>();
+            var rrt2 = rr.FromSql("select * from rules").ToList<RR>();
 
 
             #region test
@@ -559,7 +559,7 @@ namespace WEF.Test
         /// 执行sql语句
         /// <param name="sql"></param>
         /// </summary>
-        public SqlSection ExecuteSQL(string sql)
+        public SqlSection FromSql(string sql)
         {
             return db.FromSql(sql);
         }
@@ -567,7 +567,7 @@ namespace WEF.Test
         /// 执行存储过程
         /// <param name="sql"></param>
         /// </summary>
-        public ProcSection ExcuteProc(string procName)
+        public ProcSection FromProc(string procName)
         {
             return db.FromProc(procName);
         }

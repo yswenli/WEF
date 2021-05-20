@@ -448,7 +448,7 @@ namespace WEF
             return (Search<T>)base.OrderBy(gb);
         }
         /// <summary>
-        /// 
+        /// OrderByDescending
         /// </summary>
         /// <param name="f"></param>
         /// <returns></returns>
@@ -456,6 +456,37 @@ namespace WEF
         {
             var gb = f.Aggregate(OrderByOperation.None, (current, field) => current && field.Desc);
             return (Search<T>)base.OrderBy(gb);
+        }
+
+        /// <summary>
+        /// OrderBy
+        /// </summary>
+        /// <param name="asc"></param>
+        /// <param name="desc"></param>
+        /// <returns></returns>
+        public Search<T> OrderBy(IEnumerable<string> asc, IEnumerable<string> desc)
+        {
+            var orderBys = new List<OrderByOperation>();
+
+            foreach (var item in asc)
+            {
+                orderBys.Aggregate(OrderByOperation.None, (current, ob) => current && ob);
+
+                orderBys.Add(new OrderByOperation(item, OrderByOperater.ASC));
+            }
+
+            foreach (var item in desc)
+            {
+                orderBys.Add(new OrderByOperation(item, OrderByOperater.DESC));
+            }
+
+            if (null == orderBys || !orderBys.Any()) return this;
+
+            var temporderby = orderBys.Aggregate(OrderByOperation.None, (current, ob) => current && ob);
+
+            this._orderBy = temporderby;
+
+            return this;
         }
         #endregion
         /// <summary>
@@ -978,7 +1009,6 @@ namespace WEF
 
         #endregion
 
-
         /// <summary>
         /// 获取分页
         /// </summary>
@@ -1031,6 +1061,8 @@ namespace WEF
 
             return new PagedList<T>(list, pageIndex, pageSize, total);
         }
+
+
 
     }
 }

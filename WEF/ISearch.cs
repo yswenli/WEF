@@ -15,7 +15,7 @@
  *****************************************************************************************************/
 using System.Collections.Generic;
 using System.Data;
-using System.Web.Caching;
+
 using WEF.Common;
 using WEF.Db;
 using WEF.Expressions;
@@ -57,11 +57,11 @@ namespace WEF
         Search LeftJoin(string tableName, WhereOperation where, string userName = null);
         Search OrderBy(OrderByOperation orderBy);
         Search OrderBy(params OrderByOperation[] orderBys);
+        Search OrderBy(IEnumerable<string> asc, IEnumerable<string> desc);
         Search Page(int pageSize, int pageIndex);
         Search Refresh();
         Search RightJoin(string tableName, WhereOperation where, string userName = null);
         Search Select(params Field[] fields);
-        Search SetCacheDependency(CacheDependency dep);
         Search SetCacheTimeOut(int timeout);
         IDataReader ToDataReader();
         DataSet ToDataSet();

@@ -2202,6 +2202,19 @@ namespace WEF
         {
             return new SqlSection(this, sql);
         }
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public SqlSection FromSql(string sql, int pageIndex, int pageSize, string orderBy, bool asc = true)
+        {
+            return new SqlSection(this, sql, pageIndex, pageSize, orderBy, asc);
+        }
 
         #endregion
 

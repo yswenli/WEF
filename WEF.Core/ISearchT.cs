@@ -38,6 +38,7 @@ namespace WEF
         Search<T> OrderBy(params OrderByOperation[] orderBys);
         Search<T> OrderByDescending(Expression<Func<T, object>> lambdaOrderBy);
         Search<T> OrderByDescending(params Field[] f);
+        Search<T> OrderBy(IEnumerable<string> asc, IEnumerable<string> desc);
         Search<T> Page(int pageIndex, int pageSize);
         Search<T> Refresh();
         Search<T> RightJoin<TEntity>(WhereOperation where) where TEntity : Entity;

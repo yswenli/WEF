@@ -20,7 +20,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Web.Caching;
+
 using WEF.Common;
 using WEF.Db;
 using WEF.Expressions;
@@ -448,7 +448,7 @@ namespace WEF
             return (Search<T>)base.OrderBy(gb);
         }
         /// <summary>
-        /// 
+        /// OrderByDescending
         /// </summary>
         /// <param name="f"></param>
         /// <returns></returns>
@@ -456,6 +456,37 @@ namespace WEF
         {
             var gb = f.Aggregate(OrderByOperation.None, (current, field) => current && field.Desc);
             return (Search<T>)base.OrderBy(gb);
+        }
+
+        /// <summary>
+        /// OrderBy
+        /// </summary>
+        /// <param name="asc"></param>
+        /// <param name="desc"></param>
+        /// <returns></returns>
+        public Search<T> OrderBy(IEnumerable<string> asc, IEnumerable<string> desc)
+        {
+            var orderBys = new List<OrderByOperation>();
+
+            foreach (var item in asc)
+            {
+                orderBys.Aggregate(OrderByOperation.None, (current, ob) => current && ob);
+
+                orderBys.Add(new OrderByOperation(item, OrderByOperater.ASC));
+            }
+
+            foreach (var item in desc)
+            {
+                orderBys.Add(new OrderByOperation(item, OrderByOperater.DESC));
+            }
+
+            if (null == orderBys || !orderBys.Any()) return this;
+
+            var temporderby = orderBys.Aggregate(OrderByOperation.None, (current, ob) => current && ob);
+
+            this._orderBy = temporderby;
+
+            return this;
         }
         #endregion
         /// <summary>
@@ -657,17 +688,6 @@ namespace WEF
         }
 
         /// <summary>
-        /// 设置缓存依赖
-        /// </summary>
-        /// <param name="dep"></param>
-        /// <returns></returns>
-        public new Search<T> SetCacheDependency(CacheDependency dep)
-        {
-            this.cacheDep = dep;
-            return this;
-        }
-
-        /// <summary>
         /// 重新加载
         /// </summary>
         /// <returns></returns>
@@ -723,22 +743,13 @@ namespace WEF
 
             if (typet.IsClass && !_notClass.Contains(typet.Name))
             {
-                string cacheKey = String.Format("{0}List|{1}", _dbProvider.ConnectionStringsName,
-                    formatSql(@from.SqlString, @from));
-                var cacheValue = getCache(cacheKey);
-
-                if (null != cacheValue)
-                {
-                    return (List<TResult>)cacheValue;
-                }
-                List<TResult> list;
+                List<TResult> result = null;
                 using (var reader = ToDataReader(from))
                 {
-                    list = EntityUtils.ReaderToEnumerable<TResult>(reader).ToList();
+                    result = EntityUtils.ReaderToEnumerable<TResult>(reader).ToList();
                     reader.Close();
                 }
-                setCache(list, cacheKey);
-                return list;
+                return result;
             }
             if (!@from.Fields.Any())
             {
@@ -748,42 +759,30 @@ namespace WEF
             {
                 throw new Exception(".ToList<" + typet.Name + ">()最多.Select()一个字段！");
             }
+
+            var list = new List<TResult>();
+
+            using (var reader = ToDataReader(@from))
             {
-                var cacheKey = string.Concat(_dbProvider.ConnectionStringsName, "List", "|",
-                    formatSql(@from.SqlString, @from));
-
-                var cacheValue = getCache(cacheKey);
-
-                if (null != cacheValue)
+                while (reader.Read())
                 {
-                    return (List<TResult>)cacheValue;
-                }
+                    var t = DataUtils.ConvertValue<TResult>(reader[@from.Fields[0].Name]);
 
-                var list = new List<TResult>();
+                    var st = t as Entity;
 
-                using (var reader = ToDataReader(@from))
-                {
-                    while (reader.Read())
+                    if (st != null)
                     {
-                        var t = DataUtils.ConvertValue<TResult>(reader[@from.Fields[0].Name]);
-
-                        var st = t as Entity;
-
-                        if (st != null)
-                        {
-                            st.ClearModifyFields();
-                            st.SetTableName(_tableName);
-                        }
-
-                        list.Add(t);
+                        st.ClearModifyFields();
+                        st.SetTableName(_tableName);
                     }
-                    reader.Close();
+
+                    list.Add(t);
                 }
-
-                setCache(list, cacheKey);
-
-                return list;
+                reader.Close();
             }
+
+            return list;
+
         }
         /// <summary>
         /// To List&lt;T>
@@ -792,19 +791,12 @@ namespace WEF
         public List<T> ToList()
         {
             var from = GetPagedFromSection();
-            string cacheKey = String.Format("{0}List|{1}", _dbProvider.ConnectionStringsName,
-                formatSql(@from.SqlString, @from));
-            var cacheValue = getCache(cacheKey);
-            if (null != cacheValue)
-            {
-                return (List<T>)cacheValue;
-            }
+
             List<T> list;
             using (var reader = ToDataReader(from))
             {
                 list = EntityUtils.ReaderToEnumerable<T>(reader).ToList();
             }
-            setCache(list, cacheKey);
 
             foreach (var m in list)
             {
@@ -892,15 +884,6 @@ namespace WEF
             }
             Search from = this.Top(1).GetPagedFromSection();
 
-            string cacheKey = string.Format("{0}FirstT|{1}", _dbProvider.ConnectionStringsName, formatSql(from.SqlString, from));
-            object cacheValue = getCache(cacheKey);
-
-            if (null != cacheValue)
-            {
-                return (TResult)cacheValue;
-            }
-
-
             TResult t = null;
 
             using (IDataReader reader = ToDataReader(from))
@@ -924,8 +907,6 @@ namespace WEF
                 }
             }
 
-            setCache<TResult>(t, cacheKey);
-
             return t;
         }
         /// <summary>
@@ -935,16 +916,6 @@ namespace WEF
         public T ToFirst()
         {
             Search search = this.Top(1).GetPagedFromSection();
-
-            string cacheKey = string.Format("{0}FirstT|{1}", _dbProvider.ConnectionStringsName, formatSql(search.SqlString, search));
-
-            object cacheValue = getCache(cacheKey);
-
-            if (null != cacheValue)
-            {
-                return (T)cacheValue;
-            }
-
 
             T t = null;
 
@@ -957,8 +928,6 @@ namespace WEF
                     t = result.First();
                 }
             }
-
-            setCache<T>(t, cacheKey);
 
             if (t != null)
             {

@@ -10,6 +10,8 @@
  *****************************************************************************************************/
 
 using System;
+using System.Collections.Concurrent;
+using System.Linq;
 
 namespace WEF.Common
 {
@@ -56,6 +58,29 @@ namespace WEF.Common
         public string GetUserName()
         {
             return _userName;
+        }
+
+
+        static ConcurrentDictionary<Type, string> _dic = new ConcurrentDictionary<Type, string>();
+
+        /// <summary>
+        /// 根据类型获取表名
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static string GetTableName<T>()
+        {
+            var type = typeof(T);
+
+            string tableName = "";
+
+            if (!_dic.TryGetValue(type, out tableName))
+            {
+                tableName = ((TableAttribute)typeof(T).GetCustomAttributes(true).Where(b => b.GetType().Name == "TableAttribute").First()).GetTableName();
+
+                _dic[type] = tableName;
+            }
+            return tableName;
         }
     }
 }

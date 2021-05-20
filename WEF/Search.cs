@@ -18,9 +18,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
-using System.Web.Caching;
+
 using WEF.Common;
 using WEF.Db;
 using WEF.Expressions;
@@ -102,13 +101,6 @@ namespace WEF
         /// 缓存超时时间
         /// </summary>
         protected int? timeout;
-
-
-        /// <summary>
-        /// 缓存依赖
-        /// </summary>
-        protected CacheDependency cacheDep = null;
-
 
         /// <summary>
         /// 
@@ -554,29 +546,6 @@ namespace WEF
 
 
         /// <summary>
-        /// 是否开启缓存
-        /// </summary>
-        /// <returns></returns>
-        protected bool isTurnonCache()
-        {
-            if (null == _dbProvider.CacheConfig)
-                return false;
-
-            return _dbProvider.CacheConfig.Enable;
-
-        }
-
-        /// <summary>
-        /// 判断是否用户自定义缓存策略
-        /// </summary>
-        /// <returns></returns>
-        protected bool isCustomerCache()
-        {
-            return (timeout.HasValue || null != cacheDep);
-        }
-
-
-        /// <summary>
         /// 设置缓存有效期  单位：秒
         /// </summary>
         /// <param name="timeout"></param>
@@ -584,17 +553,6 @@ namespace WEF
         public Search SetCacheTimeOut(int timeout)
         {
             this.timeout = timeout;
-            return this;
-        }
-
-        /// <summary>
-        /// 设置缓存依赖
-        /// </summary>
-        /// <param name="dep"></param>
-        /// <returns></returns>
-        public Search SetCacheDependency(CacheDependency dep)
-        {
-            this.cacheDep = dep;
             return this;
         }
 
@@ -683,6 +641,30 @@ namespace WEF
             return this;
         }
 
+        public Search OrderBy(IEnumerable<string> asc, IEnumerable<string> desc)
+        {
+            var orderBys = new List<OrderByOperation>();
+
+            foreach (var item in asc)
+            {
+                orderBys.Aggregate(OrderByOperation.None, (current, ob) => current && ob);
+
+                orderBys.Add(new OrderByOperation(item, OrderByOperater.ASC));
+            }
+
+            foreach (var item in desc)
+            {
+                orderBys.Add(new OrderByOperation(item, OrderByOperater.DESC));
+            }
+
+            if (null == orderBys || !orderBys.Any()) return this;
+
+            var temporderby = orderBys.Aggregate(OrderByOperation.None, (current, ob) => current && ob);
+
+            this._orderBy = temporderby;
+
+            return this;
+        }
 
         /// <summary>
         /// select field
@@ -825,7 +807,7 @@ namespace WEF
         public int Count()
         {
             return Count(GetPagedFromSection());
-        }        
+        }
 
         /// <summary>
         /// 获取记录数(内部使用)
@@ -834,13 +816,6 @@ namespace WEF
         /// <returns></returns>
         internal int Count(Search from)
         {
-            string cacheKey = string.Format("{0}COUNT|{1}", _dbProvider.ConnectionStringsName, formatSql(from.CountSqlString, from));
-            object cacheValue = getCache(cacheKey);
-            if (null != cacheValue)
-            {
-                return (int)cacheValue;
-            }
-
             DbCommand dbCommand = _database.GetSqlStringCommand(from.CountSqlString);
 
             _database.AddCommandParameter(dbCommand, from.Parameters.ToArray());
@@ -851,56 +826,11 @@ namespace WEF
             else
                 returnValue = DataUtils.ConvertValue<int>(_database.ExecuteScalar(dbCommand, trans));
 
-            setCache<int>(returnValue, cacheKey);
-
             return returnValue;
         }
 
 
-        /// <summary>
-        /// 获取缓存
-        /// </summary>
-        /// <param name="cacheKey"></param>
-        /// <returns></returns>
-        protected object getCache(string cacheKey)
-        {
-            if (isRefresh)
-                return null;
 
-            object cacheValue = Cache.Cache.Default.GetCache(cacheKey);
-
-            return cacheValue;
-        }
-
-        /// <summary>
-        /// 保存信息
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="cacheKey"></param>
-        protected void setCache<T>(T value, string cacheKey)
-        {
-            if (isCustomerCache())
-                Cache.Cache.Default.AddCacheDependency(cacheKey, value, timeout.HasValue ? timeout.Value : 0, cacheDep);
-            else
-            {
-                if (isTurnonCache())
-                {
-                    string entityCacheKey = string.Concat(_dbProvider.ConnectionStringsName, typeTableName);
-                    if (_dbProvider.EntitiesCache.ContainsKey(entityCacheKey))
-                    {
-                        int? temptimeOut = _dbProvider.EntitiesCache[entityCacheKey].TimeOut;
-                        if (temptimeOut.HasValue)
-                        {
-                            Cache.Cache.Default.AddCacheSlidingExpiration(cacheKey, value, temptimeOut.Value);
-                        }
-                        else
-                        {
-                            Cache.Cache.Default.AddCacheDependency(cacheKey, value, 0, new CacheDependency(_dbProvider.EntitiesCache[entityCacheKey].FilePath));
-                        }
-                    }
-                }
-            }
-        }
 
 
         /// <summary>
@@ -911,20 +841,11 @@ namespace WEF
         {
             Search from = GetPagedFromSection();
 
-            string cacheKey = string.Format("{0}DataSet|{1}", _dbProvider.ConnectionStringsName, formatSql(from.SqlString, from));
-            object cacheValue = getCache(cacheKey);
-            if (null != cacheValue)
-            {
-                return (DataSet)cacheValue;
-            }
-
             DataSet ds;
             if (trans == null)
                 ds = _database.ExecuteDataSet(CreateDbCommand(from));
             else
                 ds = _database.ExecuteDataSet(CreateDbCommand(from), trans);
-
-            setCache<DataSet>(ds, cacheKey);
 
             return ds;
         }
@@ -942,7 +863,7 @@ namespace WEF
             }
             return this;
         }
-        
+
 
         /// <summary>
         /// 创建  查询的DbCommand
@@ -996,12 +917,6 @@ namespace WEF
 
             Search from = GetPagedFromSection();
 
-            string cacheKey = string.Format("{0}Scalar|{1}", _dbProvider.ConnectionStringsName, formatSql(from.SqlString, from));
-            object cacheValue = getCache(cacheKey);
-            if (null != cacheValue)
-            {
-                return cacheValue;
-            }
 
             object returnValue;
 
@@ -1009,8 +924,6 @@ namespace WEF
                 returnValue = _database.ExecuteScalar(CreateDbCommand(from));
             else
                 returnValue = _database.ExecuteScalar(CreateDbCommand(from), trans);
-
-            setCache<object>(returnValue, cacheKey);
 
             return returnValue;
 
@@ -1183,7 +1096,6 @@ namespace WEF
             Search tmpSearch = new Search(this._database, tname.ToString());
             tmpSearch.typeTableName = this.typeTableName;
             tmpSearch.timeout = this.timeout;
-            tmpSearch.cacheDep = this.cacheDep;
             tmpSearch.isRefresh = this.isRefresh;
 
 
@@ -1215,7 +1127,6 @@ namespace WEF
             Search tmpSearch = new Search(this._database, tname.ToString());
             tmpSearch.typeTableName = this.typeTableName;
             tmpSearch.timeout = this.timeout;
-            tmpSearch.cacheDep = this.cacheDep;
             tmpSearch.isRefresh = this.isRefresh;
 
             tmpSearch._parameters.AddRange(this.Parameters);

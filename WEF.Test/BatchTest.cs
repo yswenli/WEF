@@ -61,14 +61,14 @@ namespace WEF.Test
 
             var flist = rr.Search().OrderByDescending(b => b.Name).From(1, 2).ToList();
 
-            var ic = rr.ExecuteSQL("select count(id) from Rules").ToScalar<string>();
+            var ic = rr.FromSql("select count(id) from Rules").ToScalar<string>();
 
             var max = rr.Search().Select(b => b.Id.Max()).ToFirstDefault().Id;
             var cou = rr.Search().Select(b => b.Id.Count()).ToFirstDefault().Id;
             var sum = rr.Search().Select(b => b.Id.Sum()).ToFirstDefault().Id;
             var avg = rr.Search().Select(b => b.Id.Avg()).ToFirstDefault().Id;
 
-            rr.ExecuteSQL("TRUNCATE TABLE Rules").ToScalar();
+            rr.FromSql("TRUNCATE TABLE Rules").ToScalar();
 
             var sw = Stopwatch.StartNew();
 

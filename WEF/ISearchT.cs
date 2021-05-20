@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+
 using WEF.Common;
 using WEF.Expressions;
 using WEF.MvcPager;
@@ -38,6 +39,7 @@ namespace WEF
         Search<T> OrderBy(params OrderByOperation[] orderBys);
         Search<T> OrderByDescending(Expression<Func<T, object>> lambdaOrderBy);
         Search<T> OrderByDescending(params Field[] f);
+        Search<T> OrderBy(IEnumerable<string> asc, IEnumerable<string> desc);
         Search<T> Page(int pageIndex, int pageSize);
         Search<T> Refresh();
         Search<T> RightJoin<TEntity>(WhereOperation where) where TEntity : Entity;
@@ -66,7 +68,7 @@ namespace WEF
         Search<T> UnionAll(Search fromSection);
 
         #region where
-        
+
         Search<T> Where(params Expression<Func<T, bool>>[] lambdaWheres);
 
         Search<T> Where(Where whereParam);

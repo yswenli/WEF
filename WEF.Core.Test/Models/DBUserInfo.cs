@@ -386,7 +386,7 @@ namespace WEF.Core.Test.Models
 		/// 执行sql语句
 		/// <param name="sql"></param>
 		/// </summary>
-		public SqlSection ExecuteSQL(string sql)
+		public SqlSection FromSql(string sql)
 		{
 			return db.FromSql(sql);
 		}
@@ -394,7 +394,7 @@ namespace WEF.Core.Test.Models
 		/// 执行存储过程
 		/// <param name="sql"></param>
 		/// </summary>
-		public ProcSection ExcuteProc(string procName)
+		public ProcSection FromProc(string procName)
 		{
 			return db.FromProc(procName);
 		}

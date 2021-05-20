@@ -641,6 +641,30 @@ namespace WEF
             return this;
         }
 
+        public Search OrderBy(IEnumerable<string> asc, IEnumerable<string> desc)
+        {
+            var orderBys = new List<OrderByOperation>();
+
+            foreach (var item in asc)
+            {
+                orderBys.Aggregate(OrderByOperation.None, (current, ob) => current && ob);
+
+                orderBys.Add(new OrderByOperation(item, OrderByOperater.ASC));
+            }
+
+            foreach (var item in desc)
+            {
+                orderBys.Add(new OrderByOperation(item, OrderByOperater.DESC));
+            }
+
+            if (null == orderBys || !orderBys.Any()) return this;
+
+            var temporderby = orderBys.Aggregate(OrderByOperation.None, (current, ob) => current && ob);
+
+            this._orderBy = temporderby;
+
+            return this;
+        }
 
         /// <summary>
         /// select field
@@ -746,6 +770,7 @@ namespace WEF
         public Search From(int startIndex, int endIndex)
         {
             this.startIndex = startIndex;
+
             this.endIndex = endIndex;
 
             isPageFromSection = false;

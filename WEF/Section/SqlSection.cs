@@ -36,6 +36,24 @@ namespace WEF.Section
         }
 
         /// <summary>
+        /// 执行sql语句
+        /// </summary>
+        /// <param name="dbContext"></param>
+        /// <param name="sql"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        public SqlSection(DBContext dbContext, string sql, int pageIndex, int pageSize, string orderBy, bool asc = true)
+            : base(dbContext)
+        {
+
+            Check.Require(sql, "sql", Check.NotNullOrEmpty);
+
+            this._dbCommand = dbContext.Db.GetSqlStringCommand(sql, pageIndex, pageSize, orderBy, asc);
+        }
+
+        /// <summary>
         /// 设置事务
         /// </summary>
         /// <param name="tran"></param>

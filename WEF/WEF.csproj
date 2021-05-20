@@ -89,6 +89,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseRepository.cs" />
     <Compile Include="Batcher\BatcherBase.cs" />
     <Compile Include="Batcher\BatcherFactory.cs" />
     <Compile Include="Batcher\IBatcher.cs" />

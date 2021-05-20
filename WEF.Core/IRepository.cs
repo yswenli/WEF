@@ -26,8 +26,8 @@ namespace WEF
 
         int Delete(T obj);
         int Deletes(List<T> objs);
-        ProcSection ExcuteProc(string procName);
-        SqlSection ExecuteSQL(string sql);
+        ProcSection FromProc(string procName);
+        SqlSection FromSql(string sql);
         List<T> GetList(int pageIndex, int pageSize);
         List<T> GetList(string tableName, int pageIndex = 1, int pageSize = 12);
         int Insert(T obj);
