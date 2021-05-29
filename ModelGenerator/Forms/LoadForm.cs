@@ -68,7 +68,7 @@ namespace WEF.ModelGenerator
 
                 parent.Invoke(new Action(() =>
                 {
-                    if (loadForm != null)
+                    if (loadForm != null && !loadForm.Visible)
                         loadForm.ShowDialog(parent);
                 }));
             });
@@ -82,7 +82,7 @@ namespace WEF.ModelGenerator
                 if (loadForm != null && loadForm.IsHandleCreated)
                     loadForm.BeginInvoke(new Action(() =>
                     {
-                        loadForm.Close();
+                        loadForm?.Close();
                         loadForm = null;
                     }), null);
             });

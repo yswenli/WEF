@@ -18,9 +18,11 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using WEF.DbDAL;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Forms;
@@ -177,6 +179,8 @@ namespace WEF.ModelGenerator
         {
             TreeNode node = Treeview.SelectedNode;
 
+            if (node == null) return;
+
             if (node.Level == 0)
             {
                 node.Nodes.Clear();
@@ -186,7 +190,8 @@ namespace WEF.ModelGenerator
             else if (node.Level == 1)
             {
                 node.Nodes.Clear();
-                getDatabaseinfo();
+
+                getDatabaseinfo(node);
             }
             else if (node.Level == 4)
             {
@@ -266,18 +271,18 @@ namespace WEF.ModelGenerator
 
 
         /// <summary>
-        /// 
+        /// 刷新菜单
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void 刷新ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             refreshConnectionList();
             Treeview.ExpandAll();
         }
 
 
-        private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show(this, "确定要移除当前配置么？", "WEF数据库工具", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
@@ -294,19 +299,25 @@ namespace WEF.ModelGenerator
 
         #region database
 
-        private void 连接ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void connectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TreeNode node = Treeview.SelectedNode;
-            node.Nodes.Clear();
-            getDatabaseinfo();
+            if (node != null && node.Level > 1)
+            {
+                node.Nodes.Clear();
+                getDatabaseinfo(node);
+            }
         }
 
-        private void 刷新ToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void refreshToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             TreeNode node = Treeview.SelectedNode;
-            node.Nodes.Clear();
-            getDatabaseinfo();
-            Treeview.ExpandAll();
+            if (node != null && node.Level > 1)
+            {
+                node.Nodes.Clear();
+                getDatabaseinfo(node);
+                Treeview.ExpandAll();
+            }
         }
 
         private void viewConnectStringToolStripMenuItem_Click(object sender, EventArgs e)
@@ -321,22 +332,19 @@ namespace WEF.ModelGenerator
         /// <summary>
         /// 获取数据库服务器
         /// </summary>
-        private void getDatabaseinfo()
+        private void getDatabaseinfo(TreeNode node)
         {
             LoadForm.ShowLoading(this);
-
-            TreeNode node = Treeview.SelectedNode;
 
             Task.Factory.StartNew(() =>
             {
                 try
                 {
-
                     ConnectionModel conModel = null;
 
                     this.Invoke(new Action(() =>
                     {
-                        conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Tag.ToString()); });
+                        conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Tag?.ToString() ?? ""); });
                     }));
 
 
@@ -1111,6 +1119,58 @@ namespace WEF.ModelGenerator
 
 
 
-        #endregion        
+        #endregion
+
+
+
+        ///快速查询
+        private void searchTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                var text = searchTextBox.Text;
+
+                LoadForm.ShowLoading(this);
+
+                var nodes = Treeview.Nodes;
+
+                if (nodes != null && nodes.Count > 0)
+                {
+                    for (int i = 0; i < nodes.Count; i++)
+                    {
+                        ChangeByKeyword(text, nodes[i]);
+
+                    }
+                }
+                LoadForm.HideLoading();
+
+            }
+        }
+
+        void ChangeByKeyword(string keyword, TreeNode treeNode)
+        {
+            List<TreeNode> list = new List<TreeNode>();
+
+            if (treeNode.Nodes != null && treeNode.Nodes.Count > 0)
+            {
+                for (int i = 0; i < treeNode.Nodes.Count; i++)
+                {
+                    ChangeByKeyword(keyword, treeNode.Nodes[i]);
+                }
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(keyword) || (string.IsNullOrEmpty(treeNode.Text) || treeNode.Text.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) == -1))
+                {
+                    treeNode.BackColor = SystemColors.Window;
+                    treeNode.ForeColor = SystemColors.WindowText;
+                }
+                else
+                {
+                    treeNode.BackColor = Color.Red;
+                    treeNode.ForeColor = Color.White;
+                }
+            }
+        }
     }
 }
