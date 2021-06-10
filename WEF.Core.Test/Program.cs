@@ -23,7 +23,7 @@ namespace WEF.Core.Test
                 Created = DateTime.Now
             };
 
-            var list= userInfoRepository.DBContext.FromSql("select * from db", 1, 20).ToList<DBUserInfo>();
+            var list= userInfoRepository.DBContext.FromSql("select * from db", 1, 20,"username").ToList<DBUserInfo>();
 
             var iResult = userInfoRepository.Insert(userInfo);
 

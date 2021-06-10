@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using WEF.ModelGenerator.Common;
 
 namespace WEF.ModelGenerator
 {
@@ -10,82 +10,50 @@ namespace WEF.ModelGenerator
         public LoadForm()
         {
             InitializeComponent();
+
+            CancelLink.Visible = false;
         }
 
-        private void LoadForm_Load(object sender, EventArgs e)
-        {
-            skinLabel2.Text = "1秒";
-        }
 
-        public void SetTime(int sec)
+        public void SetTime(string sec)
         {
             skinLabel2.Text = $"{sec}秒";
         }
 
-        static LoadForm loadForm = null;
+        static LoadForm _loadForm = null;
 
-
+        static Form _parent;
 
         public static void ShowLoading(Form parent)
         {
-            int i = 0;
+            _parent = parent;
 
-            loadForm = new LoadForm();
-
-            Task.Factory.StartNew(() =>
+            _parent.Invoke(new Action(() =>
             {
-                while (loadForm != null)
+                if (_loadForm == null)
                 {
-                    try
-                    {
-                        if (loadForm.IsHandleCreated)
-                            loadForm.Invoke(new Action(() =>
-                            {
-                                i++;
-                                if (loadForm != null)
-                                    if (loadForm.Visible)
-                                    {
-                                        loadForm.SetTime(i);
-                                    }
-                                    else
-                                    {
-                                        i = 0;
-                                    }
-                            }));
-                    }
-                    catch
-                    {
-                        loadForm = null;
-                        i = 0;
-                    }
-                    Thread.Sleep(1000);
+                    _loadForm = new LoadForm();
                 }
-            });
+            }));
 
-            Task.Factory.StartNew(() =>
+            _loadForm.ShowDialogWithLoopAsync(_parent, (seconds) =>
             {
-                Thread.Sleep(100);
-
-                parent.Invoke(new Action(() =>
+                if (int.TryParse(seconds, out int os) && (os > 10 && !_loadForm.CancelLink.Visible))
                 {
-                    if (loadForm != null && !loadForm.Visible)
-                        loadForm.ShowDialog(parent);
-                }));
+                    _loadForm.CancelLink.Visible = true;
+                }
+                _loadForm.SetTime(seconds);
             });
         }
 
-        public static void HideLoading(int sec = 0)
+        public static void HideLoading(Form parent = null)
         {
-            Task.Factory.StartNew(() =>
-            {
-                Thread.Sleep((sec == 0 ? 1 : sec) * 1000);
-                if (loadForm != null && loadForm.IsHandleCreated)
-                    loadForm.BeginInvoke(new Action(() =>
-                    {
-                        loadForm?.Close();
-                        loadForm = null;
-                    }), null);
-            });
+            _loadForm.HideDialogAsync(parent ?? _parent);
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            HideLoading();
         }
     }
 }

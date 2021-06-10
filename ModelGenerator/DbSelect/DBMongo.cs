@@ -58,12 +58,12 @@ namespace WEF.ModelGenerator.DbSelect
                     this.Invoke(new Action(() =>
                     {
                         button2.Enabled = true;
-                        LoadForm.HideLoading();
+                        LoadForm.HideLoading(this);
                     }));
                 }
                 catch (Exception ex)
                 {
-                    LoadForm.HideLoading();
+                    LoadForm.HideLoading(this);
                     this.Invoke(new Action(() =>
                     {
                         MessageBox.Show(this, "连接失败!\n\r" + ex.Message);
@@ -115,7 +115,7 @@ namespace WEF.ModelGenerator.DbSelect
                 {
                     MessageBox.Show("连接失败!\n\r" + ex.Message);
                 }
-                LoadForm.HideLoading();
+                LoadForm.HideLoading(this);
             });
         }
 

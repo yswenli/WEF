@@ -118,7 +118,7 @@ namespace WEF.ModelGenerator
                     txtClassName.Text = TableName.Trim().Replace(' ', '_');
                     txtnamespace.Text = UtilsHelper.ReadNamespace();
                 }));
-                LoadForm.HideLoading(1);
+                LoadForm.HideLoading(this);
             });
         }
 

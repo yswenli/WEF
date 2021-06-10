@@ -108,7 +108,7 @@ namespace WEF.ModelGenerator.Forms
 
                     if (string.IsNullOrEmpty(sql))
                     {
-                        LoadForm.HideLoading(1);
+                        LoadForm.HideLoading(this);;
 
                         this.Invoke(new Action(() =>
                         {
@@ -126,7 +126,7 @@ namespace WEF.ModelGenerator.Forms
 
                             if (string.IsNullOrEmpty(sql))
                             {
-                                LoadForm.HideLoading(1);
+                                LoadForm.HideLoading(this);;
                                 MessageBox.Show(this, "sql内容不能为空!");
                                 return;
                             }
@@ -188,11 +188,11 @@ namespace WEF.ModelGenerator.Forms
                                     }));
                                 }
                             }
-                            LoadForm.HideLoading();
+                            LoadForm.HideLoading(this);;
                         }
                         catch (Exception ex)
                         {
-                            LoadForm.HideLoading();
+                            LoadForm.HideLoading(this);;
                             this.Invoke(new Action(() =>
                             {
                                 MessageBox.Show(this, $"查询发生异常，ex:" + ex.Message);
@@ -210,11 +210,11 @@ namespace WEF.ModelGenerator.Forms
                                 lbl_execute.Text = $"影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalMilliseconds} 毫秒";
                             }));
 
-                            LoadForm.HideLoading();
+                            LoadForm.HideLoading(this);;
                         }
                         catch (Exception ex)
                         {
-                            LoadForm.HideLoading();
+                            LoadForm.HideLoading(this);;
                             this.Invoke(new Action(() =>
                             {
                                 MessageBox.Show(this, $"操作发生异常，ex:" + ex.Message);

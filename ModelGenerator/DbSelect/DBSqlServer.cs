@@ -107,7 +107,7 @@ namespace WEF.ModelGenerator.DbSelect
                 }
                 catch (Exception ex)
                 {
-                    LoadForm.HideLoading();
+                    LoadForm.HideLoading(this);
                     MessageBox.Show($"连接测试失败：{ex.Message}");
                 }
 
@@ -132,7 +132,7 @@ namespace WEF.ModelGenerator.DbSelect
 
                             cbbDatabase.Enabled = true;
                             cbbDatabase.SelectedIndex = 0;
-                            LoadForm.HideLoading();
+                            LoadForm.HideLoading(this);
                             MessageBox.Show("连接成功!");
 
                             button2.Enabled = true;
@@ -140,7 +140,7 @@ namespace WEF.ModelGenerator.DbSelect
                     }
                     catch (Exception ex)
                     {
-                        LoadForm.HideLoading();
+                        LoadForm.HideLoading(this);
                         MessageBox.Show("连接失败!\n\r" + ex.Message);
                     }
                 });
@@ -183,7 +183,7 @@ namespace WEF.ModelGenerator.DbSelect
 
                             cbbDatabase.Enabled = true;
                             cbbDatabase.SelectedIndex = 0;
-                            LoadForm.HideLoading();
+                            LoadForm.HideLoading(this);
                             MessageBox.Show("连接成功!");
 
                             button2.Enabled = true;
@@ -191,7 +191,7 @@ namespace WEF.ModelGenerator.DbSelect
                     }
                     catch (Exception ex)
                     {
-                        LoadForm.HideLoading();
+                        LoadForm.HideLoading(this);
                         MessageBox.Show("连接失败!\n\r" + ex.Message);
                     }
                 });
@@ -230,7 +230,7 @@ namespace WEF.ModelGenerator.DbSelect
                     {
                         conn.Open();
                     }
-                    LoadForm.HideLoading();
+                    LoadForm.HideLoading(this);
 
                     Dictionary<string, string> dic = new Dictionary<string, string>();
 
@@ -292,7 +292,7 @@ namespace WEF.ModelGenerator.DbSelect
                 }
                 catch (Exception ex)
                 {
-                    LoadForm.HideLoading();
+                    LoadForm.HideLoading(this);
                     MessageBox.Show("连接失败!\n\r" + ex.Message);
                 }
             });

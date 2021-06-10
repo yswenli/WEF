@@ -74,7 +74,7 @@
             this.toolStripButton2});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(231, 31);
+            this.toolStrip1.Size = new System.Drawing.Size(231, 27);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -84,7 +84,7 @@
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(29, 28);
+            this.toolStripButton1.Size = new System.Drawing.Size(29, 24);
             this.toolStripButton1.ToolTipText = "新建数据库连接";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
@@ -94,7 +94,7 @@
             this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(29, 28);
+            this.toolStripButton2.Size = new System.Drawing.Size(29, 24);
             this.toolStripButton2.Text = "异常日志";
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
@@ -105,7 +105,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Treeview.ImageIndex = 0;
             this.Treeview.ImageList = this.imgList;
-            this.Treeview.Location = new System.Drawing.Point(0, 52);
+            this.Treeview.Location = new System.Drawing.Point(0, 59);
             this.Treeview.Margin = new System.Windows.Forms.Padding(4);
             this.Treeview.Name = "Treeview";
             treeNode1.Name = "节点0";
@@ -113,7 +113,7 @@
             this.Treeview.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1});
             this.Treeview.SelectedImageIndex = 0;
-            this.Treeview.Size = new System.Drawing.Size(229, 402);
+            this.Treeview.Size = new System.Drawing.Size(229, 395);
             this.Treeview.TabIndex = 1;
             this.Treeview.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tview_NodeMouseClick);
             this.Treeview.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tview_NodeMouseDoubleClick);
@@ -294,11 +294,10 @@
             // 
             // searchTextBox
             // 
-            this.searchTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.searchTextBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.searchTextBox.Location = new System.Drawing.Point(0, 27);
             this.searchTextBox.Name = "searchTextBox";
-            this.searchTextBox.Size = new System.Drawing.Size(229, 25);
+            this.searchTextBox.Size = new System.Drawing.Size(231, 25);
             this.searchTextBox.TabIndex = 5;
             this.searchTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.searchTextBox_KeyUp);
             // 

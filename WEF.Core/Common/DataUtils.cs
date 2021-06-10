@@ -20,6 +20,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
+
 using WEF.Expressions;
 
 namespace WEF.Common
@@ -269,6 +270,22 @@ namespace WEF.Common
         }
 
         /// <summary>
+        /// 获取属性值
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public static object GetPropertyValue(object obj, PropertyInfo property)
+        {
+            if (property.CanRead)
+            {
+                FastPropertyGetHandler propertyGetter = DynamicCalls.GetPropertyGetter(property);
+
+                return propertyGetter(obj);
+            }
+            return null;
+        }
+        /// <summary>
         /// 设置属性值
         /// </summary>
         /// <param name="obj"></param>
@@ -313,10 +330,12 @@ namespace WEF.Common
 
             if (property != null)
             {
-                return property.GetValue(entity, null);
+                return GetPropertyValue(entity, property);
             }
 
             return null;
+
+
         }
 
         private static System.Text.RegularExpressions.Regex keyReg = new System.Text.RegularExpressions.Regex("[^a-zA-Z]", System.Text.RegularExpressions.RegexOptions.Compiled);

@@ -641,11 +641,11 @@ namespace WEF.ModelGenerator
 
 
                     }
-                    LoadForm.HideLoading();
+                    LoadForm.HideLoading(this);;
                 }
                 catch (Exception ex)
                 {
-                    LoadForm.HideLoading();
+                    LoadForm.HideLoading(this);;
                     MessageBox.Show(ex.Message, "出错啦!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
@@ -1142,7 +1142,7 @@ namespace WEF.ModelGenerator
 
                     }
                 }
-                LoadForm.HideLoading();
+                LoadForm.HideLoading(this);;
 
             }
         }

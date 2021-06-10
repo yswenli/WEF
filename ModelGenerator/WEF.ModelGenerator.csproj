@@ -96,6 +96,7 @@
     <Compile Include="Common\DockContentHelper.cs" />
     <Compile Include="Common\EntityCodeBuilder.cs" />
     <Compile Include="Common\ExcelHelper.cs" />
+    <Compile Include="Common\InvokeHelper.cs" />
     <Compile Include="Common\ShortcutKeyHelper.cs" />
     <Compile Include="Common\StringPlus.cs" />
     <Compile Include="Common\UtilsHelper.cs" />
