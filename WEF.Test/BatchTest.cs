@@ -107,9 +107,6 @@ namespace WEF.Test
 
             batch.Execute();
 
-
-
-
             sw.Stop();
 
             Console.WriteLine("批量insert测试完成,cost:" + sw.ElapsedMilliseconds);

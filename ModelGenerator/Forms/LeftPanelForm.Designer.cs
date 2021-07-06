@@ -57,7 +57,7 @@
             this.contextMenuStripOneMongoDB = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.searchTextBox = new System.Windows.Forms.TextBox();
+            this.searchTextBox = new CCWin.SkinControl.SkinWaterTextBox();
             this.toolStrip1.SuspendLayout();
             this.contextMenuStripTop.SuspendLayout();
             this.contextMenuStripDatabase.SuspendLayout();
@@ -299,6 +299,8 @@
             this.searchTextBox.Name = "searchTextBox";
             this.searchTextBox.Size = new System.Drawing.Size(231, 25);
             this.searchTextBox.TabIndex = 5;
+            this.searchTextBox.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.searchTextBox.WaterText = "查询：请输入表名或视图名";
             this.searchTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.searchTextBox_KeyUp);
             // 
             // LeftPanelForm
@@ -358,6 +360,6 @@
         private System.Windows.Forms.ToolStripMenuItem copyFieldNameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportDataToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteTableToolStripMenuItem;
-        private System.Windows.Forms.TextBox searchTextBox;
+        private CCWin.SkinControl.SkinWaterTextBox searchTextBox;
     }
 }

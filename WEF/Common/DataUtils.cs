@@ -146,7 +146,7 @@ namespace WEF.Common
             {
                 if (string.IsNullOrEmpty(value.ToString()))
                 {
-                    return null;
+                    return Guid.Empty;
                 }
                 return new Guid(value.ToString());
             }

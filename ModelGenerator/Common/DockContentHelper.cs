@@ -15,17 +15,23 @@
 *版 本 号： V1.0.0.0
 *描    述：
 *****************************************************************************/
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+
 using WEF.ModelGenerator.Forms;
 using WEF.ModelGenerator.Model;
+
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace WEF.ModelGenerator.Common
 {
+    /// <summary>
+    /// Dock内容工具类
+    /// </summary>
     public static class DockContentHelper
     {
         static string _configFile = string.Empty;
@@ -36,6 +42,9 @@ namespace WEF.ModelGenerator.Common
 
         static DockPanel _dockPanel = null;
 
+        /// <summary>
+        /// Dock内容工具类
+        /// </summary>
         static DockContentHelper()
         {
             _configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Config", "wefdp.config");
@@ -50,8 +59,8 @@ namespace WEF.ModelGenerator.Common
             if (persistString == typeof(LeftPanelForm).ToString())
             {
                 var lf = new LeftPanelForm();
-                lf.newsqlForm += Lf_newsqlForm;
-                lf.newcontentForm += Lf_newcontentForm;
+                lf.OnNewSqlForm += Lf_newsqlForm;
+                lf.OnNewContentForm += Lf_newcontentForm;
                 return lf;
             }
             else if (persistString == typeof(SQLForm).ToString())
@@ -80,23 +89,55 @@ namespace WEF.ModelGenerator.Common
                 return null;
         }
 
+
+        static ConcurrentDictionary<string, ContentForm> _contentFormDic = new ConcurrentDictionary<string, ContentForm>();
+
         private static void Lf_newcontentForm(ConnectionModel conModel)
         {
-            ContentForm s = new ContentForm();
-            s.Text = "(" + conModel.Database + ")" + conModel.TableName;
-            s.TableName = conModel.TableName;
-            s.DatabaseName = conModel.Database;
-            s.IsView = conModel.IsView;
-            s.ConnectionModel = conModel;
-            s.Show(_dockPanel);
+            var key = $"({conModel.Database}){conModel.TableName}";
+
+            try
+            {
+                ContentForm contentForm = _contentFormDic.GetOrAdd(key, (k) =>
+                {
+                    ContentForm s = new ContentForm();
+                    s.Text = "(" + conModel.Database + ")" + conModel.TableName;
+                    s.TableName = conModel.TableName;
+                    s.DatabaseName = conModel.Database;
+                    s.IsView = conModel.IsView;
+                    s.ConnectionModel = conModel;
+                    return s;
+                });
+                contentForm.Show(_dockPanel);
+            }
+            catch
+            {
+                _contentFormDic.TryRemove(key, out ContentForm _);
+            }
         }
 
-        private static void Lf_newsqlForm(ConnectionModel conModel, string tableName)
+        static ConcurrentDictionary<string, SQLForm> _sqlFormDic = new ConcurrentDictionary<string, SQLForm>();
+
+
+        private static void Lf_newsqlForm(ConnectionModel conModel)
         {
-            SQLForm s = new SQLForm(tableName);
-            s.Text = "(" + conModel.Database + ")SQL查询窗口";
-            s.ConnectionModel = conModel;
-            s.Show(_dockPanel);
+            var key = $"({conModel.Database}){conModel.TableName}";
+
+            try
+            {
+                SQLForm sqlForm = _sqlFormDic.GetOrAdd(key, (k) =>
+                {
+                    SQLForm s = new SQLForm(conModel.TableName);
+                    s.Text = "(" + conModel.Database + ")SQL查询窗口";
+                    s.ConnectionModel = conModel;
+                    return s;
+                });
+                sqlForm.Show(_dockPanel);
+            }
+            catch
+            {
+                _sqlFormDic.TryRemove(key, out SQLForm _);
+            }
         }
 
         public static bool Load(DockPanel dockPanel)
@@ -117,6 +158,22 @@ namespace WEF.ModelGenerator.Common
                 if (File.Exists(_configFile))
                 {
                     dockPanel.LoadFromXml(_configFile, content);
+
+
+                    foreach (var item in _dockPanel.Contents)
+                    {
+                        var sf = item as SQLForm;
+                        if (sf != null)
+                        {
+                            _sqlFormDic.TryAdd(sf.Text, sf);
+                        }
+
+                        var cf = item as ContentForm;
+                        if (cf != null)
+                        {
+                            _contentFormDic.TryAdd(cf.Text, cf);
+                        }
+                    }
 
                     return true;
                 }

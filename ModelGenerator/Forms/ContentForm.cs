@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.IO;
-using WEF;
-using WEF.ModelGenerator.Common;
-using WEF.Common;
+using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
+using System.Windows.Forms;
+
+using WEF.Common;
+using WEF.ModelGenerator.Common;
+using WEF.ModelGenerator.Forms;
 
 namespace WEF.ModelGenerator
 {
@@ -77,7 +75,6 @@ namespace WEF.ModelGenerator
             }
 
 
-
             Task.Factory.StartNew(() =>
             {
                 var dbObject = DBObjectHelper.GetDBObject(ConnectionModel);
@@ -89,17 +86,13 @@ namespace WEF.ModelGenerator
                     MessageBox.Show("当前表找不到任何主键，请选择上面的列表行来添加主键");
                 }
 
+                columnsdt = dbObject.GetColumnInfoList(DatabaseName, TableName);
+
                 this.Invoke(new Action(() =>
                 {
                     cnnTxt.Text = DBObjectHelper.GetCnnString(ConnectionModel, DatabaseName);
 
-                    #region structure
-
-                    columnsdt = dbObject.GetColumnInfoList(DatabaseName, TableName);
-
                     gridColumns.DataSource = columnsdt;
-
-                    #endregion
 
                     cbPrimarykey.Items.Clear();
 
@@ -109,13 +102,17 @@ namespace WEF.ModelGenerator
                         {
                             cbPrimarykey.Items.Add(dr["ColumnName"].ToString());
                         }
-
                         cbPrimarykey.SelectedIndex = 0;
                     }
 
-
-
-                    txtClassName.Text = TableName.Trim().Replace(' ', '_');
+                    if (TableName.StartsWith("DB"))
+                    {
+                        txtClassName.Text = $"{TableName.Trim().Replace(" ", "").Replace("_", "")}";
+                    }
+                    else
+                    {
+                        txtClassName.Text = $"DB{TableName.Trim().Replace(" ", "").Replace("_", "")}";
+                    }
                     txtnamespace.Text = UtilsHelper.ReadNamespace();
                 }));
                 LoadForm.HideLoading(this);
@@ -123,46 +120,6 @@ namespace WEF.ModelGenerator
         }
 
 
-
-        /// <summary>
-        /// 添加主键
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnAddPrimarykey_Click(object sender, EventArgs e)
-        {
-            DataGridViewSelectedRowCollection rows = gridColumns.SelectedRows;
-            if (null != rows && rows.Count > 0)
-            {
-                foreach (DataGridViewRow row in rows)
-                {
-                    object temp = row.Cells[1].Value;
-
-                    if (!cbPrimarykey.Items.Contains(temp))
-                    {
-                        cbPrimarykey.Items.Add(temp);
-                    }
-                }
-
-                cbPrimarykey.SelectedIndex = 0;
-            }
-        }
-
-        /// <summary>
-        /// 删除主键
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnRemovePrimarykey_Click(object sender, EventArgs e)
-        {
-            if (cbPrimarykey.SelectedIndex >= 0)
-            {
-                cbPrimarykey.Items.RemoveAt(cbPrimarykey.SelectedIndex);
-            }
-
-            if (cbPrimarykey.Items.Count > 0)
-                cbPrimarykey.SelectedIndex = 0;
-        }
 
 
         bool _isOk = false;
@@ -216,6 +173,56 @@ namespace WEF.ModelGenerator
             }
 
             _isOk = true;
+        }
+
+        /// <summary>
+        /// 生成Json
+        /// </summary>
+        /// <returns></returns>
+        private string GenerateJson()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("{");
+
+            List<ColumnInfo> dbColumns = UtilsHelper.GetColumnInfos(columnsdt);
+
+            var columns = DBToCSharp.DbtoCSColumns(dbColumns, ConnectionModel.DbType);
+
+
+            bool isFirst = true;
+
+            foreach (ColumnInfo column in columns)
+            {
+                if (isFirst)
+                {
+                    isFirst = false;
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                if (column.DataTypeName == "string")
+                {
+                    sb.AppendLine($"\"{column.Name}\":\"\"");
+                }
+                else if (column.DataTypeName == "bool" || column.DataTypeName == "bool?")
+                {
+                    sb.AppendLine($"\"{column.Name}\":true");
+                }
+                else if (column.DataTypeName == "DateTime" || column.DataTypeName == "DateTime?")
+                {
+                    sb.AppendLine($"\"{column.Name}\":\"{DateTime.Now}\"");
+                }
+                else
+                {
+                    sb.AppendLine($"\"{column.Name}\":0");
+                }
+            }
+            sb.AppendLine("}");
+
+            return SerializeHelper.ExpandJson(sb.ToString());
         }
 
         #region 代码页快捷菜单
@@ -298,6 +305,17 @@ namespace WEF.ModelGenerator
         }
 
         /// <summary>
+        /// 生成json
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var json = GenerateJson();
+            new TextForm("WEF代码生成工具", json, true).ShowDialog(this);
+        }
+
+        /// <summary>
         /// 保存
         /// </summary>
         /// <param name="sender"></param>
@@ -317,6 +335,7 @@ namespace WEF.ModelGenerator
             }
         }
 
+        #region 快捷菜单
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (contextMenuCopy.SourceControl == cnnTxt)
@@ -348,6 +367,44 @@ namespace WEF.ModelGenerator
                 }
             }
         }
+
+        private void 设为主键ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var cells = gridColumns.SelectedCells;
+
+            if (cells != null && cells.Count > 0)
+            {
+                var selectVal = gridColumns.Rows[cells[0].RowIndex].Cells[1].Value;
+
+                if (!cbPrimarykey.Items.Contains(selectVal))
+                {
+                    cbPrimarykey.Items.Add(selectVal);
+                }
+
+                cbPrimarykey.SelectedIndex = 0;
+            }
+        }
+
+        private void 取消主键ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var cells = gridColumns.SelectedCells;
+
+            if (cells != null && cells.Count > 0)
+            {
+                var selectVal = gridColumns.Rows[cells[0].RowIndex].Cells[1].Value;
+
+                if (cbPrimarykey.Items.Contains(selectVal))
+                {
+                    cbPrimarykey.Items.Remove(selectVal);
+                }
+            }
+
+            if (cbPrimarykey.Items.Count > 0)
+                cbPrimarykey.SelectedIndex = 0;
+        }
+
+        #endregion
+
 
     }
 }

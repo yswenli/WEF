@@ -40,7 +40,7 @@
             this.skinLabel1.BackColor = System.Drawing.Color.Transparent;
             this.skinLabel1.BorderColor = System.Drawing.Color.White;
             this.skinLabel1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.skinLabel1.Location = new System.Drawing.Point(119, 271);
+            this.skinLabel1.Location = new System.Drawing.Point(127, 305);
             this.skinLabel1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.skinLabel1.Name = "skinLabel1";
             this.skinLabel1.Size = new System.Drawing.Size(167, 27);
@@ -53,7 +53,7 @@
             this.skinLabel2.BackColor = System.Drawing.Color.Transparent;
             this.skinLabel2.BorderColor = System.Drawing.Color.White;
             this.skinLabel2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.skinLabel2.Location = new System.Drawing.Point(188, 310);
+            this.skinLabel2.Location = new System.Drawing.Point(196, 344);
             this.skinLabel2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.skinLabel2.Name = "skinLabel2";
             this.skinLabel2.Size = new System.Drawing.Size(33, 20);
@@ -64,7 +64,7 @@
             // 
             this.CancelLink.AutoSize = true;
             this.CancelLink.Font = new System.Drawing.Font("微软雅黑 Light", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.CancelLink.Location = new System.Drawing.Point(177, 239);
+            this.CancelLink.Location = new System.Drawing.Point(185, 273);
             this.CancelLink.Name = "CancelLink";
             this.CancelLink.Size = new System.Drawing.Size(50, 25);
             this.CancelLink.TabIndex = 2;
@@ -85,7 +85,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(124)))), ((int)(((byte)(199)))));
-            this.ClientSize = new System.Drawing.Size(409, 360);
+            this.ClientSize = new System.Drawing.Size(421, 380);
             this.ControlBox = false;
             this.Controls.Add(this.CancelLink);
             this.Controls.Add(this.skinLabel2);

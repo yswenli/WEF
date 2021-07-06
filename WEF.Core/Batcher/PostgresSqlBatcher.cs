@@ -15,12 +15,14 @@
 *版 本 号： V1.0.0.0
 *描    述：
 *****************************************************************************/
+using Npgsql;
+
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 
-using Npgsql;
+using WEF.Provider;
 
 namespace WEF.Batcher
 {
@@ -65,32 +67,37 @@ namespace WEF.Batcher
         /// <param name="timeout"></param>
         public override void Execute(int batchSize = 10000, int timeout = 10 * 1000)
         {
+            _dataTable = ToDataTable(_list);
+            Execute(_dataTable);
+        }
+
+        /// <summary>
+        /// 批量执行
+        /// </summary>
+        /// <param name="dataTable"></param>
+        public override void Execute(DataTable dataTable)
+        {
             NpgsqlConnection newConnection = (NpgsqlConnection)_database.CreateConnection();
 
             try
             {
-                _dataTable = ToDataTable(_list);
+                if (dataTable == null || dataTable.Rows.Count == 0) return;
 
-                if (_dataTable == null || _dataTable.Rows.Count == 0) return;
-
-                var commandFormat = string.Format(CultureInfo.InvariantCulture, "COPY {0} FROM STDIN BINARY", _dataTable.TableName);
+                var commandFormat = string.Format(CultureInfo.InvariantCulture, "COPY {0} FROM STDIN BINARY", dataTable.TableName);
 
                 newConnection.Open();
 
                 using (var writer = newConnection.BeginBinaryImport(commandFormat))
                 {
-                    foreach (DataRow item in _dataTable.Rows)
+                    foreach (DataRow item in dataTable.Rows)
                         writer.WriteRow(item.ItemArray);
                 }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
             }
             finally
             {
                 if (newConnection.State == ConnectionState.Open)
                     newConnection.Close();
+                dataTable?.Clear();
                 _list.Clear();
             }
         }

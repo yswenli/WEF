@@ -15,9 +15,11 @@
 *版 本 号： V1.0.0.0
 *描    述：
 *****************************************************************************/
+//using Microsoft.Office.Interop.Access.Dao;
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace WEF.Batcher
 {
@@ -62,7 +64,18 @@ namespace WEF.Batcher
         /// <param name="timeout"></param>
         public override void Execute(int batchSize = 10000, int timeout = 10 * 1000)
         {
-            throw new NotSupportedException("core版本不支持此操作");
+            _dataTable = ToDataTable(_list);
+
+            Execute(_dataTable);
+        }
+
+        /// <summary>
+        /// 批量执行
+        /// </summary>
+        /// <param name="dataTable"></param>
+        public override void Execute(DataTable dataTable)
+        {
+            throw new NotSupportedException("暂不支持");
         }
 
         /// <summary>

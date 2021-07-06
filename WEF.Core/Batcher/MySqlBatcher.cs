@@ -15,13 +15,13 @@
 *版 本 号： V1.0.0.0
 *描    述：
 *****************************************************************************/
+using MySql.Data.MySqlClient;
+using MySql.Data.Types;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-
-using MySql.Data.MySqlClient;
-using MySql.Data.Types;
 
 namespace WEF.Batcher
 {
@@ -59,80 +59,6 @@ namespace WEF.Batcher
             _list.AddRange(data);
         }
 
-
-        /// <summary>
-        /// ToDataTable
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public new DataTable ToDataTable<TEntity>(IEnumerable<TEntity> entities)
-            where TEntity : Entity
-        {
-            if (entities == null || !entities.Any()) return null;
-
-            var first = entities.First();
-
-            var fields = first.GetFields();
-
-            var tableName = first.GetTableName();
-
-            var dt = _database.GetMap(tableName);
-
-            var maxId = 0;
-
-            var autoIncrementName = "";
-
-            for (int i = 0; i < dt.Columns.Count; i++)
-            {
-                if (dt.Columns[i].AutoIncrement)
-                {
-                    autoIncrementName = dt.Columns[i].ColumnName;
-                }
-            }
-
-            if (!string.IsNullOrEmpty(autoIncrementName))
-            {
-                maxId = _database.GetMaxId(tableName, autoIncrementName);
-            }
-
-            foreach (TEntity entity in entities)
-            {
-                DataRow dtRow = dt.NewRow();
-
-                object[] values = entity.GetValues();
-
-                for (int i = 0; i < dt.Columns.Count; i++)
-                {
-                    if (dt.Columns[i].AutoIncrement)
-                    {
-                        maxId++;
-                        dtRow[fields[i].Name] = maxId;
-                    }
-                    else
-                    {
-                        if (dt.Columns[i].AllowDBNull)
-                        {
-                            if (values[i] == null)
-                                continue;
-                        }
-                        if (values[i] != null && values[i].GetType().Name == "DateTime")
-                        {
-                            dtRow[fields[i].Name] = new MySqlDateTime(values[i].ToString());
-                        }
-                        else
-                            dtRow[fields[i].Name] = values[i];
-
-                    }
-
-                }
-                dt.Rows.Add(dtRow);
-            }
-            return dt;
-        }
-
-
-
         /// <summary>
         /// 批量执行
         /// </summary>
@@ -140,17 +66,25 @@ namespace WEF.Batcher
         /// <param name="timeout"></param>
         public override void Execute(int batchSize = 10000, int timeout = 10 * 1000)
         {
+            _dataTable = ToDataTable(_list);
+            Execute(_dataTable);
+        }
+
+        /// <summary>
+        /// 批量执行
+        /// </summary>
+        /// <param name="dataTable"></param>
+        public override void Execute(DataTable dataTable)
+        {
             MySqlConnection newConnection = (MySqlConnection)_database.CreateConnection();
 
             try
             {
-                _dataTable = ToDataTable(_list);
+                if (dataTable == null || dataTable.Rows.Count == 0) return;
 
-                if (_dataTable == null || _dataTable.Rows.Count == 0) return;
-                
-                string tmpPath = Path.Combine(Path.GetTempPath(), _dataTable.TableName + ".csv");
+                string tmpPath = Path.Combine(Path.GetTempPath(), dataTable.TableName + ".csv");
 
-                DBContext.WriteToCSV(_dataTable, tmpPath, false);
+                DBContext.WriteToCSV(dataTable, tmpPath, false);
 
                 newConnection.Open();
 
@@ -165,12 +99,12 @@ namespace WEF.Batcher
                         FileName = tmpPath,
                         Local = true,
                         NumberOfLinesToSkip = 0,
-                        TableName = _dataTable.TableName,
+                        TableName = dataTable.TableName,
                         CharacterSet = "utf8"
                     };
                     try
                     {
-                        bulk.Columns.AddRange(_dataTable.Columns.Cast<DataColumn>().Select(colum => colum.ColumnName).ToList());
+                        bulk.Columns.AddRange(dataTable.Columns.Cast<DataColumn>().Select(colum => colum.ColumnName).ToList());
                         var size = bulk.Load();
                         tran.Commit();
                     }
@@ -193,6 +127,7 @@ namespace WEF.Batcher
 
                 if (newConnection.State == ConnectionState.Open)
                     newConnection.Close();
+                dataTable?.Clear();
                 _list.Clear();
             }
         }

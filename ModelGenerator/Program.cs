@@ -3,6 +3,8 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
+using WEF.ModelGenerator.Common;
+
 namespace WEF.ModelGenerator
 {
     static class Program
@@ -16,7 +18,11 @@ namespace WEF.ModelGenerator
             Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+
+            SingleProcessHelper.ProcessRun<MainForm>((f) =>
+            {
+                Application.Run(f);
+            });
         }
 
 

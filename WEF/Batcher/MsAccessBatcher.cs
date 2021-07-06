@@ -16,8 +16,10 @@
 *描    述：
 *****************************************************************************/
 using Microsoft.Office.Interop.Access.Dao;
+
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace WEF.Batcher
 {
@@ -62,6 +64,17 @@ namespace WEF.Batcher
         /// <param name="timeout"></param>
         public override void Execute(int batchSize = 10000, int timeout = 10 * 1000)
         {
+            _dataTable = ToDataTable(_list);
+
+            Execute(_dataTable);
+        }
+
+        /// <summary>
+        /// 批量执行
+        /// </summary>
+        /// <param name="dataTable"></param>
+        public override void Execute(DataTable dataTable)
+        {
             DBEngine dbEngine = new DBEngine();
 
             Database db = null;
@@ -70,13 +83,11 @@ namespace WEF.Batcher
             {
                 db = dbEngine.OpenDatabase(_database.DbProvider.ConnectionString);
 
-                _dataTable = ToDataTable(_list);
+                if (dataTable == null || dataTable.Rows.Count == 0) return;
 
-                if (_dataTable == null || _dataTable.Rows.Count == 0) return;
+                Recordset rs = db.OpenRecordset(dataTable.TableName);
 
-                Recordset rs = db.OpenRecordset(_dataTable.TableName);
-
-                var columns = _dataTable.Columns;
+                var columns = dataTable.Columns;
 
                 Field[] myFields = new Field[columns.Count];
 
@@ -85,25 +96,22 @@ namespace WEF.Batcher
                     myFields[i] = rs.Fields[columns[i].ColumnName];
                 }
 
-                for (int i = 0; i < _dataTable.Rows.Count; i++)
+                for (int i = 0; i < dataTable.Rows.Count; i++)
                 {
                     rs.AddNew();
 
                     for (int j = 0; j < columns.Count; j++)
                     {
-                        myFields[0].Value = _dataTable.Rows[i][j];
+                        myFields[0].Value = dataTable.Rows[i][j];
                     }
                     rs.Update();
                 }
                 rs.Close();
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
             finally
             {
                 db?.Close();
+                dataTable?.Clear();
                 _list.Clear();
             }
         }

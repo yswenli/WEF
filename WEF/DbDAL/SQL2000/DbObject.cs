@@ -128,15 +128,15 @@ namespace WEF.DbDAL.SQL2000
         /// <summary>
         /// 删除视图
         /// </summary>
-        /// <param name="DbName"></param>
-        /// <param name="TableName"></param>
+        /// <param name="dbName"></param>
+        /// <param name="tableName"></param>
         /// <returns></returns>
-        public bool DeleteView(string DbName, string TableName)
+        public bool DeleteView(string dbName, string tableName)
         {
             try
             {
-                SqlCommand dbCommand = OpenDB(DbName);
-                dbCommand.CommandText = "DROP VIEW " + TableName + "";
+                SqlCommand dbCommand = OpenDB(dbName);
+                dbCommand.CommandText = "DROP VIEW " + tableName + "";
                 dbCommand.ExecuteNonQuery();
                 return true;
             }
@@ -221,14 +221,14 @@ namespace WEF.DbDAL.SQL2000
 
         }
 
-        public DataTable GetColumnInfoListSP(string DbName, string TableName)
+        public DataTable GetColumnInfoListSP(string dbName, string TableName)
         {
             SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@table_name", SqlDbType.NVarChar, 0x180), new SqlParameter("@table_owner", SqlDbType.NVarChar, 0x180), new SqlParameter("@table_qualifier", SqlDbType.NVarChar, 0x180), new SqlParameter("@column_name", SqlDbType.VarChar, 100) };
             parameters[0].Value = TableName;
             parameters[1].Value = null;
             parameters[2].Value = null;
             parameters[3].Value = null;
-            DataSet set = this.RunProcedure(DbName, "sp_columns", parameters, "ds");
+            DataSet set = this.RunProcedure(dbName, "sp_columns", parameters, "ds");
             if (set.Tables.Count <= 0)
             {
                 return null;
@@ -593,13 +593,13 @@ namespace WEF.DbDAL.SQL2000
             }
         }
 
-        public DataSet Query(string DbName, string SQLString)
+        public DataSet Query(string dbName, string sqlString)
         {
             DataSet dataSet = new DataSet();
             try
             {
-                this.OpenDB(DbName);
-                new SqlDataAdapter(SQLString, this._connect).Fill(dataSet, "ds");
+                this.OpenDB(dbName);
+                new SqlDataAdapter(sqlString, this._connect).Fill(dataSet, "ds");
             }
             catch (SqlException exception)
             {

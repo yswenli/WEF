@@ -88,8 +88,11 @@ namespace WEF.Batcher
 
         public abstract void Execute(int batchSize = 10000, int timeout = 10000);
 
+        public abstract void Execute(DataTable dataTable);
+
         public abstract void Insert(T t);
 
         public abstract void Insert(IEnumerable<T> data);
+
     }
 }

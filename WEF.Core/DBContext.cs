@@ -1894,6 +1894,18 @@ namespace WEF
 
             batch.Execute();
         }
+
+        /// <summary>
+        /// 批量添加
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="dataTable"></param>
+        public void BulkInsert(DataTable dataTable)
+        {
+            var batch = CreateBatch<Entity>();
+
+            batch.Execute(dataTable);
+        }
         #endregion
 
         #region Save操作

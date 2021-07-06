@@ -1080,6 +1080,74 @@ namespace WEF
                                 }
 
                                 #endregion
+
+                                #region guid
+
+                                if (sourceProperty.PropertyType == typeof(Guid))
+                                {
+                                    if (targetProperty.PropertyType == typeof(string))
+                                    {
+                                        if (val != null)
+                                        {
+                                            var guid = (Guid)val;
+                                            DataUtils.SetPropertyValue(target, targetProperty, guid.ToString("N"));
+                                        }
+                                        else
+                                        {
+                                            DataUtils.SetPropertyValue(target, targetProperty, Guid.Empty.ToString("N"));
+                                        }
+                                    }
+                                    else if (targetProperty.PropertyType == typeof(Nullable<Guid>))
+                                    {
+                                        if (val != null)
+                                        {
+                                            DataUtils.SetPropertyValue(target, targetProperty, val);
+                                        }
+                                    }
+                                }
+                                else if (sourceProperty.PropertyType == typeof(Nullable<Guid>))
+                                {
+                                    if (targetProperty.PropertyType == typeof(string))
+                                    {
+                                        if (val != null)
+                                        {
+                                            var guid = (Nullable<Guid>)val;
+                                            if (guid.HasValue)
+                                            {
+                                                DataUtils.SetPropertyValue(target, targetProperty, guid.Value.ToString("N"));
+                                            }
+                                        }
+                                    }
+                                    else if (targetProperty.PropertyType == typeof(Guid))
+                                    {
+                                        if (val != null)
+                                        {
+                                            var guid = (Nullable<Guid>)val;
+                                            if (guid.HasValue)
+                                            {
+                                                DataUtils.SetPropertyValue(target, targetProperty, guid.Value);
+                                            }
+                                        }
+                                    }
+                                }
+                                else if (sourceProperty.PropertyType == typeof(string))
+                                {
+                                    var str = (string)val;
+
+                                    if (targetProperty.PropertyType == typeof(Nullable<Guid>) || targetProperty.PropertyType == typeof(Guid))
+                                    {
+                                        if (string.IsNullOrEmpty(str))
+                                        {
+                                            DataUtils.SetPropertyValue(target, targetProperty, Guid.Empty);
+                                        }
+                                        else
+                                        {
+                                            if (Guid.TryParse(str, out Guid sval))
+                                                DataUtils.SetPropertyValue(target, targetProperty, sval);
+                                        }
+                                    }
+                                }
+                                #endregion
                             }
                         }
                         catch (Exception ex)

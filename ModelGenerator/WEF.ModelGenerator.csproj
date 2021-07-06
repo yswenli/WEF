@@ -98,6 +98,7 @@
     <Compile Include="Common\ExcelHelper.cs" />
     <Compile Include="Common\InvokeHelper.cs" />
     <Compile Include="Common\ShortcutKeyHelper.cs" />
+    <Compile Include="Common\SingleProcessHelper.cs" />
     <Compile Include="Common\StringPlus.cs" />
     <Compile Include="Common\UtilsHelper.cs" />
     <Compile Include="Controls\AutoTextBox.cs">
@@ -235,6 +236,12 @@
     <Compile Include="Forms\SQLTemplateForm.Designer.cs">
       <DependentUpon>SQLTemplateForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TextForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TextForm.Designer.cs">
+      <DependentUpon>TextForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="JsonTools\CodeWriters\CSharpCodeWriter.cs" />
     <Compile Include="JsonTools\CodeWriters\JavaCodeWriter.cs" />
     <Compile Include="JsonTools\CodeWriters\TypeScriptCodeWriter.cs" />
@@ -318,6 +325,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SQLTemplateForm.resx">
       <DependentUpon>SQLTemplateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TextForm.resx">
+      <DependentUpon>TextForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -20,7 +20,7 @@ namespace WEF.ModelGenerator.DbSelect
 
         private void DBSqlServer_Load(object sender, EventArgs e)
         {
-            cbbServerType.SelectedIndex = 2;
+            cbbServerType.SelectedIndex = 0;
             cbbShenFenRZ.SelectedIndex = 0;
             cbbDatabase.SelectedIndex = 0;
         }

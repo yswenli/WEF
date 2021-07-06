@@ -38,9 +38,12 @@ namespace WEF.ModelGenerator
 
             _loadForm.ShowDialogWithLoopAsync(_parent, (seconds) =>
             {
-                if (int.TryParse(seconds, out int os) && (os > 10 && !_loadForm.CancelLink.Visible))
+                if (float.TryParse(seconds, out float fi))
                 {
-                    _loadForm.CancelLink.Visible = true;
+                    if (fi >= 5 && !_loadForm.CancelLink.Visible)
+                    {
+                        _loadForm.CancelLink.Visible = true;
+                    }
                 }
                 _loadForm.SetTime(seconds);
             });

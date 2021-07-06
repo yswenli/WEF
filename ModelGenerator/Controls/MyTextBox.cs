@@ -39,6 +39,18 @@ namespace WEF.ModelGenerator.Controls
             };
         }
 
+        public bool ReadOnly
+        {
+            get
+            {
+                return this.txtContent.ReadOnly;
+            }
+            set
+            {
+                this.txtContent.ReadOnly = value;
+            }
+        }
+
         private void MyTextBox_Load(object sender, EventArgs e)
         {
             txtContent.MouseWheel += txtContect_MouseWheel;

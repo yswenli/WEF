@@ -37,9 +37,10 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(53, 31);
+            this.button1.Location = new System.Drawing.Point(37, 97);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(147, 55);
+            this.button1.Size = new System.Drawing.Size(196, 69);
             this.button1.TabIndex = 0;
             this.button1.Text = "导出为Excel";
             this.button1.UseVisualStyleBackColor = true;
@@ -47,9 +48,10 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(269, 31);
+            this.button2.Location = new System.Drawing.Point(266, 97);
+            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(147, 55);
+            this.button2.Size = new System.Drawing.Size(196, 69);
             this.button2.TabIndex = 0;
             this.button2.Text = "导出为CSV";
             this.button2.UseVisualStyleBackColor = true;
@@ -61,23 +63,25 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(53, 121);
+            this.progressBar1.Location = new System.Drawing.Point(37, 222);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.progressBar1.MarqueeAnimationSpeed = 10;
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(363, 23);
+            this.progressBar1.Size = new System.Drawing.Size(425, 29);
             this.progressBar1.TabIndex = 1;
             this.progressBar1.Visible = false;
             // 
             // SQLExportForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(463, 179);
+            this.ClientSize = new System.Drawing.Size(502, 276);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SQLExportForm";

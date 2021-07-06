@@ -66,40 +66,47 @@ namespace WEF.Batcher
         {
             if (_list == null || !_list.Any()) return;
 
+            _dataTable = ToDataTable(_list);
+
+            Execute(_dataTable);
+        }
+
+
+        /// <summary>
+        /// 批量执行
+        /// </summary>
+        /// <param name="dataTable"></param>
+        public override void Execute(DataTable dataTable)
+        {
             SqlConnection newConnection = (SqlConnection)_database.CreateConnection();
 
             try
             {
-                _dataTable = ToDataTable(_list);
-
-                if (_dataTable == null || _dataTable.Rows == null || _dataTable.Rows.Count == 0) return;
+                if (dataTable == null || dataTable.Rows == null || dataTable.Rows.Count == 0) return;
 
                 var sbc = new SqlBulkCopy(newConnection);
 
                 using (sbc)
                 {
-                    sbc.BatchSize = batchSize;
+                    sbc.BatchSize = dataTable.Rows.Count;
 
-                    sbc.DestinationTableName = _dataTable.TableName;
+                    sbc.DestinationTableName = dataTable.TableName;
 
-                    sbc.BulkCopyTimeout = timeout;
+                    sbc.BulkCopyTimeout = 30*1000;
 
                     if (newConnection.State != ConnectionState.Open)
                     {
                         newConnection.Open();
                     }
 
-                    sbc.WriteToServer(_dataTable);
+                    sbc.WriteToServer(dataTable);
                 }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
             }
             finally
             {
                 if (newConnection.State == ConnectionState.Open)
                     newConnection.Close();
+                dataTable?.Clear();
                 _list.Clear();
             }
         }

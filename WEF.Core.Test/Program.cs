@@ -2,6 +2,8 @@
 
 using WEF.Common;
 using WEF.Core.Test.Models;
+using WEF.Expressions;
+using WEF.Models;
 
 namespace WEF.Core.Test
 {
@@ -13,7 +15,7 @@ namespace WEF.Core.Test
 
             //var userInfoRepository = new DBUserInfoRepository(DatabaseType.MySql, "server=127.0.0.1;user id=root; password=yswenli; Port=3306;database=test; pooling=true");
 
-            var userInfoRepository = new DBUserInfoRepository(DatabaseType.SqlServer, "Data Source=192.168.11.77;Initial Catalog=OceaniaJobMonitor;User Id=Test77Ur;Password=Test77Ur");
+            var skuInfoRepository = new SkuInfoRepository(DatabaseType.SqlServer, "Data Source=LP20210416002\\MSSQLSERVER2014;Initial Catalog=Oceania_Test;Integrated Security=True");
 
             var userInfo = new DBUserInfo()
             {
@@ -23,31 +25,20 @@ namespace WEF.Core.Test
                 Created = DateTime.Now
             };
 
-            var list= userInfoRepository.DBContext.FromSql("select * from db", 1, 20,"username").ToList<DBUserInfo>();
+            var search = skuInfoRepository.Search();
 
-            var iResult = userInfoRepository.Insert(userInfo);
+            //search = search.Where(b => b.SKU == "000a6d2fb6774cb8866ef7a6987b71e4");
 
-            Console.WriteLine($"Insert:{iResult}");
+            var where1 = new Where<SkuInfo>();
 
-            var ui = userInfoRepository.Search().Where(b => b.UserName == "yswenli").First();
+            where1.And(b =>b.ID== "00091ee8c4ec465993c7de57ad5cc6fa" && b.SKU == "000a6d2fb6774cb8866ef7a6987b71e4");
 
-            if (ui != null)
-            {
-                Console.WriteLine($"Get:{SerializeHelper.Serialize(ui)}");
-            }
+            //search = search.Where(b => b.Price == 1M);
 
-            ui.NickName = "Mason.Wen";
+            where1.And(b => b.Price == 1M);
 
-            var uResult = userInfoRepository.Update(ui);
+            var list= search.Where(where1).ToList();
 
-            Console.WriteLine($"Update:{uResult}");
-
-            var dui = userInfoRepository.Search().Where(b => b.UserName == "yswenli").First();
-            if (dui != null)
-            {
-                var dResult = userInfoRepository.Delete(dui);
-                Console.WriteLine($"Delete:{dResult}");
-            }
 
             Console.ReadLine();
         }

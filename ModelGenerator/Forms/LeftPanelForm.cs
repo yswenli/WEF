@@ -41,11 +41,11 @@ namespace WEF.ModelGenerator
             Treeview.ExpandAll();
         }
 
-        public delegate void NewContentForm(ConnectionModel conModel);
+        public delegate void OnNewContentFormHandler(ConnectionModel conModel);
 
-        public event NewContentForm newcontentForm;
+        public event OnNewContentFormHandler OnNewContentForm;
 
-        public event Action<ConnectionModel, string> newsqlForm;
+        public event Action<ConnectionModel> OnNewSqlForm;
 
         /// <summary>
         /// 新建数据库连接
@@ -195,7 +195,7 @@ namespace WEF.ModelGenerator
             }
             else if (node.Level == 4)
             {
-                if (null != newcontentForm)
+                if (null != OnNewContentForm)
                 {
                     ConnectionModel conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(Treeview.SelectedNode.Parent.Parent.Parent.Tag.ToString()); });
 
@@ -213,7 +213,7 @@ namespace WEF.ModelGenerator
                             conModel.TableName = Treeview.SelectedNode.Text;
                             conModel.Database = Treeview.SelectedNode.Parent.Parent.Text;
                             conModel.IsView = Treeview.SelectedNode.Tag.ToString().Equals("V");
-                            newcontentForm?.Invoke(conModel);
+                            OnNewContentForm?.Invoke(conModel);
                         }
                         catch { }
                     }
@@ -641,11 +641,11 @@ namespace WEF.ModelGenerator
 
 
                     }
-                    LoadForm.HideLoading(this);;
+                    LoadForm.HideLoading(this); ;
                 }
                 catch (Exception ex)
                 {
-                    LoadForm.HideLoading(this);;
+                    LoadForm.HideLoading(this); ;
                     MessageBox.Show(ex.Message, "出错啦!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
@@ -792,7 +792,7 @@ namespace WEF.ModelGenerator
         /// <param name="e"></param>
         private void 生成代码ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (null != newcontentForm)
+            if (null != OnNewContentForm)
             {
                 ConnectionModel conModel = _ConnectList.Find(
                     delegate (ConnectionModel con)
@@ -803,7 +803,7 @@ namespace WEF.ModelGenerator
                 conModel.TableName = Treeview.SelectedNode.Text;
                 conModel.Database = Treeview.SelectedNode.Parent.Parent.Text;
                 conModel.IsView = Treeview.SelectedNode.Tag.ToString().Equals("V");
-                newcontentForm(conModel);
+                OnNewContentForm(conModel);
             }
         }
 
@@ -1030,7 +1030,7 @@ namespace WEF.ModelGenerator
 
             #endregion
 
-            newsqlForm?.Invoke(conModel, tableName);
+            OnNewSqlForm?.Invoke(conModel);
         }
 
         public void ShowSQLExportForm()
@@ -1128,9 +1128,9 @@ namespace WEF.ModelGenerator
         {
             if (e.KeyCode == Keys.Enter)
             {
-                var text = searchTextBox.Text;
-
                 LoadForm.ShowLoading(this);
+
+                var text = searchTextBox.Text;
 
                 var nodes = Treeview.Nodes;
 
@@ -1139,11 +1139,10 @@ namespace WEF.ModelGenerator
                     for (int i = 0; i < nodes.Count; i++)
                     {
                         ChangeByKeyword(text, nodes[i]);
-
                     }
                 }
-                LoadForm.HideLoading(this);;
 
+                LoadForm.HideLoading(this); 
             }
         }
 

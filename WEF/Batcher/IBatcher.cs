@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace WEF.Batcher
 {
@@ -45,5 +46,10 @@ namespace WEF.Batcher
         /// <param name="batchSize"></param>
         /// <param name="timeout"></param>
         void Execute(int batchSize = 10000, int timeout = 10 * 1000);
+        /// <summary>
+        /// 批量执行
+        /// </summary>
+        /// <param name="dataTable"></param>
+        void Execute(DataTable dataTable);
     }
 }
