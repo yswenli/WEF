@@ -24,6 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Controls;
 using WEF.ModelGenerator.Model;
@@ -108,7 +109,7 @@ namespace WEF.ModelGenerator.Forms
 
                     if (string.IsNullOrEmpty(sql))
                     {
-                        LoadForm.HideLoading(this);;
+                        LoadForm.HideLoading(this); ;
 
                         this.Invoke(new Action(() =>
                         {
@@ -126,7 +127,7 @@ namespace WEF.ModelGenerator.Forms
 
                             if (string.IsNullOrEmpty(sql))
                             {
-                                LoadForm.HideLoading(this);;
+                                LoadForm.HideLoading(this); ;
                                 MessageBox.Show(this, "sql内容不能为空!");
                                 return;
                             }
@@ -136,7 +137,7 @@ namespace WEF.ModelGenerator.Forms
 
                     }));
 
-                    if (sql.IndexOf("select", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    if (sql.IndexOf("select", StringComparison.InvariantCultureIgnoreCase) >= 0 || sql.IndexOf("print", StringComparison.InvariantCultureIgnoreCase) >= 0)
                     {
                         try
                         {
@@ -169,6 +170,14 @@ namespace WEF.ModelGenerator.Forms
                                         {
                                             dList.Add(i);
                                         }
+
+                                        if (dt.Columns[i].DataType == typeof(byte[]))
+                                        {
+                                            foreach (DataRow dr in dt.Rows)
+                                            {
+                                                dr[i] = null;
+                                            }
+                                        }
                                     }
 
 
@@ -188,11 +197,11 @@ namespace WEF.ModelGenerator.Forms
                                     }));
                                 }
                             }
-                            LoadForm.HideLoading(this);;
+                            LoadForm.HideLoading(this); ;
                         }
                         catch (Exception ex)
                         {
-                            LoadForm.HideLoading(this);;
+                            LoadForm.HideLoading(this); ;
                             this.Invoke(new Action(() =>
                             {
                                 MessageBox.Show(this, $"查询发生异常，ex:" + ex.Message);
@@ -210,11 +219,11 @@ namespace WEF.ModelGenerator.Forms
                                 lbl_execute.Text = $"影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalMilliseconds} 毫秒";
                             }));
 
-                            LoadForm.HideLoading(this);;
+                            LoadForm.HideLoading(this); ;
                         }
                         catch (Exception ex)
                         {
-                            LoadForm.HideLoading(this);;
+                            LoadForm.HideLoading(this); ;
                             this.Invoke(new Action(() =>
                             {
                                 MessageBox.Show(this, $"操作发生异常，ex:" + ex.Message);
