@@ -97,12 +97,21 @@ namespace WEF.ModelGenerator
 
 
         #region 菜单
-
+        /// <summary>
+        /// 新连接
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void newDBConnectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _leftPannelForm.ShowDbSelect();
         }
 
+        /// <summary>
+        /// f5 sql运行
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void runToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var sqlForm = dpleft.ActiveContent as SQLForm;
@@ -111,12 +120,34 @@ namespace WEF.ModelGenerator
             {
                 sqlForm.RunSql();
             }
-
+        }
+        /// <summary>
+        /// 模板管理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void templateManageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new TemplateForm().ShowDialog(this);
+        }
+        /// <summary>
+        /// 生成业务代码
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void generateBusinessCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new TemplateToCodeForm().ShowDialog(this);
         }
 
-        private void logsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void templatetocodefastToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _leftPannelForm.ShowLogs();
+            new TemplateToCodeFastForm().ShowDialog(this);
+        }
+
+        private void dataSyncToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataSyncForm.Instance.Show(this);
         }
         /// <summary>
         /// json工具
@@ -138,10 +169,17 @@ namespace WEF.ModelGenerator
             new QrCodeForm().ShowDialog(this);
         }
 
-        private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
+        #region 关于菜单
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AboutForm().ShowDialog(this);
         }
+
+        private void errorlogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _leftPannelForm.ShowLogs();
+        }
+        #endregion
 
         #endregion
 
@@ -187,8 +225,13 @@ namespace WEF.ModelGenerator
 
 
 
+
+
+
+
+
         #endregion
 
-
+       
     }
 }

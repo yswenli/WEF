@@ -1,4 +1,6 @@
 ﻿
+using System.Windows.Forms;
+
 using CCWin;
 
 namespace WEF.ModelGenerator.Forms
@@ -46,6 +48,19 @@ namespace WEF.ModelGenerator.Forms
             }
         }
 
-
+        private void textBox1_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            {
+                textBox1.SelectAll();
+            }
+            if (e.KeyCode == Keys.C && e.Modifiers == Keys.Control)
+            {
+                if (!string.IsNullOrEmpty(textBox1.SelectedText))
+                {
+                    Clipboard.SetText(textBox1.SelectedText);
+                }
+            }
+        }
     }
 }

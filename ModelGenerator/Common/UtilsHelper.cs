@@ -31,12 +31,24 @@ namespace WEF.ModelGenerator.Common
     /// <summary>
     /// 生成器综合工具类
     /// </summary>
-    public class UtilsHelper
+    public static class UtilsHelper
     {
         /// <summary>
         /// 数据库连接配置文件
         /// </summary>
         public static readonly string DatabaseconfigPath = Application.StartupPath + "/Config/databaseconfig.xml";
+
+        /// <summary>
+        /// 当前目录
+        /// </summary>
+        public static string CurrentPath
+        {
+            get
+            {
+                return Application.StartupPath;
+            }
+        }
+
 
 
         /// <summary>
@@ -372,5 +384,74 @@ namespace WEF.ModelGenerator.Common
         }
 
 
+        /// <summary>
+        /// 读取文件
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static string Read(string filePath)
+        {
+            if (File.Exists(filePath))
+                return File.ReadAllText(filePath, Encoding.UTF8);
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 写入文件
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="txt"></param>
+        public static void Write(string filePath, string txt)
+        {
+            using (var fs = File.Open(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+            {
+                using (var sw = new StreamWriter(fs, Encoding.UTF8))
+                {
+                    sw.Write(txt);
+                }
+            }
+        }
+        /// <summary>
+        /// 读取文件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static T Read<T>(string filePath)
+        {
+            var json = Read(filePath);
+            if (!string.IsNullOrEmpty(json))
+            {
+                return SerializeHelper.Deserialize<T>(json);
+            }
+            return default(T);
+        }
+
+        /// <summary>
+        /// 写入文件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="filePath"></param>
+        /// <param name="t"></param>
+        public static void Write<T>(string filePath, T t)
+        {
+            if (t != null)
+            {
+                var json = SerializeHelper.Serialize(t);
+                Write(filePath, json);
+            }
+        }
+
+        /// <summary>
+        /// split
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="separator"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static string[] Split(this string str, string separator, StringSplitOptions options = StringSplitOptions.None)
+        {
+            return str.Split(new string[] { separator }, options);
+        }
     }
 }

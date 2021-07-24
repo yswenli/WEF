@@ -56,6 +56,65 @@ namespace WEF.ModelGenerator
         {
             ShowDbSelect();
         }
+        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var node = Treeview.SelectedNode;
+
+            if (node == null || node.Level != 1) return;
+
+            var id = node.Tag?.ToString() ?? "";
+
+            if (string.IsNullOrEmpty(id)) return;
+
+            var cm = UtilsHelper.GetConnectionList().Where(q => q.ID == Guid.Parse(id)).FirstOrDefault();
+
+            if (cm == null) return;
+
+            DatabaseSelect.databaseType = (DatabaseType)Enum.Parse(typeof(DatabaseType), cm.DbType);
+
+            DialogResult dia = DialogResult.No;
+
+            switch (DatabaseSelect.databaseType)
+            {
+                case DatabaseType.SqlServer:
+                case DatabaseType.SqlServer9:
+                    DbSelect.DBSqlServer dbsqlserver = new WEF.ModelGenerator.DbSelect.DBSqlServer(cm);
+                    dia = dbsqlserver.ShowDialog();
+                    break;
+                case DatabaseType.MsAccess:
+                    //DbSelect.DBMsAccess dbMsAccess = new WEF.ModelGenerator.DbSelect.DBMsAccess(cm);
+                    //dia = dbMsAccess.ShowDialog();
+                    break;
+                case DatabaseType.Oracle:
+                    //DbSelect.DBOracle dbOracle = new WEF.ModelGenerator.DbSelect.DBOracle(cm);
+                    //dia = dbOracle.ShowDialog();
+                    break;
+                case DatabaseType.Sqlite3:
+                    //DbSelect.DbSqlite dbSqlite = new WEF.ModelGenerator.DbSelect.DbSqlite(cm);
+                    //dia = dbSqlite.ShowDialog();
+                    break;
+                case DatabaseType.MySql:
+                    DbSelect.DBMySql dbMySql = new WEF.ModelGenerator.DbSelect.DBMySql(cm);
+                    dia = dbMySql.ShowDialog();
+                    break;
+                case DatabaseType.PostgreSQL:
+                    //DbSelect.DBPostgre dbPostgreSql = new WEF.ModelGenerator.DbSelect.DBPostgre(cm);
+                    //dia = dbPostgreSql.ShowDialog();
+                    break;
+                case DatabaseType.MongoDB:
+                    //DbSelect.DBMongo dbMongo = new WEF.ModelGenerator.DbSelect.DBMongo(cm);
+                    //dia = dbMongo.ShowDialog();
+                    break;
+                default:
+                    break;
+            }
+
+            if (dia == DialogResult.OK)
+            {
+                refreshConnectionList();
+            }
+
+        }
         /// <summary>
         /// 查看日志
         /// </summary>
@@ -128,7 +187,7 @@ namespace WEF.ModelGenerator
         /// <summary>
         /// 连接
         /// </summary>
-        List<ConnectionModel> _ConnectList;
+        List<ConnectionModel> _connectList;
 
         /// <summary>
         /// 加载
@@ -153,13 +212,13 @@ namespace WEF.ModelGenerator
 
             Treeview.Nodes.Add("服务器", "数据库服务器", 0);
 
-            _ConnectList = UtilsHelper.GetConnectionList();
+            _connectList = UtilsHelper.GetConnectionList();
 
             TreeNode node = Treeview.Nodes[0];
 
             node.ContextMenuStrip = contextMenuStripTop;
 
-            foreach (ConnectionModel connection in _ConnectList)
+            foreach (ConnectionModel connection in _connectList)
             {
                 TreeNode nnode = new TreeNode(connection.Name, 0, 0);
                 nnode.ContextMenuStrip = contextMenuStripDatabase;
@@ -197,7 +256,7 @@ namespace WEF.ModelGenerator
             {
                 if (null != OnNewContentForm)
                 {
-                    ConnectionModel conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(Treeview.SelectedNode.Parent.Parent.Parent.Tag.ToString()); });
+                    ConnectionModel conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(Treeview.SelectedNode.Parent.Parent.Parent.Tag.ToString()); });
 
                     if (conModel.DbType.Equals(DatabaseType.MongoDB.ToString()))
                     {
@@ -252,11 +311,13 @@ namespace WEF.ModelGenerator
         /// </summary>
         private void refreshConnectionList()
         {
+            if (_connectList == null) _connectList = new List<ConnectionModel>();
+
             List<ConnectionModel> connList = UtilsHelper.GetConnectionList();
 
             foreach (ConnectionModel conn in connList)
             {
-                ConnectionModel tempconn = _ConnectList.Find(delegate (ConnectionModel connin) { return conn.ID.ToString().Equals(connin.ID.ToString()); });
+                ConnectionModel tempconn = _connectList.Find(delegate (ConnectionModel connin) { return conn.ID.ToString().Equals(connin.ID.ToString()); });
                 if (null == tempconn)
                 {
                     TreeNode nnode = new TreeNode(conn.Name, 0, 0);
@@ -265,8 +326,7 @@ namespace WEF.ModelGenerator
                     Treeview.Nodes[0].Nodes.Add(nnode);
                 }
             }
-
-            _ConnectList = connList;
+            _connectList = connList;
         }
 
 
@@ -288,13 +348,12 @@ namespace WEF.ModelGenerator
             {
                 string stringid = Treeview.SelectedNode.Tag.ToString();
                 UtilsHelper.DeleteConnection(stringid);
-                ConnectionModel tempconn = _ConnectList.Find(delegate (ConnectionModel conn) { return conn.ID.ToString().Equals(stringid); });
+                ConnectionModel tempconn = _connectList.Find(delegate (ConnectionModel conn) { return conn.ID.ToString().Equals(stringid); });
                 if (null != tempconn)
-                    _ConnectList.Remove(tempconn);
+                    _connectList.Remove(tempconn);
                 Treeview.Nodes.Remove(Treeview.SelectedNode);
             }
         }
-
         #endregion
 
         #region database
@@ -323,7 +382,7 @@ namespace WEF.ModelGenerator
         private void viewConnectStringToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TreeNode node = Treeview.SelectedNode;
-            var conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Tag.ToString()); });
+            var conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Tag.ToString()); });
             conConnectionString = conModel.ConnectionString;
             Clipboard.SetText(conConnectionString);
             MessageBox.Show($"已复制到剪切板，conConnectionString：\r\n{conConnectionString}", "WEF数据库工具", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
@@ -344,7 +403,7 @@ namespace WEF.ModelGenerator
 
                     this.Invoke(new Action(() =>
                     {
-                        conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Tag?.ToString() ?? ""); });
+                        conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Tag?.ToString() ?? ""); });
                     }));
 
 
@@ -794,7 +853,7 @@ namespace WEF.ModelGenerator
         {
             if (null != OnNewContentForm)
             {
-                ConnectionModel conModel = _ConnectList.Find(
+                ConnectionModel conModel = _connectList.Find(
                     delegate (ConnectionModel con)
                     {
                         return con.ID.ToString().Equals(Treeview.SelectedNode.Parent.Parent.Parent.Tag.ToString());
@@ -827,7 +886,7 @@ namespace WEF.ModelGenerator
                     }
 
                     var tableName = node.Text;
-                    var conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
+                    var conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
                     conModel.Database = node.Parent.Parent.Text;
                     WEF.DbDAL.IDbObject dbObject = DBObjectHelper.GetDBObject(conModel);
 
@@ -880,7 +939,7 @@ namespace WEF.ModelGenerator
             ConnectionModel conModel = null;
             try
             {
-                conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
+                conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
 
                 IDbObject dbObject;
 
@@ -939,14 +998,14 @@ namespace WEF.ModelGenerator
             ConnectionModel conModel = null;
             try
             {
-                conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
+                conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
             }
             catch { }
             try
             {
                 if (conModel == null)
                 {
-                    conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Tag.ToString()); });
+                    conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Tag.ToString()); });
                 }
             }
             catch { }
@@ -959,6 +1018,7 @@ namespace WEF.ModelGenerator
         {
             ShowSQLForm();
         }
+
         private void sQL查询ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var tableName = "";
@@ -970,6 +1030,8 @@ namespace WEF.ModelGenerator
                 tableName = node.Text;
             }
 
+            if (string.IsNullOrEmpty(tableName)) return;
+
             ShowSQLForm(tableName);
         }
 
@@ -978,13 +1040,47 @@ namespace WEF.ModelGenerator
             TreeNode node = Treeview.SelectedNode;
             Clipboard.SetText(node.Text);
         }
+        //快捷生成业务代码
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            var tableName = "";
+
+            TreeNode node = Treeview.SelectedNode;
+
+            if (node != null && node.Level == 4)
+            {
+                tableName = node.Text;
+            }
+
+            if (string.IsNullOrEmpty(tableName)) return;
+
+            if (tableName.StartsWith("DB"))
+            {
+                tableName = $"{tableName.Trim().Replace(" ", "").Replace("_", "")}";
+            }
+            else
+            {
+                tableName = $"DB{tableName.Trim().Replace(" ", "").Replace("_", "")}";
+            }
+
+            new TemplateToCodeFastForm(tableName).ShowDialog();
+        }
 
         private void exportDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TreeNode node = Treeview.SelectedNode;
             if (node != null && !string.IsNullOrEmpty(node.Text) && node.Level == 4)
             {
-                ShowSQLExportForm();
+                ShowSQLExportForm(node);
+            }
+        }
+
+        private void importDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TreeNode node = Treeview.SelectedNode;
+            if (node != null && !string.IsNullOrEmpty(node.Text) && node.Level == 4)
+            {
+                ShowSQLImportForm(node);
             }
         }
         #endregion
@@ -998,16 +1094,16 @@ namespace WEF.ModelGenerator
             switch (node.Level)
             {
                 case 3:
-                    conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Tag.ToString()); });
+                    conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Tag.ToString()); });
                     conModel.Database = node.Parent.Text;
                     break;
                 case 4:
-                    conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
+                    conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
                     conModel.Database = node.Parent.Parent.Text;
 
                     break;
                 default:
-                    conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
+                    conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
                     conModel.Database = node.Text;
                     break;
             }
@@ -1033,17 +1129,15 @@ namespace WEF.ModelGenerator
             OnNewSqlForm?.Invoke(conModel);
         }
 
-        public void ShowSQLExportForm()
+        public void ShowSQLExportForm(TreeNode node)
         {
-            TreeNode node = Treeview.SelectedNode;
-
             ConnectionModel conModel = null;
 
-            conModel = _ConnectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
+            conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
             conModel.Database = node.Parent.Parent.Text;
 
             #region mysql
-            var index1 = conModel.ConnectionString.IndexOf("database=");
+            var index1 = conModel.ConnectionString.IndexOf("database=", StringComparison.OrdinalIgnoreCase);
 
             if (index1 > 0)
             {
@@ -1060,7 +1154,71 @@ namespace WEF.ModelGenerator
 
             #endregion
 
+            #region sqlserver
+            var index12 = conModel.ConnectionString.IndexOf("Initial Catalog=",StringComparison.OrdinalIgnoreCase);
+
+            if (index12 > 0)
+            {
+                var str1 = conModel.ConnectionString.Substring(0, index12);
+
+                var str2 = conModel.ConnectionString.Substring(index12);
+
+                var index2 = str2.IndexOf(";");
+
+                str2 = str2.Substring(index2 + 1);
+
+                conModel.ConnectionString = $"{str1}database={conModel.Database};{str2}";
+            }
+
+            #endregion
+
             new SQLExportForm(conModel, node.Text).ShowDialog(this);
+        }
+
+        public void ShowSQLImportForm(TreeNode node)
+        {
+            ConnectionModel conModel = null;
+
+            conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
+            conModel.Database = node.Parent.Parent.Text;
+
+            #region mysql
+            var index1 = conModel.ConnectionString.IndexOf("database=", StringComparison.OrdinalIgnoreCase);
+
+            if (index1 > 0)
+            {
+                var str1 = conModel.ConnectionString.Substring(0, index1);
+
+                var str2 = conModel.ConnectionString.Substring(index1);
+
+                var index2 = str2.IndexOf(";");
+
+                str2 = str2.Substring(index2 + 1);
+
+                conModel.ConnectionString = $"{str1}database={conModel.Database};{str2}";
+            }
+
+            #endregion
+
+            #region sqlserver
+            var index12 = conModel.ConnectionString.IndexOf("Initial Catalog=", StringComparison.OrdinalIgnoreCase);
+
+            if (index12 > 0)
+            {
+                var str1 = conModel.ConnectionString.Substring(0, index12);
+
+                var str2 = conModel.ConnectionString.Substring(index12);
+
+                var index2 = str2.IndexOf(";");
+
+                str2 = str2.Substring(index2 + 1);
+
+                conModel.ConnectionString = $"{str1}database={conModel.Database};{str2}";
+            }
+
+            #endregion
+
+            new SQLImportForm(conModel, node.Text).ShowDialog(this);
         }
 
         /// <summary>
@@ -1079,7 +1237,7 @@ namespace WEF.ModelGenerator
                         var txt = string.Empty;
                         if (Treeview.SelectedNode.Level == 1)
                         {
-                            txt = _ConnectList.Find(b => b.ID.ToString() == Treeview.SelectedNode.Tag.ToString()).ConnectionString;
+                            txt = _connectList.Find(b => b.ID.ToString() == Treeview.SelectedNode.Tag.ToString()).ConnectionString;
                         }
                         else
                         {
@@ -1142,7 +1300,7 @@ namespace WEF.ModelGenerator
                     }
                 }
 
-                LoadForm.HideLoading(this); 
+                LoadForm.HideLoading(this);
             }
         }
 
@@ -1171,5 +1329,7 @@ namespace WEF.ModelGenerator
                 }
             }
         }
+
+        
     }
 }

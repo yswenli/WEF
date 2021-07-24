@@ -111,7 +111,9 @@ namespace WEF.ModelGenerator.DbSelect
             ConnectionModel connectionModel = new ConnectionModel();
             connectionModel.Database = serviceName;
             connectionModel.ID = Guid.NewGuid();
-            connectionModel.Name = serviceName + "(Oracle)";
+            connectionModel.Name = skinWaterTextBox1.Text;
+            if (string.IsNullOrEmpty(connectionModel.Name))
+                connectionModel.Name = serviceName + "(Oracle)";
             connectionModel.ConnectionString = dbObject.DbConnectStr;
             connectionModel.DbType = DatabaseType.Oracle.ToString();
             UtilsHelper.AddConnection(connectionModel);

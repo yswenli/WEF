@@ -9,15 +9,26 @@ namespace WEF.ModelGenerator.Forms
 {
     public partial class SQLExportForm : CCWin.Skin_Mac
     {
+        ExcelHelper excelHelper;
+
+        CsvHelper csvHelper;
+
         public SQLExportForm()
         {
             InitializeComponent();
-            ExcelHelper.OnStop += ExcelHelper_OnStop;
-            CsvHelper.OnStop += CsvHelper_OnStop;
+
+            excelHelper = new ExcelHelper();
+            excelHelper.OnStop += ExcelHelper_OnStop;
+
+            csvHelper = new CsvHelper();
+
+            csvHelper.OnStop += CsvHelper_OnStop;
             progressBar1.Style = ProgressBarStyle.Marquee;
             progressBar1.MarqueeAnimationSpeed = 5;
             //progressBar1.Visible = true;
         }
+
+
 
 
         private void ExcelHelper_OnStop()
@@ -66,6 +77,7 @@ namespace WEF.ModelGenerator.Forms
             TableName = tableName;
         }
 
+
         private void button1_Click(object sender, EventArgs e)
         {
             saveFileDialog1.Filter = "Excel文件|*.xls";
@@ -81,11 +93,11 @@ namespace WEF.ModelGenerator.Forms
 
                     if (DataTable != null)
                     {
-                        ExcelHelper.DataTableToExcelAsync(DataTable, fileName);
+                        excelHelper.DataTableToExcelAsync(DataTable, fileName);
                     }
                     else
                     {
-                        ExcelHelper.DataTableToExcel(Connection, TableName, fileName);
+                        excelHelper.DataTableToExcel(Connection, TableName, fileName);
                     }
                 }
                 catch (Exception ex)
@@ -111,11 +123,11 @@ namespace WEF.ModelGenerator.Forms
 
                     if (DataTable != null)
                     {
-                        CsvHelper.CSV(DataTable, fileName);
+                        csvHelper.CSV(DataTable, fileName);
                     }
                     else
                     {
-                        CsvHelper.CSV(Connection, TableName, fileName);
+                        csvHelper.CSV(Connection, TableName, fileName);
                     }
                 }
                 catch (Exception ex)

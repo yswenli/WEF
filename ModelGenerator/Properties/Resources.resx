@@ -335,4 +335,11 @@ select * from orders_history where type=8 order by id limit 10000,10;</value>
   <data name="JsonClassHelper" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\JsonClassHelper;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="MSSQL启用ServiceBroker" xml:space="preserve">
+    <value>SELECT is_broker_enabled FROM sys.databases WHERE name = 'OceaniaERP'
+
+ALTER DATABASE OceaniaERP SET NEW_BROKER WITH ROLLBACK IMMEDIATE; 
+
+ALTER DATABASE OceaniaERP SET ENABLE_BROKER;</value>
+  </data>
 </root>

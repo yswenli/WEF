@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using WEF.Common;
+using WEF.DbDAL;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Forms;
 
@@ -77,9 +78,32 @@ namespace WEF.ModelGenerator
 
             Task.Factory.StartNew(() =>
             {
-                var dbObject = DBObjectHelper.GetDBObject(ConnectionModel);
+                IDbObject dbObject;
+                DataTable primarykeydt;
+                try
+                {
+                    if (ConnectionModel.DbType == "SqlServer")
+                    {
+                        ConnectionModel.DbType = "SqlServer9";
+                    }
 
-                DataTable primarykeydt = dbObject.GetKeyName(DatabaseName, TableName);
+                    dbObject = DBObjectHelper.GetDBObject(ConnectionModel);
+
+                    primarykeydt = dbObject.GetKeyName(DatabaseName, TableName);
+                }
+                catch
+                {
+                    if (ConnectionModel.DbType == "SqlServer9")
+                    {
+                        ConnectionModel.DbType = "SqlServer";
+                    }
+
+                    dbObject = DBObjectHelper.GetDBObject(ConnectionModel);
+
+                    primarykeydt = dbObject.GetKeyName(DatabaseName, TableName);
+                }
+
+
 
                 if (primarykeydt.Rows.Count == 0)
                 {
@@ -123,10 +147,13 @@ namespace WEF.ModelGenerator
 
 
         bool _isOk = false;
+
+
         /// <summary>
         /// 实体生成
         /// </summary>
-        private void GenerateModel()
+        /// <param name="simple"></param>
+        private void GenerateModel(bool simple = false)
         {
             _isOk = false;
 
@@ -161,7 +188,7 @@ namespace WEF.ModelGenerator
 
             EntityCodeBuilder builder = new EntityCodeBuilder(TableName, txtnamespace.Text, txtClassName.Text, columns, IsView, cbToupperFrstword.Checked, ConnectionModel.DbType);
 
-            var cs = builder.Builder();
+            var cs = builder.Builder(simple);
 
             if (string.IsNullOrEmpty(cs))
             {
@@ -277,7 +304,7 @@ namespace WEF.ModelGenerator
         {
             if (tabControl1.SelectedIndex == 1)
             {
-                GenerateModel();
+                GenerateModel(checkBox1.Checked);
 
                 if (_isOk)
                 {
@@ -292,7 +319,7 @@ namespace WEF.ModelGenerator
 
         private void button2_Click(object sender, EventArgs e)
         {
-            GenerateModel();
+            GenerateModel(checkBox1.Checked);
 
             if (_isOk)
             {
@@ -313,6 +340,17 @@ namespace WEF.ModelGenerator
         {
             var json = GenerateJson();
             new TextForm("WEF代码生成工具", json, true).ShowDialog(this);
+        }
+
+        //快捷业务代码生成
+        private void button4_Click(object sender, EventArgs e)
+        {
+            var className = txtClassName.Text;
+            if (!string.IsNullOrEmpty(className))
+            {
+                new TemplateToCodeFastForm(className).ShowDialog(this);
+            }
+
         }
 
         /// <summary>
@@ -402,6 +440,7 @@ namespace WEF.ModelGenerator
             if (cbPrimarykey.Items.Count > 0)
                 cbPrimarykey.SelectedIndex = 0;
         }
+
 
         #endregion
 

@@ -1898,13 +1898,12 @@ namespace WEF
         /// <summary>
         /// 批量添加
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="dataTable"></param>
-        public void BulkInsert(DataTable dataTable)
+        /// <returns></returns>
+        public int BulkInsert(string tableName, DataTable dataTable)
         {
-            var batch = CreateBatch<Entity>();
-
-            batch.Execute(dataTable);
+            return _db.BulkInsert(tableName, dataTable);
         }
         #endregion
 

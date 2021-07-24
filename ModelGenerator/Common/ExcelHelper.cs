@@ -30,13 +30,13 @@ using WEF.ModelGenerator.Model;
 
 namespace WEF.ModelGenerator.Common
 {
-    class ExcelHelper
+    public class ExcelHelper
     {
-        public static event Action OnStart;
-        public static event Action<long, long> OnRunning;
-        public static event Action OnStop;
+        public event Action OnStart;
+        public event Action<long, long> OnRunning;
+        public event Action OnStop;
 
-        public static async Task DataTableToExcelAsync(DataTable dt, string fileName, string sheetName = "sheet1")
+        public async Task DataTableToExcelAsync(DataTable dt, string fileName, string sheetName = "sheet1")
         {
             await Task.Yield();
             OnStart?.Invoke();
@@ -85,7 +85,7 @@ namespace WEF.ModelGenerator.Common
         }
 
 
-        public static async Task DataTableToExcel(ConnectionModel cnn, string tableName, string fileName, string sheetName = "sheet1")
+        public async Task DataTableToExcel(ConnectionModel cnn, string tableName, string fileName, string sheetName = "sheet1")
         {
             await Task.Yield();
 

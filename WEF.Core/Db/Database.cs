@@ -1142,6 +1142,68 @@ namespace WEF.Db
             return DoExecuteReader(command, CommandBehavior.Default);
         }
 
+        /// <summary>
+        /// 批量导入
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="dataTable"></param>
+        /// <returns></returns>
+        public int BulkInsert(string tableName, DataTable dataTable)
+        {
+            Check.Require(tableName, "tableName", Check.NotNullOrEmpty);
+
+            if (dataTable == null || dataTable.Rows == null || dataTable.Rows.Count < 1)
+                return -1;
+
+            var ds = new DataSet();
+
+            try
+            {
+                using (DbConnection connection = GetConnection(true))
+                {
+                    using (DbCommand command = CreateCommandByCommandType(CommandType.Text, $"select * from {tableName} where 1=1"))
+                    {
+                        PrepareCommand(command, connection);
+
+                        ds.Locale = CultureInfo.InvariantCulture;
+
+                        using (DbDataAdapter adapter = GetDataAdapter())
+                        {
+                            WriteLog(command);
+
+                            ((IDbDataAdapter)adapter).SelectCommand = command;
+
+                            adapter.Fill(ds);
+
+                            var dt = ds.Tables[0];
+
+                            var columns1 = dataTable.Columns;
+
+                            var columns2 = dt.Columns;
+
+                            for (int i = 0; i < dataTable.Rows.Count; i++)
+                            {
+                                var newRow = dt.NewRow();
+
+                                for (int j = 0; j < columns1.Count; j++)
+                                {
+                                    newRow[j] = dataTable.Rows[i][j];
+                                }
+                            }
+
+                            return adapter.Update(ds, tableName);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                dataTable.Clear();
+                ds.Clear();
+            }
+
+
+        }
         #endregion
 
         #region Transactions
@@ -1355,7 +1417,6 @@ namespace WEF.Db
         }
 
         #endregion
-
 
         #region Extiond
 

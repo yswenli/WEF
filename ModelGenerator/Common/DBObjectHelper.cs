@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using WEF.DbDAL;
 using WEF.ModelGenerator.Model;
 
@@ -76,6 +77,49 @@ namespace WEF.ModelGenerator.Common
                 throw new Exception($"暂不支持的数据类型[{cnn.DbType}]");
             }
             return dbObject;
+        }
+
+        public static DBContext GetDBContext(ConnectionModel cnn)
+        {
+            DBContext dbContext = null;
+
+            if (cnn.DbType.Equals(DatabaseType.SqlServer.ToString()))
+            {
+                dbContext = new DBContext(DatabaseType.SqlServer, cnn.ConnectionString);
+            }
+            else if (cnn.DbType.Equals(DatabaseType.SqlServer9.ToString()))
+            {
+                dbContext = new DBContext(DatabaseType.SqlServer9, cnn.ConnectionString);
+            }
+            else if (cnn.DbType.Equals(DatabaseType.MsAccess.ToString()))
+            {
+                dbContext = new DBContext(DatabaseType.MsAccess, cnn.ConnectionString);
+            }
+            else if (cnn.DbType.Equals(DatabaseType.Oracle.ToString()))
+            {
+                dbContext = new DBContext(DatabaseType.Oracle, cnn.ConnectionString);
+            }
+            else if (cnn.DbType.Equals(DatabaseType.Sqlite3.ToString()))
+            {
+                dbContext = new DBContext(DatabaseType.Sqlite3, cnn.ConnectionString);
+            }
+            else if (cnn.DbType.Equals(DatabaseType.MySql.ToString()))
+            {
+                dbContext = new DBContext(DatabaseType.MySql, cnn.ConnectionString);
+            }
+            else if (cnn.DbType.Equals(DatabaseType.MariaDB.ToString()))
+            {
+                dbContext = new DBContext(DatabaseType.MySql, cnn.ConnectionString);
+            }
+            else if (cnn.DbType.Equals(DatabaseType.PostgreSQL.ToString()))
+            {
+                dbContext = new DBContext(DatabaseType.PostgreSQL, cnn.ConnectionString);
+            }
+            else
+            {
+                throw new Exception($"暂不支持的数据类型[{cnn.DbType}]");
+            }
+            return dbContext;
         }
 
         /// <summary>

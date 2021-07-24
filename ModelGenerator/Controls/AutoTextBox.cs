@@ -1,8 +1,10 @@
 ﻿using CCWin.SkinControl;
+
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+
 using WEF.ModelGenerator.Common;
 
 namespace WEF.ModelGenerator.Controls
@@ -16,7 +18,7 @@ namespace WEF.ModelGenerator.Controls
             listBox1.Hide();
         }
 
-        public SkinWaterTextBox TextBox
+        public TextBox TextBox
         {
             get
             {
@@ -31,6 +33,11 @@ namespace WEF.ModelGenerator.Controls
         private void textBox1_KeyUp(object sender, KeyEventArgs e)
         {
             KeyUp?.Invoke(sender, e);
+
+            if (string.IsNullOrEmpty(textBox1.Text))
+            {
+                return;
+            }
 
             ShortcutKeyHelper.Select(sender, e, () =>
             {

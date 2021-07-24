@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SQLForm));
             this.cnnTxt = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -36,6 +38,7 @@
             this.exportDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lbl_execute = new System.Windows.Forms.Label();
+            this.生成JsonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStripCopy.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -47,7 +50,7 @@
             // 
             this.cnnTxt.Dock = System.Windows.Forms.DockStyle.Top;
             this.cnnTxt.Location = new System.Drawing.Point(0, 0);
-            this.cnnTxt.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cnnTxt.Margin = new System.Windows.Forms.Padding(4);
             this.cnnTxt.Name = "cnnTxt";
             this.cnnTxt.ReadOnly = true;
             this.cnnTxt.Size = new System.Drawing.Size(1131, 25);
@@ -58,15 +61,25 @@
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedHeaders;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.ContextMenuStrip = this.contextMenuStripCopy;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersWidth = 51;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.RowTemplate.Height = 23;
             this.dataGridView1.Size = new System.Drawing.Size(1131, 430);
             this.dataGridView1.TabIndex = 10;
@@ -90,11 +103,12 @@
             this.contextMenuStripCopy.ItemRadiusStyle = CCWin.SkinClass.RoundStyle.All;
             this.contextMenuStripCopy.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyToolStripMenuItem,
-            this.exportDataToolStripMenuItem});
+            this.exportDataToolStripMenuItem,
+            this.生成JsonToolStripMenuItem});
             this.contextMenuStripCopy.ItemSplitter = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
             this.contextMenuStripCopy.Name = "contextMenuStripCopy";
             this.contextMenuStripCopy.RadiusStyle = CCWin.SkinClass.RoundStyle.All;
-            this.contextMenuStripCopy.Size = new System.Drawing.Size(139, 52);
+            this.contextMenuStripCopy.Size = new System.Drawing.Size(211, 104);
             this.contextMenuStripCopy.SkinAllColor = true;
             this.contextMenuStripCopy.TitleAnamorphosis = true;
             this.contextMenuStripCopy.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(228)))), ((int)(((byte)(236)))));
@@ -104,14 +118,14 @@
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.copyToolStripMenuItem.Text = "复制";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // exportDataToolStripMenuItem
             // 
             this.exportDataToolStripMenuItem.Name = "exportDataToolStripMenuItem";
-            this.exportDataToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.exportDataToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.exportDataToolStripMenuItem.Text = "导出数据";
             this.exportDataToolStripMenuItem.Click += new System.EventHandler(this.exportDataToolStripMenuItem_Click);
             // 
@@ -121,7 +135,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainer1.Location = new System.Drawing.Point(0, 34);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -144,6 +158,13 @@
             this.lbl_execute.TabIndex = 12;
             this.lbl_execute.Text = "就绪";
             // 
+            // 生成JsonToolStripMenuItem
+            // 
+            this.生成JsonToolStripMenuItem.Name = "生成JsonToolStripMenuItem";
+            this.生成JsonToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.生成JsonToolStripMenuItem.Text = "生成Json";
+            this.生成JsonToolStripMenuItem.Click += new System.EventHandler(this.生成JsonToolStripMenuItem_Click);
+            // 
             // SQLForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -154,7 +175,7 @@
             this.Controls.Add(this.cnnTxt);
             this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SQLForm";
             this.Text = "SQLForm";
             this.Load += new System.EventHandler(this.SQLForm_Load);
@@ -177,5 +198,6 @@
         private CCWin.SkinControl.SkinContextMenuStrip contextMenuStripCopy;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportDataToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 生成JsonToolStripMenuItem;
     }
 }

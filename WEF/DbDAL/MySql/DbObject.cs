@@ -230,6 +230,7 @@ namespace WEF.DbDAL.MySql
         }
 
 
+
         /// <summary>
         /// 执行存储过程
         /// </summary>
@@ -1033,6 +1034,26 @@ namespace WEF.DbDAL.MySql
             reader.Close();
             return strScript;
 
+        }
+
+        /// <summary>
+        /// 获取数据
+        /// </summary>
+        /// <param name="DbName"></param>
+        /// <param name="sqlString"></param>
+        /// <returns></returns>
+        public object GetScale(string DbName, string sqlString)
+        {
+            try
+            {
+                MySqlCommand dbCommand = OpenDB(DbName);
+                dbCommand.CommandText = sqlString;
+                return dbCommand.ExecuteScalar();                
+            }
+            catch
+            {
+                return null;
+            }
         }
         #endregion
 

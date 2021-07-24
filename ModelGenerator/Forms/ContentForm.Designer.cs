@@ -38,8 +38,10 @@
             this.设为主键ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.取消主键ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.cbToupperFrstword = new System.Windows.Forms.CheckBox();
             this.txtClassName = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -56,7 +58,7 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.cnnTxt = new System.Windows.Forms.TextBox();
             this.saveEntity = new System.Windows.Forms.SaveFileDialog();
-            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tp1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridColumns)).BeginInit();
@@ -151,9 +153,11 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.button4);
             this.groupBox1.Controls.Add(this.button3);
             this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.checkBox1);
             this.groupBox1.Controls.Add(this.cbToupperFrstword);
             this.groupBox1.Controls.Add(this.txtClassName);
             this.groupBox1.Controls.Add(this.label3);
@@ -169,6 +173,17 @@
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "生成配置";
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(378, 275);
+            this.button3.Margin = new System.Windows.Forms.Padding(4);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(121, 44);
+            this.button3.TabIndex = 8;
+            this.button3.Text = "生成Json";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button2
             // 
@@ -191,6 +206,17 @@
             this.button1.Text = "保存代码文件";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(120, 220);
+            this.checkBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(134, 19);
+            this.checkBox1.TabIndex = 6;
+            this.checkBox1.Text = "生成贫血实体类";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // cbToupperFrstword
             // 
@@ -339,16 +365,15 @@
             this.cnnTxt.Size = new System.Drawing.Size(960, 25);
             this.cnnTxt.TabIndex = 7;
             // 
-            // button3
+            // button4
             // 
-            this.button3.Location = new System.Drawing.Point(378, 275);
-            this.button3.Margin = new System.Windows.Forms.Padding(4);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(121, 44);
-            this.button3.TabIndex = 8;
-            this.button3.Text = "生成Json";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button4.Location = new System.Drawing.Point(536, 144);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(159, 30);
+            this.button4.TabIndex = 9;
+            this.button4.Text = "快捷生成业务代码";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // ContentForm
             // 
@@ -407,5 +432,7 @@
         private System.Windows.Forms.ToolStripMenuItem 设为主键ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 取消主键ToolStripMenuItem;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button button4;
     }
 }

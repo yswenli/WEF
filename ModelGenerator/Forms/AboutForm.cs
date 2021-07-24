@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Windows.Forms;
 
+using CCWin;
+
 namespace WEF.ModelGenerator.Forms
 {
-    public partial class AboutForm : CCWin.Skin_Mac
+    public partial class AboutForm : Skin_Mac
     {
         public AboutForm()
         {

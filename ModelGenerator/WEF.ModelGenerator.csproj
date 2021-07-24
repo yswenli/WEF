@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -69,9 +69,16 @@
       <HintPath>..\packages\NPOI.2.5.1\lib\net45\NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Common, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.Common.4.3.0\lib\net451\System.Data.Common.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Data.SqlClient, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SqlClient.4.3.0\lib\net451\System.Data.SqlClient.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.SQLite, Version=1.0.104.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.104.0\lib\net40\System.Data.SQLite.dll</HintPath>
       <Private>True</Private>
@@ -90,6 +97,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ConfigHelper.cs" />
     <Compile Include="Common\CsvHelper.cs" />
     <Compile Include="Common\DBObjectHelper.cs" />
     <Compile Include="Common\DBToCSharp.cs" />
@@ -100,6 +108,8 @@
     <Compile Include="Common\ShortcutKeyHelper.cs" />
     <Compile Include="Common\SingleProcessHelper.cs" />
     <Compile Include="Common\StringPlus.cs" />
+    <Compile Include="Common\SyncDataHelper.cs" />
+    <Compile Include="Common\TemplateHelper.cs" />
     <Compile Include="Common\UtilsHelper.cs" />
     <Compile Include="Controls\AutoTextBox.cs">
       <SubType>UserControl</SubType>
@@ -182,6 +192,18 @@
     <Compile Include="Forms\DatabaseSelect.Designer.cs">
       <DependentUpon>DatabaseSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DataSyncConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DataSyncConfigForm.Designer.cs">
+      <DependentUpon>DataSyncConfigForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DataSyncForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DataSyncForm.Designer.cs">
+      <DependentUpon>DataSyncForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\JsonClassGeneratorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -230,11 +252,35 @@
     <Compile Include="Forms\SQLForm.Designer.cs">
       <DependentUpon>SQLForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SQLImportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SQLImportForm.Designer.cs">
+      <DependentUpon>SQLImportForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SQLTemplateForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\SQLTemplateForm.Designer.cs">
       <DependentUpon>SQLTemplateForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TemplateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TemplateForm.Designer.cs">
+      <DependentUpon>TemplateForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TemplateToCodeFastForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TemplateToCodeFastForm.Designer.cs">
+      <DependentUpon>TemplateToCodeFastForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TemplateToCodeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TemplateToCodeForm.Designer.cs">
+      <DependentUpon>TemplateToCodeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\TextForm.cs">
       <SubType>Form</SubType>
@@ -253,8 +299,15 @@
     <Compile Include="JsonTools\JsonClassHelper.cs" />
     <Compile Include="JsonTools\JsonType.cs" />
     <Compile Include="JsonTools\JsonTypeEnum.cs" />
+    <Compile Include="Model\ConnectionInfo.cs" />
     <Compile Include="Model\ConnectionModel.cs" />
+    <Compile Include="Model\DatabaseObject.cs" />
+    <Compile Include="Model\DataSyncConfig.cs" />
+    <Compile Include="Model\SqlWord.cs" />
     <Compile Include="Model\Sysconfig.cs" />
+    <Compile Include="Model\TemplateData.cs" />
+    <Compile Include="Model\TemplateToCodeConfig.cs" />
+    <Compile Include="Model\UserDefinedType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Controls\AutoTextBox.resx">
@@ -299,6 +352,12 @@
     <EmbeddedResource Include="Forms\DatabaseSelect.resx">
       <DependentUpon>DatabaseSelect.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DataSyncConfigForm.resx">
+      <DependentUpon>DataSyncConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DataSyncForm.resx">
+      <DependentUpon>DataSyncForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\JsonClassGeneratorForm.resx">
       <DependentUpon>JsonClassGeneratorForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -323,8 +382,20 @@
     <EmbeddedResource Include="Forms\SQLForm.resx">
       <DependentUpon>SQLForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SQLImportForm.resx">
+      <DependentUpon>SQLImportForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\SQLTemplateForm.resx">
       <DependentUpon>SQLTemplateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TemplateForm.resx">
+      <DependentUpon>TemplateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TemplateToCodeFastForm.resx">
+      <DependentUpon>TemplateToCodeFastForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TemplateToCodeForm.resx">
+      <DependentUpon>TemplateToCodeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TextForm.resx">
       <DependentUpon>TextForm.cs</DependentUpon>
@@ -342,6 +413,9 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Config\templateData.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

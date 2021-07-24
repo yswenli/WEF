@@ -16,14 +16,39 @@ namespace WEF.ModelGenerator.DbSelect
         public DBSqlServer()
         {
             InitializeComponent();
-        }
 
-        private void DBSqlServer_Load(object sender, EventArgs e)
-        {
             cbbServerType.SelectedIndex = 0;
             cbbShenFenRZ.SelectedIndex = 0;
             cbbDatabase.SelectedIndex = 0;
         }
+
+        Guid _cmdID = Guid.Empty;
+
+        public DBSqlServer(ConnectionModel cm)
+        {
+            InitializeComponent();
+
+            cbbServerType.SelectedIndex = 0;
+
+            _cmdID = cm.ID;
+
+            var ci = ConnectionInfo.GetConnectionInfo(cm);
+            skinWaterTextBox1.Text = cm.Name;
+            cbbServer.Text = ci.Server;
+            cbbDatabase.Text = ci.DataBase;
+            txtUserName.Text = ci.UserName;
+            txtPassword.Text = ci.Password;
+            if (string.IsNullOrEmpty(ci.Password))
+            {
+                cbbShenFenRZ.SelectedIndex = 0;
+            }
+            else
+            {
+                cbbShenFenRZ.SelectedIndex = 1;
+            }
+            cbbDatabase.Text = ci.DataBase;
+        }
+
 
         /// <summary>
         /// 取消 关闭
@@ -162,7 +187,16 @@ namespace WEF.ModelGenerator.DbSelect
 
                 LoadForm.ShowLoading(this);
 
-                WEF.DbDAL.IDbObject dbObejct = new WEF.DbDAL.SQL2000.DbObject(cbbShenFenRZ.SelectedIndex == 0, cbbServer.Text, txtUserName.Text, txtPassword.Text);
+                WEF.DbDAL.IDbObject dbObejct;
+
+                if (cbbServerType.SelectedIndex == 0)
+                {
+                    dbObejct = new WEF.DbDAL.SQL2005.DbObject(cbbShenFenRZ.SelectedIndex == 0, cbbServer.Text, txtUserName.Text, txtPassword.Text);
+                }
+                else
+                {
+                    dbObejct = new WEF.DbDAL.SQL2000.DbObject(cbbShenFenRZ.SelectedIndex == 0, cbbServer.Text, txtUserName.Text, txtPassword.Text);
+                }
 
                 cbbDatabase.Enabled = false;
 
@@ -253,15 +287,23 @@ namespace WEF.ModelGenerator.DbSelect
                                 catch { }
                             }
 
-
                             ConnectionModel connectionModel = new ConnectionModel();
                             connectionModel.Database = dic["initial catalog"];
                             connectionModel.ID = Guid.NewGuid();
-                            connectionModel.Name = dic["data source"] + "(" + DatabaseType.SqlServer9.ToString() + ")[" + connectionModel.Database + "]";
-
-                            connectionModel.DbType = DatabaseType.SqlServer9.ToString();
+                            connectionModel.Name = skinWaterTextBox1.Text;
+                            if (string.IsNullOrEmpty(connectionModel.Name))
+                                connectionModel.Name = dic["data source"] + "(" + DatabaseType.SqlServer9.ToString() + ")[" + connectionModel.Database + "]";
+                            if (cbbServerType.SelectedIndex == 0)
+                            {
+                                connectionModel.DbType = DatabaseType.SqlServer9.ToString();
+                            }
+                            else
+                            {
+                                connectionModel.DbType = DatabaseType.SqlServer.ToString();
+                            }
                             connectionModel.ConnectionString = tempconnectionstring;
                             UtilsHelper.AddConnection(connectionModel);
+                            UtilsHelper.DeleteConnection(_cmdID.ToString());
                             this.DialogResult = DialogResult.OK;
                             this.Close();
                         }
@@ -270,18 +312,21 @@ namespace WEF.ModelGenerator.DbSelect
                             ConnectionModel connectionModel = new ConnectionModel();
                             connectionModel.Database = cbbDatabase.SelectedIndex == 0 ? "all" : cbbDatabase.Text;
                             connectionModel.ID = Guid.NewGuid();
-                            connectionModel.Name = cbbServer.Text + "(" + cbbServerType.Text + ")[" + connectionModel.Database + "]";
+                            connectionModel.Name = skinWaterTextBox1.Text;
+                            if (string.IsNullOrEmpty(connectionModel.Name))
+                                connectionModel.Name = cbbServer.Text + "(" + cbbServerType.Text + ")[" + connectionModel.Database + "]";
                             if (cbbServerType.SelectedIndex == 0)
                             {
-                                connectionModel.DbType = DatabaseType.SqlServer.ToString();
+                                connectionModel.DbType = DatabaseType.SqlServer9.ToString();
                             }
                             else
                             {
-                                connectionModel.DbType = DatabaseType.SqlServer9.ToString();
+                                connectionModel.DbType = DatabaseType.SqlServer.ToString();
                             }
                             connectionModel.ConnectionString = tempconnectionstring;
 
                             UtilsHelper.AddConnection(connectionModel);
+                            UtilsHelper.DeleteConnection(_cmdID.ToString());
 
                             this.DialogResult = DialogResult.OK;
 

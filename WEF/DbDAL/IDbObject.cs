@@ -94,9 +94,9 @@ namespace WEF.DbDAL
         /// 返回一个值
         /// </summary>
         /// <param name="dbName"></param>
-        /// <param name="SQLString"></param>
+        /// <param name="sqlString"></param>
         /// <returns></returns>
-        object GetSingle(string dbName, string SQLString);
+        object GetSingle(string dbName, string sqlString);
         /// <summary>
         /// 返回数据表所有(原始)记录
         /// </summary>

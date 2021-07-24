@@ -49,6 +49,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.textBox1 = new CCWin.SkinControl.SkinAlphaWaterTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.skinWaterTextBox1 = new CCWin.SkinControl.SkinWaterTextBox();
             this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -68,7 +69,7 @@
             // 
             this.txtUserName.Enabled = false;
             this.txtUserName.Location = new System.Drawing.Point(120, 181);
-            this.txtUserName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtUserName.Margin = new System.Windows.Forms.Padding(4);
             this.txtUserName.Name = "txtUserName";
             this.txtUserName.Size = new System.Drawing.Size(284, 25);
             this.txtUserName.TabIndex = 4;
@@ -78,7 +79,7 @@
             // 
             this.cbbServer.FormattingEnabled = true;
             this.cbbServer.Location = new System.Drawing.Point(120, 20);
-            this.cbbServer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbbServer.Margin = new System.Windows.Forms.Padding(4);
             this.cbbServer.Name = "cbbServer";
             this.cbbServer.Size = new System.Drawing.Size(284, 23);
             this.cbbServer.TabIndex = 1;
@@ -87,7 +88,7 @@
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(292, 454);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(139, 29);
             this.button1.TabIndex = 8;
@@ -110,9 +111,10 @@
             this.cbbServerType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbServerType.FormattingEnabled = true;
             this.cbbServerType.Items.AddRange(new object[] {
-            "SQL Server"});
+            "SQL Server",
+            "SQL Server 2000"});
             this.cbbServerType.Location = new System.Drawing.Point(120, 75);
-            this.cbbServerType.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbbServerType.Margin = new System.Windows.Forms.Padding(4);
             this.cbbServerType.Name = "cbbServerType";
             this.cbbServerType.Size = new System.Drawing.Size(284, 23);
             this.cbbServerType.TabIndex = 2;
@@ -135,7 +137,7 @@
             "Windows 身份认证",
             "SQL Server 身份认证"});
             this.cbbShenFenRZ.Location = new System.Drawing.Point(120, 128);
-            this.cbbShenFenRZ.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbbShenFenRZ.Margin = new System.Windows.Forms.Padding(4);
             this.cbbShenFenRZ.Name = "cbbShenFenRZ";
             this.cbbShenFenRZ.Size = new System.Drawing.Size(284, 23);
             this.cbbShenFenRZ.TabIndex = 3;
@@ -165,7 +167,7 @@
             // 
             this.txtPassword.Enabled = false;
             this.txtPassword.Location = new System.Drawing.Point(120, 234);
-            this.txtPassword.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtPassword.Margin = new System.Windows.Forms.Padding(4);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(284, 25);
             this.txtPassword.TabIndex = 5;
@@ -188,7 +190,7 @@
             this.cbbDatabase.Items.AddRange(new object[] {
             "全部库"});
             this.cbbDatabase.Location = new System.Drawing.Point(145, 490);
-            this.cbbDatabase.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbbDatabase.Margin = new System.Windows.Forms.Padding(4);
             this.cbbDatabase.Name = "cbbDatabase";
             this.cbbDatabase.Size = new System.Drawing.Size(284, 23);
             this.cbbDatabase.TabIndex = 9;
@@ -196,8 +198,8 @@
             // button2
             // 
             this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(248, 594);
-            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button2.Location = new System.Drawing.Point(245, 642);
+            this.button2.Margin = new System.Windows.Forms.Padding(4);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(100, 39);
             this.button2.TabIndex = 10;
@@ -207,8 +209,8 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(356, 594);
-            this.button3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button3.Location = new System.Drawing.Point(353, 642);
+            this.button3.Margin = new System.Windows.Forms.Padding(4);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(100, 39);
             this.button3.TabIndex = 11;
@@ -224,10 +226,10 @@
             this.groupBox1.Controls.Add(this.cbbDatabase);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Location = new System.Drawing.Point(25, 48);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Location = new System.Drawing.Point(22, 96);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox1.Size = new System.Drawing.Size(443, 528);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
@@ -236,7 +238,7 @@
             // 
             this.checkBox1.AutoSize = true;
             this.checkBox1.Location = new System.Drawing.Point(11, 312);
-            this.checkBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkBox1.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(119, 19);
             this.checkBox1.TabIndex = 6;
@@ -249,7 +251,7 @@
             this.panel2.Controls.Add(this.textBox1);
             this.panel2.Enabled = false;
             this.panel2.Location = new System.Drawing.Point(11, 340);
-            this.panel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(420, 106);
             this.panel2.TabIndex = 13;
@@ -260,7 +262,7 @@
             this.textBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox1.Location = new System.Drawing.Point(16, 18);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
@@ -283,28 +285,38 @@
             this.panel1.Controls.Add(this.cbbServer);
             this.panel1.Controls.Add(this.txtPassword);
             this.panel1.Location = new System.Drawing.Point(11, 19);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(420, 289);
             this.panel1.TabIndex = 12;
+            // 
+            // skinWaterTextBox1
+            // 
+            this.skinWaterTextBox1.Location = new System.Drawing.Point(21, 60);
+            this.skinWaterTextBox1.Name = "skinWaterTextBox1";
+            this.skinWaterTextBox1.Size = new System.Drawing.Size(443, 25);
+            this.skinWaterTextBox1.TabIndex = 58;
+            this.skinWaterTextBox1.Text = "MSSQLServerConnection";
+            this.skinWaterTextBox1.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.skinWaterTextBox1.WaterText = "配置名称";
             // 
             // DBSqlServer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(492, 652);
+            this.ClientSize = new System.Drawing.Size(492, 713);
+            this.Controls.Add(this.skinWaterTextBox1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DBSqlServer";
             this.ShowInTaskbar = false;
             this.Text = "连接到SqlServer服务器";
-            this.Load += new System.EventHandler(this.DBSqlServer_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -312,6 +324,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -337,5 +350,6 @@
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Panel panel2;
         private CCWin.SkinControl.SkinAlphaWaterTextBox textBox1;
+        private CCWin.SkinControl.SkinWaterTextBox skinWaterTextBox1;
     }
 }

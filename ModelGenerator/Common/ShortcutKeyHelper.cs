@@ -25,12 +25,25 @@ namespace WEF.ModelGenerator.Common
 
         public static void AllSelect(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            var text = (TextBox)sender;
+            var textBox = sender as TextBox;
 
-            if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            if (textBox == null)
             {
-                text.SelectAll();
+                var richTextBox = sender as RichTextBox;
+
+                if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+                {
+                    richTextBox.SelectAll();
+                }
             }
+            else
+            {
+                if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+                {
+                    textBox.SelectAll();
+                }
+            }
+
         }
 
         public static void Run(object sender, System.Windows.Forms.KeyEventArgs e, Action action)

@@ -30,10 +30,21 @@ using System.Windows.Forms;
 namespace WEF.ModelGenerator.Common
 {
     /// <summary>
-    /// 
+    /// 线程同步ui线程
     /// </summary>
     public static class InvokeHelper
     {
+        /// <summary>
+        /// 线程同步ui线程
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="action"></param>
+        public static void Invoke(this Form owner, Action action)
+        {
+            if (!owner.IsHandleCreated) throw new InvalidOperationException("父对象必须是从UI线程上创建的");
+            owner.Invoke(action);
+        }
+
         /// <summary>
         /// 异步线程同步ui线程
         /// </summary>
@@ -44,6 +55,8 @@ namespace WEF.ModelGenerator.Common
             if (!owner.IsHandleCreated) throw new InvalidOperationException("父对象必须是从UI线程上创建的");
             Task.Run(() => owner.Invoke(action));
         }
+
+
 
         /// <summary>
         /// 安全弹出模态窗体
@@ -104,7 +117,8 @@ namespace WEF.ModelGenerator.Common
                             Thread.Sleep(time);
                         }
                     });
-                    form.ShowDialog(owner);
+                    if (!form.Visible)
+                        form.ShowDialog(owner);
                 }));
             });
         }

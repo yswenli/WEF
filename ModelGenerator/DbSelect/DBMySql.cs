@@ -17,6 +17,24 @@ namespace WEF.ModelGenerator.DbSelect
             InitializeComponent();
         }
 
+        Guid _cmdID = Guid.Empty;
+
+        public DBMySql(ConnectionModel cm)
+        {
+            InitializeComponent();
+
+            _cmdID = cm.ID;
+
+            var ci = ConnectionInfo.GetConnectionInfo(cm);
+
+            skinWaterTextBox2.Text = cm.Name;
+            cbbServer.Text = ci.Server;
+            txtport.Text = ci.Port.ToString();
+            cbbDatabase.Text = ci.DataBase;
+            txtUserName.Text = ci.UserName;
+            txtPassword.Text = ci.Password;
+        }
+
 
         /// <summary>
         /// 测试连接
@@ -132,16 +150,20 @@ namespace WEF.ModelGenerator.DbSelect
                     return;
                 }
 
-                
+
 
                 ConnectionModel connectionModel = new ConnectionModel();
                 connectionModel.Database = keyValuePairs["database"];
                 connectionModel.ID = Guid.NewGuid();
-                connectionModel.Name = keyValuePairs["server"] + "(MySql)[" + connectionModel.Database + "]";
+                connectionModel.Name = skinWaterTextBox2.Text;
+                if (string.IsNullOrEmpty(connectionModel.Name))
+                    connectionModel.Name = keyValuePairs["server"] + "(MySql)[" + connectionModel.Database + "]";
                 connectionModel.ConnectionString = dbObejct.DbConnectStr;
                 connectionModel.DbType = DatabaseType.MySql.ToString();
 
+                
                 UtilsHelper.AddConnection(connectionModel);
+                UtilsHelper.DeleteConnection(_cmdID.ToString());
 
                 this.DialogResult = DialogResult.OK;
 
@@ -195,6 +217,7 @@ namespace WEF.ModelGenerator.DbSelect
                 connectionModel.DbType = DatabaseType.MySql.ToString();
 
                 UtilsHelper.AddConnection(connectionModel);
+                UtilsHelper.DeleteConnection(_cmdID.ToString());
 
                 this.DialogResult = DialogResult.OK;
 

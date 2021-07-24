@@ -25,6 +25,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using WEF.Common;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Controls;
 using WEF.ModelGenerator.Model;
@@ -33,6 +34,8 @@ namespace WEF.ModelGenerator.Forms
 {
     public partial class SQLForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {
+        string _currentSql = "";
+
         public SQLForm()
         {
             InitializeComponent();
@@ -95,7 +98,7 @@ namespace WEF.ModelGenerator.Forms
 
         public void RunSql()
         {
-            var sql = AutoTextBox.TextBox.Text;
+            _currentSql = AutoTextBox.TextBox.Text;
 
             stopwatch.Restart();
 
@@ -107,7 +110,7 @@ namespace WEF.ModelGenerator.Forms
                 {
                     WEF.DbDAL.IDbObject dbObject = DBObjectHelper.GetDBObject(ConnectionModel);
 
-                    if (string.IsNullOrEmpty(sql))
+                    if (string.IsNullOrEmpty(_currentSql))
                     {
                         LoadForm.HideLoading(this); ;
 
@@ -123,9 +126,9 @@ namespace WEF.ModelGenerator.Forms
                     {
                         if (!string.IsNullOrWhiteSpace(AutoTextBox.TextBox.SelectedText))
                         {
-                            sql = AutoTextBox.TextBox.SelectedText.Trim();
+                            _currentSql = AutoTextBox.TextBox.SelectedText.Trim();
 
-                            if (string.IsNullOrEmpty(sql))
+                            if (string.IsNullOrEmpty(_currentSql))
                             {
                                 LoadForm.HideLoading(this); ;
                                 MessageBox.Show(this, "sql内容不能为空!");
@@ -137,13 +140,15 @@ namespace WEF.ModelGenerator.Forms
 
                     }));
 
-                    if (sql.IndexOf("select", StringComparison.InvariantCultureIgnoreCase) >= 0 || sql.IndexOf("print", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    if (_currentSql.StartsWith("select", StringComparison.InvariantCultureIgnoreCase))
                     {
                         try
                         {
                             int max = 50;
 
-                            var ds = dbObject.Query(ConnectionModel.Database, sql);
+                            var ds = dbObject.Query(ConnectionModel.Database, _currentSql);
+
+                            stopwatch.Stop();
 
                             if (ds != null && ds.Tables != null)
                             {
@@ -180,7 +185,6 @@ namespace WEF.ModelGenerator.Forms
                                         }
                                     }
 
-
                                     dataGridView1.Invoke(new Action(() =>
                                     {
                                         dataGridView1.DataSource = dt;
@@ -193,7 +197,7 @@ namespace WEF.ModelGenerator.Forms
                                             }
                                         }
 
-                                        lbl_execute.Text = $"当前显示{(max > count ? count : max)}行，影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalSeconds} 秒";
+                                        lbl_execute.Text = $"当前显示{(max > count ? count : max)}行，影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalSeconds} s";
                                     }));
                                 }
                             }
@@ -201,22 +205,42 @@ namespace WEF.ModelGenerator.Forms
                         }
                         catch (Exception ex)
                         {
-                            LoadForm.HideLoading(this); ;
+                            LoadForm.HideLoading(this);
                             this.Invoke(new Action(() =>
                             {
                                 MessageBox.Show(this, $"查询发生异常，ex:" + ex.Message);
                             }));
                         }
                     }
+                    else if (_currentSql.StartsWith("print", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        try
+                        {
+                            var obj = dbObject.GetSingle(ConnectionModel.Database, _currentSql);
+
+                            lbl_execute.Invoke(new Action(() =>
+                            {
+                                dataGridView1.DataSource = null;
+                                lbl_execute.Text = $"影响数据行数：1 耗时：{stopwatch.Elapsed.TotalSeconds} s";
+                                dataGridView1.DataSource = new { 结果 = obj?.ToString() ?? "" };
+                            }));
+                        }
+                        finally
+                        {
+                            LoadForm.HideLoading(this);
+                        }
+                    }
                     else
                     {
                         try
                         {
-                            var count = dbObject.ExecuteSql(ConnectionModel.Database, sql);
+                            var count = dbObject.ExecuteSql(ConnectionModel.Database, _currentSql);
+
+                            stopwatch.Stop();
 
                             lbl_execute.Invoke(new Action(() =>
                             {
-                                lbl_execute.Text = $"影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalMilliseconds} 毫秒";
+                                lbl_execute.Text = $"影响数据行数：{count} 耗时：{stopwatch.Elapsed.TotalSeconds} s";
                             }));
 
                             LoadForm.HideLoading(this); ;
@@ -247,7 +271,7 @@ namespace WEF.ModelGenerator.Forms
         {
             var cells = dataGridView1.SelectedCells;
 
-            if (cells != null)
+            if (cells != null && cells.Count > 0)
             {
                 StringBuilder sb = new StringBuilder();
 
@@ -269,14 +293,91 @@ namespace WEF.ModelGenerator.Forms
 
         private void exportDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var cells = dataGridView1.SelectedCells;
-            if (cells != null)
+            if (_currentSql.StartsWith("select", StringComparison.InvariantCultureIgnoreCase))
             {
-                new SQLExportForm((DataTable)dataGridView1.DataSource).ShowDialog();
+                Task.Run(() =>
+                {
+                    LoadForm.ShowLoading(this);
+
+                    try
+                    {
+                        WEF.DbDAL.IDbObject dbObject = DBObjectHelper.GetDBObject(ConnectionModel);
+
+                        var ds = dbObject.Query(ConnectionModel.Database, _currentSql);
+
+                        if (ds != null && ds.Tables != null)
+                        {
+                            var dt = ds.Tables[0];
+                            if (dt != null && dt.Rows != null && dt.Rows.Count > 0)
+                            {
+                                LoadForm.HideLoading(this);
+                                InvokeHelper.Invoke(this, () => new SQLExportForm(dt).ShowDialog());
+                                return;
+                            }
+                        }
+                        LoadForm.HideLoading(this);
+                    }
+                    catch (Exception ex)
+                    {
+                        LoadForm.HideLoading(this);
+                        MessageBox.Show("导出数据时发生异常：" + ex.Message);
+                    }
+                });
             }
         }
+        private void 生成JsonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_currentSql.StartsWith("select", StringComparison.InvariantCultureIgnoreCase))
+            {
 
+                Task.Run(() =>
+                {
+                    LoadForm.ShowLoading(this);
+
+                    try
+                    {
+                        WEF.DbDAL.IDbObject dbObject = DBObjectHelper.GetDBObject(ConnectionModel);
+
+                        var ds = dbObject.Query(ConnectionModel.Database, _currentSql);
+
+                        if (ds != null && ds.Tables != null)
+                        {
+                            var dt = ds.Tables[0];
+
+                            if (dt != null && dt.Rows != null && dt.Rows.Count > 0)
+                            {
+                                if (dt.Rows.Count >= 1000)
+                                {
+                                    MessageBox.Show("生成失败，当前数据量超过1000条");
+                                    LoadForm.HideLoading(this);
+                                    return;
+                                }
+
+                                var json = SerializeHelper.Serialize(dt);
+
+                                LoadForm.HideLoading(this);
+
+                                InvokeHelper.Invoke(this, () => new TextForm("WEF数据库工具", json, true).ShowDialog(this));
+
+                                return;
+                            }
+                        }
+
+                        LoadForm.HideLoading(this);
+                    }
+                    catch (Exception ex)
+                    {
+                        LoadForm.HideLoading(this);
+                        MessageBox.Show("生成Json时发生异常：" + ex.Message);
+                    }
+                });
+
+
+            }
+
+        }
         #endregion
+
 
     }
 }

@@ -18,6 +18,7 @@
  *****************************************************************************************************/
 using System;
 using System.Collections.Generic;
+
 using WEF.Common;
 
 namespace WEF.ModelGenerator.Common
@@ -104,7 +105,24 @@ namespace WEF.ModelGenerator.Common
             set { _isView = value; }
         }
 
-        public string Builder()
+        public string Builder(bool simple = false)
+        {
+            if (!simple)
+            {
+                return WholeBuilder();
+            }
+            else
+            {
+                return SimpleBuilder();
+            }
+
+        }
+
+        /// <summary>
+        /// 生成完整支持wef的实体类代码
+        /// </summary>
+        /// <returns></returns>
+        string WholeBuilder()
         {
             Columns = DBToCSharp.DbtoCSColumns(Columns, DbType);
 
@@ -125,9 +143,9 @@ namespace WEF.ModelGenerator.Common
             //plus.AppendLine("using System.Collections.Generic;");
             //plus.AppendLine("using System.Data.Common;");
             //plus.AppendLine("using System.Linq.Expressions;");
-            plus.AppendLine("using System.Runtime.Serialization;");            
+            plus.AppendLine("using System.Runtime.Serialization;");
             plus.AppendLine("using WEF;");
-            plus.AppendLine("using WEF.Common;"); 
+            plus.AppendLine("using WEF.Common;");
 
             plus.AppendLine();
             plus.AppendLine("namespace " + NameSpace);
@@ -161,6 +179,64 @@ namespace WEF.ModelGenerator.Common
 
             plus.AppendLine(repositoryCs);
 
+            plus.AppendLine("}");
+            plus.AppendLine("");
+            return plus.ToString();
+        }
+
+        /// <summary>
+        /// 简单生成贫血模式的实体类
+        /// </summary>
+        /// <returns></returns>
+        string SimpleBuilder()
+        {
+            Columns = DBToCSharp.DbtoCSColumns(Columns, DbType);
+
+            StringPlus plus = new StringPlus();
+            plus.AppendLine("//------------------------------------------------------------------------------");
+            plus.AppendLine("// <WEF-ModelGenerator>");
+            plus.AppendLine("//     此代码由" + System.Reflection.Assembly.GetExecutingAssembly().FullName + "生成;时间 " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture));
+            plus.AppendLine("//     运行时版本:" + Environment.Version.ToString());
+            plus.AppendLine("//     不建议手动更改此代码，如有需要请自行扩展partial类");
+            plus.AppendLine("// </WEF-ModelGenerator>");
+            plus.AppendLine("//------------------------------------------------------------------------------");
+
+            plus.AppendLine();
+            plus.AppendLine();
+
+
+            plus.AppendLine("using System;");
+            plus.AppendLine("using System.Runtime.Serialization;");
+
+            plus.AppendLine();
+            plus.AppendLine("namespace " + NameSpace);
+            plus.AppendLine("{");
+            plus.AppendLine();
+            plus.AppendSpaceLine(1, "/// <summary>");
+            plus.AppendSpaceLine(1, "/// 实体类" + ClassName + "");
+            plus.AppendSpaceLine(1, "/// " + TableName + "");
+            plus.AppendSpaceLine(1, "/// </summary>");
+            plus.AppendSpaceLine(1, $"[Serializable, DataContract]");
+            plus.AppendSpaceLine(1, "public partial class " + ClassName);
+            plus.AppendSpaceLine(1, "{");
+            plus.AppendLine();
+            StringPlus plus1 = new StringPlus();
+            StringPlus plus2 = new StringPlus();
+            foreach (ColumnInfo column in Columns)
+            {
+                plus2.AppendSpaceLine(2, "/// <summary>");
+                plus2.AppendSpaceLine(2, "/// " + column.Name + " " + column.DeText);
+                plus2.AppendSpaceLine(2, "/// </summary>");
+                plus2.AppendSpaceLine(2, "[DataMember]");
+                plus2.AppendSpaceLine(2, "public " + column.DataTypeName + " " + column.Name);
+                plus2.AppendSpaceLine(2, "{");
+                plus2.AppendSpaceLine(3, "get;");
+                plus2.AppendSpaceLine(3, "set;");
+                plus2.AppendSpaceLine(2, "}");
+            }
+            plus1.Append(plus2.Value);
+            plus.AppendLine(plus1.ToString());
+            plus.AppendSpaceLine(1, "}");
             plus.AppendLine("}");
             plus.AppendLine("");
             return plus.ToString();

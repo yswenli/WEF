@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
+
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Model;
 
@@ -133,7 +134,9 @@ namespace WEF.ModelGenerator.DbSelect
                 ConnectionModel connectionModel = new ConnectionModel();
                 connectionModel.Database = keyValuePairs["database"];
                 connectionModel.ID = Guid.NewGuid();
-                connectionModel.Name = keyValuePairs["server"] + "(PostgreSql)[" + connectionModel.Database + "]";
+                connectionModel.Name = skinWaterTextBox2.Text;
+                if (string.IsNullOrEmpty(connectionModel.Name))
+                    connectionModel.Name = keyValuePairs["server"] + "(PostgreSql)[" + connectionModel.Database + "]";
                 connectionModel.ConnectionString = dbObejct.DbConnectStr;
                 connectionModel.DbType = DatabaseType.PostgreSQL.ToString();
 

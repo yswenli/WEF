@@ -107,7 +107,9 @@ namespace WEF.ModelGenerator.DbSelect
                 }
 
                 connModel.ConnectionString = cstring.ToString();
-                connModel.Name = txtfilepath.Text;
+                connModel.Name = skinWaterTextBox1.Text;
+                if (string.IsNullOrEmpty(connModel.Name))
+                    connModel.Name = txtfilepath.Text;
                 connModel.Database = connModel.Name.Substring(connModel.Name.LastIndexOf('\\') + 1);
             }
             else
@@ -154,7 +156,7 @@ namespace WEF.ModelGenerator.DbSelect
                     oledbConn.Open();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("连接失败!\n\r" + ex.Message);
                 return;

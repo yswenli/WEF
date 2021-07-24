@@ -2,6 +2,7 @@
 using System.Data.OleDb;
 using System.Text;
 using System.Windows.Forms;
+
 using WEF.ModelGenerator.Common;
 
 namespace WEF.ModelGenerator.DbSelect
@@ -117,7 +118,7 @@ namespace WEF.ModelGenerator.DbSelect
                 }
 
                 connModel.ConnectionString = cstring.ToString();
-                connModel.Name = txtfilepath.Text;
+                connModel.Name = skinWaterTextBox1.Text;
                 connModel.Database = connModel.Name.Substring(connModel.Name.LastIndexOf('\\') + 1);
             }
             else
