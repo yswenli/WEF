@@ -214,7 +214,7 @@
             // 
             this.dataSyncToolStripMenuItem.Name = "dataSyncToolStripMenuItem";
             this.dataSyncToolStripMenuItem.Size = new System.Drawing.Size(102, 24);
-            this.dataSyncToolStripMenuItem.Text = "(&S)数据同步";
+            this.dataSyncToolStripMenuItem.Text = "(&S)数据传输";
             this.dataSyncToolStripMenuItem.Click += new System.EventHandler(this.dataSyncToolStripMenuItem_Click);
             // 
             // jsonToolToolStripMenuItem

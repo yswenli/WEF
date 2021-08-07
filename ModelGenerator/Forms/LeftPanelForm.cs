@@ -47,6 +47,8 @@ namespace WEF.ModelGenerator
 
         public event Action<ConnectionModel> OnNewSqlForm;
 
+        public event Action<ConnectionModel> OnNewDataForm;
+
         /// <summary>
         /// 新建数据库连接
         /// </summary>
@@ -1066,6 +1068,16 @@ namespace WEF.ModelGenerator
             new TemplateToCodeFastForm(tableName).ShowDialog();
         }
 
+
+        private void dataOperateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TreeNode node = Treeview.SelectedNode;
+            if (node != null && !string.IsNullOrEmpty(node.Text) && node.Level == 4)
+            {
+                ShowDataForm(node);
+            }
+        }
+
         private void exportDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TreeNode node = Treeview.SelectedNode;
@@ -1127,6 +1139,54 @@ namespace WEF.ModelGenerator
             #endregion
 
             OnNewSqlForm?.Invoke(conModel);
+        }
+
+        public void ShowDataForm(TreeNode node)
+        {
+            ConnectionModel conModel = null;
+
+            conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
+            conModel.Database = node.Parent.Parent.Text;
+
+            #region mysql
+            var index1 = conModel.ConnectionString.IndexOf("database=", StringComparison.OrdinalIgnoreCase);
+
+            if (index1 > 0)
+            {
+                var str1 = conModel.ConnectionString.Substring(0, index1);
+
+                var str2 = conModel.ConnectionString.Substring(index1);
+
+                var index2 = str2.IndexOf(";");
+
+                str2 = str2.Substring(index2 + 1);
+
+                conModel.ConnectionString = $"{str1}database={conModel.Database};{str2}";
+            }
+
+            #endregion
+
+            #region sqlserver
+            var index12 = conModel.ConnectionString.IndexOf("Initial Catalog=", StringComparison.OrdinalIgnoreCase);
+
+            if (index12 > 0)
+            {
+                var str1 = conModel.ConnectionString.Substring(0, index12);
+
+                var str2 = conModel.ConnectionString.Substring(index12);
+
+                var index2 = str2.IndexOf(";");
+
+                str2 = str2.Substring(index2 + 1);
+
+                conModel.ConnectionString = $"{str1}database={conModel.Database};{str2}";
+            }
+
+            #endregion
+
+            conModel.TableName = node.Text;
+
+            OnNewDataForm?.Invoke(conModel);
         }
 
         public void ShowSQLExportForm(TreeNode node)
@@ -1329,7 +1389,5 @@ namespace WEF.ModelGenerator
                 }
             }
         }
-
-        
     }
 }

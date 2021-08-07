@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -39,6 +40,16 @@ namespace WEF.ModelGenerator.Forms
         public SQLForm()
         {
             InitializeComponent();
+
+            #region 防闪
+            //设置窗体的双缓冲
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint, true);
+            this.UpdateStyles();
+            //利用反射设置DataGridView的双缓冲
+            Type dgvType = this.dataGridView1.GetType();
+            PropertyInfo pi = dgvType.GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
+            pi.SetValue(this.dataGridView1, true, null);
+            #endregion
         }
 
         public SQLForm(string tableName) : this()
@@ -376,8 +387,7 @@ namespace WEF.ModelGenerator.Forms
             }
 
         }
+
         #endregion
-
-
     }
 }

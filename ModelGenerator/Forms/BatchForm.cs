@@ -5,6 +5,7 @@ using System.Data;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+
 using WEF.DbDAL;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Model;
@@ -33,11 +34,11 @@ namespace WEF.ModelGenerator
 
 
 
-        public BatchForm(string _databaseName, ConnectionModel _ConnectionModel)
+        public BatchForm(string _databaseName, ConnectionModel _connectionModel)
         {
             InitializeComponent();
             this.DatabaseName = _databaseName;
-            this.ConnectionModel = _ConnectionModel;
+            this.ConnectionModel = _connectionModel;
         }
 
         /// <summary>
@@ -53,14 +54,9 @@ namespace WEF.ModelGenerator
 
                 txtNamaspace.Text = sysconfigModel.Namespace;
 
-                var index = connectionModel.Name.IndexOf("[");
+                var connectionInfo = ConnectionInfo.GetConnectionInfo(connectionModel);
 
-                if (index < 0)
-                {
-                    index = connectionModel.Name.IndexOf("(");
-                }
-
-                llServer.Text = connectionModel.Name.Substring(0, index);
+                llServer.Text = connectionInfo.Server;
                 llDatabaseName.Text = DatabaseName;
                 txtPath.Text = sysconfigModel.BatchDirectoryPath;
 
@@ -82,9 +78,9 @@ namespace WEF.ModelGenerator
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                MessageBox.Show($"");
+                MessageBox.Show(this, $"初始化失败," + ex.Message);
                 this.Close();
             }
         }

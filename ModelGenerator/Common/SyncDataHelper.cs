@@ -83,7 +83,7 @@ namespace WEF.ModelGenerator.Common
 
                 if (configs == null || configs.Count < 1)
                 {
-                    RaiseOnLog("执行同步失败，无任何同步配置");
+                    RaiseOnLog("执行传输失败，无任何传输配置");
 
                     return;
                 }
@@ -92,7 +92,7 @@ namespace WEF.ModelGenerator.Common
 
                 if (cs == null || cs.Count < 1)
                 {
-                    RaiseOnLog("执行同步失败，无任何可用的同步配置");
+                    RaiseOnLog("执行传输失败，无任何可用的传输配置");
 
                     return;
                 }
@@ -112,106 +112,96 @@ namespace WEF.ModelGenerator.Common
         {
             await Task.Yield();
 
-            var runSpanTime = DateTime.FromFileTime(_startedTime.AddMinutes(dataSyncConfig.RunSpan).ToFileTime());
-
-            var recordTime = dataSyncConfig.Started;
-
-            while (true)
+            if (token.IsCancellationRequested)
             {
-                await Task.Delay(1000);
+                RaiseOnLog($"传输任务【{dataSyncConfig.Name}】已取消");
+                return;
+            }
 
+            RaiseOnLog($"传输任务【{dataSyncConfig.Name}】开始处理");
+
+            await Task.Run(async () =>
+            {
                 if (token.IsCancellationRequested)
                 {
-                    RaiseOnLog($"同步任务【{dataSyncConfig.Name}】已取消");
+                    RaiseOnLog($"传输任务【{dataSyncConfig.Name}】已取消");
                     return;
                 }
 
-                if (runSpanTime <= DateTime.Now)
+                var sql = dataSyncConfig.Source.Sql;
+
+
+                DataTable dt = null;
+                Stopwatch stopwatch = null;
+                try
                 {
-                    RaiseOnLog($"同步任务【{dataSyncConfig.Name}】开始处理");
+                    stopwatch = Stopwatch.StartNew();
 
-                    await Task.Run(async () =>
+                    RaiseOnLog($"传输任务【{dataSyncConfig.Name}】正在开始获取数据源");
+
+                    var source = DBObjectHelper.GetDBObject(dataSyncConfig.Source);
+
+                    var sourceData = source.Query(dataSyncConfig.Source.Database, sql);
+
+                    if (sourceData == null || sourceData.Tables == null || sourceData.Tables.Count < 1 || sourceData.Tables[0].Rows == null || sourceData.Tables[0].Rows.Count < 1)
                     {
-                        if (token.IsCancellationRequested)
-                        {
-                            RaiseOnLog($"同步任务【{dataSyncConfig.Name}】已取消");
-                            return;
-                        }
+                        RaiseOnLog($"传输任务【{dataSyncConfig.Name}】未获取到数据，用时:{stopwatch.ElapsedMilliseconds} ms，任务已退出");
 
-                        var sql = dataSyncConfig.Source.Sql.Replace("{datetime}", $"'{recordTime:yyyy-MM-dd HH:mm:ss.fff}'");
+                        return;
+                    }
+                    else
+                    {
+                        RaiseOnLog($"传输任务【{dataSyncConfig.Name}】已获取数据{sourceData.Tables[0].Rows.Count}条，用时:{stopwatch.ElapsedMilliseconds} ms");
+                    }
 
-                        runSpanTime = runSpanTime.AddMinutes(dataSyncConfig.RunSpan);
-
-                        DataTable dt = null;
-                        Stopwatch stopwatch = null;
-                        try
-                        {
-                            stopwatch = Stopwatch.StartNew();
-
-                            var source = DBObjectHelper.GetDBObject(dataSyncConfig.Source);
-
-                            recordTime = DateTime.Now;
-
-                            var sourceData = source.Query(dataSyncConfig.Source.Database, sql);
-
-                            if (sourceData == null || sourceData.Tables == null || sourceData.Tables.Count < 1 || sourceData.Tables[0].Rows == null)
-                            {
-                                RaiseOnLog($"同步任务【{dataSyncConfig.Name}】未获取到数据，用时:{stopwatch.ElapsedMilliseconds} ms，任务已退出");
-
-                                return;
-                            }
-                            else
-                            {
-                                RaiseOnLog($"同步任务【{dataSyncConfig.Name}】已获取数据{sourceData.Tables[0].Rows.Count}条，用时:{stopwatch.ElapsedMilliseconds} ms");
-                            }
-
-                            dt = sourceData.Tables[0];
-                        }
-                        catch (Exception ex)
-                        {
-                            RaiseOnLog($"同步任务【{dataSyncConfig.Name}】获取源数据失败,任务已退出，Error:" + ex.Message);
-                        }
-                        finally
-                        {
-                            stopwatch.Stop();
-                        }
-
-                        await Task.Yield();
-
-                        if (token.IsCancellationRequested)
-                        {
-                            RaiseOnLog($"同步任务【{dataSyncConfig.Name}】已取消");
-                            return;
-                        }
-
-                        try
-                        {
-                            stopwatch = Stopwatch.StartNew();
-
-                            if (dt != null)
-                            {
-                                var target = DBObjectHelper.GetDBContext(dataSyncConfig.Target);
-
-                                target.BulkInsert(dataSyncConfig.Target.TableName, dt);
-
-                                RaiseOnLog($"同步任务【{dataSyncConfig.Name}】已处理完成，用时:{stopwatch.ElapsedMilliseconds} ms");
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            RaiseOnLog($"同步任务【{dataSyncConfig.Name}】获取源数据失败,任务已退出，Error:" + ex.Message);
-                        }
-                        finally
-                        {
-                            stopwatch.Stop();
-                        }
-                    });
+                    dt = sourceData.Tables[0];
+                }
+                catch (Exception ex)
+                {
+                    RaiseOnLog($"传输任务【{dataSyncConfig.Name}】获取源数据失败,任务已退出，Error:" + ex.Message);
+                }
+                finally
+                {
+                    stopwatch.Stop();
                 }
 
-            }
+                await Task.Yield();
 
+                if (token.IsCancellationRequested)
+                {
+                    RaiseOnLog($"传输任务【{dataSyncConfig.Name}】已取消");
+                    return;
+                }
 
+                try
+                {
+                    stopwatch = Stopwatch.StartNew();
 
+                    if (dt != null)
+                    {
+                        RaiseOnLog($"传输任务【{dataSyncConfig.Name}】正在开始传输数据");
+
+                        if (dataSyncConfig.Target.ConnectionString.IndexOf("pooling=true", StringComparison.OrdinalIgnoreCase) > -1 && dataSyncConfig.Target.ConnectionString.IndexOf("charset=utf8", StringComparison.OrdinalIgnoreCase) == -1)
+                        {
+                            dataSyncConfig.Target.ConnectionString = dataSyncConfig.Target.ConnectionString + ";charset=utf8";
+                        }
+
+                        var target = DBObjectHelper.GetDBContext(dataSyncConfig.Target);
+
+                        var count = target.BulkInsert(dataSyncConfig.Target.TableName, dt, 3600);
+
+                        RaiseOnLog($"传输任务【{dataSyncConfig.Name}】传输数据完成，已成功完成{count}条，用时:{stopwatch.ElapsedMilliseconds} ms");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    RaiseOnLog($"传输任务【{dataSyncConfig.Name}】获取源数据失败,任务已退出，Error:" + ex.Message);
+                }
+                finally
+                {
+                    stopwatch.Stop();
+                }
+            });
         }
     }
 }

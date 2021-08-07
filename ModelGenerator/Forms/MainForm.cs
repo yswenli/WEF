@@ -15,12 +15,11 @@
 *版 本 号： V1.0.0.0
 *描    述：
 *****************************************************************************/
-using CCWin;
-
 using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using CCWin;
 
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Forms;
@@ -51,6 +50,7 @@ namespace WEF.ModelGenerator
             {
                 _leftPannelForm.OnNewContentForm += lp_newcontentForm;
                 _leftPannelForm.OnNewSqlForm += lp_newsqlForm;
+                _leftPannelForm.OnNewDataForm += _leftPannelForm_OnNewDataForm;
                 _leftPannelForm.Show(dpleft);
                 _leftPannelForm.DockTo(dpleft, DockStyle.Left);
 
@@ -58,6 +58,8 @@ namespace WEF.ModelGenerator
                 _sqlTemplateForm.DockTo(dpleft, DockStyle.Right);
             }
         }
+
+
 
         /// <summary>
         /// 创建生成
@@ -79,6 +81,14 @@ namespace WEF.ModelGenerator
         {
             SQLForm s = new SQLForm(conModel.TableName);
             s.Text = "(" + conModel.Database + ")SQL查询窗口";
+            s.ConnectionModel = conModel;
+            s.Show(dpleft);
+        }
+
+        private void _leftPannelForm_OnNewDataForm(ConnectionModel conModel)
+        {
+            DataForm s = new DataForm(conModel);
+            s.Text = "(" + conModel.Database + conModel.TableName + ")数据编辑窗口";
             s.ConnectionModel = conModel;
             s.Show(dpleft);
         }
@@ -147,7 +157,18 @@ namespace WEF.ModelGenerator
 
         private void dataSyncToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DataSyncForm.Instance.Show(this);
+            if (DataSyncForm.Instance.Visible)
+            {
+                if (DataSyncForm.Instance.WindowState == FormWindowState.Minimized)
+                {
+                    DataSyncForm.Instance.WindowState = FormWindowState.Normal;
+                }
+            }
+            else
+            {
+                DataSyncForm.Instance.Show(this);
+            }
+
         }
         /// <summary>
         /// json工具
@@ -232,6 +253,6 @@ namespace WEF.ModelGenerator
 
         #endregion
 
-       
+
     }
 }

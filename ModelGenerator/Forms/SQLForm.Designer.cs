@@ -36,9 +36,9 @@
             this.contextMenuStripCopy = new CCWin.SkinControl.SkinContextMenuStrip();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.生成JsonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lbl_execute = new System.Windows.Forms.Label();
-            this.生成JsonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStripCopy.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -77,12 +77,14 @@
             this.dataGridView1.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.RowHeadersWidth = 51;
+            this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.RowTemplate.Height = 23;
             this.dataGridView1.Size = new System.Drawing.Size(1131, 430);
             this.dataGridView1.TabIndex = 10;
+            
+            
             // 
             // contextMenuStripCopy
             // 
@@ -108,7 +110,7 @@
             this.contextMenuStripCopy.ItemSplitter = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
             this.contextMenuStripCopy.Name = "contextMenuStripCopy";
             this.contextMenuStripCopy.RadiusStyle = CCWin.SkinClass.RoundStyle.All;
-            this.contextMenuStripCopy.Size = new System.Drawing.Size(211, 104);
+            this.contextMenuStripCopy.Size = new System.Drawing.Size(141, 76);
             this.contextMenuStripCopy.SkinAllColor = true;
             this.contextMenuStripCopy.TitleAnamorphosis = true;
             this.contextMenuStripCopy.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(228)))), ((int)(((byte)(236)))));
@@ -118,16 +120,23 @@
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(140, 24);
             this.copyToolStripMenuItem.Text = "复制";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // exportDataToolStripMenuItem
             // 
             this.exportDataToolStripMenuItem.Name = "exportDataToolStripMenuItem";
-            this.exportDataToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.exportDataToolStripMenuItem.Size = new System.Drawing.Size(140, 24);
             this.exportDataToolStripMenuItem.Text = "导出数据";
             this.exportDataToolStripMenuItem.Click += new System.EventHandler(this.exportDataToolStripMenuItem_Click);
+            // 
+            // 生成JsonToolStripMenuItem
+            // 
+            this.生成JsonToolStripMenuItem.Name = "生成JsonToolStripMenuItem";
+            this.生成JsonToolStripMenuItem.Size = new System.Drawing.Size(140, 24);
+            this.生成JsonToolStripMenuItem.Text = "生成Json";
+            this.生成JsonToolStripMenuItem.Click += new System.EventHandler(this.生成JsonToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -157,13 +166,6 @@
             this.lbl_execute.Size = new System.Drawing.Size(37, 15);
             this.lbl_execute.TabIndex = 12;
             this.lbl_execute.Text = "就绪";
-            // 
-            // 生成JsonToolStripMenuItem
-            // 
-            this.生成JsonToolStripMenuItem.Name = "生成JsonToolStripMenuItem";
-            this.生成JsonToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
-            this.生成JsonToolStripMenuItem.Text = "生成Json";
-            this.生成JsonToolStripMenuItem.Click += new System.EventHandler(this.生成JsonToolStripMenuItem_Click);
             // 
             // SQLForm
             // 

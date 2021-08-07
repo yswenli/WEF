@@ -37,11 +37,7 @@ namespace WEF.ModelGenerator.Model
 
         public ConnectionModel Source { get; set; }
 
-        public DateTime Started { get; set; } = DateTime.UtcNow;
-
         public ConnectionModel Target { get; set; }
-
-        public int RunSpan { get; set; }
 
         public DateTime Created { get; set; }
 

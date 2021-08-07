@@ -38,24 +38,22 @@ namespace WEF.ModelGenerator.Forms
             this.button2 = new System.Windows.Forms.Button();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.skinWaterTextBox1 = new CCWin.SkinControl.SkinWaterTextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.skinWaterTextBox2 = new CCWin.SkinControl.SkinWaterTextBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.dateTimePicker1);
             this.groupBox1.Controls.Add(this.textBox1);
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.comboBox1);
             this.groupBox1.Location = new System.Drawing.Point(8, 85);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(912, 193);
+            this.groupBox1.Size = new System.Drawing.Size(912, 176);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "源数据";
@@ -69,7 +67,7 @@ namespace WEF.ModelGenerator.Forms
             this.textBox1.Size = new System.Drawing.Size(899, 94);
             this.textBox1.TabIndex = 2;
             this.textBox1.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
-            this.textBox1.WaterText = "请输入要传输数据的Sql，例如：select * from oc_userinfo where createtime>={datetime}";
+            this.textBox1.WaterText = "请输入要传输数据的Sql，例如：select * from oc_userinfo";
             // 
             // button1
             // 
@@ -97,7 +95,7 @@ namespace WEF.ModelGenerator.Forms
             this.groupBox2.Controls.Add(this.comboBox2);
             this.groupBox2.Location = new System.Drawing.Point(9, 293);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(905, 124);
+            this.groupBox2.Size = new System.Drawing.Size(905, 110);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "目标数据";
@@ -131,15 +129,6 @@ namespace WEF.ModelGenerator.Forms
             this.comboBox2.TabIndex = 1;
             this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
-            // skinWaterTextBox1
-            // 
-            this.skinWaterTextBox1.Location = new System.Drawing.Point(37, 446);
-            this.skinWaterTextBox1.Name = "skinWaterTextBox1";
-            this.skinWaterTextBox1.Size = new System.Drawing.Size(149, 25);
-            this.skinWaterTextBox1.TabIndex = 2;
-            this.skinWaterTextBox1.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
-            this.skinWaterTextBox1.WaterText = "间隔时长（分钟）";
-            // 
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(802, 450);
@@ -164,7 +153,7 @@ namespace WEF.ModelGenerator.Forms
             this.checkBox1.AutoSize = true;
             this.checkBox1.Checked = true;
             this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(207, 450);
+            this.checkBox1.Location = new System.Drawing.Point(15, 427);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(89, 19);
             this.checkBox1.TabIndex = 5;
@@ -172,32 +161,31 @@ namespace WEF.ModelGenerator.Forms
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
-            // dateTimePicker1
+            // label1
             // 
-            this.dateTimePicker1.CustomFormat = "yyyy-MM-dd HH:mm:ss";
-            this.dateTimePicker1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker1.Location = new System.Drawing.Point(7, 157);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(207, 27);
-            this.dateTimePicker1.TabIndex = 3;
+            this.label1.Image = global::WEF.ModelGenerator.Properties.Resources._0616152d52f214c689f01819eefb836d;
+            this.label1.Location = new System.Drawing.Point(165, 136);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(347, 333);
+            this.label1.TabIndex = 6;
             // 
             // DataSyncConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(926, 508);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.skinWaterTextBox2);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.skinWaterTextBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "DataSyncConfigForm";
-            this.Text = "数据同步配置";
+            this.Text = "数据传输配置";
+            this.Load += new System.EventHandler(this.DataSyncConfigForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -216,10 +204,9 @@ namespace WEF.ModelGenerator.Forms
         private System.Windows.Forms.Button button2;
         private CCWin.SkinControl.SkinWaterTextBox textBox1;
         private System.Windows.Forms.ComboBox comboBox3;
-        private CCWin.SkinControl.SkinWaterTextBox skinWaterTextBox1;
         private System.Windows.Forms.Button button3;
         private CCWin.SkinControl.SkinWaterTextBox skinWaterTextBox2;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.Label label1;
     }
 }

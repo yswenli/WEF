@@ -28,14 +28,21 @@ namespace WEF.Db
     /// </summary>
     public sealed class Database : ILogable
     {
-        int _timeout = 30;
 
-        private DbProvider dbProvider;
+        private DbProvider _dbProvider;
 
         /// <summary>
         /// Default Database
         /// </summary>
         public static Database Default = new Database(ProviderFactory.Default);
+
+        /// <summary>
+        /// 设置操作超时间
+        /// </summary>
+        public int TimeOut
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 下拉框选择
@@ -44,8 +51,8 @@ namespace WEF.Db
         /// <param name="timeout"></param>
         public Database(DbProvider dbProvider, int timeout = 30)
         {
-            this.dbProvider = dbProvider;
-            _timeout = timeout;
+            this._dbProvider = dbProvider;
+            TimeOut = timeout;
         }
 
         #region Properties
@@ -58,7 +65,7 @@ namespace WEF.Db
         {
             get
             {
-                return dbProvider.ConnectionString;
+                return _dbProvider.ConnectionString;
             }
         }
 
@@ -69,7 +76,7 @@ namespace WEF.Db
         {
             get
             {
-                return dbProvider.DbProviderFactory;
+                return _dbProvider.DbProviderFactory;
             }
         }
 
@@ -81,7 +88,11 @@ namespace WEF.Db
         {
             get
             {
-                return dbProvider;
+                return _dbProvider;
+            }
+            set
+            {
+
             }
         }
 
@@ -92,11 +103,11 @@ namespace WEF.Db
         {
             get
             {
-                return _timeout;
+                return TimeOut;
             }
             set
             {
-                _timeout = value;
+                TimeOut = value;
             }
         }
 
@@ -150,22 +161,43 @@ namespace WEF.Db
 
         #region Private Members
 
-        private DbCommand CreateCommandByCommandType(CommandType commandType, string commandText)
+        /// <summary>
+        /// CreateCommandByCommandType
+        /// </summary>
+        /// <param name="commandType"></param>
+        /// <param name="commandText"></param>
+        /// <returns></returns>
+        public DbCommand CreateCommandByCommandType(CommandType commandType, string commandText)
         {
-            DbCommand command = dbProvider.DbProviderFactory.CreateCommand();
+            DbCommand command = _dbProvider.DbProviderFactory.CreateCommand();
             command.CommandType = commandType;
             command.CommandText = commandText;
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
+            return command;
+        }
+        /// <summary>
+        /// CreateCommandByCommandType
+        /// </summary>
+        /// <param name="timeOut"></param>
+        /// <param name="commandType"></param>
+        /// <param name="commandText"></param>
+        /// <returns></returns>
+        public DbCommand CreateCommandByCommandType(int timeOut, CommandType commandType, string commandText)
+        {
+            DbCommand command = _dbProvider.DbProviderFactory.CreateCommand();
+            command.CommandType = commandType;
+            command.CommandText = commandText;
+            command.CommandTimeout = timeOut;
             return command;
         }
 
         private DbCommand CreateCommandByCommandType(CommandType commandType, string commandText, int pageIndex, int pageSize, string orderBy, bool asc = true)
         {
-            if (dbProvider.DbProviderFactory.GetType().Name == "SqlClientFactory")
+            if (_dbProvider.DbProviderFactory.GetType().Name == "SqlClientFactory")
             {
                 commandText = $"SELECT * FROM(SELECT ROW_NUMBER() over(order by {orderBy} {(asc ? "asc" : "desc")}) rowNO, * From({commandText}) queryData) pagerows WHERE pagerows.rowNO>={(pageIndex - 1) * pageSize + 1} and pagerows.rowNO<= {pageIndex * pageSize}";
             }
-            else if (dbProvider.DbProviderFactory.GetType().Name == "OracleClientFactory")
+            else if (_dbProvider.DbProviderFactory.GetType().Name == "OracleClientFactory")
             {
                 commandText = $"SELECT * FROM (SELECT queryData.*, ROWNUM rowNO FROM ({commandText} order by {orderBy} {(asc ? "asc" : "desc")}) queryData WHERE rowNO <= {pageIndex * pageSize}) WHERE rowNO >= {(pageIndex - 1) * pageSize + 1}";
             }
@@ -173,11 +205,10 @@ namespace WEF.Db
             {
                 commandText = $"{commandText} order by {orderBy} {(asc ? "asc" : "desc")} limit {pageSize} offset {(pageIndex - 1) * pageSize}";
             }
-
-            DbCommand command = dbProvider.DbProviderFactory.CreateCommand();
+            DbCommand command = _dbProvider.DbProviderFactory.CreateCommand();
             command.CommandType = commandType;
             command.CommandText = commandText;
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
             return command;
         }
 
@@ -192,7 +223,6 @@ namespace WEF.Db
                 WriteLog(command);
 
                 ((IDbDataAdapter)adapter).SelectCommand = command;
-
 
                 string systemCreatedTableNameRoot = "Table";
                 for (int i = 0; i < tableNames.Length; i++)
@@ -257,13 +287,18 @@ namespace WEF.Db
         }
 
 
-        private void PrepareCommand(DbCommand command, DbConnection connection)
+        /// <summary>
+        /// PrepareCommand
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="connection"></param>
+        public void PrepareCommand(DbCommand command, DbConnection connection)
         {
             Check.Require(command != null, "command could not be null.");
             Check.Require(connection != null, "connection could not be null.");
 
             command.Connection = connection;
-            dbProvider.PrepareCommand(command);
+            _dbProvider.PrepareCommand(command);
 
         }
 
@@ -330,9 +365,9 @@ namespace WEF.Db
         /// <returns></returns>
         DbParameter CreateParameter(string name)
         {
-            DbParameter param = dbProvider.DbProviderFactory.CreateParameter();
+            DbParameter param = _dbProvider.DbProviderFactory.CreateParameter();
 
-            param.ParameterName = dbProvider.BuildParameterName(name);
+            param.ParameterName = _dbProvider.BuildParameterName(name);
 
             return param;
         }
@@ -407,7 +442,7 @@ namespace WEF.Db
         /// </summary>
         /// <param name="tryOpen">if set to <c>true</c> [try open].</param>
         /// <returns></returns>
-        public DbConnection GetConnection(bool tryOpen)
+        public DbConnection GetConnection(bool tryOpen = true)
         {
             return CreateConnection(tryOpen);
         }
@@ -421,7 +456,7 @@ namespace WEF.Db
         /// </returns>
         public DbConnection CreateConnection()
         {
-            DbConnection newConnection = dbProvider.DbProviderFactory.CreateConnection();
+            DbConnection newConnection = _dbProvider.DbProviderFactory.CreateConnection();
 
             newConnection.ConnectionString = ConnectionString;
 
@@ -511,7 +546,7 @@ namespace WEF.Db
         /// <seealso cref="DbDataAdapter"/>
         public DbDataAdapter GetDataAdapter()
         {
-            return dbProvider.DbProviderFactory.CreateDataAdapter();
+            return _dbProvider.DbProviderFactory.CreateDataAdapter();
         }
 
 
@@ -835,7 +870,7 @@ namespace WEF.Db
         {
             using (DbConnection connection = GetConnection(true))
             {
-                command.CommandTimeout = _timeout;
+                command.CommandTimeout = TimeOut;
                 PrepareCommand(command, connection);
                 return DoExecuteScalar(command);
             }
@@ -854,7 +889,7 @@ namespace WEF.Db
             {
                 using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
                 {
-                    command.CommandTimeout = _timeout;
+                    command.CommandTimeout = TimeOut;
                     PrepareCommand(command, connection);
                     return DoExecuteScalar(command);
                 }
@@ -875,7 +910,7 @@ namespace WEF.Db
             {
                 using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
                 {
-                    command.CommandTimeout = _timeout;
+                    command.CommandTimeout = TimeOut;
 
                     if (dbParameters != null && dbParameters.Any())
                     {
@@ -903,7 +938,7 @@ namespace WEF.Db
         /// <seealso cref="IDbCommand.ExecuteScalar"/>
         public object ExecuteScalar(DbCommand command, DbTransaction transaction)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
             PrepareCommand(command, transaction);
             return DoExecuteScalar(command);
         }
@@ -925,7 +960,7 @@ namespace WEF.Db
         {
             using (DbCommand command = CreateCommandByCommandType(commandType, commandText))
             {
-                command.CommandTimeout = _timeout;
+                command.CommandTimeout = TimeOut;
                 return ExecuteScalar(command);
             }
         }
@@ -951,7 +986,7 @@ namespace WEF.Db
         {
             using (DbCommand command = CreateCommandByCommandType(commandType, commandText))
             {
-                command.CommandTimeout = _timeout;
+                command.CommandTimeout = TimeOut;
                 return ExecuteScalar(command, transaction);
             }
         }
@@ -965,7 +1000,7 @@ namespace WEF.Db
         /// <seealso cref="IDbCommand.ExecuteScalar"/>
         public int ExecuteNonQuery(DbCommand command)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
 
             using (DbConnection connection = GetConnection(true))
             {
@@ -986,7 +1021,7 @@ namespace WEF.Db
 
             using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
             {
-                command.CommandTimeout = _timeout;
+                command.CommandTimeout = TimeOut;
 
                 using (DbConnection connection = GetConnection(true))
                 {
@@ -1007,7 +1042,7 @@ namespace WEF.Db
 
             using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
             {
-                command.CommandTimeout = _timeout;
+                command.CommandTimeout = TimeOut;
 
                 using (DbConnection connection = GetConnection(true))
                 {
@@ -1033,7 +1068,7 @@ namespace WEF.Db
         /// <seealso cref="IDbCommand.ExecuteScalar"/>
         public int ExecuteNonQuery(DbCommand command, DbTransaction transaction)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
             PrepareCommand(command, transaction);
             return DoExecuteNonQuery(command);
         }
@@ -1055,7 +1090,7 @@ namespace WEF.Db
         {
             using (DbCommand command = CreateCommandByCommandType(commandType, commandText))
             {
-                command.CommandTimeout = _timeout;
+                command.CommandTimeout = TimeOut;
                 return ExecuteNonQuery(command);
             }
         }
@@ -1080,7 +1115,7 @@ namespace WEF.Db
         {
             using (DbCommand command = CreateCommandByCommandType(commandType, commandText))
             {
-                command.CommandTimeout = _timeout;
+                command.CommandTimeout = TimeOut;
                 return ExecuteNonQuery(command, transaction);
             }
         }
@@ -1097,7 +1132,7 @@ namespace WEF.Db
         /// </returns>        
         public IDataReader ExecuteReader(DbCommand command)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
 
             DbConnection connection = GetConnection(true);
 
@@ -1137,72 +1172,134 @@ namespace WEF.Db
         /// </returns>        
         public IDataReader ExecuteReader(DbCommand command, DbTransaction transaction)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
             PrepareCommand(command, transaction);
             return DoExecuteReader(command, CommandBehavior.Default);
+        }
+
+        /// <summary>
+        /// 为adapter生成其他操作命令
+        /// </summary>
+        /// <param name="adapter"></param>
+        /// <param name="transaction"></param>
+        public void PrepareAdapter(DbDataAdapter adapter, DbTransaction transaction)
+        {
+            var commandBuilder = _dbProvider.DbProviderFactory.CreateCommandBuilder();
+            commandBuilder.DataAdapter = adapter;
+            commandBuilder.ConflictOption = ConflictOption.OverwriteChanges;
+            commandBuilder.SetAllValues = false;
+            adapter.InsertCommand = commandBuilder.GetInsertCommand();
+            adapter.UpdateCommand = commandBuilder.GetUpdateCommand();
+            adapter.DeleteCommand = commandBuilder.GetDeleteCommand();
+            if (transaction != null)
+            {
+                adapter.InsertCommand.Transaction = transaction;
+                adapter.UpdateCommand.Transaction = transaction;
+                adapter.DeleteCommand.Transaction = transaction;
+            }
         }
 
         /// <summary>
         /// 批量导入
         /// </summary>
         /// <param name="tableName"></param>
-        /// <param name="dataTable"></param>
+        /// <param name="sourceDataTable"></param>
+        /// <param name="timeOut"></param>
         /// <returns></returns>
-        public int BulkInsert(string tableName, DataTable dataTable)
+        public int BulkInsert(string tableName, DataTable sourceDataTable, int timeOut = 180)
         {
             Check.Require(tableName, "tableName", Check.NotNullOrEmpty);
 
-            if (dataTable == null || dataTable.Rows == null || dataTable.Rows.Count < 1)
+            if (sourceDataTable == null || sourceDataTable.Rows == null || sourceDataTable.Rows.Count < 1)
                 return -1;
-
-            var ds = new DataSet();
 
             try
             {
+                sourceDataTable.Locale = CultureInfo.InvariantCulture;
+
                 using (DbConnection connection = GetConnection(true))
                 {
-                    using (DbCommand command = CreateCommandByCommandType(CommandType.Text, $"select * from {tableName} where 1=1"))
-                    {
-                        PrepareCommand(command, connection);
+                    var selectCommand = CreateCommandByCommandType(timeOut, CommandType.Text, $"select * from {tableName} where 1=1");
 
-                        ds.Locale = CultureInfo.InvariantCulture;
+                    PrepareCommand(selectCommand, connection);
+
+                    using (var transction = connection.BeginTransaction())
+                    {
+                        selectCommand.Transaction = transction;
 
                         using (DbDataAdapter adapter = GetDataAdapter())
                         {
-                            WriteLog(command);
+                            DataTable targetDataTable = new DataTable(tableName);
 
-                            ((IDbDataAdapter)adapter).SelectCommand = command;
+                            targetDataTable.Locale = CultureInfo.InvariantCulture;
 
-                            adapter.Fill(ds);
-
-                            var dt = ds.Tables[0];
-
-                            var columns1 = dataTable.Columns;
-
-                            var columns2 = dt.Columns;
-
-                            for (int i = 0; i < dataTable.Rows.Count; i++)
+                            try
                             {
-                                var newRow = dt.NewRow();
+                                adapter.SelectCommand = selectCommand;
 
-                                for (int j = 0; j < columns1.Count; j++)
+                                adapter.Fill(targetDataTable);
+
+                                PrepareAdapter(adapter, transction);
+
+                                var columns1 = sourceDataTable.Columns;
+
+                                var columns2 = targetDataTable.Columns;
+
+                                for (int i = 0; i < sourceDataTable.Rows.Count; i++)
                                 {
-                                    newRow[j] = dataTable.Rows[i][j];
-                                }
-                            }
+                                    var newRow = targetDataTable.NewRow();
 
-                            return adapter.Update(ds, tableName);
+                                    for (int j = 0; j < columns1.Count; j++)
+                                    {
+                                        if (sourceDataTable.Rows[i][j] == null || sourceDataTable.Rows[i][j] is DBNull)
+                                        {
+                                            continue;
+                                        }
+                                        if (columns2[j].DataType.Name == "MySqlDateTime")
+                                        {
+                                            var datetime = sourceDataTable.Rows[i][j];
+                                            if (datetime != null)
+                                            {
+                                                var dtVal = (DateTime)datetime;
+                                                newRow[j] = new MySql.Data.Types.MySqlDateTime(dtVal);
+                                            }
+                                        }
+                                        else if (columns2[j].DataType.Name == "Image" || columns2[j].DataType.Name == "Byte[]" || columns2[j].DataType.Name == "Timespan")
+                                        {
+                                            continue;
+                                        }
+                                        else
+                                        {
+                                            newRow[j] = sourceDataTable.Rows[i][j];
+                                        }
+                                    }
+
+                                    targetDataTable.Rows.Add(newRow);
+                                }
+
+                                var count = adapter.Update(targetDataTable);
+
+                                transction.Commit();
+
+                                return count;
+                            }
+                            catch (Exception)
+                            {
+                                transction.Rollback();
+                                throw;
+                            }
+                            finally
+                            {
+                                targetDataTable.Clear();
+                            }
                         }
                     }
                 }
             }
             finally
             {
-                dataTable.Clear();
-                ds.Clear();
+                sourceDataTable.Clear();
             }
-
-
         }
         #endregion
 
@@ -1247,7 +1344,7 @@ namespace WEF.Db
         /// <param name="value"><para>The value of the parameter.</para></param>       
         public void AddParameter(DbCommand command, string name, DbType dbType, int size, ParameterDirection direction, bool nullable, byte precision, byte scale, string sourceColumn, DataRowVersion sourceVersion, object value)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
             DbParameter parameter = CreateParameter(name, dbType == DbType.Object ? DbType.String : dbType, size, direction, nullable, precision, scale, sourceColumn, sourceVersion, value);
             command.Parameters.Add(parameter);
         }
@@ -1264,7 +1361,7 @@ namespace WEF.Db
         /// <param name="value"><para>The value of the parameter.</para></param>    
         public void AddParameter(DbCommand command, string name, DbType dbType, ParameterDirection direction, string sourceColumn, DataRowVersion sourceVersion, object value)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
             AddParameter(command, name, dbType, 0, direction, false, 0, 0, sourceColumn, sourceVersion, value);
         }
 
@@ -1277,7 +1374,7 @@ namespace WEF.Db
         /// <param name="size"><para>The maximum size of the data within the column.</para></param>        
         public void AddOutParameter(DbCommand command, string name, DbType dbType, int size)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
             AddParameter(command, name, dbType, size, ParameterDirection.Output, true, 0, 0, String.Empty, DataRowVersion.Default, DBNull.Value);
         }
 
@@ -1292,7 +1389,7 @@ namespace WEF.Db
         /// </remarks>        
         public void AddInParameter(DbCommand command, string name, DbType dbType)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
             AddParameter(command, name, dbType, ParameterDirection.Input, String.Empty, DataRowVersion.Default, null);
         }
 
@@ -1305,7 +1402,7 @@ namespace WEF.Db
         /// <param name="value"><para>The value of the parameter.</para></param>      
         public void AddInParameter(DbCommand command, string name, DbType dbType, object value)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
             AddParameter(command, name, dbType, ParameterDirection.Input, String.Empty, DataRowVersion.Default, value);
         }
 
@@ -1319,7 +1416,7 @@ namespace WEF.Db
         /// <param name="value"><para>The value of the parameter.</para></param>      
         public void AddInParameter(DbCommand command, string name, DbType dbType, int size, object value)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
             AddParameter(command, name, dbType, size, ParameterDirection.Input, true, 0, 0, String.Empty, DataRowVersion.Default, value);
         }
 
@@ -1331,7 +1428,7 @@ namespace WEF.Db
         /// <param name="value"><para>The value of the parameter.</para></param>      
         public void AddInParameter(DbCommand command, string name, object value)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
             AddParameter(command, name, DbType.Object, ParameterDirection.Input, String.Empty, DataRowVersion.Default, value);
         }
 
@@ -1345,7 +1442,7 @@ namespace WEF.Db
         /// <param name="sourceVersion"><para>One of the <see cref="DataRowVersion"/> values.</para></param>
         public void AddInParameter(DbCommand command, string name, DbType dbType, string sourceColumn, DataRowVersion sourceVersion)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
             AddParameter(command, name, dbType, 0, ParameterDirection.Input, true, 0, 0, sourceColumn, sourceVersion, null);
         }
 
@@ -1355,7 +1452,7 @@ namespace WEF.Db
         /// </summary>
         public void AddInputOutputParameter(DbCommand command, string name, DbType dbType, int size, object value)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
             AddParameter(command, name, dbType, size, ParameterDirection.InputOutput, true, 0, 0, String.Empty, DataRowVersion.Default, value);
         }
 
@@ -1365,7 +1462,7 @@ namespace WEF.Db
         /// </summary>
         public void AddReturnValueParameter(DbCommand command, string name, DbType dbType, int size)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
             AddParameter(command, name, dbType, size, ParameterDirection.ReturnValue, true, 0, 0, String.Empty, DataRowVersion.Default, DBNull.Value);
         }
 
@@ -1375,13 +1472,13 @@ namespace WEF.Db
         /// </summary>
         public void AddParameter(DbCommand command, params DbParameter[] parameters)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
 
             if (null == parameters || parameters.Length == 0)
                 return;
             foreach (DbParameter p in parameters)
             {
-                p.ParameterName = dbProvider.BuildParameterName(p.ParameterName);
+                p.ParameterName = _dbProvider.BuildParameterName(p.ParameterName);
                 command.Parameters.Add(p);
             }
 
@@ -1396,7 +1493,7 @@ namespace WEF.Db
         /// <returns></returns>
         internal DbCommand AddCommandParameter(DbCommand command, params Parameter[] parameters)
         {
-            command.CommandTimeout = _timeout;
+            command.CommandTimeout = TimeOut;
 
             if (null == parameters || parameters.Length == 0)
                 return command;
@@ -1418,6 +1515,7 @@ namespace WEF.Db
 
         #endregion
 
+
         #region Extiond
 
         DataTable LoadMap(DbCommand command, string tableName)
@@ -1428,7 +1526,7 @@ namespace WEF.Db
 
             using (DbDataAdapter adapter = GetDataAdapter())
             {
-                command.CommandTimeout = _timeout;
+                command.CommandTimeout = TimeOut;
                 adapter.SelectCommand = command;
                 adapter.FillSchema(data, SchemaType.Mapped);
                 data.AcceptChanges();
@@ -1462,7 +1560,7 @@ namespace WEF.Db
             {
                 using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
                 {
-                    command.CommandTimeout = _timeout;
+                    command.CommandTimeout = TimeOut;
                     PrepareCommand(command, connection);
                     return LoadMap(command, tableName);
                 }
@@ -1495,7 +1593,7 @@ namespace WEF.Db
             {
                 using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
                 {
-                    command.CommandTimeout = _timeout;
+                    command.CommandTimeout = TimeOut;
                     PrepareCommand(command, connection);
                     var result = command.ExecuteScalar();
 

@@ -24,7 +24,7 @@ namespace WEF.ModelGenerator.Forms
         }
 
         /// <summary>
-        /// 获取数据同步
+        /// 获取数据传输
         /// </summary>
         public static DataSyncForm Instance
         {
@@ -120,7 +120,7 @@ namespace WEF.ModelGenerator.Forms
                 var config = _configs.FirstOrDefault(b => b.ID == cid);
                 if (config != null)
                 {
-                    if (MessageBox.Show(this, "确定要删除吗？", "数据同步工具", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show(this, "确定要删除吗？", "数据传输工具", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         _configs.Remove(config);
                         DataSyncConfig.Save(_configs);
@@ -134,7 +134,7 @@ namespace WEF.ModelGenerator.Forms
 
         private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (button2.Text == "开始同步")
+            if (button2.Text == "开始传输")
             {
                 var cells = dataGridView1.SelectedCells;
                 if (cells != null && cells.Count > 0)
@@ -161,9 +161,9 @@ namespace WEF.ModelGenerator.Forms
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (button2.Text == "开始同步")
+            if (button2.Text == "开始传输")
             {
-                button2.Text = "停止同步";
+                button2.Text = "停止传输";
                 contextMenuStrip1.Enabled = false;
                 button1.Enabled = false;
 
@@ -173,9 +173,22 @@ namespace WEF.ModelGenerator.Forms
             {
                 SyncDataHelper.Stop();
 
-                button2.Text = "开始同步";
+                button2.Text = "开始传输";
                 contextMenuStrip1.Enabled = true;
                 button1.Enabled = true;
+            }
+        }
+
+        private void dataGridView2_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var selectedCells = dataGridView2.SelectedCells;
+            if (selectedCells != null && selectedCells.Count > 0)
+            {
+                var cell = selectedCells[0];
+                if (cell.ColumnIndex == 0)
+                {
+                    new TextForm("传输日志", cell.Value?.ToString() ?? "", true).ShowDialog(this);
+                }
             }
         }
     }

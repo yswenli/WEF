@@ -15,6 +15,7 @@
 *版 本 号： V1.0.0.0
 *描    述：
 *****************************************************************************/
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -61,6 +62,7 @@ namespace WEF.ModelGenerator.Common
                 var lf = new LeftPanelForm();
                 lf.OnNewSqlForm += Lf_newsqlForm;
                 lf.OnNewContentForm += Lf_newcontentForm;
+                lf.OnNewDataForm += Lf_OnNewDataForm;
                 return lf;
             }
             else if (persistString == typeof(SQLForm).ToString())
@@ -73,7 +75,6 @@ namespace WEF.ModelGenerator.Common
                 sf.AutoTextBox.TextBox.Text = cm.Sql;
                 return sf;
             }
-
             else if (persistString == typeof(ContentForm).ToString())
             {
                 var cm = _connections.First();
@@ -83,6 +84,16 @@ namespace WEF.ModelGenerator.Common
                 cf.ConnectionModel = cm;
                 return cf;
             }
+            else if (persistString == typeof(DataForm).ToString())
+            {
+                //var cm = _connections.First();
+                //_connections.Remove(cm);
+                //var cf = new DataForm();
+                //cf.Text = $"({cm.Database}){cm.TableName}";
+                //cf.ConnectionModel = cm;
+                //return cf;
+                return null;
+            }
             else if (persistString == typeof(SQLTemplateForm).ToString())
                 return new SQLTemplateForm();
             else
@@ -90,11 +101,25 @@ namespace WEF.ModelGenerator.Common
         }
 
 
+        private static void Lf_OnNewDataForm(ConnectionModel conModel)
+        {
+            try
+            {
+                DataForm s = new DataForm(conModel);
+                s.Text = "(" + conModel.Database + ")" + conModel.TableName + "数据编辑";
+                s.Show(_dockPanel);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("加载数据窗体时发生异常：" + ex.Message);
+            }
+        }
+
         static ConcurrentDictionary<string, ContentForm> _contentFormDic = new ConcurrentDictionary<string, ContentForm>();
 
         private static void Lf_newcontentForm(ConnectionModel conModel)
         {
-            var key = $"({conModel.Database}){conModel.TableName}";
+            var key = $"{conModel.ConnectionString}({conModel.Database}){conModel.TableName}";
 
             try
             {
@@ -121,7 +146,7 @@ namespace WEF.ModelGenerator.Common
 
         private static void Lf_newsqlForm(ConnectionModel conModel)
         {
-            var key = $"({conModel.Database}){conModel.TableName}";
+            var key = $"{conModel.ConnectionString}({conModel.Database}){conModel.TableName}";
 
             try
             {

@@ -23,96 +23,125 @@ namespace WEF.ModelGenerator.Forms
         DataSyncConfigForm()
         {
             InitializeComponent();
+            label1.Dock = DockStyle.Fill;
         }
 
         public DataSyncConfigForm(DataSyncConfig dataSyncConfig) : this()
         {
             _dataSyncConfig = dataSyncConfig;
+        }
 
+
+        private void DataSyncConfigForm_Load(object sender, EventArgs e)
+        {
             if (_dataSyncConfig == null)
             {
                 _dataSyncConfig = new DataSyncConfig();
                 _dataSyncConfig.ID = Guid.NewGuid().ToString();
             }
 
-            Init();
+            InitAsync();
         }
 
-        void Init()
+        async void InitAsync()
         {
-            try
+            await Task.Factory.StartNew(() =>
             {
-                if (!string.IsNullOrEmpty(_dataSyncConfig.Name))
+                try
                 {
-                    skinWaterTextBox2.Text = _dataSyncConfig.Name;
-                }
-
-                var clist = UtilsHelper.GetConnectionList();
-
-                comboBox1.Items.Clear();
-
-                foreach (var item in clist)
-                {
-                    comboBox1.Items.Add(item.Name);
-
-                    if (_dataSyncConfig.Source != null && _dataSyncConfig.Source.Name == item.Name)
+                    this.Invoke(() =>
                     {
-                        comboBox1.SelectedItem = item.Name;
-                    }
-                }
-
-                comboBox2.Items.Clear();
-                foreach (var item in clist)
-                {
-                    comboBox2.Items.Add(item.Name);
-
-                    if (_dataSyncConfig.Target != null && _dataSyncConfig.Target.Name == item.Name)
-                    {
-                        comboBox2.SelectedItem = item.Name;
-                    }
-                }
-
-                textBox1.Text = _dataSyncConfig.Source?.Sql ?? "";
-
-                dateTimePicker1.Value = _dataSyncConfig.Started;
-
-                if (_dataSyncConfig.Target == null)
-                {
-                    return;
-                }
-
-                var dbObject = DBObjectHelper.GetDBObject(_dataSyncConfig.Target);
-
-                var tables = dbObject.GetTables(_dataSyncConfig.Target.Database);
-
-                if (tables != null && tables.Rows != null && tables.Rows.Count > 0)
-                {
-                    comboBox3.Items.Clear();
-
-                    foreach (DataRow dr in tables.Rows)
-                    {
-                        comboBox3.Items.Add(dr[0].ToString());
-
-                        if (dr[0].ToString() == _dataSyncConfig.Target.TableName)
+                        label1.Visible = true;
+                        if (!string.IsNullOrEmpty(_dataSyncConfig.Name))
                         {
-                            comboBox3.SelectedItem = dr[0].ToString();
+                            skinWaterTextBox2.Text = _dataSyncConfig.Name;
                         }
+                    });
+
+                    var clist = UtilsHelper.GetConnectionList();
+
+                    this.Invoke(() =>
+                    {
+                        comboBox1.Items.Clear();
+
+                        foreach (var item in clist)
+                        {
+                            comboBox1.Items.Add(item.Name);
+
+                            if (_dataSyncConfig.Source != null && _dataSyncConfig.Source.Name == item.Name)
+                            {
+                                comboBox1.SelectedItem = item.Name;
+                            }
+                        }
+                    });
+
+                    this.Invoke(() =>
+                    {
+                        comboBox2.Items.Clear();
+                        foreach (var item in clist)
+                        {
+                            comboBox2.Items.Add(item.Name);
+
+                            if (_dataSyncConfig.Target != null && _dataSyncConfig.Target.Name == item.Name)
+                            {
+                                comboBox2.SelectedItem = item.Name;
+                            }
+                        }
+
+                        textBox1.Text = _dataSyncConfig.Source?.Sql ?? "";
+                    });
+
+
+                    if (_dataSyncConfig.Target == null)
+                    {
+                        return;
                     }
+
+                    var dbObject = DBObjectHelper.GetDBObject(_dataSyncConfig.Target);
+
+                    var tables = dbObject.GetTables(_dataSyncConfig.Target.Database);
+
+                    if (tables != null && tables.Rows != null && tables.Rows.Count > 0)
+                    {
+                        this.Invoke(() =>
+                        {
+                            comboBox3.Items.Clear();
+
+                            foreach (DataRow dr in tables.Rows)
+                            {
+                                comboBox3.Items.Add(dr[0].ToString());
+
+                                if (dr[0].ToString() == _dataSyncConfig.Target.TableName)
+                                {
+                                    comboBox3.SelectedItem = dr[0].ToString();
+                                }
+                            }
+                        });
+                    }
+
+                    this.Invoke(() =>
+                    {
+                        checkBox1.Checked = _dataSyncConfig.IsEnabled;
+                    });
                 }
-
-                skinWaterTextBox1.Text = _dataSyncConfig.RunSpan.ToString();
-
-                checkBox1.Checked = _dataSyncConfig.IsEnabled;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("加载配置有误，" + ex.Message);
-                Close();
-            }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("加载配置有误，" + ex.Message);
+                    this.Invoke(() =>
+                    {
+                        Close();
+                    });
+                }
+                finally
+                {
+                    this.Invoke(() => label1.Visible = false);
+                }
+            });
         }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
+            var selectValue = comboBox2.SelectedItem.ToString();
             var owner = this;
             LoadForm.ShowLoading(owner);
             Task.Run(() =>
@@ -123,7 +152,7 @@ namespace WEF.ModelGenerator.Forms
 
                     if (clist == null) return;
 
-                    var connectModel = clist.FirstOrDefault(b => b.Name == comboBox2.SelectedItem.ToString());
+                    var connectModel = clist.FirstOrDefault(b => b.Name == selectValue);
 
                     if (connectModel == null)
                     {
@@ -212,13 +241,13 @@ namespace WEF.ModelGenerator.Forms
         private void button1_Click(object sender, EventArgs e)
         {
             ShowSelectDBInit();
-            Init();
+            InitAsync();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             ShowSelectDBInit();
-            Init();
+            InitAsync();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -249,40 +278,9 @@ namespace WEF.ModelGenerator.Forms
                 return;
             }
 
-            if (sql.IndexOf("{datetime}") == -1)
-            {
-                MessageBox.Show(this, "源数据SQL不包含替换符{datetime}");
-                return;
-            }
-
-            var started = dateTimePicker1.Value;
-
-            if (started.Year == 0)
-            {
-                MessageBox.Show(this, "源数据的时间值不正确");
-                return;
-            }
-
             if (comboBox3.SelectedItem == null)
             {
                 MessageBox.Show(this, "目的数据表名不能为空");
-                return;
-            }
-
-            if (string.IsNullOrEmpty(skinWaterTextBox1.Text))
-            {
-                MessageBox.Show(this, "间隔时长不能为空");
-                return;
-            }
-
-            if (!int.TryParse(skinWaterTextBox1.Text, out int runSpan))
-            {
-                MessageBox.Show(this, "间隔时长格式不正确");
-                return;
-            }
-            else if (runSpan < 1)
-            {
-                MessageBox.Show(this, "间隔时长不能小于1");
                 return;
             }
 
@@ -297,9 +295,7 @@ namespace WEF.ModelGenerator.Forms
             }
             _dataSyncConfig.Target = clist.FirstOrDefault(b => b.Name == comboBox2.SelectedItem.ToString());
             _dataSyncConfig.Source.Sql = sql;
-            _dataSyncConfig.Started = started;
             _dataSyncConfig.Target.TableName = comboBox3.SelectedItem.ToString();
-            _dataSyncConfig.RunSpan = runSpan;
             _dataSyncConfig.IsEnabled = checkBox1.Checked;
 
 
@@ -350,5 +346,7 @@ namespace WEF.ModelGenerator.Forms
                 _dataSyncConfig.IsEnabled = checkBox1.Checked;
             }
         }
+
+
     }
 }

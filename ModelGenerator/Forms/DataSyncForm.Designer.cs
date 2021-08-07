@@ -91,7 +91,7 @@ namespace WEF.ModelGenerator.Forms
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(116, 35);
             this.button1.TabIndex = 1;
-            this.button1.Text = "添加同步配置";
+            this.button1.Text = "添加传输配置";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -101,7 +101,7 @@ namespace WEF.ModelGenerator.Forms
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(118, 35);
             this.button2.TabIndex = 3;
-            this.button2.Text = "开始同步";
+            this.button2.Text = "开始传输";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -124,7 +124,8 @@ namespace WEF.ModelGenerator.Forms
             this.dataGridView2.RowHeadersWidth = 51;
             this.dataGridView2.RowTemplate.Height = 27;
             this.dataGridView2.Size = new System.Drawing.Size(1240, 335);
-            this.dataGridView2.TabIndex = 4;
+            this.dataGridView2.TabIndex = 4;            
+            this.dataGridView2.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentDoubleClick);
             // 
             // LogContent
             // 
@@ -145,7 +146,7 @@ namespace WEF.ModelGenerator.Forms
             this.Controls.Add(this.dataGridView1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DataSyncForm";
-            this.Text = "数据同步";
+            this.Text = "数据传输";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DataSyncForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);

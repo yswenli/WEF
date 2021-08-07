@@ -2264,6 +2264,41 @@ namespace WEF
         }
         #endregion
 
+        #region 数据更新
+
+        AdoBatcher _adoBatcher = null;
+
+        /// <summary>
+        /// 获取源数据
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="size"></param>
+        /// <param name="timeOut"></param>
+        /// <returns></returns>
+        public DataTable GetDataSource(string tableName, int size = 100, int timeOut = 180)
+        {
+            _adoBatcher = new AdoBatcher(_db, tableName, timeOut);
+
+            return _adoBatcher.Fill(size);
+        }
+
+        /// <summary>
+        /// 更新源数据
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <returns></returns>
+        public int UpdateDataSource(DataTable dataTable)
+        {
+            if (_adoBatcher != null)
+            {
+                return _adoBatcher.Update(dataTable);
+            }
+            return -1;
+        }
+
+        #endregion
+
+
         #region 数据导入导出
 
         /// <summary>

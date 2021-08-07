@@ -58,6 +58,8 @@ namespace WEF.ModelGenerator.Forms
             _dic.Add("查看存储过程", Resources.查看存储过程);
             _dic.Add("分页", Resources.分页);
             _dic.Add("分割字段并分组统计", Resources.分割字段并分组统计);
+            _dic.Add("MSSQL启用ServiceBroker", Resources.MSSQL启用ServiceBroker);
+            
 
             comboBox1.Items.AddRange(_dic.Keys.ToArray());
 
