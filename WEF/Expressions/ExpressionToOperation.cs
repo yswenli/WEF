@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+
 using WEF.Common;
 
 namespace WEF.Expressions
@@ -307,6 +308,9 @@ namespace WEF.Expressions
             MemberExpression rightMe;
             System.Linq.Expressions.Expression expLeft = be.Left;
             System.Linq.Expressions.Expression expRight = be.Right;
+
+            tableName = GetTableName("", ((MemberExpression)expLeft).Expression.Type);
+
             if (be.Left.NodeType == ExpressionType.Convert)
             {
                 expLeft = ((UnaryExpression)be.Left).Operand;
@@ -344,7 +348,7 @@ namespace WEF.Expressions
                             }
                             else
                             {
-                                return new WhereOperation(CreateField(tableName, keyRightName, rightMe.Expression.Type), CreateField(tableName, keyLeft, left.Expression.Type), co);
+                                return new WhereOperation(CreateField(GetTableName("", ((MemberExpression)be.Right).Expression.Type), keyRightName, rightMe.Expression.Type), CreateField(tableName, keyLeft, left.Expression.Type), co);
                             }
                         }
                     }
@@ -357,14 +361,20 @@ namespace WEF.Expressions
                         }
                         return new WhereOperation(" 1=1 ");
                     }
+
+                    var rigthTableName = GetTableName("", ((MemberExpression)be.Right).Expression.Type);
+
                     if (value != null)
-                        return new WhereOperation(CreateField(tableName, keyRightName, rightMe.Expression.Type), value, co);
+                    {                        
+                        return new WhereOperation(CreateField(rigthTableName, keyRightName, rightMe.Expression.Type), value, co);
+                    }
+                        
                     switch (co)
                     {
                         case QueryOperator.Equal:
-                            return CreateField(tableName, keyRightName, rightMe.Expression.Type).IsNull();
+                            return CreateField(rigthTableName, keyRightName, rightMe.Expression.Type).IsNull();
                         case QueryOperator.NotEqual:
-                            return CreateField(tableName, keyRightName, rightMe.Expression.Type).IsNotNull();
+                            return CreateField(rigthTableName, keyRightName, rightMe.Expression.Type).IsNotNull();
                     }
                     throw new Exception("null值只支持等于或不等于！出错比较符：" + co.ToString());
                 }
@@ -391,11 +401,13 @@ namespace WEF.Expressions
                     var right = (MemberExpression)expRight;
                     if (right.Expression != null && (wtype == WhereType.JoinWhere || right.Expression == leftMe.Expression))
                     {
-                        ColumnFunction functionRight;
-                        var keyRight = GetMemberName(expRight, out functionRight, out right);
+                        var rigthTableName = GetTableName("", ((MemberExpression)be.Right).Expression.Type);
+
+                        var keyRight = GetMemberName(expRight, out ColumnFunction functionRight, out right);
+
                         return new WhereOperation(
                             CreateField(tableName, key, leftMe.Expression.Type),
-                            CreateField(tableName, keyRight, right.Expression.Type)
+                            CreateField(rigthTableName, keyRight, right.Expression.Type)
                             , co);
                     }
                 }

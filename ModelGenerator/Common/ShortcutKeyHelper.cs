@@ -82,5 +82,13 @@ namespace WEF.ModelGenerator.Common
             }
             action2?.Invoke();
         }
+
+        public static void Save(object sender, System.Windows.Forms.KeyEventArgs e, Action action)
+        {
+            if (e.Modifiers.CompareTo(Keys.Control) == 0 && e.KeyCode == Keys.C)
+            {
+                action?.Invoke();
+            }
+        }
     }
 }

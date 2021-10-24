@@ -10,6 +10,7 @@
  *****************************************************************************************************/
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Globalization;
@@ -204,6 +205,34 @@ namespace WEF.Db
             else
             {
                 commandText = $"{commandText} order by {orderBy} {(asc ? "asc" : "desc")} limit {pageSize} offset {(pageIndex - 1) * pageSize}";
+            }
+            DbCommand command = _dbProvider.DbProviderFactory.CreateCommand();
+            command.CommandType = commandType;
+            command.CommandText = commandText;
+            command.CommandTimeout = TimeOut;
+            return command;
+        }
+
+        private DbCommand CreateCommandByCommandType(CommandType commandType, string commandText, int pageIndex, int pageSize, Dictionary<string, OrderByOperater> orderBys)
+        {
+            StringBuilder orderByBuilder = new StringBuilder();
+            foreach (var item in orderBys)
+            {
+                orderByBuilder.Append($",{item.Key} {item.Value}");
+            }
+            var orderStr = orderByBuilder.ToString(1, orderByBuilder.Length - 1);
+
+            if (_dbProvider.DbProviderFactory.GetType().Name == "SqlClientFactory")
+            {
+                commandText = $"SELECT * FROM(SELECT ROW_NUMBER() over(order by {orderStr}) rowNO, * From({commandText}) queryData) pagerows WHERE pagerows.rowNO>={(pageIndex - 1) * pageSize + 1} and pagerows.rowNO<= {pageIndex * pageSize}";
+            }
+            else if (_dbProvider.DbProviderFactory.GetType().Name == "OracleClientFactory")
+            {
+                commandText = $"SELECT * FROM (SELECT queryData.*, ROWNUM rowNO FROM ({commandText} order by {orderStr}) queryData WHERE rowNO <= {pageIndex * pageSize}) WHERE rowNO >= {(pageIndex - 1) * pageSize + 1}";
+            }
+            else
+            {
+                commandText = $"{commandText} order by {orderStr} limit {pageSize} offset {(pageIndex - 1) * pageSize}";
             }
             DbCommand command = _dbProvider.DbProviderFactory.CreateCommand();
             command.CommandType = commandType;
@@ -537,6 +566,22 @@ namespace WEF.Db
             Check.Require(!string.IsNullOrEmpty(query), "query could not be null.");
 
             return CreateCommandByCommandType(CommandType.Text, query, pageIndex, pageSize, orderBy, asc);
+        }
+
+        /// <summary>
+        /// 创建Command
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBys"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public DbCommand GetSqlStringCommand(string query, int pageIndex, int pageSize, Dictionary<string, OrderByOperater> orderBys)
+        {
+            Check.Require(!string.IsNullOrEmpty(query), "query could not be null.");
+
+            return CreateCommandByCommandType(CommandType.Text, query, pageIndex, pageSize, orderBys);
         }
 
         /// <summary>
@@ -1502,10 +1547,10 @@ namespace WEF.Db
             {
                 DbParameter dbParameter = CreateParameter(p.ParameterName);// + i
                 dbParameter.Value = p.ParameterValue;
-                if (p.ParameterDbType.HasValue)
-                    dbParameter.DbType = p.ParameterDbType.Value;
-                if (p.ParameterSize.HasValue)
-                    dbParameter.Size = p.ParameterSize.Value;
+                //if (p.ParameterDbType.HasValue)
+                dbParameter.DbType = p.ParameterDbType;
+                //if (p.ParameterSize.HasValue)
+                dbParameter.Size = p.ParameterSize;
                 command.Parameters.Add(dbParameter);
                 //i++;
             }

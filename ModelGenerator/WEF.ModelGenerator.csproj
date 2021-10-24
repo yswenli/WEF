@@ -180,6 +180,18 @@
     <Compile Include="Forms\BatchForm.Designer.cs">
       <DependentUpon>BatchForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\CollectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CollectForm.Designer.cs">
+      <DependentUpon>CollectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CollectViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CollectViewForm.Designer.cs">
+      <DependentUpon>CollectViewForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ContentForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -305,6 +317,7 @@
     <Compile Include="JsonTools\JsonClassHelper.cs" />
     <Compile Include="JsonTools\JsonType.cs" />
     <Compile Include="JsonTools\JsonTypeEnum.cs" />
+    <Compile Include="Model\CollectInfo.cs" />
     <Compile Include="Model\ConnectionInfo.cs" />
     <Compile Include="Model\ConnectionModel.cs" />
     <Compile Include="Model\DatabaseObject.cs" />
@@ -351,6 +364,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchForm.resx">
       <DependentUpon>BatchForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CollectForm.resx">
+      <DependentUpon>CollectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CollectViewForm.resx">
+      <DependentUpon>CollectViewForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ContentForm.resx">
       <DependentUpon>ContentForm.cs</DependentUpon>

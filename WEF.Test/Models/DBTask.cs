@@ -939,6 +939,15 @@ namespace WEF.Models
             return db.Update(obj);
         }
         /// <summary>
+        /// 更新实体
+        /// </summary>
+        /// <param name="objs"></param>
+        /// <returns></returns>
+        public int Update(List<DBTask> objs)
+        {
+            return db.Update(objs);
+        }
+        /// <summary>
         /// 删除实体
         /// <param name="obj">传进的实体</param>
         /// </summary>

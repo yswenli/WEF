@@ -654,7 +654,15 @@ namespace WEF.Common
         private const string LinqBinary = "System.Data.Linq.Binary";
 
 
-
+        /// <summary>
+        /// 从db reader中反序列化实体
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="reader"></param>
+        /// <param name="startBound"></param>
+        /// <param name="length"></param>
+        /// <param name="returnNullIfFirstMissing"></param>
+        /// <returns></returns>
         public static Func<IDataReader, object> GetDeserializer(Type type, IDataReader reader, int startBound, int length, bool returnNullIfFirstMissing)
         {
             if (type == typeof(object)
@@ -671,7 +679,7 @@ namespace WEF.Common
         }
 
         /// <summary>
-        /// 
+        /// 从db reader中反序列化实体
         /// </summary>
         /// <param name="type"></param>
         /// <param name="index"></param>

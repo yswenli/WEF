@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+
 using WEF.Common;
 
 namespace WEF.Expressions
@@ -137,15 +138,15 @@ namespace WEF.Expressions
     {
         private string parameterName;
         private object parameterValue;
-        private DbType? parameterDbType;
-        private int? parameterSize;
+        private DbType parameterDbType;
+        private int parameterSize;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="parameterName"></param>
         /// <param name="parameterValue"></param>
-        public Parameter(string parameterName, object parameterValue) : this(parameterName, parameterValue, null, null) { }
+        //public Parameter(string parameterName, object parameterValue) : this(parameterName, parameterValue, null, null) { }
 
         /// <summary>
         /// 
@@ -154,7 +155,7 @@ namespace WEF.Expressions
         /// <param name="parameterValue"></param>
         /// <param name="parameterDbType"></param>
         /// <param name="parameterSize"></param>
-        public Parameter(string parameterName, object parameterValue, DbType? parameterDbType, int? parameterSize)
+        public Parameter(string parameterName, object parameterValue, DbType parameterDbType, int parameterSize)
         {
             this.parameterName = parameterName;
             this.parameterValue = parameterValue;
@@ -196,7 +197,7 @@ namespace WEF.Expressions
         /// <summary>
         /// 类型
         /// </summary>
-        public DbType? ParameterDbType
+        public DbType ParameterDbType
         {
             get
             {
@@ -211,7 +212,7 @@ namespace WEF.Expressions
         /// <summary>
         /// 长度
         /// </summary>
-        public int? ParameterSize
+        public int ParameterSize
         {
             get
             {

@@ -94,8 +94,10 @@ namespace WEF.ModelGenerator.Common
                 //return cf;
                 return null;
             }
-            else if (persistString == typeof(SQLTemplateForm).ToString())
-                return new SQLTemplateForm();
+            //else if (persistString == typeof(SQLTemplateForm).ToString())
+            //    return new SQLTemplateForm();
+            //else if (persistString == typeof(CollectForm).ToString())
+            //    return new CollectForm();
             else
                 return null;
         }

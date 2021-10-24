@@ -214,7 +214,7 @@ namespace WEF.Provider
         }
 
         #endregion
-       
+
 
 
         /// <summary>
@@ -450,8 +450,6 @@ namespace WEF.Provider
 
                 object value = p.Value;
 
-                DbType dbType = p.DbType;
-
                 if (value == DBNull.Value)
                 {
                     continue;
@@ -463,26 +461,34 @@ namespace WEF.Provider
                     continue;
                 }
 
-                Type type = value.GetType();
-
-                if (type.IsEnum)
+                try
                 {
-                    p.DbType = DbType.Int32;
-                    p.Value = Convert.ToInt32(value);
-                    continue;
-                }
+                    Type type = value.GetType();
 
-                if (dbType == DbType.Guid && type != typeof(Guid))
-                {
-                    p.Value = new Guid(value.ToString());
-                    continue;
-                }
+                    if (type.IsEnum)
+                    {
+                        p.DbType = DbType.Int32;
+                        p.Value = Convert.ToInt32(value);
+                        continue;
+                    }
 
-                if (type == typeof(Boolean))
-                {
-                    p.Value = (((bool)value) ? 1 : 0);
-                    continue;
+                    DbType dbType = p.DbType;
+
+                    if (dbType == DbType.Guid && type != typeof(Guid))
+                    {
+                        p.Value = new Guid(value.ToString());
+                        continue;
+                    }
+
+                    if (type == typeof(Boolean))
+                    {
+                        p.Value = (((bool)value) ? 1 : 0);
+                        continue;
+                    }
                 }
+                catch { }
+
+
             }
         }
     }

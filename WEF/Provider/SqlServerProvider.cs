@@ -12,6 +12,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+
 using WEF.Common;
 
 namespace WEF.Provider
@@ -77,56 +78,64 @@ namespace WEF.Provider
                 }
 
                 object value = p.Value;
+
                 if (value == DBNull.Value)
                 {
                     continue;
                 }
+
                 Type type = value.GetType();
-                SqlParameter sqlParam = (SqlParameter)p;
 
-                if (type == typeof(Guid))
+                try
                 {
-                    sqlParam.SqlDbType = SqlDbType.UniqueIdentifier;
-                    continue;
-                }
+                    SqlParameter sqlParam = (SqlParameter)p;
 
-                switch (p.DbType)
-                {
-                    case DbType.Binary:
-                        if (((byte[])value).Length > 8000)
-                        {
-                            sqlParam.SqlDbType = SqlDbType.Image;
-                        }
-                        break;
-                    case DbType.Time:
-                        sqlParam.SqlDbType = SqlDbType.DateTime;
-                        break;
-                    case DbType.DateTime:
-                        sqlParam.SqlDbType = SqlDbType.DateTime;
-                        break;
-                    case DbType.AnsiString:
-                        if (value.ToString().Length > 8000)
-                        {
-                            sqlParam.SqlDbType = SqlDbType.Text;
-                        }
-                        break;
-                    case DbType.String:
-                        if (value.ToString().Length > 4000)
-                        {
+                    if (type == typeof(Guid))
+                    {
+                        sqlParam.SqlDbType = SqlDbType.UniqueIdentifier;
+                        continue;
+                    }
+
+                    switch (p.DbType)
+                    {
+                        case DbType.Binary:
+                            if (((byte[])value).Length > 8000)
+                            {
+                                sqlParam.SqlDbType = SqlDbType.Image;
+                            }
+                            break;
+                        case DbType.Time:
+                            sqlParam.SqlDbType = SqlDbType.DateTime;
+                            break;
+                        case DbType.DateTime:
+                            sqlParam.SqlDbType = SqlDbType.DateTime;
+                            break;
+                        case DbType.AnsiString:
+                            if (value.ToString().Length > 8000)
+                            {
+                                sqlParam.SqlDbType = SqlDbType.Text;
+                            }
+                            break;
+                        case DbType.String:
+                            if (value.ToString().Length > 4000)
+                            {
+                                sqlParam.SqlDbType = SqlDbType.NText;
+                            }
+                            break;
+                        case DbType.Object:
                             sqlParam.SqlDbType = SqlDbType.NText;
-                        }
-                        break;
-                    case DbType.Object:
-                        sqlParam.SqlDbType = SqlDbType.NText;
-                        p.Value = SerializationManager.Serialize(value);
-                        break;
-                }
+                            p.Value = SerializationManager.Serialize(value);
+                            break;
+                    }
 
-                if (sqlParam.SqlDbType == SqlDbType.DateTime && type == typeof(TimeSpan))
-                {
-                    sqlParam.Value = new DateTime(1900, 1, 1).Add((TimeSpan)value);
-                    continue;
+                    if (sqlParam.SqlDbType == SqlDbType.DateTime && type == typeof(TimeSpan))
+                    {
+                        sqlParam.Value = new DateTime(1900, 1, 1).Add((TimeSpan)value);
+                        continue;
+                    }
                 }
+                catch { }
+
             }
 
             ////replace TONUMBER to cast

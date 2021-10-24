@@ -318,7 +318,7 @@
     <Compile Include="DbDAL\Oracle\DbObject.cs" />
     <Compile Include="DbDAL\PostgreSQL\DbObject.cs" />
     <Compile Include="DbDAL\SQL2000\DbObject.cs" />
-    <Compile Include="DbDAL\SQL2005\DbObject.cs" />
+    <Compile Include="DbDAL\SQLServer\DbObject.cs" />
     <Compile Include="DbDAL\Sqlite\DbObject.cs" />
     <Compile Include="Db\CommandCreator.cs" />
     <Compile Include="Db\Database.cs" />

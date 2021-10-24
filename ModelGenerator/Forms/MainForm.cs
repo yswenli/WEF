@@ -38,25 +38,30 @@ namespace WEF.ModelGenerator
 
         SQLTemplateForm _sqlTemplateForm;
 
+        CollectForm _collectForm;
+
         #region 打开数据库视图
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            _leftPannelForm = new LeftPanelForm();
+            _leftPannelForm = new LeftPanelForm();            
 
-            _sqlTemplateForm = new SQLTemplateForm();
-
-            if (!DockContentHelper.Load(dpleft))
+            if (!DockContentHelper.Load(dockPanel))
             {
                 _leftPannelForm.OnNewContentForm += lp_newcontentForm;
                 _leftPannelForm.OnNewSqlForm += lp_newsqlForm;
                 _leftPannelForm.OnNewDataForm += _leftPannelForm_OnNewDataForm;
-                _leftPannelForm.Show(dpleft);
-                _leftPannelForm.DockTo(dpleft, DockStyle.Left);
-
-                _sqlTemplateForm.Show(dpleft);
-                _sqlTemplateForm.DockTo(dpleft, DockStyle.Right);
+                _leftPannelForm.Show(dockPanel);
+                _leftPannelForm.DockTo(dockPanel, DockStyle.Left);              
             }
+
+            _sqlTemplateForm = new SQLTemplateForm();
+            _sqlTemplateForm.Show(dockPanel);
+            _sqlTemplateForm.DockTo(dockPanel, DockStyle.Right);
+
+            _collectForm = new CollectForm();
+            _collectForm.Show(dockPanel);
+            _collectForm.DockTo(dockPanel, DockStyle.Right);
         }
 
 
@@ -74,7 +79,7 @@ namespace WEF.ModelGenerator
             contentForm.DatabaseName = conModel.Database;
             contentForm.IsView = conModel.IsView;
             contentForm.ConnectionModel = conModel;
-            contentForm.Show(dpleft);
+            contentForm.Show(dockPanel);
         }
 
         void lp_newsqlForm(ConnectionModel conModel)
@@ -82,7 +87,7 @@ namespace WEF.ModelGenerator
             SQLForm s = new SQLForm(conModel.TableName);
             s.Text = "(" + conModel.Database + ")SQL查询窗口";
             s.ConnectionModel = conModel;
-            s.Show(dpleft);
+            s.Show(dockPanel);
         }
 
         private void _leftPannelForm_OnNewDataForm(ConnectionModel conModel)
@@ -90,7 +95,7 @@ namespace WEF.ModelGenerator
             DataForm s = new DataForm(conModel);
             s.Text = "(" + conModel.Database + conModel.TableName + ")数据编辑窗口";
             s.ConnectionModel = conModel;
-            s.Show(dpleft);
+            s.Show(dockPanel);
         }
 
         /// <summary>
@@ -124,7 +129,7 @@ namespace WEF.ModelGenerator
         /// <param name="e"></param>
         private void runToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var sqlForm = dpleft.ActiveContent as SQLForm;
+            var sqlForm = dockPanel.ActiveContent as SQLForm;
 
             if (sqlForm != null)
             {
@@ -211,7 +216,7 @@ namespace WEF.ModelGenerator
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DockContentHelper.Save(dpleft);
+            DockContentHelper.Save(dockPanel);
             e.Cancel = true;
             this.Hide();
             NotifyIcon.ShowBalloonTip(3000, "WEF数据库工具", "当前程序正在后台运行", ToolTipIcon.Info);
@@ -232,7 +237,7 @@ namespace WEF.ModelGenerator
         {
             try
             {
-                DockContentHelper.Save(dpleft);
+                DockContentHelper.Save(dockPanel);
 
                 if (MessageBox.Show("确定要退出WEF数据库工具吗？", "WEF数据库工具", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {

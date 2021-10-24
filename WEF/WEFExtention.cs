@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
+
 using WEF.Common;
 
 namespace WEF
@@ -1205,9 +1207,6 @@ namespace WEF
 
         #endregion
 
-
-
-
         #region DataTable 与 Entity互相转换
 
         /// <summary>
@@ -1438,6 +1437,105 @@ namespace WEF
 
         #endregion
 
+        #region 特殊字符串过滤
 
+        /// <summary>
+        /// 特殊字符串过滤
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public static string ReplaceSQLString(this string sql)
+        {
+            if (string.IsNullOrEmpty(sql))
+                return String.Empty;
+            sql = sql.Replace("'", "");
+            sql = sql.Replace(";", "");
+            sql = sql.Replace(",", "");
+            sql = sql.Replace("?", "");
+            sql = sql.Replace("<", "");
+            sql = sql.Replace(">", "");
+            sql = sql.Replace("(", "");
+            sql = sql.Replace(")", "");
+            sql = sql.Replace("@", "");
+            sql = sql.Replace("=", "");
+            sql = sql.Replace("+", "");
+            sql = sql.Replace("*", "");
+            sql = sql.Replace("&", "");
+            sql = sql.Replace("#", "");
+            sql = sql.Replace("%", "");
+            sql = sql.Replace("$", "");
+            //删除与数据库相关的词
+            sql = Regex.Replace(sql, "select", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "insert", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "delete from", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "count", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "drop table", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "truncate", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "asc", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "mid", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "char", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "xp_cmdshell", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "exec master", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "net localgroup administrators", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "and", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "net user", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "or", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "net", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "-", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "delete", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "drop", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "script", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "update", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "and", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "chr", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "master", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "truncate", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "declare", "", RegexOptions.IgnoreCase);
+            sql = Regex.Replace(sql, "mid", "", RegexOptions.IgnoreCase);
+            return sql;
+        }
+
+        #endregion
+
+        #region 常规类型转换
+
+        /// <summary>
+        /// 常规类型转换
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static DbType GetDbType(this object value)
+        {
+            var typeName = value.GetType().Name;
+            switch (typeName)
+            {
+                case "String":
+                    return DbType.String;
+                case "Byte":
+                    return DbType.Byte;
+                case "Int16":
+                    return DbType.Int16;
+                case "Int32":
+                    return DbType.Int32;
+                case "Int64":
+                    return DbType.Int64;
+                case "Single":
+                    return DbType.Single;
+                case "Double":
+                    return DbType.Double;
+                case "Decimal":
+                    return DbType.Decimal;
+                case "DateTime":
+                    return DbType.DateTime;
+                case "Guid":
+                    return DbType.Guid;
+                case "Byte[]":
+                    return DbType.Binary;
+                default:
+                    throw new NotSupportedException("不支持的类型");
+            }
+        }
+
+        #endregion
     }
 }

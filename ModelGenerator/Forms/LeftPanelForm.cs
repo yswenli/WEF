@@ -468,7 +468,7 @@ namespace WEF.ModelGenerator
                         if (conModel.DbType.Equals(DatabaseType.SqlServer.ToString()))
                             dbObject = new WEF.DbDAL.SQL2000.DbObject(conConnectionString);
                         else
-                            dbObject = new WEF.DbDAL.SQL2005.DbObject(conConnectionString);
+                            dbObject = new WEF.DbDAL.SQLServer.DbObject(conConnectionString);
 
                         if (conModel.Database.Equals("all"))
                         {
@@ -957,7 +957,7 @@ namespace WEF.ModelGenerator
                 }
                 else if (conModel.DbType.Equals(DatabaseType.SqlServer9.ToString()))
                 {
-                    dbObject = new WEF.DbDAL.SQL2005.DbObject(conConnectionString);
+                    dbObject = new WEF.DbDAL.SQLServer.DbObject(conConnectionString);
                     ShowTablesAndViews(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
                 }
                 else if (conModel.DbType.Equals(DatabaseType.Oracle.ToString()))

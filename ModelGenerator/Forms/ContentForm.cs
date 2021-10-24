@@ -216,7 +216,6 @@ namespace WEF.ModelGenerator
 
             var columns = DBToCSharp.DbtoCSColumns(dbColumns, ConnectionModel.DbType);
 
-
             bool isFirst = true;
 
             foreach (ColumnInfo column in columns)
@@ -441,6 +440,29 @@ namespace WEF.ModelGenerator
                 cbPrimarykey.SelectedIndex = 0;
         }
 
+        /// <summary>
+        /// 生成markdown文档
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void generateMarkDownDocToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (gridColumns.Rows != null && gridColumns.Rows.Count > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendLine($"### 表名 {TableName}");
+                sb.AppendLine("|字段|类型|可空|默认|注释|");
+                sb.AppendLine("|:----    |:-------    |:--- |-- -|------      |");
+
+                foreach (DataGridViewRow row in gridColumns.Rows)
+                {
+                    sb.AppendLine($"|{row.Cells["ColumnName"].Value}|{row.Cells["TypeName"].Value}({row.Cells["Length"].Value})|{row.Cells["cisNull"].Value}|{row.Cells["defaultVal"].Value}|{row.Cells["deText"].Value}|");
+                }
+                Clipboard.SetText(sb.ToString());
+                MessageBox.Show(this, "已将结构文档生成到剪切板！", "生成MarkDown文档提示");
+            }
+        }
 
         #endregion
 

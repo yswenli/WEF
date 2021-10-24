@@ -191,7 +191,7 @@ namespace WEF.ModelGenerator.DbSelect
 
                 if (cbbServerType.SelectedIndex == 0)
                 {
-                    dbObejct = new WEF.DbDAL.SQL2005.DbObject(cbbShenFenRZ.SelectedIndex == 0, cbbServer.Text, txtUserName.Text, txtPassword.Text);
+                    dbObejct = new WEF.DbDAL.SQLServer.DbObject(cbbShenFenRZ.SelectedIndex == 0, cbbServer.Text, txtUserName.Text, txtPassword.Text);
                 }
                 else
                 {

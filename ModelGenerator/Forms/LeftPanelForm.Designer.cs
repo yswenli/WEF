@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LeftPanelForm));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("数据库服务器");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("数据库服务器");
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
@@ -57,6 +57,7 @@
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.dataOperateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
@@ -65,7 +66,6 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.searchTextBox = new CCWin.SkinControl.SkinWaterTextBox();
-            this.dataOperateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.contextMenuStripTop.SuspendLayout();
             this.contextMenuStripDatabase.SuspendLayout();
@@ -82,7 +82,7 @@
             this.toolStripButton2});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(231, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(231, 31);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -92,7 +92,7 @@
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(29, 24);
+            this.toolStripButton1.Size = new System.Drawing.Size(29, 28);
             this.toolStripButton1.ToolTipText = "新建数据库连接";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
@@ -102,7 +102,7 @@
             this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(29, 24);
+            this.toolStripButton2.Size = new System.Drawing.Size(29, 28);
             this.toolStripButton2.Text = "异常日志";
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
@@ -111,15 +111,16 @@
             this.Treeview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.Treeview.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Treeview.ImageIndex = 0;
             this.Treeview.ImageList = this.imgList;
             this.Treeview.Location = new System.Drawing.Point(0, 59);
             this.Treeview.Margin = new System.Windows.Forms.Padding(4);
             this.Treeview.Name = "Treeview";
-            treeNode1.Name = "节点0";
-            treeNode1.Text = "数据库服务器";
+            treeNode2.Name = "节点0";
+            treeNode2.Text = "数据库服务器";
             this.Treeview.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode2});
             this.Treeview.SelectedImageIndex = 0;
             this.Treeview.Size = new System.Drawing.Size(229, 395);
             this.Treeview.TabIndex = 1;
@@ -260,69 +261,76 @@
             this.toolStripMenuItem7,
             this.deleteTableToolStripMenuItem});
             this.contextMenuStripTable.Name = "contextMenuStripOneDataBase";
-            this.contextMenuStripTable.Size = new System.Drawing.Size(211, 242);
+            this.contextMenuStripTable.Size = new System.Drawing.Size(199, 214);
             // 
             // 生成代码ToolStripMenuItem
             // 
             this.生成代码ToolStripMenuItem.Name = "生成代码ToolStripMenuItem";
-            this.生成代码ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.生成代码ToolStripMenuItem.Size = new System.Drawing.Size(198, 24);
             this.生成代码ToolStripMenuItem.Text = "查看详情";
             this.生成代码ToolStripMenuItem.Click += new System.EventHandler(this.生成代码ToolStripMenuItem_Click);
             // 
             // sQL查询ToolStripMenuItem
             // 
             this.sQL查询ToolStripMenuItem.Name = "sQL查询ToolStripMenuItem";
-            this.sQL查询ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.sQL查询ToolStripMenuItem.Size = new System.Drawing.Size(198, 24);
             this.sQL查询ToolStripMenuItem.Text = "SQL查询窗口";
             this.sQL查询ToolStripMenuItem.Click += new System.EventHandler(this.sQL查询ToolStripMenuItem_Click);
             // 
             // copyFieldNameToolStripMenuItem
             // 
             this.copyFieldNameToolStripMenuItem.Name = "copyFieldNameToolStripMenuItem";
-            this.copyFieldNameToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.copyFieldNameToolStripMenuItem.Size = new System.Drawing.Size(198, 24);
             this.copyFieldNameToolStripMenuItem.Text = "复制表名";
             this.copyFieldNameToolStripMenuItem.Click += new System.EventHandler(this.copyFieldNameToolStripMenuItem_Click);
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(207, 6);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(195, 6);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(198, 24);
             this.toolStripMenuItem4.Text = "快捷生成业务代码";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(207, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(195, 6);
+            // 
+            // dataOperateToolStripMenuItem
+            // 
+            this.dataOperateToolStripMenuItem.Name = "dataOperateToolStripMenuItem";
+            this.dataOperateToolStripMenuItem.Size = new System.Drawing.Size(198, 24);
+            this.dataOperateToolStripMenuItem.Text = "编辑数据";
+            this.dataOperateToolStripMenuItem.Click += new System.EventHandler(this.dataOperateToolStripMenuItem_Click);
             // 
             // exportDataToolStripMenuItem
             // 
             this.exportDataToolStripMenuItem.Name = "exportDataToolStripMenuItem";
-            this.exportDataToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.exportDataToolStripMenuItem.Size = new System.Drawing.Size(198, 24);
             this.exportDataToolStripMenuItem.Text = "导出数据";
             this.exportDataToolStripMenuItem.Click += new System.EventHandler(this.exportDataToolStripMenuItem_Click);
             // 
             // importDataToolStripMenuItem
             // 
             this.importDataToolStripMenuItem.Name = "importDataToolStripMenuItem";
-            this.importDataToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.importDataToolStripMenuItem.Size = new System.Drawing.Size(198, 24);
             this.importDataToolStripMenuItem.Text = "导入数据";
             this.importDataToolStripMenuItem.Click += new System.EventHandler(this.importDataToolStripMenuItem_Click);
             // 
             // toolStripMenuItem7
             // 
             this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(207, 6);
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(195, 6);
             // 
             // deleteTableToolStripMenuItem
             // 
             this.deleteTableToolStripMenuItem.Name = "deleteTableToolStripMenuItem";
-            this.deleteTableToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.deleteTableToolStripMenuItem.Size = new System.Drawing.Size(198, 24);
             this.deleteTableToolStripMenuItem.Text = "删除表";
             this.deleteTableToolStripMenuItem.Click += new System.EventHandler(this.deleteTableToolStripMenuItem_Click);
             // 
@@ -352,20 +360,14 @@
             // searchTextBox
             // 
             this.searchTextBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.searchTextBox.Location = new System.Drawing.Point(0, 27);
+            this.searchTextBox.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.searchTextBox.Location = new System.Drawing.Point(0, 31);
             this.searchTextBox.Name = "searchTextBox";
-            this.searchTextBox.Size = new System.Drawing.Size(231, 25);
+            this.searchTextBox.Size = new System.Drawing.Size(231, 27);
             this.searchTextBox.TabIndex = 5;
             this.searchTextBox.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
             this.searchTextBox.WaterText = "查询：请输入表名或视图名";
             this.searchTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.searchTextBox_KeyUp);
-            // 
-            // dataOperateToolStripMenuItem
-            // 
-            this.dataOperateToolStripMenuItem.Name = "dataOperateToolStripMenuItem";
-            this.dataOperateToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
-            this.dataOperateToolStripMenuItem.Text = "编辑数据";
-            this.dataOperateToolStripMenuItem.Click += new System.EventHandler(this.dataOperateToolStripMenuItem_Click);
             // 
             // LeftPanelForm
             // 

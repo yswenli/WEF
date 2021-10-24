@@ -94,52 +94,15 @@ namespace WEF.ModelGenerator.Forms
             });
         }
 
-
-        private async void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-            if (!_loading)
-            {
-                label1.Visible = true;
-                try
-                {
-                    _dbContext.UpdateDataSource(_dataTable);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(this, "添加数据发生异常：" + ex.Message);
-                }
-                finally
-                {
-                    label1.Visible = false;
-                }
-            }
-        }
-
-
-        private async void dataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        void Save()
         {
             label1.Visible = true;
             try
             {
                 _dbContext.UpdateDataSource(_dataTable);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, "删除数据发生异常：" + ex.Message);
-            }
-            finally
-            {
-                label1.Visible = false;
-            }
-        }
 
+                MessageBox.Show(this, "保存成功");
 
-        private async void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            label1.Visible = true;
-            try
-            {
-                _dbContext.UpdateDataSource(_dataTable);
             }
             catch (Exception ex)
             {
@@ -149,6 +112,37 @@ namespace WEF.ModelGenerator.Forms
             {
                 label1.Visible = false;
             }
+        }
+
+        #region menus
+        private void deleteRowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var rows = dataGridView1.SelectedRows;
+            if (rows != null && rows.Count > 0)
+            {
+                dataGridView1.Rows.Remove(rows[0]);
+            }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Save();
+        }
+
+        #endregion
+        /// <summary>
+        /// ctrl+s 保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridView1_KeyUp(object sender, KeyEventArgs e)
+        {
+            ShortcutKeyHelper.Save(sender, e, Save);
+        }
+
+        private void DataForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            ShortcutKeyHelper.Save(sender, e, Save);
         }
     }
 }

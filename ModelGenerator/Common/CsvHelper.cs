@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,47 +38,13 @@ namespace WEF.ModelGenerator.Common
         {
             await Task.Yield();
             OnStart?.Invoke();
-            await Task.Yield();
-            await Task.Run(async () =>
+            using (var fs = File.Open(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             {
-                using (StringWriter sw = new StringWriter())
-                {
-                    StringBuilder sb = new StringBuilder();
-                    char c = ',';
-                    for (int i = 0; i < dt.Columns.Count; i++)
-                    {
-                        sb.Append(dt.Columns[i].Caption + c);
-                    }
-                    sb.Append("\r\n");
-                    for (int i = 0; i < dt.Rows.Count; i++)
-                    {
-                        for (int j = 0; j < dt.Columns.Count; j++)
-                        {
-                            try
-                            {
-                                sb.Append(ConvertToSaveCell(dt.Rows[i][j]));
-
-                                OnRunning.Invoke(i * dt.Columns.Count + (j + 1), dt.Rows.Count * dt.Columns.Count);
-                            }
-                            catch
-                            {
-                                sb.Append(c);
-                            }
-                        }
-                        sb.Append("\r\n");
-                    }
-                    sw.Write(Encoding.UTF8.GetString(new byte[] { (byte)0xEF, (byte)0xBB, (byte)0xBF }));
-                    sw.Write(sb);
-                    using (var fs = File.Open(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
-                    {
-                        using (StreamWriter ssw = new StreamWriter(fs))
-                        {
-                            await ssw.WriteAsync(sb.ToString());
-                        }
-                    }
-                }
-                OnStop?.Invoke();
-            });
+                var stream = ExportFromDataTable(dt);
+                stream.CopyTo(fs);
+                await fs.FlushAsync();
+            }
+            OnStop?.Invoke();
         }
 
         /// <summary>
@@ -104,11 +71,7 @@ namespace WEF.ModelGenerator.Common
         /// <returns></returns>
         public async Task CSV(ConnectionModel cnn, string tableName, string fileName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await Task.Yield();
-
             OnStart?.Invoke();
-
-            await Task.Yield();
 
             await Task.Run(async () =>
             {
@@ -136,7 +99,10 @@ namespace WEF.ModelGenerator.Common
 
                     for (int i = 0; i < filedCount; i++)
                     {
-                        sb.Append(header[i] + c);
+                        if (i == filedCount - 1)
+                            sb.Append(header[i]);
+                        else
+                            sb.Append(header[i] + c);
                     }
                     sb.Append("\r\n");
 
@@ -150,9 +116,13 @@ namespace WEF.ModelGenerator.Common
                         {
                             try
                             {
-                                sb.Append(ConvertToSaveCell(reader[j]));
+                                sb.Append(reader[j]?.ToString() ?? "" + c);
 
-                                OnRunning?.Invoke(filedCount * j + rowCount, filedCount * rowCount);
+                                try
+                                {
+                                    OnRunning?.Invoke(filedCount * j + rowCount, filedCount * rowCount);
+                                }
+                                catch { }
                             }
                             catch
                             {
@@ -261,5 +231,72 @@ namespace WEF.ModelGenerator.Common
             return null;
         }
 
+        /// <summary>
+        /// 导出
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="splitStr"></param>
+        /// <param name="columnNameList"></param>
+        /// <returns></returns>
+        public static Stream ExportFromDataTable(DataTable dt, string splitStr = ",", IEnumerable<string> columnNameList = null)
+        {
+            if (dt == null || dt.Rows == null || dt.Rows.Count == 0) return null;
+
+            MemoryStream memoryStream = new MemoryStream();
+
+            if (columnNameList != null)
+            {
+                if (columnNameList.Count() != dt.Columns.Count) throw new ArgumentOutOfRangeException("自定义列数与数据源不一致");
+
+                foreach (var columnName in columnNameList)
+                {
+                    if (columnNameList.First() == columnName)
+                    {
+                        memoryStream.Write(Encoding.UTF8.GetBytes(columnName));
+                    }
+                    else
+                    {
+                        memoryStream.Write(Encoding.UTF8.GetBytes(splitStr));
+                        memoryStream.Write(Encoding.UTF8.GetBytes(columnName));
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < dt.Columns.Count; i++)
+                {
+                    memoryStream.Write(Encoding.UTF8.GetBytes(dt.Columns[i].ColumnName.ToString()));
+                    if (i < dt.Columns.Count - 1)
+                    {
+                        memoryStream.Write(Encoding.UTF8.GetBytes(splitStr));
+                    }
+                }
+            }
+
+            memoryStream.Write(Encoding.UTF8.GetBytes(Environment.NewLine));
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    memoryStream.Write(Encoding.UTF8.GetBytes(dt.Rows[i][j].ToString()));
+                    if (j < dt.Columns.Count - 1)
+                    {
+                        memoryStream.Write(Encoding.UTF8.GetBytes(splitStr));
+                    }
+                }
+                memoryStream.Write(Encoding.UTF8.GetBytes(Environment.NewLine));
+            }
+            memoryStream.Position = 0;
+            return memoryStream;
+        }
     }
+
+    public static class MemoryStreamExtend
+    {
+        public static void Write(this MemoryStream memoryStream, byte[] data)
+        {
+            memoryStream.Write(data, 0, data.Length);
+        }
+    }
+
 }

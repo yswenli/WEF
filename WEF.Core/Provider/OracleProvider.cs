@@ -153,7 +153,6 @@ namespace WEF.Provider
                         oracleParam.OracleDbType = OracleDbType.NClob;
                         p.Value = SerializationManager.Serialize(value);
                         break;
-                    //2015-12-31  新增
                     case DbType.Guid:
                         oracleParam.OracleDbType = OracleDbType.Char;//AnsiStringFixedLength  
                         p.Value = SerializationManager.Serialize(value);

@@ -11,6 +11,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Reflection;
+
 using WEF.Common;
 using WEF.Provider;
 
@@ -119,8 +121,9 @@ namespace WEF.Section
         /// 添加输入参数
         /// </summary>
         /// <param name="parameterName"></param>
-        /// <param name="value"></param>
         /// <param name="dbType"></param>
+        /// <param name="size"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public ProcSection AddInParameter(string parameterName, DbType dbType, int size, object value)
         {
@@ -130,6 +133,55 @@ namespace WEF.Section
             _dbContext.Db.AddInParameter(this._dbCommand, parameterName, dbType, size, value);
             return this;
         }
+
+        /// <summary>
+        /// 添加自定义参数
+        /// </summary>
+        /// <param name="parameterName"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public ProcSection AddInParameter(string parameterName, object value)
+        {
+            Check.Require(parameterName, "parameterName", Check.NotNullOrEmpty);
+            Check.Require(value, "value", Check.NotNullOrEmpty);
+            return AddInParameter(parameterName, value.GetDbType(), 0, value);
+        }
+
+        /// <summary>
+        /// 添加自定义参数
+        /// </summary>
+        /// <param name="keyValuePairs"></param>
+        /// <returns></returns>
+        public ProcSection AddInParameter(IEnumerable<KeyValuePair<string, object>> keyValuePairs)
+        {
+            foreach (var keyValuePair in keyValuePairs)
+            {
+                this.AddInParameter(keyValuePair.Key, keyValuePair.Value.GetDbType(), 0, keyValuePair.Value);
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// 添加自定义参数
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public ProcSection AddInParameterWithModel<T>(T parameter) where T : class
+        {
+            Check.Require(parameter, "parameter", Check.NotNullOrEmpty);
+            List<KeyValuePair<string, object>> keyValuePairs = new List<KeyValuePair<string, object>>();
+            var type = typeof(T);
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (var property in properties)
+            {
+                var value = DynamicCalls.GetPropertyGetter(property).Invoke(parameter);
+                keyValuePairs.Add(new KeyValuePair<string, object>($"@{property.Name}", value));
+            }
+            this.AddInParameter(keyValuePairs);
+            return this;
+        }
+
 
         /// <summary>
         /// 添加输出参数
@@ -229,7 +281,7 @@ namespace WEF.Section
         /// <summary>
         /// 操作参数名称
         /// </summary>
-        protected void executeBefore()
+        protected void ExecuteBefore()
         {
             if (isParameterSpecial)
             {
@@ -252,7 +304,7 @@ namespace WEF.Section
         /// <returns></returns>
         public override object ToScalar()
         {
-            executeBefore();
+            ExecuteBefore();
 
             return base.ToScalar();
         }
@@ -263,7 +315,7 @@ namespace WEF.Section
         /// <returns></returns>
         public override IDataReader ToDataReader()
         {
-            executeBefore();
+            ExecuteBefore();
 
             return base.ToDataReader();
         }
@@ -274,7 +326,7 @@ namespace WEF.Section
         /// <returns></returns>
         public override DataSet ToDataSet()
         {
-            executeBefore();
+            ExecuteBefore();
 
             return base.ToDataSet();
         }
@@ -286,7 +338,7 @@ namespace WEF.Section
         /// <returns></returns>
         public override int ExecuteNonQuery()
         {
-            executeBefore();
+            ExecuteBefore();
 
             return base.ExecuteNonQuery();
         }

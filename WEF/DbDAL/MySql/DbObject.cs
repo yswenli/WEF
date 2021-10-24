@@ -590,55 +590,60 @@ namespace WEF.DbDAL.MySql
         /// <summary>
         /// 得到数据库里表或视图的列的详细信息
         /// </summary>
-        /// <param name="DbName">库</param>
+        /// <param name="dbName">库</param>
         /// <param name="TableName">表</param>
         /// <returns></returns>
-        public DataTable GetColumnInfoList(string DbName, string TableName)
+        public DataTable GetColumnInfoList(string dbName, string TableName)
         {
             try
             {
-                string strSql = "SHOW COLUMNS FROM " + TableName;
+                string sql = $"SELECT column_name AS '列名', data_type AS '数据类型',column_key as 'Key', character_maximum_length  AS '字符长度', numeric_precision AS '数字长度', numeric_scale AS '小数位数', is_nullable AS '是否允许非空', CASE WHEN extra = 'auto_increment' THEN 1 ELSE 0 END AS '是否自增', column_default  AS  '默认值', column_comment  AS  '备注' FROM Information_schema.columns WHERE table_Name='{TableName}';";
                 DataTable columnsTables = CreateColumnTable();
                 DataRow dr;
-                var reader = ExecuteReader(DbName, strSql);
+                var reader = ExecuteReader(dbName, sql);
                 int n = 1;
                 while (reader.Read())
                 {
                     dr = columnsTables.NewRow();
                     dr[0] = n.ToString();
-                    if ((!Object.Equals(reader["Field"], null)) && (!Object.Equals(reader["Field"], System.DBNull.Value)))
+                    if ((!Object.Equals(reader["列名"], null)) && (!Object.Equals(reader["列名"], System.DBNull.Value)))
                     {
-                        string tname = reader["Field"].GetType().Name;
+                        string tname = reader["列名"].GetType().Name;
                         switch (tname)
                         {
                             case "Byte[]":
-                                dr["ColumnName"] = Encoding.Default.GetString((Byte[])reader["Field"]);
+                                dr["ColumnName"] = Encoding.Default.GetString((Byte[])reader["列名"]);
                                 break;
                             case "":
                                 break;
                             default:
-                                dr["ColumnName"] = reader["Field"].ToString();
+                                dr["ColumnName"] = reader["列名"].ToString();
                                 break;
                         }
                     }
                     string typename = string.Empty;
-                    if ((!Object.Equals(reader["Type"], null)) && (!Object.Equals(reader["Type"], System.DBNull.Value)))
+                    if ((!Object.Equals(reader["数据类型"], null)) && (!Object.Equals(reader["数据类型"], System.DBNull.Value)))
                     {
-                        string tname = reader["Type"].GetType().Name;
+                        string tname = reader["数据类型"].GetType().Name;
                         switch (tname)
                         {
                             case "Byte[]":
-                                typename = Encoding.Default.GetString((Byte[])reader["Type"]);
+                                typename = Encoding.Default.GetString((Byte[])reader["数据类型"]);
                                 break;
                             case "":
                                 break;
                             default:
-                                typename = reader["Type"].ToString();
+                                typename = reader["数据类型"].ToString();
                                 break;
                         }
                     }
                     string len = "", pre = "", scal = "";
                     TypeNameProcess(typename, out typename, out len, out pre, out scal);
+
+                    len = reader["字符长度"].ToString();
+                    pre= reader["数字长度"].ToString();
+                    scal = reader["小数位数"].ToString();
+
                     dr["TypeName"] = typename;
 
                     dr["Length"] = len;
@@ -660,59 +665,56 @@ namespace WEF.DbDAL.MySql
                                 break;
                         }
                         dr["isPK"] = (skey.Trim() == "PRI") ? "√" : "";
+                        dr["IsIdentity"] = (skey.Trim() == "PRI") ? "√" : ""; 
                     }
-                    if ((!Object.Equals(reader["Null"], null)) && (!Object.Equals(reader["Null"], System.DBNull.Value)))
+                    if ((!Object.Equals(reader["是否允许非空"], null)) && (!Object.Equals(reader["是否允许非空"], System.DBNull.Value)))
                     {
                         string snull = "";
-                        string tname = reader["Null"].GetType().Name;
+                        string tname = reader["是否允许非空"].GetType().Name;
                         switch (tname)
                         {
                             case "Byte[]":
-                                snull = Encoding.Default.GetString((Byte[])reader["Null"]);
+                                snull = Encoding.Default.GetString((Byte[])reader["是否允许非空"]);
                                 break;
                             case "":
                                 break;
                             default:
-                                snull = reader["Null"].ToString();
+                                snull = reader["是否允许非空"].ToString();
                                 break;
                         }
                         dr["cisNull"] = (snull.Trim() == "YES") ? "√" : "";
                     }
-                    if ((!Object.Equals(reader["Default"], null)) && (!Object.Equals(reader["Default"], System.DBNull.Value)))
+                    if ((!Object.Equals(reader["默认值"], null)) && (!Object.Equals(reader["默认值"], System.DBNull.Value)))
                     {
-                        string tname = reader["Default"].GetType().Name;
+                        string tname = reader["默认值"].GetType().Name;
                         switch (tname)
                         {
                             case "Byte[]":
-                                dr["DefaultVal"] = Encoding.Default.GetString((Byte[])reader["Default"]);
+                                dr["DefaultVal"] = Encoding.Default.GetString((Byte[])reader["默认值"]);
                                 break;
                             case "":
                                 break;
                             default:
-                                dr["DefaultVal"] = reader["Default"].ToString();
+                                dr["DefaultVal"] = reader["默认值"].ToString();
                                 break;
                         }
                     }
                     dr["IsIdentity"] = "";
-                    if ((!Object.Equals(reader["Extra"], null)) && (!Object.Equals(reader["Extra"], System.DBNull.Value)))
+                    if ((!Object.Equals(reader["备注"], null)) && (!Object.Equals(reader["备注"], System.DBNull.Value)))
                     {
 
-                        string tname = reader["Extra"].GetType().Name;
+                        string tname = reader["备注"].GetType().Name;
                         switch (tname)
                         {
                             case "Byte[]":
-                                dr["DeText"] = Encoding.Default.GetString((Byte[])reader["Extra"]);
+                                dr["DeText"] = Encoding.UTF8.GetString((Byte[])reader["备注"]);
                                 break;
                             case "":
                                 dr["DeText"] = "";
                                 break;
                             default:
-                                dr["DeText"] = reader["Extra"].ToString();
+                                dr["DeText"] = reader["备注"].ToString();
                                 break;
-                        }
-                        if (dr["DeText"].ToString().Trim() == "auto_increment")
-                        {
-                            dr["IsIdentity"] = "√";
                         }
                     }
 

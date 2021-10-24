@@ -14,7 +14,6 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -25,7 +24,6 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 
 using WEF.Batcher;
-using WEF.Cache;
 using WEF.Common;
 using WEF.Db;
 using WEF.Expressions;
@@ -99,38 +97,12 @@ namespace WEF
         {
             get
             {
-                return (DBContext)CallContext.LogicalGetData(CONTEXTKEY);
+                return (DBContext)CallContext.GetData(CONTEXTKEY);
             }
         }
 
         #endregion
 
-        #region Cache
-
-        /// <summary>
-        /// 开启缓存
-        /// </summary>
-        public void TurnOnCache()
-        {
-            if (null != _db.DbProvider.CacheConfig)
-            {
-                _db.DbProvider.CacheConfig.Enable = true;
-            }
-        }
-
-
-        /// <summary>
-        /// 关闭缓存
-        /// </summary>
-        public void TurnOffCache()
-        {
-            if (null != _db.DbProvider.CacheConfig)
-            {
-                _db.DbProvider.CacheConfig.Enable = false;
-            }
-        }
-
-        #endregion
 
         #region batch
 
@@ -187,59 +159,6 @@ namespace WEF
         private void initDbSesion()
         {
             cmdCreator = new CommandCreator(_db);
-
-            if (_db.DbProvider.CacheConfig == null)
-            {
-                object cacheConfig = System.Configuration.ConfigurationManager.GetSection("WEFCacheConfig");
-
-                if (cacheConfig != null)
-                {
-                    _db.DbProvider.CacheConfig = (CacheConfiguration)cacheConfig;
-
-                    ConcurrentDictionary<string, CacheInfo> entitiesCache = new ConcurrentDictionary<string, CacheInfo>();
-
-                    //获取缓存配制
-
-                    foreach (string key in _db.DbProvider.CacheConfig.Entities.AllKeys)
-                    {
-                        if (key.IndexOf('.') > 0)
-                        {
-                            string[] splittedKey = key.Split('.');
-
-                            if (splittedKey[0].Trim() == _db.DbProvider.ConnectionStringsName)
-                            {
-                                int expireSeconds = 0;
-                                CacheInfo cacheInfo = new CacheInfo();
-
-                                if (int.TryParse(_db.DbProvider.CacheConfig.Entities[key].Value, out expireSeconds))
-
-                                {
-                                    cacheInfo.TimeOut = expireSeconds;
-                                }
-                                else
-                                {
-                                    string tempFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _db.DbProvider.CacheConfig.Entities[key].Value);
-
-                                    if (File.Exists(tempFilePath))
-                                    {
-                                        cacheInfo.FilePath = tempFilePath;
-                                    }
-                                }
-
-                                if (!cacheInfo.IsNullOrEmpty())
-                                {
-                                    string entityName = string.Concat(_db.DbProvider.ConnectionStringsName, splittedKey[1].Trim());
-
-                                    entitiesCache[entityName] = cacheInfo;
-                                }
-                            }
-                        }
-                    }
-
-                    _db.DbProvider.EntitiesCache = entitiesCache;
-                }
-
-            }
         }
 
         /// <summary>
@@ -252,7 +171,7 @@ namespace WEF
 
             initDbSesion();
 
-            CallContext.LogicalSetData(CONTEXTKEY, this);
+            CallContext.SetData(CONTEXTKEY, this);
         }
 
         /// <summary>
@@ -265,7 +184,7 @@ namespace WEF
             this._db = new Database(ProviderFactory.CreateDbProvider(connStrName), timeout);
             this._db.DbProvider.ConnectionStringsName = connStrName;
             initDbSesion();
-            CallContext.LogicalSetData(CONTEXTKEY, this);
+            CallContext.SetData(CONTEXTKEY, this);
         }
 
 
@@ -280,7 +199,7 @@ namespace WEF
 
             initDbSesion();
 
-            CallContext.LogicalSetData(CONTEXTKEY, this);
+            CallContext.SetData(CONTEXTKEY, this);
         }
 
         /// <summary>
@@ -297,7 +216,7 @@ namespace WEF
 
             initDbSesion();
 
-            CallContext.LogicalSetData(CONTEXTKEY, this);
+            CallContext.SetData(CONTEXTKEY, this);
         }
 
         /// <summary>
@@ -320,7 +239,7 @@ namespace WEF
 
             cmdCreator = new CommandCreator(_db);
 
-            CallContext.LogicalSetData(CONTEXTKEY, this);
+            CallContext.SetData(CONTEXTKEY, this);
         }
 
         #endregion
@@ -1982,11 +1901,10 @@ namespace WEF
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="dataTable"></param>
-        /// <param name="timeOut"></param>
         /// <returns></returns>
-        public int BulkInsert(string tableName, DataTable dataTable, int timeOut = 180)
+        public int BulkInsert(string tableName, DataTable dataTable)
         {
-            return _db.BulkInsert(tableName, dataTable, timeOut);
+            return _db.BulkInsert(tableName, dataTable);
         }
         #endregion
 
@@ -2291,10 +2209,34 @@ namespace WEF
         /// 执行sql
         /// </summary>
         /// <param name="sql"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
-        public SqlSection FromSql(string sql)
+        public SqlSection FromSql(string sql, params Parameter[] parameters)
         {
-            return new SqlSection(this, sql);
+            return new SqlSection(this, sql, parameters);
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="keyValuePairs"></param>
+        /// <returns></returns>
+        public SqlSection FromSqlWithdAutomatic(string sql, params KeyValuePair<string, object>[] keyValuePairs)
+        {
+            return new SqlSection(this, sql, keyValuePairs);
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public SqlSection FromSqlWithdModel<T>(string sql, T parameter) where T : class, new()
+        {
+            return new SqlSection(this, sql).AddInParameterWithModel(parameter);
         }
         /// <summary>
         /// 执行sql
@@ -2308,6 +2250,49 @@ namespace WEF
         public SqlSection FromSql(string sql, int pageIndex, int pageSize, string orderBy, bool asc = true)
         {
             return new SqlSection(this, sql, pageIndex, pageSize, orderBy, asc);
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBys"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public SqlSection FromSql(string sql, int pageIndex, int pageSize, Dictionary<string, OrderByOperater> orderBys, params Parameter[] parameters)
+        {
+            return new SqlSection(this, sql, pageIndex, pageSize, orderBys, parameters);
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBys"></param>
+        /// <param name="keyValuePairs"></param>
+        /// <returns></returns>
+        public SqlSection FromSql(string sql, int pageIndex, int pageSize, Dictionary<string, OrderByOperater> orderBys, KeyValuePair<string, object>[] keyValuePairs)
+        {
+            return new SqlSection(this, sql, pageIndex, pageSize, orderBys, keyValuePairs);
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBys"></param>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public SqlSection FromSql<T>(string sql, int pageIndex, int pageSize, Dictionary<string, OrderByOperater> orderBys, T parameter) where T : class, new()
+        {
+            return new SqlSection(this, sql, pageIndex, pageSize, orderBys).AddInParameterWithModel(parameter);
         }
 
         #endregion
@@ -2346,6 +2331,41 @@ namespace WEF
             return CreateParameter(name, dbType, size, ParameterDirection.Input, true, 0, 0, String.Empty, DataRowVersion.Default, value);
         }
         #endregion
+
+        #region 数据更新
+
+        AdoBatcher _adoBatcher = null;
+
+        /// <summary>
+        /// 获取源数据
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="size"></param>
+        /// <param name="timeOut"></param>
+        /// <returns></returns>
+        public DataTable GetDataSource(string tableName, int size = 100, int timeOut = 180)
+        {
+            _adoBatcher = new AdoBatcher(_db, tableName, timeOut);
+
+            return _adoBatcher.Fill(size);
+        }
+
+        /// <summary>
+        /// 更新源数据
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <returns></returns>
+        public int UpdateDataSource(DataTable dataTable)
+        {
+            if (_adoBatcher != null)
+            {
+                return _adoBatcher.Update(dataTable);
+            }
+            return -1;
+        }
+
+        #endregion
+
 
         #region 数据导入导出
 
@@ -2502,40 +2522,6 @@ namespace WEF
             var dataTable = list.EntitiesToDataTable();
 
             WriteToCSV(dataTable, filePath, withHeader);
-        }
-
-        #endregion
-
-        #region 数据更新
-
-        AdoBatcher _adoBatcher = null;
-
-        /// <summary>
-        /// 获取源数据
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="size"></param>
-        /// <param name="timeOut"></param>
-        /// <returns></returns>
-        public DataTable GetDataSource(string tableName, int size = 100, int timeOut = 180)
-        {
-            _adoBatcher = new AdoBatcher(_db, tableName, timeOut);
-
-            return _adoBatcher.Fill(size);
-        }
-
-        /// <summary>
-        /// 更新源数据
-        /// </summary>
-        /// <param name="dataTable"></param>
-        /// <returns></returns>
-        public int UpdateDataSource(DataTable dataTable)
-        {
-            if (_adoBatcher != null)
-            {
-                return _adoBatcher.Update(dataTable);
-            }
-            return -1;
         }
 
         #endregion

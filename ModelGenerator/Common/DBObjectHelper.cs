@@ -46,7 +46,7 @@ namespace WEF.ModelGenerator.Common
             }
             else if (cnn.DbType.Equals(DatabaseType.SqlServer9.ToString()))
             {
-                dbObject = new WEF.DbDAL.SQL2005.DbObject(cnn.ConnectionString);
+                dbObject = new WEF.DbDAL.SQLServer.DbObject(cnn.ConnectionString);
             }
             else if (cnn.DbType.Equals(DatabaseType.MsAccess.ToString()))
             {
@@ -79,6 +79,11 @@ namespace WEF.ModelGenerator.Common
             return dbObject;
         }
 
+        /// <summary>
+        /// 获取不同的数据库操作上下文
+        /// </summary>
+        /// <param name="cnn"></param>
+        /// <returns></returns>
         public static DBContext GetDBContext(ConnectionModel cnn)
         {
             DBContext dbContext = null;

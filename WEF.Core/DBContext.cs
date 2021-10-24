@@ -2208,10 +2208,34 @@ namespace WEF
         /// 执行sql
         /// </summary>
         /// <param name="sql"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
-        public SqlSection FromSql(string sql)
+        public SqlSection FromSql(string sql, params Parameter[] parameters)
         {
-            return new SqlSection(this, sql);
+            return new SqlSection(this, sql, parameters);
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="keyValuePairs"></param>
+        /// <returns></returns>
+        public SqlSection FromSqlWithdAutomatic(string sql, params KeyValuePair<string, object>[] keyValuePairs)
+        {
+            return new SqlSection(this, sql, keyValuePairs);
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public SqlSection FromSqlWithdModel<T>(string sql, T parameter) where T : class, new()
+        {
+            return new SqlSection(this, sql).AddInParameterWithModel(parameter);
         }
         /// <summary>
         /// 执行sql
@@ -2225,6 +2249,49 @@ namespace WEF
         public SqlSection FromSql(string sql, int pageIndex, int pageSize, string orderBy, bool asc = true)
         {
             return new SqlSection(this, sql, pageIndex, pageSize, orderBy, asc);
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBys"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public SqlSection FromSql(string sql, int pageIndex, int pageSize, Dictionary<string, OrderByOperater> orderBys, params Parameter[] parameters)
+        {
+            return new SqlSection(this, sql, pageIndex, pageSize, orderBys, parameters);
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBys"></param>
+        /// <param name="keyValuePairs"></param>
+        /// <returns></returns>
+        public SqlSection FromSql(string sql, int pageIndex, int pageSize, Dictionary<string, OrderByOperater> orderBys, KeyValuePair<string, object>[] keyValuePairs)
+        {
+            return new SqlSection(this, sql, pageIndex, pageSize, orderBys, keyValuePairs);
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBys"></param>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public SqlSection FromSql<T>(string sql, int pageIndex, int pageSize, Dictionary<string, OrderByOperater> orderBys, T parameter) where T : class, new()
+        {
+            return new SqlSection(this, sql, pageIndex, pageSize, orderBys).AddInParameterWithModel(parameter);
         }
 
         #endregion

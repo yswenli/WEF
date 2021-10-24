@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+
 using WEF.Common;
 using WEF.Expressions;
 using WEF.Models;
@@ -24,23 +25,21 @@ namespace WEF.Test
     {
         static void Main(string[] args)
         {
-            BatchTest2.Test();
+            //BatchTest.Test();
 
-            Console.ReadLine();
+            //MutiTablesTest.Test();
 
-            BatchTest.Test();
-
-
-            MutiTablesTest.Test();
-
-
+            //BatchTest2.Test();
 
             //new DBTicketOrderRepository().Search().Where(b => b.C_id == "123sdf4asdfsadfgrewfdg5498432165").OrderBy(b=>b.C_price).ToFirst();
-
 
             //Test4();
 
             //Test3();
+
+            MultyTableTest.Test();
+
+            Console.ReadLine();
 
             var c_id = Guid.NewGuid().ToString("N");
 
@@ -61,11 +60,11 @@ namespace WEF.Test
                 C_discountrate = 90F,
                 C_activityName = "asdfasd",
                 C_productName = "asdfed",
-                C_resv1 ="hello",
+                C_resv1 = "hello",
                 C_created = DateTime.Now
             };
 
-            
+
 
 
             var c_price = (decimal)(((float)dbtickerOrder.C_amount) * dbtickerOrder.C_discountrate / 100F);
@@ -318,11 +317,15 @@ namespace WEF.Test
 
             var dt1 = new DBContext().FromSql("select * from tb_task where taskid=@taskID").AddInParameter("@taskID", System.Data.DbType.String, 200, "10B676E5BC852464DE0533C5610ACC53").ToFirst<DBTask>();
 
-            var count = new DBContext().Search<DBTask>().Where(b => b.Crc32.Avg() > 1).Where(" 1=1 ").Count();
+            var count1 = new DBContext().Search<DBTask>().Where(b => b.Crc32.Avg() > 1).Where(" 1=1 ").Count();
 
-            //dbContext.ExecuteNonQuery("");            
+            var dt2 = new DBContext().FromSql("select * from tb_task where taskid=@taskID").AddInParameter("@taskID", "10B676E5BC852464DE0533C5610ACC53").ToFirst<DBTask>();
 
-            //dbContext.FromSql("").ToList<DBTask>();
+            var count2 = new DBContext().Search<DBTask>().Where(b => b.Crc32.Avg() > 1).Where(" 1=1 ").Count();
+
+            var dt3 = new DBContext().FromSql("select * from tb_task where taskid=@taskID").AddInParameterWithModel(new { taskID = "10B676E5BC852464DE0533C5610ACC53" }).ToFirst<DBTask>();
+
+            var count3 = new DBContext().Search<DBTask>().Where(b => b.Crc32.Avg() > 1).Where(" 1=1 ").Count();
 
             #endregion
 
@@ -385,10 +388,6 @@ namespace WEF.Test
                 batch.Insert(ut);
             }
 
-                
-
-
-
             var nut = ut.ConvertTo<SUser>();
 
             var nut1 = ut.ConvertTo<SUser>();
@@ -403,19 +402,41 @@ namespace WEF.Test
 
             #region tran
 
-            var tran = ur.DBContext.BeginTransaction();
+            var tran1 = ur.DBContext.BeginTransaction();
 
-            tran.Insert<User>(ut);
+            try
+            {
+                tran1.Insert(ut);
 
-            var tb1 = new DBTaskRepository().GetList(1, 10);
+                var tb1 = new DBTaskRepository().GetList(1, 10);
 
-            //todo tb1
+                tran1.Update(tb1);
 
-            tran.Update<DBTask>(tb1);
+                tran1.Commit();
+            }
+            catch
+            {
+                tran1.Rollback();
+            }
+            finally
+            {
+                ur.DBContext.CloseTransaction(tran1);
+            }
 
-            ur.DBContext.CloseTransaction(tran);
+            //or
+            using (var tran2 = ur.DBContext.BeginTransaction())
+            {
+                tran2.Insert(ut);
+
+                new DBTaskRepository().DBContext.Delete(tran2, new DBTask() { Taskid = "123" });
+
+                tran2.Delete(ut);
+
+                tran2.Commit();
+            }
 
             #endregion
+
 
             var dlts = ur.GetList(1, 10000);
             ur.Deletes(dlts);
@@ -523,5 +544,7 @@ namespace WEF.Test
             Console.ReadLine();
 
         }
+
+        
     }
 }

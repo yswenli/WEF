@@ -31,6 +31,7 @@ namespace WEF.ModelGenerator.Forms
         public SQLTemplateForm()
         {
             InitializeComponent();
+            this.CloseButtonVisible = false;
 
             _dic = new Dictionary<string, string>();
 

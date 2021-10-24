@@ -188,7 +188,7 @@ namespace WEF.ModelGenerator.Common
 
                         var target = DBObjectHelper.GetDBContext(dataSyncConfig.Target);
 
-                        var count = target.BulkInsert(dataSyncConfig.Target.TableName, dt, 3600);
+                        var count = target.BulkInsert(dataSyncConfig.Target.TableName, dt);
 
                         RaiseOnLog($"传输任务【{dataSyncConfig.Name}】传输数据完成，已成功完成{count}条，用时:{stopwatch.ElapsedMilliseconds} ms");
                     }

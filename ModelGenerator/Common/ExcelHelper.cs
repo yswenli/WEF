@@ -253,7 +253,7 @@ namespace WEF.ModelGenerator.Common
                                 case CellType.Numeric:
                                     short format = cell.CellStyle.DataFormat;
                                     //对时间格式（2015.12.5、2015/12/5、2015-12-5等）的处理  
-                                    if (format == 14 || format == 31 || format == 57 || format == 58)
+                                    if (format == 14 || format == 22 || format == 31 || format == 57 || format == 58 || format == 176)
                                     {
                                         dataRow[j] = DateTime.FromOADate(cell.NumericCellValue).ToString("yyyy/MM/dd");//cell.DateCellValue 第二次打开excel的时候会这个属性读不到会抛异常                                                                                                        
                                     }

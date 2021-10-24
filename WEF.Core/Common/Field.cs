@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+
 using WEF.Expressions;
 
 namespace WEF.Common
@@ -92,8 +93,8 @@ namespace WEF.Common
             this.tableName = tableName;
             this.description = description;
             this.aliasName = aliasName;
-            this.parameterDbType = parameterDbType;
-            this.parameterSize = parameterSize;
+            this.parameterDbType = parameterDbType ?? DbType.String;
+            this.parameterSize = parameterSize ?? 0;
         }
         #endregion
 
@@ -122,12 +123,12 @@ namespace WEF.Common
         /// <summary>
         /// 字段数据库中类型
         /// </summary>
-        private DbType? parameterDbType;
+        private DbType parameterDbType;
 
         /// <summary>
         /// 字段数据库中长度
         /// </summary>
-        private int? parameterSize;
+        private int parameterSize;
 
         /// <summary>
         /// 所有字段   就是  *  
@@ -145,7 +146,7 @@ namespace WEF.Common
         /// <summary>
         /// 字段数据库中类型
         /// </summary>
-        public DbType? ParameterDbType
+        public DbType ParameterDbType
         {
             get
             {
@@ -156,7 +157,7 @@ namespace WEF.Common
         /// <summary>
         /// 字段数据库中长度
         /// </summary>
-        public int? ParameterSize
+        public int ParameterSize
         {
             get
             {

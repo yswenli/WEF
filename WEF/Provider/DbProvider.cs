@@ -10,11 +10,10 @@
  *****************************************************************************************************/
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using WEF.Cache;
+
 using WEF.Common;
 using WEF.Expressions;
 
@@ -216,47 +215,6 @@ namespace WEF.Provider
 
         #endregion
 
-
-
-        /// <summary>
-        /// 缓存
-        /// </summary>
-        private CacheConfiguration cacheConfig;
-
-        /// <summary>
-        /// 缓存配置
-        /// </summary>
-        public CacheConfiguration CacheConfig
-        {
-            get
-            {
-                return cacheConfig;
-            }
-            set
-            {
-                cacheConfig = value;
-            }
-        }
-
-        /// <summary>
-        /// 实体缓存
-        /// </summary>
-        private ConcurrentDictionary<string, CacheInfo> entitiesCache = new ConcurrentDictionary<string, CacheInfo>();
-
-        /// <summary>
-        /// 实体缓存
-        /// </summary>
-        public ConcurrentDictionary<string, CacheInfo> EntitiesCache
-        {
-            get
-            {
-                return entitiesCache;
-            }
-            set
-            {
-                entitiesCache = value;
-            }
-        }
 
 
         /// <summary>
@@ -492,8 +450,6 @@ namespace WEF.Provider
 
                 object value = p.Value;
 
-                DbType dbType = p.DbType;
-
                 if (value == DBNull.Value)
                 {
                     continue;
@@ -505,26 +461,34 @@ namespace WEF.Provider
                     continue;
                 }
 
-                Type type = value.GetType();
-
-                if (type.IsEnum)
+                try
                 {
-                    p.DbType = DbType.Int32;
-                    p.Value = Convert.ToInt32(value);
-                    continue;
-                }
+                    Type type = value.GetType();
 
-                if (dbType == DbType.Guid && type != typeof(Guid))
-                {
-                    p.Value = new Guid(value.ToString());
-                    continue;
-                }
+                    if (type.IsEnum)
+                    {
+                        p.DbType = DbType.Int32;
+                        p.Value = Convert.ToInt32(value);
+                        continue;
+                    }
 
-                if (type == typeof(Boolean))
-                {
-                    p.Value = (((bool)value) ? 1 : 0);
-                    continue;
+                    DbType dbType = p.DbType;
+
+                    if (dbType == DbType.Guid && type != typeof(Guid))
+                    {
+                        p.Value = new Guid(value.ToString());
+                        continue;
+                    }
+
+                    if (type == typeof(Boolean))
+                    {
+                        p.Value = (((bool)value) ? 1 : 0);
+                        continue;
+                    }
                 }
+                catch { }
+
+
             }
         }
     }

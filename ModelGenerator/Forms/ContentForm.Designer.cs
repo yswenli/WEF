@@ -38,6 +38,7 @@
             this.设为主键ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.取消主键ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -58,7 +59,9 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.cnnTxt = new System.Windows.Forms.TextBox();
             this.saveEntity = new System.Windows.Forms.SaveFileDialog();
-            this.button4 = new System.Windows.Forms.Button();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.generateMarkDownDocToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tp1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridColumns)).BeginInit();
@@ -113,6 +116,7 @@
             this.gridColumns.Location = new System.Drawing.Point(4, 4);
             this.gridColumns.Margin = new System.Windows.Forms.Padding(4);
             this.gridColumns.Name = "gridColumns";
+            this.gridColumns.ReadOnly = true;
             this.gridColumns.RowHeadersWidth = 51;
             this.gridColumns.RowTemplate.Height = 23;
             this.gridColumns.Size = new System.Drawing.Size(941, 394);
@@ -123,29 +127,32 @@
             this.contextMenuCopy.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuCopy.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyToolStripMenuItem,
+            this.toolStripSeparator1,
             this.设为主键ToolStripMenuItem,
-            this.取消主键ToolStripMenuItem});
+            this.取消主键ToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.generateMarkDownDocToolStripMenuItem});
             this.contextMenuCopy.Name = "contextMenuCopy";
-            this.contextMenuCopy.Size = new System.Drawing.Size(139, 76);
+            this.contextMenuCopy.Size = new System.Drawing.Size(218, 140);
             // 
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(217, 24);
             this.copyToolStripMenuItem.Text = "复制";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // 设为主键ToolStripMenuItem
             // 
             this.设为主键ToolStripMenuItem.Name = "设为主键ToolStripMenuItem";
-            this.设为主键ToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.设为主键ToolStripMenuItem.Size = new System.Drawing.Size(217, 24);
             this.设为主键ToolStripMenuItem.Text = "设为主键";
             this.设为主键ToolStripMenuItem.Click += new System.EventHandler(this.设为主键ToolStripMenuItem_Click);
             // 
             // 取消主键ToolStripMenuItem
             // 
             this.取消主键ToolStripMenuItem.Name = "取消主键ToolStripMenuItem";
-            this.取消主键ToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.取消主键ToolStripMenuItem.Size = new System.Drawing.Size(217, 24);
             this.取消主键ToolStripMenuItem.Text = "取消主键";
             this.取消主键ToolStripMenuItem.Click += new System.EventHandler(this.取消主键ToolStripMenuItem_Click);
             // 
@@ -173,6 +180,16 @@
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "生成配置";
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(536, 144);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(159, 30);
+            this.button4.TabIndex = 9;
+            this.button4.Text = "快捷生成业务代码";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // button3
             // 
@@ -365,15 +382,22 @@
             this.cnnTxt.Size = new System.Drawing.Size(960, 25);
             this.cnnTxt.TabIndex = 7;
             // 
-            // button4
+            // toolStripSeparator1
             // 
-            this.button4.Location = new System.Drawing.Point(536, 144);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(159, 30);
-            this.button4.TabIndex = 9;
-            this.button4.Text = "快捷生成业务代码";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(214, 6);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(214, 6);
+            // 
+            // generateMarkDownDocToolStripMenuItem
+            // 
+            this.generateMarkDownDocToolStripMenuItem.Name = "generateMarkDownDocToolStripMenuItem";
+            this.generateMarkDownDocToolStripMenuItem.Size = new System.Drawing.Size(217, 24);
+            this.generateMarkDownDocToolStripMenuItem.Text = "生成MarkDown文档";
+            this.generateMarkDownDocToolStripMenuItem.Click += new System.EventHandler(this.generateMarkDownDocToolStripMenuItem_Click);
             // 
             // ContentForm
             // 
@@ -434,5 +458,8 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem generateMarkDownDocToolStripMenuItem;
     }
 }

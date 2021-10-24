@@ -45,7 +45,7 @@
             WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient6 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient7 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.dpleft = new WeifenLuo.WinFormsUI.Docking.DockPanel();
+            this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -73,13 +73,13 @@
             // 
             // dpleft
             // 
-            this.dpleft.ActiveAutoHideContent = null;
-            this.dpleft.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dpleft.DockBackColor = System.Drawing.SystemColors.Control;
-            this.dpleft.Location = new System.Drawing.Point(4, 32);
-            this.dpleft.Margin = new System.Windows.Forms.Padding(4);
-            this.dpleft.Name = "dpleft";
-            this.dpleft.Size = new System.Drawing.Size(1836, 794);
+            this.dockPanel.ActiveAutoHideContent = null;
+            this.dockPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dockPanel.DockBackColor = System.Drawing.SystemColors.Control;
+            this.dockPanel.Location = new System.Drawing.Point(4, 32);
+            this.dockPanel.Margin = new System.Windows.Forms.Padding(4);
+            this.dockPanel.Name = "dpleft";
+            this.dockPanel.Size = new System.Drawing.Size(1836, 794);
             dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
             dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
             autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
@@ -123,8 +123,8 @@
             dockPaneStripToolWindowGradient1.InactiveTabGradient = tabGradient7;
             dockPaneStripSkin1.ToolWindowGradient = dockPaneStripToolWindowGradient1;
             dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
-            this.dpleft.Skin = dockPanelSkin1;
-            this.dpleft.TabIndex = 1;
+            this.dockPanel.Skin = dockPanelSkin1;
+            this.dockPanel.TabIndex = 1;
             // 
             // statusStrip1
             // 
@@ -299,7 +299,7 @@
             this.ClientSize = new System.Drawing.Size(1844, 830);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.dpleft);
+            this.Controls.Add(this.dockPanel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
@@ -321,7 +321,7 @@
 
         #endregion
 
-        private WeifenLuo.WinFormsUI.Docking.DockPanel dpleft;
+        private WeifenLuo.WinFormsUI.Docking.DockPanel dockPanel;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.MenuStrip menuStrip1;
