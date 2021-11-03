@@ -17,6 +17,9 @@
 *****************************************************************************/
 using System;
 using System.Diagnostics;
+using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using CCWin;
@@ -29,39 +32,60 @@ namespace WEF.ModelGenerator
 {
     public partial class MainForm : Skin_Mac
     {
-        public MainForm()
-        {
-            InitializeComponent();
-        }
-
         LeftPanelForm _leftPannelForm;
 
         SQLTemplateForm _sqlTemplateForm;
 
         CollectForm _collectForm;
 
+        public MainForm()
+        {
+            InitializeComponent();
+
+            dockPanel.Theme = vS2015LightTheme1;
+
+            this.SizeChanged += MainForm_SizeChanged;
+        }
+
+        private void MainForm_SizeChanged(object sender, EventArgs e)
+        {
+            dockPanel.Size = new Size(this.Size.Width - 10, this.Size.Height - 82);
+        }
+
         #region 打开数据库视图
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            _leftPannelForm = new LeftPanelForm();            
+            MainForm_SizeChanged(null, null);
 
-            if (!DockContentHelper.Load(dockPanel))
+            new Thread(new ThreadStart(() =>
             {
-                _leftPannelForm.OnNewContentForm += lp_newcontentForm;
-                _leftPannelForm.OnNewSqlForm += lp_newsqlForm;
-                _leftPannelForm.OnNewDataForm += _leftPannelForm_OnNewDataForm;
-                _leftPannelForm.Show(dockPanel);
-                _leftPannelForm.DockTo(dockPanel, DockStyle.Left);              
-            }
+                Thread.Sleep(500);
 
-            _sqlTemplateForm = new SQLTemplateForm();
-            _sqlTemplateForm.Show(dockPanel);
-            _sqlTemplateForm.DockTo(dockPanel, DockStyle.Right);
+                this.Invoke(() =>
+                {
+                    _leftPannelForm = new LeftPanelForm();
 
-            _collectForm = new CollectForm();
-            _collectForm.Show(dockPanel);
-            _collectForm.DockTo(dockPanel, DockStyle.Right);
+                    if (!DockContentHelper.Load(dockPanel))
+                    {
+                        _leftPannelForm.OnNewContentForm += lp_newcontentForm;
+                        _leftPannelForm.OnNewSqlForm += lp_newsqlForm;
+                        _leftPannelForm.OnNewDataForm += _leftPannelForm_OnNewDataForm;
+                        _leftPannelForm.Show(dockPanel);
+                        _leftPannelForm.DockTo(dockPanel, DockStyle.Left);
+                    }
+
+                    _sqlTemplateForm = new SQLTemplateForm();
+                    _sqlTemplateForm.Show(dockPanel);
+                    _sqlTemplateForm.DockTo(dockPanel, DockStyle.Right);
+
+                    _collectForm = new CollectForm();
+                    _collectForm.Show(dockPanel);
+                    _collectForm.DockTo(dockPanel, DockStyle.Right);
+
+                    
+                });
+            })).Start();
         }
 
 
@@ -195,6 +219,16 @@ namespace WEF.ModelGenerator
             new QrCodeForm().ShowDialog(this);
         }
 
+        /// <summary>
+        /// 清理垃圾
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cleanUpGarbageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FileCleaner.FileClearForm().ShowDialog(this);
+        }
+
         #region 关于菜单
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -256,8 +290,9 @@ namespace WEF.ModelGenerator
 
 
 
+
         #endregion
 
-
+       
     }
 }

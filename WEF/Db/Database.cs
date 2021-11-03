@@ -489,6 +489,14 @@ namespace WEF.Db
 
             newConnection.ConnectionString = ConnectionString;
 
+            if (_dbProvider.ToString() == "WEF.Provider.MySqlProvider" && ConnectionString.IndexOf("AllowLoadLocalInfile=true", StringComparison.InvariantCultureIgnoreCase) == -1)
+            {
+                if (ConnectionString.EndsWith(";"))
+                    newConnection.ConnectionString += "AllowLoadLocalInfile=true";
+                else
+                    newConnection.ConnectionString += ";AllowLoadLocalInfile=true";
+            }
+
             return newConnection;
         }
 

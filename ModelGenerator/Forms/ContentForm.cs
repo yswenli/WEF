@@ -129,14 +129,17 @@ namespace WEF.ModelGenerator
                         cbPrimarykey.SelectedIndex = 0;
                     }
 
-                    if (TableName.StartsWith("DB"))
+                    var className = TableName.Trim().Replace("_", " ").ToLower().ToTitleCase().Replace(" ", "");
+
+                    if (className.StartsWith("DB", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        txtClassName.Text = $"{TableName.Trim().Replace(" ", "").Replace("_", "")}";
+                        txtClassName.Text = className;
                     }
                     else
                     {
-                        txtClassName.Text = $"DB{TableName.Trim().Replace(" ", "").Replace("_", "")}";
+                        txtClassName.Text = $"DB{className}";
                     }
+
                     txtnamespace.Text = UtilsHelper.ReadNamespace();
                 }));
                 LoadForm.HideLoading(this);

@@ -70,6 +70,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Common, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.Common.4.3.0\lib\net451\System.Data.Common.dll</HintPath>
@@ -91,9 +92,11 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.3.1.24483, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dlls\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\packages\DockPanelSuite.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking.ThemeVS2015, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\packages\DockPanelSuite.ThemeVS2015.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +224,12 @@
     </Compile>
     <Compile Include="Forms\DataSyncForm.Designer.cs">
       <DependentUpon>DataSyncForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FileClearForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FileClearForm.Designer.cs">
+      <DependentUpon>FileClearForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\JsonClassGeneratorForm.cs">
       <SubType>Form</SubType>
@@ -385,6 +394,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DataSyncForm.resx">
       <DependentUpon>DataSyncForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FileClearForm.resx">
+      <DependentUpon>FileClearForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\JsonClassGeneratorForm.resx">
       <DependentUpon>JsonClassGeneratorForm.cs</DependentUpon>

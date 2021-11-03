@@ -196,6 +196,8 @@ namespace WEF.ModelGenerator
         }
 
 
+        bool _isTitleCase = false;
+
         /// <summary>
         /// 导出
         /// </summary>
@@ -224,12 +226,12 @@ namespace WEF.ModelGenerator
                 return;
             }
 
-
+            _isTitleCase = cbToupperFrstword.Checked;
 
             pbar.Maximum = lbright.Items.Count;
 
-
             button1.Enabled = false;
+
             panelbtns.Enabled = false;
 
             backgroundWorker1.RunWorkerAsync();
@@ -251,13 +253,27 @@ namespace WEF.ModelGenerator
 
             foreach (object o in lbright.Items)
             {
-                builder = new EntityCodeBuilder(o.ToString(), txtNamaspace.Text, o.ToString().Trim().Replace(" ", ""), UtilsHelper.GetColumnInfos(dbObject.GetColumnInfoList(DatabaseName, o.ToString())), tableview[o.ToString()], cbToupperFrstword.Checked);
+                var className = o.ToString().Trim();
+
+                if (_isTitleCase)
+                {
+                    className = className.Replace("_", " ").ToLower().ToTitleCase();
+                }
+
+                className = className.Replace(" ", "");
+
+                if (!className.StartsWith("DB", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    className = $"DB{className}";
+                }
+
+                builder = new EntityCodeBuilder(o.ToString(), txtNamaspace.Text, className, UtilsHelper.GetColumnInfos(dbObject.GetColumnInfoList(DatabaseName, o.ToString())), tableview[o.ToString()], _isTitleCase);
 
                 var cs = builder.Builder();
 
                 if (!string.IsNullOrEmpty(cs))
                 {
-                    using (StreamWriter sw = new StreamWriter(Path.Combine(txtPath.Text, o.ToString().Trim().Replace(' ', '_') + ".cs"), false, Encoding.UTF8))
+                    using (StreamWriter sw = new StreamWriter(Path.Combine(txtPath.Text, className + ".cs"), false, Encoding.UTF8))
                     {
                         sw.Write(cs);
                         sw.Flush();

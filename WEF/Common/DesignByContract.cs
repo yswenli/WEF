@@ -47,9 +47,22 @@ namespace WEF.Common
 
         #region Pluginable Check Strategies
 
+        /// <summary>
+        /// 检查策略
+        /// </summary>
         public interface ICheckStrategy
         {
+            /// <summary>
+            /// 是否通过
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
             bool Pass(object obj);
+            /// <summary>
+            /// 获取失败消息
+            /// </summary>
+            /// <param name="objName"></param>
+            /// <returns></returns>
             string GetFailingMessage(string objName);
         }
 

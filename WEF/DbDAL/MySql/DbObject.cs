@@ -597,7 +597,7 @@ namespace WEF.DbDAL.MySql
         {
             try
             {
-                string sql = $"SELECT column_name AS '列名', data_type AS '数据类型',column_key as 'Key', character_maximum_length  AS '字符长度', numeric_precision AS '数字长度', numeric_scale AS '小数位数', is_nullable AS '是否允许非空', CASE WHEN extra = 'auto_increment' THEN 1 ELSE 0 END AS '是否自增', column_default  AS  '默认值', column_comment  AS  '备注' FROM Information_schema.columns WHERE table_Name='{TableName}';";
+                string sql = $"SELECT column_name AS '列名', data_type AS '数据类型',column_key as 'Key', character_maximum_length  AS '字符长度', numeric_precision AS '数字长度', numeric_scale AS '小数位数', is_nullable AS '是否允许非空', CASE WHEN extra = 'auto_increment' THEN 1 ELSE 0 END AS '是否自增', column_default  AS  '默认值', column_comment  AS  '备注' FROM Information_schema.columns WHERE table_Name='{TableName}' order by ORDINAL_POSITION;";
                 DataTable columnsTables = CreateColumnTable();
                 DataRow dr;
                 var reader = ExecuteReader(dbName, sql);

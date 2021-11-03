@@ -15,13 +15,13 @@
 *版 本 号： V1.0.0.0
 *描    述：
 *****************************************************************************/
-using MySql.Data.MySqlClient;
-using MySql.Data.Types;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+
+using MySql.Data.MySqlClient;
 
 namespace WEF.Batcher
 {
@@ -57,6 +57,54 @@ namespace WEF.Batcher
         public override void Insert(IEnumerable<T> data)
         {
             _list.AddRange(data);
+        }
+
+        /// <summary>
+        /// ToDataTable
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public new DataTable ToDataTable<TEntity>(IEnumerable<TEntity> entities)
+            where TEntity : Entity
+        {
+            if (entities == null || !entities.Any()) return null;
+
+            var first = entities.First();
+
+            var fields = first.GetFields();
+
+            var dt = _database.GetMap(first.GetTableName());
+
+            foreach (TEntity entity in entities)
+            {
+                DataRow dtRow = dt.NewRow();
+
+                object[] values = entity.GetValues();
+
+                for (int i = 0; i < dt.Columns.Count; i++)
+                {
+                    if (!dt.Columns[i].AutoIncrement)
+                    {
+                        if (dt.Columns[i].AllowDBNull)
+                        {
+                            if (values[i] == null)
+                                continue;
+                        }
+
+                        if (dt.Columns[i].DataType.Name == "MySqlDateTime")
+                        {
+                            if (values[i] == null) continue;
+                            var dtVal = (DateTime)values[i];
+                            dtRow[fields[i].Name] = new MySql.Data.Types.MySqlDateTime(dtVal);
+                        }
+                        else
+                            dtRow[fields[i].Name] = values[i];
+                    }
+                }
+                dt.Rows.Add(dtRow);
+            }
+            return dt;
         }
 
         /// <summary>

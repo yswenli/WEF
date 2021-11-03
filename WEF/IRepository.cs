@@ -16,16 +16,21 @@
 *描    述：
 *****************************************************************************/
 using System.Collections.Generic;
+
 using WEF.Section;
 
 namespace WEF
 {
-    public interface IRepository<T> where T : Entity
+    /// <summary>
+    /// IRepository 接口
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public interface IRepository<T> where T : Entity, new()
     {
         DBContext DBContext { get; }
 
         int Delete(T obj);
-        int Deletes(List<T> objs);
+        int Deletes(IEnumerable<T> objs);
         ProcSection FromProc(string procName);
         SqlSection FromSql(string sql);
         List<T> GetList(int pageIndex, int pageSize);
