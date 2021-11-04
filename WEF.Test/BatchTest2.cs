@@ -365,7 +365,7 @@ namespace WEF.Test
     /// <summary>
     /// 实体类DBGiftbatchadd操作类
     /// </summary>
-    public partial class DBGiftbatchaddRepository : IRepository<DBGiftbatchadd>
+    public partial class DBGiftbatchaddRepository : BaseRepository<DBGiftbatchadd>
     {
         DBContext db;
         /// <summary>

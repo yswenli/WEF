@@ -114,6 +114,35 @@ namespace WEF.ModelGenerator.Properties {
         }
         
         /// <summary>
+        ///   查找类似 SELECT TOP 20
+        ///
+        ///total_worker_time/1000 AS [总消耗CPU 时间(ms)],execution_count [运行次数],
+        ///
+        /// qs.total_worker_time/qs.execution_count/1000 AS [平均消耗CPU 时间(ms)],
+        ///
+        /// last_execution_time AS [最后一次执行时间],max_worker_time /1000 AS [最大执行时间(ms)],
+        ///
+        /// SUBSTRING(qt.text,qs.statement_start_offset/2+1,
+        ///
+        /// (CASE WHEN qs.statement_end_offset = -1
+        ///
+        /// THEN DATALENGTH(qt.text)
+        ///
+        /// ELSE qs.statement_end_offset END -qs.statement_start_offset)/2 + 1)
+        ///
+        ///AS [使用CPU的语法], qt.text [完整语法],
+        ///
+        ///dbname=db_name(qt.dbid),
+        ///
+        ///object_name(qt.obje [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        /// </summary>
+        internal static string SqlServer慢查询 {
+            get {
+                return ResourceManager.GetString("SqlServer慢查询", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
         internal static System.Drawing.Bitmap VR {

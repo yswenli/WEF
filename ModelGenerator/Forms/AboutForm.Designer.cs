@@ -42,7 +42,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(159, 15);
             this.label1.TabIndex = 0;
-            this.label1.Text = "WEF Version:5.2.1.7";
+            this.label1.Text = "WEF Version:5.3.2.1";
             // 
             // label2
             // 
@@ -76,7 +76,7 @@
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "AboutForm";
             this.Text = "关于WEF数据库工具";

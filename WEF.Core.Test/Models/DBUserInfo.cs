@@ -183,7 +183,7 @@ namespace WEF.Core.Test.Models
 	/// <summary>
 	/// 实体类DBUserInfo操作类
 	/// </summary>
-	public partial class DBUserInfoRepository : IRepository<DBUserInfo>
+	public partial class DBUserInfoRepository : BaseRepository<DBUserInfo>
 	{
 		DBContext db;
 		/// <summary>

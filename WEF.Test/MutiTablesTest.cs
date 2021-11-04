@@ -360,7 +360,7 @@ namespace WEF.Test
     /// <summary>
     /// 实体类Rules操作类
     /// </summary>
-    public partial class RulesRepository : IRepository<Rules>
+    public partial class RulesRepository : BaseRepository<Rules>
     {
         DBContext db;
         /// <summary>

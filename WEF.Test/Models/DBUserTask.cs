@@ -513,7 +513,7 @@ namespace WEF.Models
     /// <summary>
     /// 实体类DBUserTask操作类
     /// </summary>
-    public partial class DBUserTaskRepository : IRepository<DBUserTask>
+    public partial class DBUserTaskRepository : BaseRepository<DBUserTask>
     {
         DBContext db;
         /// <summary>

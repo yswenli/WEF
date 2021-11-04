@@ -243,7 +243,7 @@ namespace WEF.Test.Models
     /// <summary>
     /// 实体类Rule操作类
     /// </summary>
-    public partial class RuleRepository : IRepository<Rule>
+    public partial class RuleRepository : BaseRepository<Rule>
     {
         DBContext db;
         /// <summary>
