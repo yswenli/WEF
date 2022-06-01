@@ -1,9 +1,9 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * 所属域：WENLI-PC
  * 登录用户：yswenli
- * CLR版本：4.0.30319.17929
+ * CLR版本：4.0.120319.17929
  * 唯一标识：fc2b3c60-82bd-4265-bf8c-051e512a1035
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
@@ -50,7 +50,7 @@ namespace WEF.Db
         /// </summary>
         /// <param name="dbProvider"></param>
         /// <param name="timeout"></param>
-        public Database(DbProvider dbProvider, int timeout = 30)
+        public Database(DbProvider dbProvider, int timeout = 120)
         {
             this._dbProvider = dbProvider;
             TimeOut = timeout;
@@ -67,6 +67,10 @@ namespace WEF.Db
             get
             {
                 return _dbProvider.ConnectionString;
+            }
+            private set
+            {
+                _dbProvider.ConnectionString = value;
             }
         }
 
@@ -98,7 +102,7 @@ namespace WEF.Db
         }
 
         /// <summary>
-        /// 命令令超时时间 30s
+        /// 命令令超时时间 120s
         /// </summary>
         public int CommandTimeout
         {
@@ -458,82 +462,78 @@ namespace WEF.Db
         #region Factory Methods
 
         /// <summary>
-        /// Gets the connection.
+        /// CreateConnection
         /// </summary>
+        /// <param name="cnnStr"></param>
         /// <returns></returns>
-        public DbConnection GetConnection()
+        /// <exception cref="Exception"></exception>
+        public DbConnection CreateConnection(string cnnStr = "")
         {
-            return CreateConnection();
-        }
+            DbConnection connection = _dbProvider.DbProviderFactory.CreateConnection();
 
-        /// <summary>
-        /// Gets the connection.
-        /// </summary>
-        /// <param name="tryOpen">if set to <c>true</c> [try open].</param>
-        /// <returns></returns>
-        public DbConnection GetConnection(bool tryOpen = true)
-        {
-            return CreateConnection(tryOpen);
-        }
-
-        /// <summary>
-        /// <para>When overridden in a derived class, gets the connection for this database.</para>
-        /// <seealso cref="DbConnection"/>        
-        /// </summary>
-        /// <returns>
-        /// <para>The <see cref="DbConnection"/> for this database.</para>
-        /// </returns>
-        public DbConnection CreateConnection()
-        {
-            DbConnection newConnection = _dbProvider.DbProviderFactory.CreateConnection();
-
-            newConnection.ConnectionString = ConnectionString;
-
-            if (_dbProvider.ToString() == "WEF.Provider.MySqlProvider" && ConnectionString.IndexOf("AllowLoadLocalInfile=true", StringComparison.InvariantCultureIgnoreCase) == -1)
+            if (!string.IsNullOrEmpty(cnnStr) && !cnnStr.Equals(ConnectionString))
             {
-                if (ConnectionString.EndsWith(";"))
-                    newConnection.ConnectionString += "AllowLoadLocalInfile=true";
-                else
-                    newConnection.ConnectionString += ";AllowLoadLocalInfile=true";
+                connection.ConnectionString = cnnStr;
+            }
+            else
+            {
+                connection.ConnectionString = ConnectionString;
             }
 
-            return newConnection;
-        }
-
-        /// <summary>
-        /// <para>When overridden in a derived class, gets the connection for this database.</para>
-        /// <seealso cref="DbConnection"/>        
-        /// </summary>
-        /// <returns>
-        /// <para>The <see cref="DbConnection"/> for this database.</para>
-        /// </returns>
-        public DbConnection CreateConnection(bool tryOpenning)
-        {
-            if (!tryOpenning)
-            {
-                return CreateConnection();
-            }
-
-            DbConnection connection = null;
             try
             {
-                connection = CreateConnection();
                 connection.Open();
             }
             catch (Exception ex)
             {
                 try
                 {
-                    connection.Close();
+                    connection?.Close();
                 }
-                catch
+                finally
                 {
+                    throw new Exception($"CreateConnection 异常， ConnectionString:{ConnectionString}", ex);
                 }
-
-                throw new Exception($"CreateConnection 异常， ConnectionString:{ConnectionString}", ex);
             }
 
             return connection;
+        }
+
+        /// <summary>
+        /// 修改连接对象的连接字符串
+        /// </summary>
+        /// <param name="dbConnection"></param>
+        /// <param name="cnnStr"></param>
+        public void ChangeConnection(ref DbConnection dbConnection, string cnnStr)
+        {
+            if (dbConnection == null) return;
+
+            if (dbConnection.State == ConnectionState.Open)
+            {
+                dbConnection.Close();
+
+                if (!string.IsNullOrEmpty(cnnStr) && !cnnStr.Equals(ConnectionString))
+                {
+                    dbConnection.ConnectionString = cnnStr;
+                }
+                else
+                {
+                    dbConnection.ConnectionString = ConnectionString;
+                }
+                dbConnection.Open();
+            }
+
+            if (dbConnection.State != ConnectionState.Open)
+            {
+                if (!string.IsNullOrEmpty(cnnStr) && !cnnStr.Equals(ConnectionString))
+                {
+                    dbConnection.ConnectionString = cnnStr;
+                }
+                else
+                {
+                    dbConnection.ConnectionString = ConnectionString;
+                }
+            }
         }
 
         /// <summary>
@@ -664,19 +664,14 @@ namespace WEF.Db
         {
             Check.Require(sql, "sql", Check.NotNullOrEmpty);
 
-            using (DbConnection connection = GetConnection(true))
+            using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
             {
-                using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
+                if (dbParameters != null && dbParameters.Any())
                 {
-                    PrepareCommand(command, connection);
-
-                    if (dbParameters != null && dbParameters.Any())
-                    {
-                        command.Parameters.AddRange(dbParameters);
-                    }
-
-                    return ExecuteReader(command);
+                    command.Parameters.AddRange(dbParameters);
                 }
+
+                return ExecuteReader(command);
             }
         }
 
@@ -760,7 +755,7 @@ namespace WEF.Db
         /// </param>
         public void LoadDataSet(DbCommand command, DataSet dataSet, string[] tableNames)
         {
-            using (DbConnection connection = GetConnection())
+            using (DbConnection connection = CreateConnection())
             {
                 PrepareCommand(command, connection);
                 DoLoadDataSet(command, dataSet, tableNames);
@@ -833,7 +828,7 @@ namespace WEF.Db
         public DataSet ExecuteDataSet(string sql, params DbParameter[] dbParameters)
         {
             Check.Require(sql, "sql", Check.NotNullOrEmpty);
-            using (DbConnection connection = GetConnection(true))
+            using (DbConnection connection = CreateConnection())
             {
                 using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
                 {
@@ -921,7 +916,7 @@ namespace WEF.Db
         /// <seealso cref="IDbCommand.ExecuteScalar"/>
         public object ExecuteScalar(DbCommand command)
         {
-            using (DbConnection connection = GetConnection(true))
+            using (DbConnection connection = CreateConnection())
             {
                 command.CommandTimeout = TimeOut;
                 PrepareCommand(command, connection);
@@ -938,7 +933,7 @@ namespace WEF.Db
         {
             Check.Require(sql, "sql", Check.NotNullOrEmpty);
 
-            using (DbConnection connection = GetConnection(true))
+            using (DbConnection connection = CreateConnection())
             {
                 using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
                 {
@@ -959,7 +954,7 @@ namespace WEF.Db
         {
             Check.Require(sql, "sql", Check.NotNullOrEmpty);
 
-            using (DbConnection connection = GetConnection(true))
+            using (DbConnection connection = CreateConnection())
             {
                 using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
                 {
@@ -1055,7 +1050,7 @@ namespace WEF.Db
         {
             command.CommandTimeout = TimeOut;
 
-            using (DbConnection connection = GetConnection(true))
+            using (DbConnection connection = CreateConnection())
             {
                 PrepareCommand(command, connection);
                 return DoExecuteNonQuery(command);
@@ -1076,7 +1071,7 @@ namespace WEF.Db
             {
                 command.CommandTimeout = TimeOut;
 
-                using (DbConnection connection = GetConnection(true))
+                using (DbConnection connection = CreateConnection())
                 {
                     PrepareCommand(command, connection);
                     return DoExecuteNonQuery(command);
@@ -1097,7 +1092,7 @@ namespace WEF.Db
             {
                 command.CommandTimeout = TimeOut;
 
-                using (DbConnection connection = GetConnection(true))
+                using (DbConnection connection = CreateConnection())
                 {
                     PrepareCommand(command, connection);
 
@@ -1187,12 +1182,12 @@ namespace WEF.Db
         {
             command.CommandTimeout = TimeOut;
 
-            DbConnection connection = GetConnection(true);
+            DbConnection connection = CreateConnection();
 
             PrepareCommand(command, connection);
 
             try
-            {
+            {               
                 return DoExecuteReader(command, CommandBehavior.CloseConnection);
             }
             catch (Exception ex)
@@ -1270,7 +1265,7 @@ namespace WEF.Db
             {
                 sourceDataTable.Locale = CultureInfo.InvariantCulture;
 
-                using (DbConnection connection = GetConnection(true))
+                using (DbConnection connection = CreateConnection())
                 {
                     var selectCommand = CreateCommandByCommandType(timeOut, CommandType.Text, $"select * from {tableName} where 1=1");
 
@@ -1364,17 +1359,17 @@ namespace WEF.Db
         /// <returns></returns>
         public DbTransaction BeginTransaction()
         {
-            return GetConnection(true).BeginTransaction();
+            return CreateConnection().BeginTransaction();
         }
 
         /// <summary>
         /// Begins the transaction.
         /// </summary>
-        /// <param name="il">The il.</param>
+        /// <param name="type">The il.</param>
         /// <returns></returns>
-        public DbTransaction BeginTransaction(IsolationLevel il)
+        public DbTransaction BeginTransaction(DbTransType type)
         {
-            return GetConnection(true).BeginTransaction(il);
+            return CreateConnection().BeginTransaction(DBTransTypeConverter.To(type));
         }
 
         #endregion
@@ -1609,7 +1604,7 @@ namespace WEF.Db
 
             var sql = "select * from " + tableName + " where 1=2";
 
-            using (DbConnection connection = GetConnection(true))
+            using (DbConnection connection = CreateConnection())
             {
                 using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
                 {
@@ -1642,7 +1637,7 @@ namespace WEF.Db
 
             var sql = "select max(" + idName + ") from " + tableName;
 
-            using (DbConnection connection = GetConnection(true))
+            using (DbConnection connection = CreateConnection())
             {
                 using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
                 {

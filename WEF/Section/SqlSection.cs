@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * 所属域：WENLI-PC
  * 登录用户：yswenli
@@ -8,6 +8,7 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -215,6 +216,28 @@ namespace WEF.Section
                 keyValuePairs.Add(new KeyValuePair<string, object>($"@{property.Name}", value));
             }
             this.AddInParameter(keyValuePairs);
+            return this;
+        }
+
+        /// <summary>
+        /// 添加集合型参数
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameterName"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public SqlSection AddInListParameter<T>(string parameterName, IEnumerable<T> list)
+        {
+            Check.Require(parameterName, "parameterName", Check.NotNullOrEmpty);
+            if (list != null && list.Any())
+            {
+                var i = 0;
+                foreach (var item in list)
+                {
+                    i += 1;
+                    this.AddInParameter($"{parameterName}{i}", item);
+                }
+            }
             return this;
         }
 

@@ -117,126 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="WEF" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\WEF.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="0616152d52f214c689f01819eefb836d" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\0616152d52f214c689f01819eefb836d.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="创建数据库" xml:space="preserve">
-    <value>CREATE DATABASE database-name</value>
-  </data>
-  <data name="创建新表" xml:space="preserve">
-    <value>create table tabname(col1 type1 [not null] [primary key],col2 type2 [not null],..)</value>
-  </data>
-  <data name="创建索引" xml:space="preserve">
-    <value>create [unique] index idxname on tabname(col….)</value>
-  </data>
-  <data name="创建视图" xml:space="preserve">
-    <value>create view viewname as select statement</value>
+  <data name="压缩数据库" xml:space="preserve">
+    <value>dbcc shrinkdatabase(dbname)</value>
   </data>
   <data name="删除主键" xml:space="preserve">
     <value>Alter table tabname drop primary key(col)</value>
   </data>
-  <data name="删除数据库" xml:space="preserve">
-    <value>DROP DATEBASE database-name</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="VR" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\VR.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="删除索引" xml:space="preserve">
-    <value>drop index idxname</value>
-  </data>
-  <data name="删除表" xml:space="preserve">
-    <value>drop table tabname</value>
-  </data>
-  <data name="删除视图" xml:space="preserve">
-    <value>drop view viewname</value>
-  </data>
-  <data name="压缩数据库" xml:space="preserve">
-    <value>dbcc shrinkdatabase(dbname)</value>
-  </data>
-  <data name="基本的sql语句" xml:space="preserve">
-    <value>选择：select * from table1 where 范围
-插入：insert into table1(field1,field2) values(value1,value2)
-删除：delete from table1 where 范围
-更新：update table1 set field1=value1 where 范围
-查找：select * from table1 where field1 like ’%value1%’ ---like的语法很精妙，查资料!
-排序：select * from table1 order by field1,field2 [desc]
-总数：select count as totalcount from table1
-求和：select sum(field1) as sumvalue from table1
-平均：select avg(field1) as avgvalue from table1
-最大：select max(field1) as maxvalue from table1
-最小：select min(field1) as minvalue from table1</value>
-  </data>
-  <data name="增加列" xml:space="preserve">
-    <value>Alter table tabname add column col type</value>
-  </data>
-  <data name="备份SqlServer" xml:space="preserve">
-    <value>--- 创建 备份数据的 device
-USE master
-EXEC sp_addumpdevice 'disk', 'testBack', 'c:\mssql7backup\MyNwind_1.dat'
---- 开始 备份
-BACKUP DATABASE pubs TO testBack</value>
-  </data>
-  <data name="按姓氏笔画排序" xml:space="preserve">
-    <value>Select * From TableName Order By CustomerName Collate Chinese_PRC_Stroke_ci_as //从少到多</value>
-  </data>
-  <data name="收缩数据和日志" xml:space="preserve">
-    <value>DBCC SHRINKDB
-DBCC SHRINKFILE</value>
-  </data>
-  <data name="数据库加密" xml:space="preserve">
-    <value>select encrypt('原始密码')
-select pwdencrypt('原始密码')
-select pwdcompare('原始密码','加密后密码') = 1--相同；否则不相同 encrypt('原始密码')</value>
-  </data>
-  <data name="根据已有的表创建新表" xml:space="preserve">
-    <value>A：create table tab_new like tab_old (使用旧表创建新表)
-B：create table tab_new as select col1,col2… from tab_old definition only</value>
-  </data>
-  <data name="添加主键" xml:space="preserve">
-    <value>sqlserver
-
-Alter table tabname add primary key(col)
-
-
-oracle
-
-alter table T_Grade 
-add constraint pk_gradeId primary key (gradeId);</value>
-  </data>
-  <data name="用户表" xml:space="preserve">
-    <value>select Name from sysobjects where xtype='u' and status&gt;=0</value>
-  </data>
-  <data name="重建索引" xml:space="preserve">
-    <value>DBCC REINDEX
-DBCC INDEXDEFRAG</value>
-  </data>
-  <data name="创建存储过程" xml:space="preserve">
-    <value>--创建名为 GetStuCou_DS 的有输入参数、输出参数和结果集的存储过程
-create procedure GetStuCou_DS
-@StuNo    nvarchar(64),
-@Height nvarchar(32) output
-as
-begin
-    if(@StuNo is not null and @StuNo &lt;&gt; '')
-    begin
-        select @Height=S_Height 
-        from Student 
-        where S_StuNo=@StuNo
-    end
-    else
-    begin
-        set @Height='185'
-    end
-
-    select s.S_Id,s.S_StuNo,s.S_Name,s.S_Sex,s.S_Height,s.S_BirthDate,c.C_Id,c.C_Name
-    from Student s
-    left join Course c on s.C_S_Id=c.C_Id
-    where S_StuNo=@StuNo
-end
-
---执行名为 GetStuCou_DS 的有输入参数、输出参数和结果集的存储过程
-execute GetStuCou_DS '005',null</value>
+  <data name="JsonClassHelper" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\JsonClassHelper;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="游标" xml:space="preserve">
     <value>declare @NodeId int
@@ -274,15 +166,50 @@ execute GetStuCou_DS '005',null</value>
 
   select * from Department</value>
   </data>
-  <data name="查看存储过程" xml:space="preserve">
-    <value>select * from sys.objects where type='P'
+  <data name="删除视图" xml:space="preserve">
+    <value>drop view viewname</value>
+  </data>
+  <data name="删除表" xml:space="preserve">
+    <value>drop table tabname</value>
+  </data>
+  <data name="收缩数据和日志" xml:space="preserve">
+    <value>DBCC SHRINKDB
+DBCC SHRINKFILE</value>
+  </data>
+  <data name="删除数据库" xml:space="preserve">
+    <value>DROP DATEBASE database-name</value>
+  </data>
+  <data name="增加列" xml:space="preserve">
+    <value>Alter table tabname add column col type</value>
+  </data>
+  <data name="数据库加密" xml:space="preserve">
+    <value>select encrypt('原始密码')
+select pwdencrypt('原始密码')
+select pwdcompare('原始密码','加密后密码') = 1--相同；否则不相同 encrypt('原始密码')</value>
+  </data>
+  <data name="help" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\help.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MSSQL启用ServiceBroker" xml:space="preserve">
+    <value>SELECT is_broker_enabled FROM sys.databases WHERE name = 'OceaniaERP'
 
-select * from sys.procedures
+ALTER DATABASE OceaniaERP SET NEW_BROKER WITH ROLLBACK IMMEDIATE; 
 
-select * from sysobjects where xtype='P'
+ALTER DATABASE OceaniaERP SET ENABLE_BROKER;</value>
+  </data>
+  <data name="添加主键" xml:space="preserve">
+    <value>sqlserver
 
-//查看存储过程定义sql
-select text from syscomments where id=object_id('AddUser2')</value>
+Alter table tabname add primary key(col)
+
+
+oracle
+
+alter table T_Grade 
+add constraint pk_gradeId primary key (gradeId);</value>
+  </data>
+  <data name="创建视图" xml:space="preserve">
+    <value>create view viewname as select statement</value>
   </data>
   <data name="分页" xml:space="preserve">
     <value>oracle 分页
@@ -320,30 +247,109 @@ mysql分页
 
 select * from orders_history where type=8 order by id limit 10000,10;</value>
   </data>
+  <data name="创建新表" xml:space="preserve">
+    <value>create table tabname(col1 type1 [not null] [primary key],col2 type2 [not null],..)</value>
+  </data>
+  <data name="删除索引" xml:space="preserve">
+    <value>drop index idxname</value>
+  </data>
+  <data name="按姓氏笔画排序" xml:space="preserve">
+    <value>Select * From TableName Order By CustomerName Collate Chinese_PRC_Stroke_ci_as //从少到多</value>
+  </data>
+  <data name="0616152d52f214c689f01819eefb836d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\0616152d52f214c689f01819eefb836d.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="分割字段并分组统计" xml:space="preserve">
     <value>select COUNT(*) sum, name from(select id,SUBSTRING(test.name, number ,CHARINDEX(',',test.name+',',number)-number) name from test,master..spt_values s where s.number &gt;=1 and s.type = 'P' and SUBSTRING(','+test.name,s.number,1) = ',')test group by name order by sum desc</value>
   </data>
-  <data name="help" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\help.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="创建数据库" xml:space="preserve">
+    <value>CREATE DATABASE database-name</value>
+  </data>
+  <data name="根据已有的表创建新表" xml:space="preserve">
+    <value>A：create table tab_new like tab_old (使用旧表创建新表)
+B：create table tab_new as select col1,col2… from tab_old definition only</value>
+  </data>
+  <data name="重建索引" xml:space="preserve">
+    <value>DBCC REINDEX
+DBCC INDEXDEFRAG</value>
   </data>
   <data name="HR" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\HR.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="VR" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\VR.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="JsonClassHelper" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\JsonClassHelper;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="MSSQL启用ServiceBroker" xml:space="preserve">
-    <value>SELECT is_broker_enabled FROM sys.databases WHERE name = 'OceaniaERP'
+  <data name="创建存储过程" xml:space="preserve">
+    <value>--创建名为 GetStuCou_DS 的有输入参数、输出参数和结果集的存储过程
+create procedure GetStuCou_DS
+@StuNo    nvarchar(64),
+@Height nvarchar(32) output
+as
+begin
+    if(@StuNo is not null and @StuNo &lt;&gt; '')
+    begin
+        select @Height=S_Height 
+        from Student 
+        where S_StuNo=@StuNo
+    end
+    else
+    begin
+        set @Height='185'
+    end
 
-ALTER DATABASE OceaniaERP SET NEW_BROKER WITH ROLLBACK IMMEDIATE; 
+    select s.S_Id,s.S_StuNo,s.S_Name,s.S_Sex,s.S_Height,s.S_BirthDate,c.C_Id,c.C_Name
+    from Student s
+    left join Course c on s.C_S_Id=c.C_Id
+    where S_StuNo=@StuNo
+end
 
-ALTER DATABASE OceaniaERP SET ENABLE_BROKER;</value>
+--执行名为 GetStuCou_DS 的有输入参数、输出参数和结果集的存储过程
+execute GetStuCou_DS '005',null</value>
   </data>
-  <data name="SqlServer慢查询" xml:space="preserve">
-    <value>SELECT TOP 20
+  <data name="备份SqlServer" xml:space="preserve">
+    <value>--- 创建 备份数据的 device
+USE master
+EXEC sp_addumpdevice 'disk', 'testBack', 'c:\mssql7backup\MyNwind_1.dat'
+--- 开始 备份
+BACKUP DATABASE pubs TO testBack</value>
+  </data>
+  <data name="创建索引" xml:space="preserve">
+    <value>create [unique] index idxname on tabname(col….)</value>
+  </data>
+  <data name="查看存储过程" xml:space="preserve">
+    <value>select * from sys.objects where type='P'
+
+select * from sys.procedures
+
+select * from sysobjects where xtype='P'
+
+//查看存储过程定义sql
+select text from syscomments where id=object_id('AddUser2')</value>
+  </data>
+  <data name="WEF" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WEF.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="用户表" xml:space="preserve">
+    <value>select Name from sysobjects where xtype='u' and status&gt;=0</value>
+  </data>
+  <data name="基本的sql语句" xml:space="preserve">
+    <value>选择：select * from table1 where 范围
+插入：insert into table1(field1,field2) values(value1,value2)
+删除：delete from table1 where 范围
+更新：update table1 set field1=value1 where 范围
+查找：select * from table1 where field1 like ’%value1%’ ---like的语法很精妙，查资料!
+排序：select * from table1 order by field1,field2 [desc]
+总数：select count as totalcount from table1
+求和：select sum(field1) as sumvalue from table1
+平均：select avg(field1) as avgvalue from table1
+最大：select max(field1) as maxvalue from table1
+最小：select min(field1) as minvalue from table1</value>
+  </data>
+  <data name="ok" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ok.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SQL执行情况查询" xml:space="preserve">
+    <value>-----------------------------------------------------
+--TSQL慢查询
+
+SELECT TOP 20
 
 total_worker_time/1000 AS [总消耗CPU 时间(ms)],execution_count [运行次数],
 
@@ -371,6 +377,10 @@ CROSS apply sys.dm_exec_sql_text(qs.sql_handle) AS qt
 
 WHERE execution_count&gt;1
 
-ORDER BY total_worker_time DESC</value>
+ORDER BY total_worker_time DESC
+
+--------------------------------------------------------------
+--mysql慢查询
+select * from information_schema.`PROCESSLIST` where info is not null ORDER BY Time desc limit 0,10</value>
   </data>
 </root>

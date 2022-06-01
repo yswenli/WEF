@@ -1,9 +1,10 @@
-﻿using System;
+﻿using CCWin;
+
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-
-using CCWin;
 
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Model;
@@ -50,29 +51,43 @@ namespace WEF.ModelGenerator.DbSelect
                     MessageBox.Show("连接字符串不能为空!");
                     return;
                 }
-                try
+
+                LoadForm.ShowLoadingAsync(this);
+
+                WEF.DbDAL.IDbObject dbObejct = new WEF.DbDAL.MySql.DbObject(skinWaterTextBox1.Text);
+
+                Task.Run(() =>
                 {
-                    WEF.DbDAL.IDbObject dbObejct = new WEF.DbDAL.MySql.DbObject(skinWaterTextBox1.Text);
-                    DataTable DBNameTable = dbObejct.GetDBList();
-                    cbbDatabase.Items.Clear();
-                    cbbDatabase.Items.Add("全部");
-                    foreach (DataRow dr in DBNameTable.Rows)
-                    {
-                        cbbDatabase.Items.Add(dr[0].ToString());
+                    try
+                    {                        
+                        DataTable dbNameTable = dbObejct.GetDBList();
+
+                        LoadForm.HideLoadingAsync(this);
+
+                        InvokeHelper.Invoke(this, () =>
+                        {
+                            cbbDatabase.Items.Clear();
+                            cbbDatabase.Items.Add("全部");
+                            foreach (DataRow dr in dbNameTable.Rows)
+                            {
+                                cbbDatabase.Items.Add(dr[0].ToString());
+                            }
+                            cbbDatabase.Enabled = true;
+                            cbbDatabase.SelectedIndex = 0;
+                            MessageBox.Show("连接成功!");
+                            button2.Enabled = true;
+                        });
                     }
-
-                    cbbDatabase.Enabled = true;
-                    cbbDatabase.SelectedIndex = 0;
-                    MessageBox.Show("连接成功!");
-
-                    button2.Enabled = true;
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("连接失败!\n\r" + ex.Message);
-                    cbbDatabase.Enabled = false;
-                }
+                    catch (Exception ex)
+                    {
+                        LoadForm.HideLoadingAsync(this);
+                        InvokeHelper.Invoke(this, () =>
+                        {
+                            MessageBox.Show("连接失败!\n\r" + ex.Message);
+                            cbbDatabase.Enabled = false;
+                        });
+                    }
+                });
             }
             else
             {
@@ -88,29 +103,45 @@ namespace WEF.ModelGenerator.DbSelect
                     return;
                 }
 
-                try
+                LoadForm.ShowLoadingAsync(this);
+
+                WEF.DbDAL.IDbObject dbObejct = new WEF.DbDAL.MySql.DbObject(false, cbbServer.Text, txtUserName.Text, txtPassword.Text, txtport.Text);
+
+                Task.Run(() =>
                 {
-                    WEF.DbDAL.IDbObject dbObejct = new WEF.DbDAL.MySql.DbObject(false, cbbServer.Text, txtUserName.Text, txtPassword.Text, txtport.Text);
-                    DataTable DBNameTable = dbObejct.GetDBList();
-                    cbbDatabase.Items.Clear();
-                    cbbDatabase.Items.Add("全部");
-                    foreach (DataRow dr in DBNameTable.Rows)
-                    {
-                        cbbDatabase.Items.Add(dr[0].ToString());
+                    try
+                    {                        
+                        DataTable DBNameTable = dbObejct.GetDBList();
+                        LoadForm.HideLoadingAsync(this);
+
+                        InvokeHelper.Invoke(this, () =>
+                        {
+                            cbbDatabase.Items.Clear();
+                            cbbDatabase.Items.Add("全部");
+                            foreach (DataRow dr in DBNameTable.Rows)
+                            {
+                                cbbDatabase.Items.Add(dr[0].ToString());
+                            }
+
+                            cbbDatabase.Enabled = true;
+                            cbbDatabase.SelectedIndex = 0;
+                            MessageBox.Show("连接成功!");
+                            button2.Enabled = true;
+                        });
+
                     }
+                    catch (Exception ex)
+                    {
+                        LoadForm.HideLoadingAsync(this);
+                        InvokeHelper.Invoke(this, () =>
+                        {
+                            MessageBox.Show("连接失败!\n\r" + ex.Message);
+                            cbbDatabase.Enabled = false;
+                        });
+                    }
+                });
 
-                    cbbDatabase.Enabled = true;
-                    cbbDatabase.SelectedIndex = 0;
-                    MessageBox.Show("连接成功!");
 
-                    button2.Enabled = true;
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("连接失败!\n\r" + ex.Message);
-                    cbbDatabase.Enabled = false;
-                }
             }
         }
 
@@ -132,42 +163,44 @@ namespace WEF.ModelGenerator.DbSelect
 
                 Dictionary<string, string> keyValuePairs = skinWaterTextBox1.Text.ToConnectParmaDic();
 
-                if (string.IsNullOrEmpty(keyValuePairs["database"]))
+                if (!keyValuePairs.ContainsKey("database"))
                 {
                     MessageBox.Show("连接字符串中不包含database!\n\r");
                     return;
                 }
 
+                LoadForm.ShowLoadingAsync(this);
+
                 WEF.DbDAL.MySql.DbObject dbObejct = new WEF.DbDAL.MySql.DbObject(skinWaterTextBox1.Text);
 
                 try
                 {
-                    dbObejct.OpenDB();
+                    _ = dbObejct.GetDBList();
                 }
                 catch (Exception ex)
                 {
+                    LoadForm.HideLoadingAsync(this);
                     MessageBox.Show("连接失败!\n\r" + ex.Message);
                     return;
                 }
 
-
-
                 ConnectionModel connectionModel = new ConnectionModel();
-                connectionModel.Database = keyValuePairs["database"];
-                connectionModel.ID = Guid.NewGuid();
+                connectionModel.Database = string.IsNullOrEmpty(keyValuePairs["database"]) ? "all" : keyValuePairs["database"];
+                connectionModel.ID = _cmdID;
                 connectionModel.Name = skinWaterTextBox2.Text;
                 if (string.IsNullOrEmpty(connectionModel.Name))
                     connectionModel.Name = keyValuePairs["server"] + "(MySql)[" + connectionModel.Database + "]";
                 connectionModel.ConnectionString = dbObejct.DbConnectStr;
                 connectionModel.DbType = DatabaseType.MySql.ToString();
 
-                
-                UtilsHelper.AddConnection(connectionModel);
                 UtilsHelper.DeleteConnection(_cmdID.ToString());
+                UtilsHelper.AddConnection(connectionModel);
 
                 this.DialogResult = DialogResult.OK;
 
                 this.Close();
+
+                LoadForm.HideLoadingAsync(this);
             }
             else
             {
@@ -182,6 +215,9 @@ namespace WEF.ModelGenerator.DbSelect
                     MessageBox.Show("登陆名不能为空!");
                     return;
                 }
+
+                LoadForm.ShowLoadingAsync(this);
+
                 WEF.DbDAL.MySql.DbObject dbObejct;
 
                 var dataBase = cbbDatabase.Items[cbbDatabase.SelectedIndex].ToString();
@@ -199,11 +235,11 @@ namespace WEF.ModelGenerator.DbSelect
 
                 try
                 {
-                    dbObejct.OpenDB();
+                    _ = dbObejct.GetDBList();
                 }
                 catch (Exception ex)
                 {
-
+                    LoadForm.HideLoadingAsync(this);
                     MessageBox.Show("连接失败!\n\r" + ex.Message);
                     return;
 
@@ -211,17 +247,22 @@ namespace WEF.ModelGenerator.DbSelect
 
                 ConnectionModel connectionModel = new ConnectionModel();
                 connectionModel.Database = cbbDatabase.SelectedIndex == 0 ? "all" : cbbDatabase.Text;
-                connectionModel.ID = Guid.NewGuid();
-                connectionModel.Name = cbbServer.Text + "(MySql)[" + connectionModel.Database + "]";
+                connectionModel.ID = _cmdID;
+                connectionModel.Name = skinWaterTextBox2.Text;
+                if (string.IsNullOrEmpty(connectionModel.Name))
+                    connectionModel.Name = cbbServer.Text + "(MySql)[" + connectionModel.Database + "]";
                 connectionModel.ConnectionString = tempconnectionstring;
                 connectionModel.DbType = DatabaseType.MySql.ToString();
 
-                UtilsHelper.AddConnection(connectionModel);
                 UtilsHelper.DeleteConnection(_cmdID.ToString());
+                UtilsHelper.AddConnection(connectionModel);
+
 
                 this.DialogResult = DialogResult.OK;
 
                 this.Close();
+
+                LoadForm.HideLoadingAsync(this);
             }
 
         }

@@ -573,7 +573,7 @@ namespace WEF.Models
     /// <summary>
     /// 实体类DBTicketOrder操作类
     /// </summary>
-    public partial class DBTicketOrderRepository : BaseRepository<DBTicketOrder>
+    public partial class DBTicketOrderRepository : IRepository<DBTicketOrder>
     {
         DBContext db;
         /// <summary>
@@ -755,6 +755,11 @@ namespace WEF.Models
         public ProcSection FromProc(string procName)
         {
             return db.FromProc(procName);
+        }
+
+        public int Deletes(IEnumerable<DBTicketOrder> objs)
+        {
+            throw new NotImplementedException();
         }
     }
 

@@ -1,5 +1,6 @@
-﻿using CCWin.SkinControl;
-
+﻿
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -26,13 +27,26 @@ namespace WEF.ModelGenerator.Controls
             }
         }
 
-        public event KeyEventHandler KeyUp;
+        /// <summary>
+        /// 按钮事件
+        /// </summary>
+        public new event KeyEventHandler KeyDown;
 
-        int textStart = 0;
 
-        private void textBox1_KeyUp(object sender, KeyEventArgs e)
+        private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            KeyUp?.Invoke(sender, e);
+            var positionInfo = TextBoxPositionInfo.GetPositionInfo(textBox1);
+            var selectStr = listBox1.SelectedItem.ToString();
+            textBox1.Text = textBox1.Text.Substring(0, positionInfo.Start) + selectStr + textBox1.Text.Substring(positionInfo.Start + positionInfo.Length);            
+            textBox1.SelectionStart = positionInfo.Start + selectStr.Length;
+            textBox1.ScrollToCaret();
+            listBox1.Hide();
+            textBox1.Focus();
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            KeyDown?.Invoke(sender, e);
 
             if (string.IsNullOrEmpty(textBox1.Text))
             {
@@ -43,10 +57,9 @@ namespace WEF.ModelGenerator.Controls
             {
                 if (listBox1.Visible == true)
                 {
-                    listBox1_MouseDoubleClick(null, null);
+                    e.SuppressKeyPress = true;
                     e.Handled = true;
-                    textBox1.Text = textBox1.Text.Substring(0, textBox1.Text.Length - 1);
-                    textBox1.SelectionStart = textBox1.Text.Length;
+                    listBox1_MouseDoubleClick(null, null);
                 }
             }, () =>
             {
@@ -54,6 +67,9 @@ namespace WEF.ModelGenerator.Controls
                 {
                     if (listBox1.Visible)
                     {
+                        e.Handled = true;
+                        e.SuppressKeyPress = true;
+
                         if (inc < 0 && listBox1.SelectedIndex == 0)
                         {
                             listBox1.SelectedIndex = 0;
@@ -70,42 +86,24 @@ namespace WEF.ModelGenerator.Controls
 
                 }, () =>
                 {
-                    if (GetCaretPos(out Point point))
+                    //代码提示
+
+                    //排除组合键和空格的提示
+                    if (e.Modifiers == Keys.Control || e.Modifiers == Keys.Shift || e.Modifiers == Keys.Alt || e.KeyCode == Keys.Space)
                     {
-                        var strs = StringPlus.GetSQLKeyWords(e.KeyCode.ToString());
-
-                        listBox1.Items.Clear();
-
-                        if (strs != null && strs.Any())
-                        {
-                            textStart = textBox1.SelectionStart;
-                            foreach (var str in strs)
-                            {
-                                listBox1.Items.Add(str);
-                            }
-                            point.Y += 20;
-                            listBox1.Location = point;
-                            listBox1.SelectedIndex = 0;
-                            listBox1.Show();
-                        }
-                        else
-                        {
-                            listBox1.Hide();
-                        }
+                        listBox1.Hide();
+                        return;
                     }
+
+                    //将前面输的内容作为一个索引项
+                    var positionInfo = TextBoxPositionInfo.GetPositionInfo(textBox1);
+                    if (string.IsNullOrEmpty(positionInfo.InputStr)) return;
+
+                    var strs = StringPlus.GetSQLKeyWords(positionInfo.InputStr);
+
+                    listBox1.AutoDisplay(strs);
                 });
             });
-        }
-
-        [DllImport("user32.dll")]
-        static extern bool GetCaretPos(out Point lpPoint);
-
-        private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            textBox1.Text = textBox1.Text.Substring(0, textStart - 1) + listBox1.SelectedItem.ToString() + textBox1.Text.Substring(textStart);
-            textBox1.SelectionStart = textBox1.Text.Length;
-            listBox1.Hide();
-            textBox1.Focus();
         }
     }
 }

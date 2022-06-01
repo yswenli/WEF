@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -68,6 +70,7 @@
     <Reference Include="NPOI.OpenXmlFormats, Version=2.5.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.5.1\lib\net45\NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -98,6 +101,7 @@
     <Reference Include="WeifenLuo.WinFormsUI.Docking.ThemeVS2015, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
       <HintPath>..\packages\DockPanelSuite.ThemeVS2015.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ConfigHelper.cs" />
@@ -107,13 +111,20 @@
     <Compile Include="Common\DockContentHelper.cs" />
     <Compile Include="Common\EntityCodeBuilder.cs" />
     <Compile Include="Common\ExcelHelper.cs" />
+    <Compile Include="Common\FileHelper.cs" />
     <Compile Include="Common\InvokeHelper.cs" />
+    <Compile Include="Common\ListBoxExtends.cs" />
+    <Compile Include="Common\MessageQueue.cs" />
+    <Compile Include="Common\WEFMessageBox.cs" />
     <Compile Include="Common\ShortcutKeyHelper.cs" />
     <Compile Include="Common\SingleProcessHelper.cs" />
     <Compile Include="Common\StringPlus.cs" />
     <Compile Include="Common\SyncDataHelper.cs" />
     <Compile Include="Common\TemplateHelper.cs" />
+    <Compile Include="Common\TextBoxPositionInfo.cs" />
     <Compile Include="Common\UtilsHelper.cs" />
+    <Compile Include="Common\Win32Helper.cs" />
+    <Compile Include="Common\XSDToCSharp.cs" />
     <Compile Include="Controls\AutoTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -177,6 +188,18 @@
     <Compile Include="Forms\AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ApiLogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ApiLogForm.Designer.cs">
+      <DependentUpon>ApiLogForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Base64Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Base64Form.Designer.cs">
+      <DependentUpon>Base64Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BatchForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -230,6 +253,12 @@
     </Compile>
     <Compile Include="Forms\FileClearForm.Designer.cs">
       <DependentUpon>FileClearForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FindForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FindForm.Designer.cs">
+      <DependentUpon>FindForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\JsonClassGeneratorForm.cs">
       <SubType>Form</SubType>
@@ -315,6 +344,18 @@
     <Compile Include="Forms\TextForm.Designer.cs">
       <DependentUpon>TextForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TxtReplaceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TxtReplaceForm.Designer.cs">
+      <DependentUpon>TxtReplaceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\XsdGeneratorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\XsdGeneratorForm.Designer.cs">
+      <DependentUpon>XsdGeneratorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="JsonTools\CodeWriters\CSharpCodeWriter.cs" />
     <Compile Include="JsonTools\CodeWriters\JavaCodeWriter.cs" />
     <Compile Include="JsonTools\CodeWriters\TypeScriptCodeWriter.cs" />
@@ -331,6 +372,7 @@
     <Compile Include="Model\ConnectionModel.cs" />
     <Compile Include="Model\DatabaseObject.cs" />
     <Compile Include="Model\DataSyncConfig.cs" />
+    <Compile Include="Model\LogInfo.cs" />
     <Compile Include="Model\SqlWord.cs" />
     <Compile Include="Model\Sysconfig.cs" />
     <Compile Include="Model\TemplateData.cs" />
@@ -338,6 +380,7 @@
     <Compile Include="Model\UserDefinedType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Resources\ok.png" />
     <EmbeddedResource Include="Controls\AutoTextBox.resx">
       <DependentUpon>AutoTextBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -371,6 +414,12 @@
     <EmbeddedResource Include="Forms\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ApiLogForm.resx">
+      <DependentUpon>ApiLogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Base64Form.resx">
+      <DependentUpon>Base64Form.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchForm.resx">
       <DependentUpon>BatchForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -397,6 +446,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FileClearForm.resx">
       <DependentUpon>FileClearForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FindForm.resx">
+      <DependentUpon>FindForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\JsonClassGeneratorForm.resx">
       <DependentUpon>JsonClassGeneratorForm.cs</DependentUpon>
@@ -439,6 +491,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TextForm.resx">
       <DependentUpon>TextForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TxtReplaceForm.resx">
+      <DependentUpon>TxtReplaceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\XsdGeneratorForm.resx">
+      <DependentUpon>XsdGeneratorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -503,6 +561,7 @@
       <Name>WEF</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.104.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.104.0\build\net40\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
+using WEF.Common;
 using WEF.ModelGenerator.Forms;
 using WEF.ModelGenerator.Model;
 
@@ -177,7 +178,7 @@ namespace WEF.ModelGenerator.Common
                 {
                     var json = File.ReadAllText(_tempFile);
 
-                    _connections = WEFExtention.JsonDeserialize<List<ConnectionModel>>(json);
+                    _connections = SerializeHelper.Deserialize<List<ConnectionModel>>(json);
                 }
 
                 var content = new DeserializeDockContent(GetContentFromPersistString);
@@ -246,7 +247,7 @@ namespace WEF.ModelGenerator.Common
                         }
                     }
 
-                    var json = WEFExtention.JsonSerialize(connections);
+                    var json = SerializeHelper.Serialize(connections);
 
                     File.WriteAllText(_tempFile, json, Encoding.UTF8);
                 }

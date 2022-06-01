@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * 所属域：WENLI-PC
  * 登录用户：yswenli
@@ -386,7 +386,6 @@ namespace WEF.Common
         internal static WhereOperation GetPrimaryKeyWhere(Entity entity)
         {
             WhereOperation where = new WhereOperation();
-
             var keyfields = entity.GetPrimaryKeyFields();
             var allfields = entity.GetFields();
             var allValues = entity.GetValues();
@@ -406,6 +405,34 @@ namespace WEF.Common
             }
             return where;
         }
+
+        /// <summary>
+        /// 生成主键条件
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
+        internal static WhereOperation GetPrimaryKeyWhere<TEntity>() where TEntity: Entity
+        {
+            WhereOperation where = new WhereOperation();
+            var keyfields = EntityCache.GetPrimaryKeyFields<TEntity>();
+            var allfields = EntityCache.GetFields<TEntity>();
+            var allValues = EntityCache.GetValues<TEntity>();
+            var fieldlength = allfields.Length;
+            if (keyfields == null) return where;
+            foreach (var pkField in keyfields)
+            {
+                for (int i = 0; i < fieldlength; i++)
+                {
+                    if (string.Compare(allfields[i].PropertyName, pkField.PropertyName, StringComparison.OrdinalIgnoreCase) == 0)
+                    {
+                        where = where.And(new WhereOperation(pkField, allValues[i], QueryOperator.Equal));
+                        break;
+                    }
+                }
+            }
+            return where;
+        }
+
         /// <summary>
         /// 生成主键条件
         /// </summary>

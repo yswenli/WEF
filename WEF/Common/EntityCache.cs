@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * 所属域：WENLI-PC
  * 登录用户：yswenli
@@ -110,6 +110,27 @@ namespace WEF.Common
             return getTEntity<TEntity>().GetFields();
         }
 
+        /// <summary>
+        /// GetValues
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
+        public static object[] GetValues<TEntity>()
+            where TEntity : Entity
+        {
+            return getTEntity<TEntity>().GetValues();
+        }
+
+        /// <summary>
+        /// GetModifyFields
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
+        public static List<ModifyField> GetModifyFields<TEntity>()
+         where TEntity : Entity
+        {
+            return getTEntity<TEntity>().GetModifyFields();
+        }
 
         /// <summary>
         /// 返回第一个字段

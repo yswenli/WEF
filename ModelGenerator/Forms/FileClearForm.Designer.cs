@@ -61,7 +61,7 @@ namespace FileCleaner
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1023, 16);
+            this.button1.Location = new System.Drawing.Point(1023, 14);
             this.button1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(36, 33);
@@ -111,7 +111,7 @@ namespace FileCleaner
             // textBox3
             // 
             this.textBox3.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.textBox3.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.textBox3.ForeColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.textBox3.Location = new System.Drawing.Point(14, 175);
             this.textBox3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox3.Multiline = true;

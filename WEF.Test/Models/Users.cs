@@ -153,7 +153,7 @@ namespace WEF.Models
     /// <summary>
     /// 实体类Users操作类
     /// </summary>
-    public partial class UsersRepository : BaseRepository<Users>
+    public partial class UsersRepository : IRepository<Users>
     {
         DBContext db;
         /// <summary>
@@ -299,6 +299,11 @@ namespace WEF.Models
         public ProcSection FromProc(string procName)
         {
             return db.FromProc(procName);
+        }
+
+        public int Deletes(IEnumerable<Users> objs)
+        {
+            throw new NotImplementedException();
         }
     }
 

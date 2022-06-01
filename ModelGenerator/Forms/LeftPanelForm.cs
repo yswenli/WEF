@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace WEF.ModelGenerator
 {
     public partial class LeftPanelForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {
-        string conConnectionString;
+        string _conConnectionString;
 
         public LeftPanelForm()
         {
@@ -58,6 +59,12 @@ namespace WEF.ModelGenerator
         {
             ShowDbSelect();
         }
+
+        /// <summary>
+        /// 编辑连接菜单
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var node = Treeview.SelectedNode;
@@ -252,6 +259,8 @@ namespace WEF.ModelGenerator
             {
                 node.Nodes.Clear();
 
+                MessageQueue.Instance.SubMsg("正在准备加载数据库结构");
+
                 getDatabaseinfo(node);
             }
             else if (node.Level == 4)
@@ -268,7 +277,7 @@ namespace WEF.ModelGenerator
                     }
                     else
                     {
-                        conConnectionString = Treeview.SelectedNode.Parent.Parent.Tag.ToString();
+                        _conConnectionString = Treeview.SelectedNode.Parent.Parent.Tag.ToString();
                         try
                         {
                             conModel.TableName = Treeview.SelectedNode.Text;
@@ -329,6 +338,8 @@ namespace WEF.ModelGenerator
                 }
             }
             _connectList = connList;
+
+            getServers();
         }
 
 
@@ -385,13 +396,13 @@ namespace WEF.ModelGenerator
         {
             TreeNode node = Treeview.SelectedNode;
             var conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Tag.ToString()); });
-            conConnectionString = conModel.ConnectionString;
-            Clipboard.SetText(conConnectionString);
-            MessageBox.Show($"已复制到剪切板，conConnectionString：\r\n{conConnectionString}", "WEF数据库工具", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            _conConnectionString = conModel.ConnectionString;
+            Clipboard.SetText(_conConnectionString);
+            MessageBox.Show($"已复制到剪切板，conConnectionString：\r\n{_conConnectionString}", "WEF数据库工具", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
 
         /// <summary>
-        /// 获取数据库服务器
+        /// 异步获取数据库服务器
         /// </summary>
         private void getDatabaseinfo(TreeNode node)
         {
@@ -408,250 +419,54 @@ namespace WEF.ModelGenerator
                         conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Tag?.ToString() ?? ""); });
                     }));
 
-
-                    conConnectionString = conModel.ConnectionString;
+                    _conConnectionString = conModel.ConnectionString;
 
                     IDbObject dbObject;
 
                     if (conModel.DbType.Equals(DatabaseType.MsAccess.ToString()))
                     {
-                        dbObject = new WEF.DbDAL.OleDb.DbObject(conConnectionString);
+                        dbObject = new WEF.DbDAL.OleDb.DbObject(_conConnectionString);
 
-                        TreeNode tnode = null;
-
-                        this.Invoke(new Action(() =>
-                        {
-                            tnode = new TreeNode(conModel.Database, 1, 1);
-                            tnode.Tag = conConnectionString;
-                            tnode.ContextMenuStrip = contextMenuStripOneDataBase;
-                            node.Nodes.Add(tnode);
-                        }));
-
-                        var tables = dbObject.GetTables("");
-
-                        var views = dbObject.GetVIEWs("");
-
-
-                        this.Invoke(new Action(() =>
-                        {
-                            ShowTablesAndViews(tnode, tables, views);
-                        }));
-
+                        LoadDataBaseForNode(dbObject, conModel, node);
                     }
                     else if (conModel.DbType.Equals(DatabaseType.Sqlite3.ToString()))
                     {
-                        dbObject = new WEF.DbDAL.SQLite.DbObject(conConnectionString);
+                        dbObject = new WEF.DbDAL.SQLite.DbObject(_conConnectionString);
 
-                        TreeNode tnode = null;
-
-                        this.Invoke(new Action(() =>
-                        {
-                            tnode = new TreeNode(conModel.Database, 1, 1);
-                            tnode.Tag = conConnectionString;
-                            tnode.ContextMenuStrip = contextMenuStripOneDataBase;
-                            node.Nodes.Add(tnode);
-                        }));
-
-                        var tables = dbObject.GetTables("");
-
-                        var views = dbObject.GetVIEWs("");
-
-
-                        this.Invoke(new Action(() =>
-                        {
-                            ShowTablesAndViews(tnode, tables, views);
-                        }));
-
+                        LoadDataBaseForNode(dbObject, conModel, node);
                     }
                     else if (conModel.DbType.Equals(DatabaseType.SqlServer.ToString()) || conModel.DbType.Equals(DatabaseType.SqlServer9.ToString()))
                     {
                         if (conModel.DbType.Equals(DatabaseType.SqlServer.ToString()))
-                            dbObject = new WEF.DbDAL.SQL2000.DbObject(conConnectionString);
+                            dbObject = new WEF.DbDAL.SQL2000.DbObject(_conConnectionString);
                         else
-                            dbObject = new WEF.DbDAL.SQLServer.DbObject(conConnectionString);
+                            dbObject = new WEF.DbDAL.SQLServer.DbObject(_conConnectionString);
 
-                        if (conModel.Database.Equals("all"))
-                        {
-                            DataTable dt = dbObject.GetDBList();
-
-                            foreach (DataRow dr in dt.Rows)
-                            {
-                                TreeNode tnode = null;
-
-                                this.Invoke(new Action(() =>
-                                {
-                                    tnode = new TreeNode(dr[0].ToString(), 1, 1);
-                                    tnode.Tag = conConnectionString.Replace("master", dr[0].ToString());
-                                    tnode.ContextMenuStrip = contextMenuStripOneDataBase;
-                                    node.Nodes.Add(tnode);
-                                }));
-
-                                var tables = dbObject.GetTables(tnode.Text);
-
-                                var views = dbObject.GetVIEWs(tnode.Text);
-
-                                this.Invoke(new Action(() =>
-                                {
-                                    ShowTablesAndViews(tnode, tables, views);
-                                }));
-                            }
-                        }
-                        else
-                        {
-                            TreeNode tnode = null;
-
-                            this.Invoke(new Action(() =>
-                            {
-                                tnode = new TreeNode(conModel.Database, 1, 1);
-                                tnode.Tag = conConnectionString;
-                                tnode.ContextMenuStrip = contextMenuStripOneDataBase;
-                                node.Nodes.Add(tnode);
-                            }));
-
-                            var tables = dbObject.GetTables(tnode.Text);
-
-                            var views = dbObject.GetVIEWs(tnode.Text);
-
-                            this.Invoke(new Action(() =>
-                            {
-                                ShowTablesAndViews(tnode, tables, views);
-                            }));
-                        }
+                        LoadDataBaseForNode(dbObject, conModel, node, "master");
                     }
                     else if (conModel.DbType.Equals(DatabaseType.Oracle.ToString()))
                     {
-                        dbObject = new WEF.DbDAL.Oracle.DbObject(conConnectionString);
+                        dbObject = new WEF.DbDAL.Oracle.DbObject(_conConnectionString);
 
-                        TreeNode tnode = null;
-
-                        this.Invoke(new Action(() =>
-                        {
-                            tnode = new TreeNode(conModel.Database, 1, 1);
-                            tnode.Tag = conConnectionString;
-                            tnode.ContextMenuStrip = contextMenuStripOneDataBase;
-                            node.Nodes.Add(tnode);
-                        }));
-
-                        var tables = dbObject.GetTables(tnode.Text);
-
-                        var views = dbObject.GetVIEWs(tnode.Text);
-
-                        this.Invoke(new Action(() =>
-                        {
-                            ShowTablesAndViews(tnode, tables, views);
-                        }));
+                        LoadDataBaseForNode(dbObject, conModel, node, "oracle");
                     }
                     else if (conModel.DbType.Equals(DatabaseType.MySql.ToString()))
                     {
-                        dbObject = new WEF.DbDAL.MySql.DbObject(conConnectionString);
+                        dbObject = new WEF.DbDAL.MySql.DbObject(_conConnectionString);
 
-                        if (conModel.Database.Equals("all"))
-                        {
-                            DataTable dt = dbObject.GetDBList();
-
-                            foreach (DataRow dr in dt.Rows)
-                            {
-                                TreeNode tnode = null;
-
-                                this.Invoke(new Action(() =>
-                                {
-                                    tnode = new TreeNode(dr[0].ToString(), 1, 1);
-                                    tnode.Tag = conConnectionString.Replace("master", dr[0].ToString());
-                                    tnode.ContextMenuStrip = contextMenuStripOneDataBase;
-                                    node.Nodes.Add(tnode);
-                                }));
-
-                                var tables = dbObject.GetTables(tnode.Text);
-
-                                var views = dbObject.GetVIEWs(tnode.Text);
-
-                                this.Invoke(new Action(() =>
-                                {
-                                    ShowTablesAndViews(tnode, tables, views);
-                                }));
-                            }
-
-                        }
-                        else
-                        {
-                            TreeNode tnode = null;
-
-                            this.Invoke(new Action(() =>
-                            {
-                                tnode = new TreeNode(conModel.Database, 1, 1);
-                                tnode.Tag = conConnectionString;
-                                tnode.ContextMenuStrip = contextMenuStripOneDataBase;
-                                node.Nodes.Add(tnode);
-                            }));
-
-                            var tables = dbObject.GetTables(tnode.Text);
-
-                            var views = dbObject.GetVIEWs(tnode.Text);
-
-                            this.Invoke(new Action(() =>
-                            {
-                                ShowTablesAndViews(tnode, tables, views);
-                            }));
-                        }
+                        LoadDataBaseForNode(dbObject, conModel, node, "master");
                     }
                     else if (conModel.DbType.Equals(DatabaseType.PostgreSQL.ToString()))
                     {
-                        dbObject = new WEF.DbDAL.PostgreSQL.DbObject(conConnectionString);
+                        dbObject = new WEF.DbDAL.PostgreSQL.DbObject(_conConnectionString);
 
-                        if (conModel.Database.Equals("all"))
-                        {
-                            DataTable dt = dbObject.GetDBList();
-
-                            foreach (DataRow dr in dt.Rows)
-                            {
-                                TreeNode tnode = null;
-
-                                this.Invoke(new Action(() =>
-                                {
-                                    tnode = new TreeNode(dr[0].ToString(), 1, 1);
-                                    tnode.Tag = conConnectionString.Replace("postgres", dr[0].ToString());
-                                    tnode.ContextMenuStrip = contextMenuStripOneDataBase;
-                                    node.Nodes.Add(tnode);
-                                }));
-
-                                var tables = dbObject.GetTables(tnode.Text);
-
-                                var views = dbObject.GetVIEWs(tnode.Text);
-
-                                this.Invoke(new Action(() =>
-                                {
-                                    ShowTablesAndViews(tnode, tables, views);
-                                }));
-                            }
-
-                        }
-                        else
-                        {
-                            TreeNode tnode = null;
-
-                            this.Invoke(new Action(() =>
-                            {
-                                tnode = new TreeNode(conModel.Database, 1, 1);
-                                tnode.Tag = conConnectionString;
-                                tnode.ContextMenuStrip = contextMenuStripOneDataBase;
-                                node.Nodes.Add(tnode);
-                            }));
-
-                            var tables = dbObject.GetTables(tnode.Text);
-
-                            var views = dbObject.GetVIEWs(tnode.Text);
-
-                            this.Invoke(new Action(() =>
-                            {
-                                ShowTablesAndViews(tnode, tables, views);
-                            }));
-                        }
+                        LoadDataBaseForNode(dbObject, conModel, node, "postgres");
                     }
                     else if (conModel.DbType.Equals(DatabaseType.MongoDB.ToString()))
                     {
                         var dataBaseName = "admin";
 
-                        var mongoDBTool = MongoDBTool.Connect(conConnectionString);
+                        var mongoDBTool = MongoDBTool.Connect(_conConnectionString);
 
                         if (conModel.Database.Equals("all"))
                         {
@@ -664,7 +479,7 @@ namespace WEF.ModelGenerator
                                 this.Invoke(new Action(() =>
                                 {
                                     tnode = new TreeNode(dbs, 1, 1);
-                                    tnode.Tag = conConnectionString.Replace(dataBaseName, dbs);
+                                    tnode.Tag = _conConnectionString.Replace(dataBaseName, dbs);
                                     tnode.ContextMenuStrip = contextMenuStripOneMongoDB;
                                     node.Nodes.Add(tnode);
                                 }));
@@ -687,7 +502,7 @@ namespace WEF.ModelGenerator
                             this.Invoke(new Action(() =>
                             {
                                 tnode = new TreeNode(conModel.Database, 1, 1);
-                                tnode.Tag = conConnectionString;
+                                tnode.Tag = _conConnectionString;
                                 tnode.ContextMenuStrip = contextMenuStripOneMongoDB;
                                 node.Nodes.Add(tnode);
                             }));
@@ -717,9 +532,105 @@ namespace WEF.ModelGenerator
                     }));
                 }
             });
+        }
 
+
+        void LoadDataBaseForNode(IDbObject dbObject, ConnectionModel conModel, TreeNode node, string replaceStr)
+        {
+            MessageQueue.Instance.SubMsg($"正在加载服务器数据库结构...");
+
+            if (conModel.Database.Equals("all"))
+            {
+                DataTable dt = dbObject.GetDBList();
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    TreeNode tnode = null;
+
+                    this.Invoke(new Action(() =>
+                    {
+                        tnode = new TreeNode(dr[0].ToString(), 1, 1);
+                        tnode.Tag = _conConnectionString.Replace(replaceStr, dr[0].ToString());
+                        tnode.ContextMenuStrip = contextMenuStripOneDataBase;
+                        node.Nodes.Add(tnode);
+                        MessageQueue.Instance.SubMsg($"正在加载数据库{tnode.Text}结构...");
+                    }));
+
+                    var txt = tnode.Text;
+
+                    Task.Run(() =>
+                    {
+                        var tables = dbObject.GetTables(txt);
+
+                        var views = dbObject.GetVIEWs(txt);
+
+                        this.Invoke(new Action(() =>
+                        {
+                            ShowTablesAndViews(tnode, tables, views);
+                            MessageQueue.Instance.SubMsg($"加载数据库{txt}结构已完成");
+                        }));
+                    });
+                }
+            }
+            else
+            {
+                TreeNode tnode = null;
+
+                this.Invoke(new Action(() =>
+                {
+                    tnode = new TreeNode(conModel.Database, 1, 1);
+                    tnode.Tag = _conConnectionString;
+                    tnode.ContextMenuStrip = contextMenuStripOneDataBase;
+                    node.Nodes.Add(tnode);
+                    MessageQueue.Instance.SubMsg($"正在加载数据库{tnode.Text}结构...");
+                }));
+
+                var txt = tnode.Text;
+
+                Task.Run(() =>
+                {
+                    var tables = dbObject.GetTables(txt);
+
+                    var views = dbObject.GetVIEWs(txt);
+
+                    this.Invoke(new Action(() =>
+                    {
+                        ShowTablesAndViews(tnode, tables, views);
+                        MessageQueue.Instance.SubMsg($"加载数据库{txt}结构已完成");
+                    }));
+                });
+            }
+        }
+
+        void LoadDataBaseForNode(IDbObject dbObject, ConnectionModel conModel, TreeNode node)
+        {
+            MessageQueue.Instance.SubMsg($"正在加载服务器数据库结构...");
+
+            TreeNode tnode = null;
+
+            this.Invoke(new Action(() =>
+            {
+                tnode = new TreeNode(conModel.Database, 1, 1);
+                tnode.Tag = _conConnectionString;
+                tnode.ContextMenuStrip = contextMenuStripOneDataBase;
+                node.Nodes.Add(tnode);
+            }));
+
+            Task.Run(() =>
+            {
+                var tables = dbObject.GetTables("");
+
+                var views = dbObject.GetVIEWs("");
+
+                this.Invoke(new Action(() =>
+                {
+                    ShowTablesAndViews(tnode, tables, views);
+                    MessageQueue.Instance.SubMsg("服务器数据库结构已完成");
+                }));
+            });
 
         }
+
         /// <summary>
         /// 获取数据表信息
         /// </summary>
@@ -743,6 +654,11 @@ namespace WEF.ModelGenerator
                             tnode.Tag = "T";
                             tnode.ContextMenuStrip = contextMenuStripTable;
                             databaseNode.Nodes.Add(tnode);
+
+                            if (!StringPlus.SQLKeyWords.Contains(tnode.Text))
+                            {
+                                StringPlus.SQLKeyWords.Add(tnode.Text);
+                            }
                         }
                     }
                 }
@@ -759,6 +675,11 @@ namespace WEF.ModelGenerator
                         tnode.Tag = "V";
                         tnode.ContextMenuStrip = contextMenuStripTable;
                         databaseNode.Nodes.Add(tnode);
+
+                        if (!StringPlus.SQLKeyWords.Contains(tnode.Text))
+                        {
+                            StringPlus.SQLKeyWords.Add(tnode.Text);
+                        }
                     }
                 }
             }
@@ -777,6 +698,11 @@ namespace WEF.ModelGenerator
                         tnode.Tag = "T";
                         tnode.ContextMenuStrip = contextMenuStripTable;
                         tableNode.Nodes.Add(tnode);
+
+                        if (!StringPlus.SQLKeyWords.Contains(tnode.Text))
+                        {
+                            StringPlus.SQLKeyWords.Add(tnode.Text);
+                        }
                     }
                 }
                 databaseNode.Nodes.Add(tableNode);
@@ -793,6 +719,11 @@ namespace WEF.ModelGenerator
                     tnode.Tag = "V";
                     tnode.ContextMenuStrip = contextMenuStripTable;
                     viewNode.Nodes.Add(tnode);
+
+                    if (!StringPlus.SQLKeyWords.Contains(tnode.Text))
+                    {
+                        StringPlus.SQLKeyWords.Add(tnode.Text);
+                    }
                 }
                 databaseNode.Nodes.Add(viewNode);
             }
@@ -860,7 +791,7 @@ namespace WEF.ModelGenerator
                     {
                         return con.ID.ToString().Equals(Treeview.SelectedNode.Parent.Parent.Parent.Tag.ToString());
                     });
-                conConnectionString = Treeview.SelectedNode.Parent.Parent.Tag.ToString();
+                _conConnectionString = Treeview.SelectedNode.Parent.Parent.Tag.ToString();
                 conModel.TableName = Treeview.SelectedNode.Text;
                 conModel.Database = Treeview.SelectedNode.Parent.Parent.Text;
                 conModel.IsView = Treeview.SelectedNode.Tag.ToString().Equals("V");
@@ -947,37 +878,37 @@ namespace WEF.ModelGenerator
 
                 if (conModel.DbType.Equals(DatabaseType.MsAccess.ToString()))
                 {
-                    dbObject = new WEF.DbDAL.OleDb.DbObject(conConnectionString);
+                    dbObject = new WEF.DbDAL.OleDb.DbObject(_conConnectionString);
                     ShowTablesAndViews(node, dbObject.GetTables(""), dbObject.GetVIEWs(""));
                 }
                 else if (conModel.DbType.Equals(DatabaseType.SqlServer.ToString()))
                 {
-                    dbObject = new WEF.DbDAL.SQL2000.DbObject(conConnectionString);
+                    dbObject = new WEF.DbDAL.SQL2000.DbObject(_conConnectionString);
                     ShowTablesAndViews(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
                 }
                 else if (conModel.DbType.Equals(DatabaseType.SqlServer9.ToString()))
                 {
-                    dbObject = new WEF.DbDAL.SQLServer.DbObject(conConnectionString);
+                    dbObject = new WEF.DbDAL.SQLServer.DbObject(_conConnectionString);
                     ShowTablesAndViews(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
                 }
                 else if (conModel.DbType.Equals(DatabaseType.Oracle.ToString()))
                 {
-                    dbObject = new WEF.DbDAL.Oracle.DbObject(conConnectionString);
+                    dbObject = new WEF.DbDAL.Oracle.DbObject(_conConnectionString);
                     ShowTablesAndViews(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
                 }
                 else if (conModel.DbType.Equals(DatabaseType.MySql.ToString()))
                 {
-                    dbObject = new WEF.DbDAL.MySql.DbObject(conConnectionString);
+                    dbObject = new WEF.DbDAL.MySql.DbObject(_conConnectionString);
                     ShowTablesAndViews(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
                 }
                 else if (conModel.DbType.Equals(DatabaseType.Sqlite3.ToString()))
                 {
-                    dbObject = new WEF.DbDAL.SQLite.DbObject(conConnectionString);
+                    dbObject = new WEF.DbDAL.SQLite.DbObject(_conConnectionString);
                     ShowTablesAndViews(node, dbObject.GetTables(node.Text), dbObject.GetVIEWs(node.Text));
                 }
                 else if (conModel.DbType.Equals(DatabaseType.MongoDB.ToString()))
                 {
-                    var mongoDBTool = MongoDBTool.Connect(conConnectionString);
+                    var mongoDBTool = MongoDBTool.Connect(_conConnectionString);
                     ShowCollections(node, mongoDBTool.GetCollections(node.Text));
                 }
                 node.ExpandAll();
@@ -1215,7 +1146,7 @@ namespace WEF.ModelGenerator
             #endregion
 
             #region sqlserver
-            var index12 = conModel.ConnectionString.IndexOf("Initial Catalog=",StringComparison.OrdinalIgnoreCase);
+            var index12 = conModel.ConnectionString.IndexOf("Initial Catalog=", StringComparison.OrdinalIgnoreCase);
 
             if (index12 > 0)
             {
@@ -1341,12 +1272,13 @@ namespace WEF.ModelGenerator
 
 
 
-        ///快速查询
+        #region 快速查询
+
         private void searchTextBox_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                LoadForm.ShowLoading(this);
+                LoadForm.ShowLoading(this);                
 
                 var text = searchTextBox.Text;
 
@@ -1381,6 +1313,8 @@ namespace WEF.ModelGenerator
                 {
                     treeNode.BackColor = SystemColors.Window;
                     treeNode.ForeColor = SystemColors.WindowText;
+                    //if (treeNode.Level == 4)
+                    //    treeNode.Remove();
                 }
                 else
                 {
@@ -1389,5 +1323,8 @@ namespace WEF.ModelGenerator
                 }
             }
         }
+
+        #endregion
+
     }
 }

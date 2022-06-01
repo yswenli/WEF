@@ -36,6 +36,8 @@ namespace WEF.Batcher
 
         protected DataTable _dataTable;
 
+        protected object _locker = new object();
+
         /// <summary>
         /// BatcherBase
         /// </summary>

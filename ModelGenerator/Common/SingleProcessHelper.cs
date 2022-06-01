@@ -117,7 +117,7 @@ namespace WEF.ModelGenerator.Common
 
         private static void Form_Load(object sender, EventArgs e)
         {
-            SetMainFormSerialize((sender as MainForm).Handle);
+            SetMainFormSerialize((sender as Form).Handle);
         }
     }
 }

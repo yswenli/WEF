@@ -23,6 +23,8 @@ using System.Linq;
 
 using MySql.Data.MySqlClient;
 
+using WEF.Common;
+
 namespace WEF.Batcher
 {
     /// <summary>
@@ -114,8 +116,11 @@ namespace WEF.Batcher
         /// <param name="timeout"></param>
         public override void Execute(int batchSize = 10000, int timeout = 10 * 1000)
         {
-            _dataTable = ToDataTable(_list);
-            Execute(_dataTable);
+            lock (_locker)
+            {
+                _dataTable = ToDataTable(_list);
+                Execute(_dataTable);
+            }
         }
 
         /// <summary>
@@ -124,31 +129,40 @@ namespace WEF.Batcher
         /// <param name="dataTable"></param>
         public override void Execute(DataTable dataTable)
         {
-            MySqlConnection newConnection = (MySqlConnection)_database.CreateConnection();
+            var connStr = _database.ConnectionString;
+
+            if (connStr.IndexOf("allowLoadLocalInfile=true", StringComparison.InvariantCultureIgnoreCase) == -1)
+            {
+                if (connStr.EndsWith(";"))
+                    connStr += "allowLoadLocalInfile=true;";
+                else
+                    connStr += ";allowLoadLocalInfile=true;";
+            }
+
+            var dbConnect = (MySqlConnection)_database.CreateConnection(connStr);
 
             try
             {
                 if (dataTable == null || dataTable.Rows.Count == 0) return;
 
-                string tmpPath = Path.Combine(Path.GetTempPath(), dataTable.TableName + ".csv");
+                string tmpPath = Path.Combine(Directory.GetCurrentDirectory(), dataTable.TableName + ".csv");
 
-                DBContext.WriteToCSV(dataTable, tmpPath, false);
+                DataTableHelper.WriteToCSV(dataTable, tmpPath, false);
 
-                newConnection.Open();
-
-                using (MySqlTransaction tran = newConnection.BeginTransaction())
+                using (MySqlTransaction tran = dbConnect.BeginTransaction())
                 {
-                    MySqlBulkLoader bulk = new MySqlBulkLoader(newConnection)
+                    MySqlBulkLoader bulk = new MySqlBulkLoader(dbConnect)
                     {
                         FieldTerminator = ",",
                         FieldQuotationCharacter = '"',
                         EscapeCharacter = '"',
-                        LineTerminator = "\r\n",
+                        LineTerminator = Environment.NewLine,
                         FileName = tmpPath,
                         Local = true,
                         NumberOfLinesToSkip = 0,
                         TableName = dataTable.TableName,
-                        CharacterSet = "utf8"
+                        CharacterSet = "utf8",
+                        Timeout = 180
                     };
                     try
                     {
@@ -173,8 +187,8 @@ namespace WEF.Batcher
             finally
             {
 
-                if (newConnection.State == ConnectionState.Open)
-                    newConnection.Close();
+                if (dbConnect.State == ConnectionState.Open)
+                    dbConnect.Close();
                 dataTable?.Clear();
                 _list.Clear();
             }

@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * 所属域：WENLI-PC
  * 登录用户：yswenli
@@ -17,9 +17,9 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 
 namespace WEF.ModelGenerator.Common
 {
@@ -140,16 +140,8 @@ namespace WEF.ModelGenerator.Common
         }
 
 
-        static string[] sqlKeyWords = null;
+        static readonly List<string> _sqlKeyWords = new List<string>() {
 
-        public static string[] SQLKeyWords
-        {
-            get
-            {
-                if (sqlKeyWords == null)
-                {
-                    sqlKeyWords = new string[]
-                    {
                         "SELECT * FROM TABLE",
                         "INSERT INTO TALBE(FILED) VALUES(VALUE)",
                         "DELETE FROM",
@@ -195,15 +187,22 @@ namespace WEF.ModelGenerator.Common
                         "END",
                         "CREATE",
                         "ADD"
-                    };
-                }
-                return sqlKeyWords;
+        };
+
+        /// <summary>
+        /// 提示字符集
+        /// </summary>
+        public static List<string> SQLKeyWords
+        {
+            get
+            {
+                return _sqlKeyWords;
             }
         }
 
         public static string[] GetSQLKeyWords(string keyCode)
-        {
-            return SQLKeyWords.Where(b => b.Substring(0, 1) == keyCode).ToArray();
+        {            
+            return SQLKeyWords.Where(b => b.IndexOf(keyCode, StringComparison.OrdinalIgnoreCase) == 0).ToArray();
         }
 
     }

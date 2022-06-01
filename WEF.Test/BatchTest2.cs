@@ -365,7 +365,7 @@ namespace WEF.Test
     /// <summary>
     /// 实体类DBGiftbatchadd操作类
     /// </summary>
-    public partial class DBGiftbatchaddRepository : BaseRepository<DBGiftbatchadd>
+    public partial class DBGiftbatchaddRepository : IRepository<DBGiftbatchadd>
     {
         DBContext db;
         /// <summary>
@@ -579,6 +579,11 @@ namespace WEF.Test
         public ProcSection FromProc(string procName)
         {
             return db.FromProc(procName);
+        }
+
+        public int Deletes(IEnumerable<DBGiftbatchadd> objs)
+        {
+            throw new NotImplementedException();
         }
     }
 

@@ -18,7 +18,7 @@ namespace WEF.ModelGenerator
             Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
+            //MainForm
             SingleProcessHelper.ProcessRun<MainForm>((f) =>
             {
                 Application.Run(f);

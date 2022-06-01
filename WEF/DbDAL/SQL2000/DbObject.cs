@@ -319,7 +319,7 @@ namespace WEF.DbDAL.SQL2000
 
         public DataTable GetDBList()
         {
-            string sQLString = "select name,user_name() cuser,'DB' type,crdate dates from sysdatabases";
+            string sQLString = "select name,user_name() cuser,'DB' type,crdate dates from sysdatabases order by name asc";
             return this.Query("master", sQLString).Tables[0];
         }
 

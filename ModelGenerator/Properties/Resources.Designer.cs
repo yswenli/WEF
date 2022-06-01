@@ -114,7 +114,20 @@ namespace WEF.ModelGenerator.Properties {
         }
         
         /// <summary>
-        ///   查找类似 SELECT TOP 20
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap ok {
+            get {
+                object obj = ResourceManager.GetObject("ok", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 -----------------------------------------------------
+        ///--TSQL慢查询
+        ///
+        ///SELECT TOP 20
         ///
         ///total_worker_time/1000 AS [总消耗CPU 时间(ms)],execution_count [运行次数],
         ///
@@ -130,15 +143,11 @@ namespace WEF.ModelGenerator.Properties {
         ///
         /// ELSE qs.statement_end_offset END -qs.statement_start_offset)/2 + 1)
         ///
-        ///AS [使用CPU的语法], qt.text [完整语法],
-        ///
-        ///dbname=db_name(qt.dbid),
-        ///
-        ///object_name(qt.obje [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///AS [使用CPU的语法] [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
-        internal static string SqlServer慢查询 {
+        internal static string SQL执行情况查询 {
             get {
-                return ResourceManager.GetString("SqlServer慢查询", resourceCulture);
+                return ResourceManager.GetString("SQL执行情况查询", resourceCulture);
             }
         }
         

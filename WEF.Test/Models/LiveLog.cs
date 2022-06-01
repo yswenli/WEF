@@ -362,7 +362,7 @@ namespace WEF.Test.Models
     /// <summary>
     /// 实体类LiveLog操作类
     /// </summary>
-    public partial class LiveLogRepository : BaseRepository<LiveLog>
+    public partial class LiveLogRepository : IRepository<LiveLog>
     {
         DBContext db;
         /// <summary>
@@ -576,6 +576,11 @@ namespace WEF.Test.Models
         public ProcSection FromProc(string procName)
         {
             return db.FromProc(procName);
+        }
+
+        public int Deletes(IEnumerable<LiveLog> objs)
+        {
+            throw new NotImplementedException();
         }
     }
 

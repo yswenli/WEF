@@ -17,7 +17,6 @@
 *****************************************************************************/
 using Microsoft.Office.Interop.Access.Dao;
 
-using System;
 using System.Collections.Generic;
 using System.Data;
 
@@ -64,9 +63,12 @@ namespace WEF.Batcher
         /// <param name="timeout"></param>
         public override void Execute(int batchSize = 10000, int timeout = 10 * 1000)
         {
-            _dataTable = ToDataTable(_list);
+            lock (_locker)
+            {
+                _dataTable = ToDataTable(_list);
 
-            Execute(_dataTable);
+                Execute(_dataTable);
+            }
         }
 
         /// <summary>

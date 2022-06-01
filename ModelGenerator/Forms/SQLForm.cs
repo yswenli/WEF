@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * 所属域：WENLI-PC
  * 登录用户：yswenli
@@ -41,6 +41,12 @@ namespace WEF.ModelGenerator.Forms
         {
             InitializeComponent();
 
+            #region 加速datagridview数据加载速度
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dataGridView1.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            #endregion
+
             #region 防闪
             //设置窗体的双缓冲
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint, true);
@@ -50,6 +56,10 @@ namespace WEF.ModelGenerator.Forms
             PropertyInfo pi = dgvType.GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
             pi.SetValue(this.dataGridView1, true, null);
             #endregion
+
+            AutoTextBox.TextBox.RegistFindForm();
+
+            AutoTextBox.TextBox.ContextMenuStrip = contextMenuStrip1;
         }
 
         public SQLForm(string tableName) : this()
@@ -85,7 +95,7 @@ namespace WEF.ModelGenerator.Forms
 
             AutoTextBox.Dock = DockStyle.Fill;
 
-            AutoTextBox.KeyUp += autoTextBox1_KeyUp;
+            AutoTextBox.KeyDown += autoTextBox1_KeyUp;
 
             AutoTextBox.TabIndex = 0;
 
@@ -153,11 +163,12 @@ namespace WEF.ModelGenerator.Forms
 
                     if (_currentSql.StartsWith("select", StringComparison.InvariantCultureIgnoreCase))
                     {
+                        DataSet ds = null;
                         try
                         {
-                            int max = 50;
+                            int max = 1000;
 
-                            var ds = dbObject.Query(ConnectionModel.Database, _currentSql);
+                            ds = dbObject.Query(ConnectionModel.Database, _currentSql);
 
                             stopwatch.Stop();
 
@@ -219,8 +230,28 @@ namespace WEF.ModelGenerator.Forms
                             LoadForm.HideLoading(this);
                             this.Invoke(new Action(() =>
                             {
-                                MessageBox.Show(this, $"查询发生异常，ex:" + ex.Message);
+
+                                if (ex.Message.IndexOf("Unable to convert MySQL date/time value to System.DateTime", StringComparison.InvariantCultureIgnoreCase) > -1)
+                                {
+                                    var msg = ex.Message + @"
+解决办法：
+1、将该字段的缺省值设置为null，而不是0000-00-00/0000-00-00 00:00:00的情况；
+2、在链接MySQL的字符串中添加：Convert Zero Datetime=True
+3、将该字段设置成字符串类型；";
+                                    MessageBox.Show(this, $"查询发生异常，ex:{msg}");
+                                }
+                                else
+                                {
+                                    MessageBox.Show(this, $"查询发生异常，ex:" + ex.Message);
+                                }
                             }));
+                        }
+                        finally
+                        {
+                            //释放内存资源
+                            ds?.Tables[0]?.Dispose();
+                            ds?.Dispose();
+                            GC.Collect();
                         }
                     }
                     else if (_currentSql.StartsWith("print", StringComparison.InvariantCultureIgnoreCase))
@@ -389,5 +420,60 @@ namespace WEF.ModelGenerator.Forms
         }
 
         #endregion
+
+        #region sql输入框中的快捷菜单
+        private void copyToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var selectTxt = autoTextBox1.TextBox.SelectedText;
+            if (!string.IsNullOrWhiteSpace(selectTxt))
+            {
+                Clipboard.SetText(selectTxt);
+            }
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var text = Clipboard.GetText();
+            var offset = autoTextBox1.TextBox.SelectionStart;
+            if (!string.IsNullOrEmpty(text))
+            {
+                if (autoTextBox1.TextBox.Text.Length < 1)
+                {
+                    autoTextBox1.TextBox.Text = text;
+                }
+                else
+                {
+                    if (autoTextBox1.TextBox.Text.Length <= offset)
+                    {
+                        autoTextBox1.TextBox.Text += text;
+                    }
+                    else if (autoTextBox1.TextBox.Text.Length > offset)
+                    {
+                        var first = autoTextBox1.TextBox.Text.Substring(0, offset);
+                        var last = autoTextBox1.TextBox.Text.Substring(offset);
+                        autoTextBox1.TextBox.Text = first + text + last;
+                    }
+                }
+            }
+        }
+
+
+        private void allSelectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(autoTextBox1.TextBox.Text))
+            {
+                return;
+            }
+            autoTextBox1.TextBox.SelectAll();
+        }
+
+        private void runToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunSql();
+        }
+
+
+        #endregion
+
     }
 }

@@ -110,7 +110,7 @@ namespace WEF.DbDAL.PostgreSQL
 
         public DataTable GetDBList()
         {
-            return this.Query("", "select datname from pg_database").Tables[0];
+            return this.Query("", "select datname from pg_database order by datname").Tables[0];
         }
 
         public DataTable GetKeyName(string DbName, string TableName)

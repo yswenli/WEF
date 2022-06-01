@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using WEF.ModelGenerator.Common;
@@ -57,6 +58,16 @@ namespace WEF.ModelGenerator
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             HideLoading();
+        }
+
+        public static Task ShowLoadingAsync(Form parent)
+        {
+            return Task.Run(() => ShowLoading(parent));            
+        }
+
+        public static Task HideLoadingAsync(Form parent)
+        {
+            return Task.Run(() => HideLoading(parent));
         }
     }
 }

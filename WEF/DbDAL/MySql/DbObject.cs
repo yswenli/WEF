@@ -1,4 +1,5 @@
 using MySql.Data.MySqlClient;
+
 using System;
 using System.Data;
 using System.Text;
@@ -10,6 +11,8 @@ namespace WEF.DbDAL.MySql
     public class DbObject : IDbObject
     {
         bool isdbosp = false;
+
+        object _locker = new object();
 
         #region  属性
         public string DbType
@@ -110,43 +113,49 @@ namespace WEF.DbDAL.MySql
 
         #region 打开数据库 OpenDB(string DbName)
 
-        object _locker = new object();
-
         /// <summary>
         /// 打开数据库
         /// </summary>
-        /// <param name="DbName">要打开的数据库</param>
+        /// <param name="dbName">要打开的数据库</param>
         /// <returns></returns>
-        public MySqlCommand OpenDB(string DbName)
+        public MySqlCommand OpenDB(string dbName)
         {
-            if (string.IsNullOrEmpty(DbName)) throw new Exception("DbName 不能为空！");
+            if (string.IsNullOrEmpty(dbName)) throw new Exception("DbName 不能为空！");
 
-            lock (_locker)
+            if (_connect.ConnectionString != _dbconnectStr)
             {
-                if (_connect.ConnectionString == "")
-                {
-                    _connect.ConnectionString = _dbconnectStr;
-                }
-
-                if (_connect.ConnectionString != _dbconnectStr)
-                {
+                if (_connect.State != ConnectionState.Closed)
                     _connect.Close();
-                    _connect.ConnectionString = _dbconnectStr;
-                }
+                _connect.ConnectionString = _dbconnectStr;
+            }
 
-                var dbCommand = new MySqlCommand();
+            var dbCommand = new MySqlCommand();
 
-                if (_connect.State == System.Data.ConnectionState.Closed)
+            if (_connect.State != ConnectionState.Open)
+            {
+                try
                 {
                     _connect.Open();
                 }
-
-                dbCommand.Connection = _connect;
-                dbCommand.CommandTimeout = 1200;
-                dbCommand.CommandText = "use " + DbName + "";
-                dbCommand.ExecuteNonQuery();
-                return dbCommand;
+                catch (Exception ex)
+                {
+                    if (ex.Message == "由于意外的数据包格式，握手失败。")
+                    {
+                        if (_dbconnectStr.EndsWith(";"))
+                            _dbconnectStr += "SslMode=None;";
+                        else
+                            _dbconnectStr += ";SslMode=None;";
+                        _connect.ConnectionString = _dbconnectStr;
+                        _connect.Open();
+                    }
+                }
             }
+
+            dbCommand.Connection = _connect;
+            dbCommand.CommandTimeout = 1200;
+            dbCommand.CommandText = "use " + dbName + "";
+            dbCommand.ExecuteNonQuery();
+            return dbCommand;
         }
 
 
@@ -194,14 +203,23 @@ namespace WEF.DbDAL.MySql
             return dbCommand.ExecuteReader(CommandBehavior.CloseConnection);
         }
 
+        /// <summary>
+        /// Query
+        /// </summary>
+        /// <param name="DbName"></param>
+        /// <param name="SQLString"></param>
+        /// <returns></returns>
         public DataSet Query(string DbName, string SQLString)
         {
-            DataSet ds = new DataSet();
-            OpenDB(DbName);
-            MySqlDataAdapter adapter = new MySqlDataAdapter(SQLString, _connect);
-            adapter.Fill(ds, "ds");
-            adapter.Dispose();
-            return ds;
+            lock (_locker)
+            {
+                DataSet ds = new DataSet();
+                OpenDB(DbName);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(SQLString, _connect);
+                adapter.Fill(ds, "ds");
+                adapter.Dispose();
+                return ds;
+            }
         }
 
 
@@ -334,8 +352,7 @@ namespace WEF.DbDAL.MySql
                 }
                 reader.Close();
             }
-            return dt;
-
+            return dt.OrderBy("name");
         }
         #endregion
 
@@ -587,13 +604,155 @@ namespace WEF.DbDAL.MySql
 
 
         #region 得到表的列的详细信息 GetColumnInfoList(string DbName,string TableName)
+
+        /// <summary>
+        /// 得到数据库里表或视图的列的详细信息
+        /// </summary>
+        /// <param name="dbName">库</param>
+        /// <param name="tableName">表</param>
+        /// <returns></returns>
+        public DataTable GetColumnInfoList(string dbName, string tableName)
+        {
+            try
+            {
+                string sql = $"show full columns from {tableName}";
+                DataTable columnsTables = CreateColumnTable();
+                DataRow dr;
+                var reader = ExecuteReader(dbName, sql);
+                int n = 1;
+                while (reader.Read())
+                {
+                    dr = columnsTables.NewRow();
+                    dr[0] = n.ToString();
+                    if ((!Object.Equals(reader["Field"], null)) && (!Object.Equals(reader["Field"], System.DBNull.Value)))
+                    {
+                        string tname = reader["Field"].GetType().Name;
+                        switch (tname)
+                        {
+                            case "Byte[]":
+                                dr["ColumnName"] = Encoding.Default.GetString((Byte[])reader["Field"]);
+                                break;
+                            case "":
+                                break;
+                            default:
+                                dr["ColumnName"] = reader["Field"].ToString();
+                                break;
+                        }
+                    }
+                    string typename = string.Empty;
+                    if ((!Object.Equals(reader["Type"], null)) && (!Object.Equals(reader["Type"], System.DBNull.Value)))
+                    {
+                        string tname = reader["Type"].GetType().Name;
+                        switch (tname)
+                        {
+                            case "Byte[]":
+                                typename = Encoding.Default.GetString((Byte[])reader["Type"]);
+                                break;
+                            case "":
+                                break;
+                            default:
+                                typename = reader["Type"].ToString();
+                                break;
+                        }
+                    }
+                    string len = "", pre = "", scal = "";
+
+                    TypeNameProcess(typename, out typename, out len, out pre, out scal);
+
+                    dr["TypeName"] = typename;
+
+                    dr["Length"] = len;
+                    dr["Preci"] = pre;
+                    dr["Scale"] = scal;
+                    if ((!Object.Equals(reader["Key"], null)) && (!Object.Equals(reader["Key"], System.DBNull.Value)))
+                    {
+                        string skey = "";
+                        string tname = reader["Key"].GetType().Name;
+                        switch (tname)
+                        {
+                            case "Byte[]":
+                                skey = Encoding.Default.GetString((Byte[])reader["Key"]);
+                                break;
+                            case "":
+                                break;
+                            default:
+                                skey = reader["Key"].ToString();
+                                break;
+                        }
+                        dr["isPK"] = (skey.Trim() == "PRI") ? "√" : "";
+                        dr["IsIdentity"] = (skey.Trim() == "PRI") ? "√" : "";
+                    }
+                    if ((!Object.Equals(reader["Null"], null)) && (!Object.Equals(reader["Null"], System.DBNull.Value)))
+                    {
+                        string snull = "";
+                        string tname = reader["Null"].GetType().Name;
+                        switch (tname)
+                        {
+                            case "Byte[]":
+                                snull = Encoding.Default.GetString((Byte[])reader["Null"]);
+                                break;
+                            case "":
+                                break;
+                            default:
+                                snull = reader["Null"].ToString();
+                                break;
+                        }
+                        dr["cisNull"] = (snull.Trim() == "YES") ? "√" : "";
+                    }
+                    if ((!Object.Equals(reader["Default"], null)) && (!Object.Equals(reader["Default"], System.DBNull.Value)))
+                    {
+                        string tname = reader["Default"].GetType().Name;
+                        switch (tname)
+                        {
+                            case "Byte[]":
+                                dr["DefaultVal"] = Encoding.Default.GetString((Byte[])reader["Default"]);
+                                break;
+                            case "":
+                                break;
+                            default:
+                                dr["DefaultVal"] = reader["Default"].ToString();
+                                break;
+                        }
+                    }
+                    dr["IsIdentity"] = "";
+                    if ((!Object.Equals(reader["Comment"], null)) && (!Object.Equals(reader["Comment"], System.DBNull.Value)))
+                    {
+
+                        string tname = reader["Comment"].GetType().Name;
+                        switch (tname)
+                        {
+                            case "Byte[]":
+                                dr["DeText"] = Encoding.UTF8.GetString((Byte[])reader["Comment"]);
+                                break;
+                            case "":
+                                dr["DeText"] = "";
+                                break;
+                            default:
+                                dr["DeText"] = reader["Comment"].ToString();
+                                break;
+                        }
+                    }
+
+                    columnsTables.Rows.Add(dr);
+                    n++;
+                }
+                reader.Close();
+                return columnsTables;
+            }
+            catch (System.Exception ex)
+            {
+                throw new Exception("获取列数据失败" + ex.Message);
+            }
+
+        }
+
         /// <summary>
         /// 得到数据库里表或视图的列的详细信息
         /// </summary>
         /// <param name="dbName">库</param>
         /// <param name="TableName">表</param>
         /// <returns></returns>
-        public DataTable GetColumnInfoList(string dbName, string TableName)
+        public DataTable GetColumnInfoList2(string dbName, string TableName)
         {
             try
             {
@@ -641,7 +800,7 @@ namespace WEF.DbDAL.MySql
                     TypeNameProcess(typename, out typename, out len, out pre, out scal);
 
                     len = reader["字符长度"].ToString();
-                    pre= reader["数字长度"].ToString();
+                    pre = reader["数字长度"].ToString();
                     scal = reader["小数位数"].ToString();
 
                     dr["TypeName"] = typename;
@@ -665,7 +824,7 @@ namespace WEF.DbDAL.MySql
                                 break;
                         }
                         dr["isPK"] = (skey.Trim() == "PRI") ? "√" : "";
-                        dr["IsIdentity"] = (skey.Trim() == "PRI") ? "√" : ""; 
+                        dr["IsIdentity"] = (skey.Trim() == "PRI") ? "√" : "";
                     }
                     if ((!Object.Equals(reader["是否允许非空"], null)) && (!Object.Equals(reader["是否允许非空"], System.DBNull.Value)))
                     {
@@ -1050,7 +1209,7 @@ namespace WEF.DbDAL.MySql
             {
                 MySqlCommand dbCommand = OpenDB(DbName);
                 dbCommand.CommandText = sqlString;
-                return dbCommand.ExecuteScalar();                
+                return dbCommand.ExecuteScalar();
             }
             catch
             {

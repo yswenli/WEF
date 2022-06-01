@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2019
+ * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * CLR版本：4.0.30319.42000
  * 唯一标识：1a0dd623-eae1-428c-8095-d971d079c8ab
@@ -191,7 +191,7 @@ namespace WEF
 
                 if (GroupByOperation.IsNullOrEmpty(_groupBy) && string.IsNullOrEmpty(_distinctString))
                 {
-                    sql.Append(" SELECT count(*) as r_cnt FROM ");
+                    sql.Append(" SELECT count(1) as r_cnt FROM ");
                     sql.Append(FromString);
                     if (!WhereOperation.IsNullOrEmpty(_where))
                     {
@@ -201,7 +201,7 @@ namespace WEF
                 else
                 {
 
-                    sql.Append("SELECT count(*) as r_cnt FROM (");
+                    sql.Append("SELECT count(1) as r_cnt FROM (");
 
                     sql.Append(SqlNoneOrderbyString);
 

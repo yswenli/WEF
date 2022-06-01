@@ -513,7 +513,7 @@ namespace WEF.Models
     /// <summary>
     /// 实体类DBUserTask操作类
     /// </summary>
-    public partial class DBUserTaskRepository : BaseRepository<DBUserTask>
+    public partial class DBUserTaskRepository : IRepository<DBUserTask>
     {
         DBContext db;
         /// <summary>
@@ -660,6 +660,11 @@ namespace WEF.Models
         public ProcSection FromProc(string procName)
         {
             return db.FromProc(procName);
+        }
+
+        public int Deletes(IEnumerable<DBUserTask> objs)
+        {
+            throw new NotImplementedException();
         }
     }
 

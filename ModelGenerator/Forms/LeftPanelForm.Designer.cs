@@ -30,10 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LeftPanelForm));
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("数据库服务器");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("数据库服务器");
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.Treeview = new System.Windows.Forms.TreeView();
             this.imgList = new System.Windows.Forms.ImageList(this.components);
             this.contextMenuStripTop = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -78,11 +77,10 @@
             // 
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
-            this.toolStripButton2});
+            this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(231, 31);
+            this.toolStrip1.Size = new System.Drawing.Size(231, 27);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -92,19 +90,9 @@
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(29, 28);
+            this.toolStripButton1.Size = new System.Drawing.Size(29, 24);
             this.toolStripButton1.ToolTipText = "新建数据库连接";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
-            // 
-            // toolStripButton2
-            // 
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(29, 28);
-            this.toolStripButton2.Text = "异常日志";
-            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
             // Treeview
             // 
@@ -117,10 +105,10 @@
             this.Treeview.Location = new System.Drawing.Point(0, 59);
             this.Treeview.Margin = new System.Windows.Forms.Padding(4);
             this.Treeview.Name = "Treeview";
-            treeNode2.Name = "节点0";
-            treeNode2.Text = "数据库服务器";
+            treeNode1.Name = "节点0";
+            treeNode1.Text = "数据库服务器";
             this.Treeview.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            treeNode1});
             this.Treeview.SelectedImageIndex = 0;
             this.Treeview.Size = new System.Drawing.Size(229, 395);
             this.Treeview.TabIndex = 1;
@@ -145,20 +133,20 @@
             this.新建ToolStripMenuItem,
             this.刷新ToolStripMenuItem});
             this.contextMenuStripTop.Name = "contextMenuStripTop";
-            this.contextMenuStripTop.Size = new System.Drawing.Size(109, 52);
+            this.contextMenuStripTop.Size = new System.Drawing.Size(211, 80);
             // 
             // 新建ToolStripMenuItem
             // 
             this.新建ToolStripMenuItem.Name = "新建ToolStripMenuItem";
-            this.新建ToolStripMenuItem.Size = new System.Drawing.Size(108, 24);
-            this.新建ToolStripMenuItem.Text = "添加";
+            this.新建ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.新建ToolStripMenuItem.Text = "添加数据库服务器";
             this.新建ToolStripMenuItem.Click += new System.EventHandler(this.新建ToolStripMenuItem_Click);
             // 
             // 刷新ToolStripMenuItem
             // 
             this.刷新ToolStripMenuItem.Name = "刷新ToolStripMenuItem";
-            this.刷新ToolStripMenuItem.Size = new System.Drawing.Size(108, 24);
-            this.刷新ToolStripMenuItem.Text = "刷新";
+            this.刷新ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.刷新ToolStripMenuItem.Text = "刷新列表";
             this.刷新ToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // contextMenuStripDatabase
@@ -361,7 +349,7 @@
             // 
             this.searchTextBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.searchTextBox.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.searchTextBox.Location = new System.Drawing.Point(0, 31);
+            this.searchTextBox.Location = new System.Drawing.Point(0, 27);
             this.searchTextBox.Name = "searchTextBox";
             this.searchTextBox.Size = new System.Drawing.Size(231, 27);
             this.searchTextBox.TabIndex = 5;
@@ -416,7 +404,6 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStripTable;
         private System.Windows.Forms.ToolStripMenuItem 生成代码ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 刷新ToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ToolStripMenuItem 执行SQLToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sQL查询ToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripOneMongoDB;

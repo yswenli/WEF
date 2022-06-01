@@ -17,8 +17,6 @@ namespace WEF.ModelGenerator.Forms
 
         DataTable _dataTable;
 
-        bool _loading = true;
-
         public Model.ConnectionModel ConnectionModel
         {
             get; set;
@@ -41,7 +39,7 @@ namespace WEF.ModelGenerator.Forms
 
             label1.Dock = DockStyle.Fill;
 
-            dataGridView1.Dock = DockStyle.Fill;
+            //dataGridView1.Dock = DockStyle.Fill;
 
             dataGridView1.AutoGenerateColumns = true;
 
@@ -70,8 +68,6 @@ namespace WEF.ModelGenerator.Forms
                     if (_dataTable != null)
                     {
                         dataGridView1.Invoke(new Action(() => dataGridView1.DataSource = _dataTable));
-
-                        _loading = false;
                     }
                     else
                     {
@@ -94,24 +90,36 @@ namespace WEF.ModelGenerator.Forms
             });
         }
 
-        void Save()
+        /// <summary>
+        /// 保存数据
+        /// </summary>
+        public void Save()
         {
+            if (MessageBox.Show(this, "确定要保存相关操作吗？") != DialogResult.OK)
+            {
+                return;
+            }
+
             label1.Visible = true;
-            try
-            {
-                _dbContext.UpdateDataSource(_dataTable);
 
-                MessageBox.Show(this, "保存成功");
+            Task.Run(() =>
+            {
+                try
+                {
+                    _dbContext.UpdateDataSource(_dataTable);
 
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, "更新数据发生异常：" + ex.Message);
-            }
-            finally
-            {
-                label1.Visible = false;
-            }
+                    InvokeHelper.Invoke(this, () => MessageBox.Show(this, "保存成功"));
+
+                }
+                catch (Exception ex)
+                {
+                    InvokeHelper.Invoke(this, () => MessageBox.Show(this, "更新数据发生异常：" + ex.Message));
+                }
+                finally
+                {
+                    InvokeHelper.Invoke(this, () => label1.Visible = false);
+                }
+            });
         }
 
         #region menus
@@ -130,6 +138,7 @@ namespace WEF.ModelGenerator.Forms
         }
 
         #endregion
+
         /// <summary>
         /// ctrl+s 保存
         /// </summary>
@@ -139,10 +148,24 @@ namespace WEF.ModelGenerator.Forms
         {
             ShortcutKeyHelper.Save(sender, e, Save);
         }
-
+        /// <summary>
+        /// ctrl+s 保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DataForm_KeyUp(object sender, KeyEventArgs e)
         {
             ShortcutKeyHelper.Save(sender, e, Save);
+        }
+
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Save();
         }
     }
 }

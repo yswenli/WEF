@@ -60,8 +60,7 @@ namespace WEF.ModelGenerator.Forms
             _dic.Add("分页", Resources.分页);
             _dic.Add("分割字段并分组统计", Resources.分割字段并分组统计);
             _dic.Add("MSSQL启用ServiceBroker", Resources.MSSQL启用ServiceBroker);
-            _dic.Add("SqlServer慢查询", Resources.SqlServer慢查询);
-
+            _dic.Add("SQL执行情况查询", Resources.SQL执行情况查询);
 
             comboBox1.Items.AddRange(_dic.Keys.ToArray());
 

@@ -21,14 +21,9 @@
 *描述：
 *
 *****************************************************************************/
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using WEF.Common;
 using WEF.Db;
@@ -45,6 +40,8 @@ namespace WEF.Batcher
         string _tableName;
 
         int _timeout = 180;
+
+        object _locker = new object();
 
         /// <summary>
         /// ado批量操作类
@@ -68,7 +65,7 @@ namespace WEF.Batcher
         /// <returns></returns>
         public DataTable Fill(int size = 100)
         {
-            using (DbConnection connection = _database.GetConnection(true))
+            using (DbConnection connection = _database.CreateConnection())
             {
                 var selectCommand = _database.CreateCommandByCommandType(_timeout, CommandType.Text, $"select top {size} * from {_tableName}");
 
@@ -104,10 +101,14 @@ namespace WEF.Batcher
         /// <returns></returns>
         public int Update(DataTable updateData)
         {
+            lock (_locker)
+            {
+
+            }
             if (updateData == null || updateData.Rows == null || updateData.Rows.Count < 1)
                 return -1;
 
-            using (DbConnection connection = _database.GetConnection(true))
+            using (DbConnection connection = _database.CreateConnection())
             {
                 using (var tran = connection.BeginTransaction())
                 {

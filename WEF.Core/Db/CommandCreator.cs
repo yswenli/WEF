@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * 所属域：WENLI-PC
  * 登录用户：yswenli
@@ -35,7 +35,7 @@ namespace WEF.Db
         /// <param name="db"></param>
         public CommandCreator(Database db)
         {
-            this._db = db;
+            _db = db;
         }
 
 
@@ -77,6 +77,7 @@ namespace WEF.Db
             }
             return CreateUpdateCommand<TEntity>(talbeName, fields, values, where);
         }
+
         /// <summary>
         /// 创建更新DbCommand
         /// </summary>

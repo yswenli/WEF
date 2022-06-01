@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2019
+ * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * CLR版本：4.0.30319.42000
  * 唯一标识：c7fbd6e7-f64f-4258-b6e8-af04f278e907
@@ -14,6 +14,7 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -196,6 +197,16 @@ namespace WEF
                                 if (val != null)
                                 {
                                     DataUtils.SetPropertyValue(target, targetProperty, val);
+                                }
+                            }
+                            else if (sourceProperty.PropertyType.GetInterface("IList", true) != null && targetProperty.PropertyType.GetInterface("IList", true) != null)
+                            {
+                                val = DataUtils.GetPropertyValue(source, sourceProperty);
+                                if (val != null)
+                                {
+                                    var sType = targetProperty.PropertyType.GenericTypeArguments[0];
+                                    var list = val.ConvertToList(sType, convertMatchType);
+                                    targetProperty.SetValue(target, list);
                                 }
                             }
                             else
@@ -1163,7 +1174,7 @@ namespace WEF
         {
             if (source != null)
             {
-                if (source.GetType().GetInterface("IEnumerable", true) != null)
+                if (source.GetType().GetInterface("IList", true) != null)
                 {
                     var list = (System.Collections.IEnumerable)source;
 
@@ -1180,6 +1191,43 @@ namespace WEF
             return null;
         }
 
+        /// <summary>
+        /// 转换成另外一个实体列表
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="targetType"></param>
+        /// <param name="convertMatchType"></param>
+        /// <returns></returns>
+        public static IList ConvertToList(this object source, Type targetType, ConvertMatchType convertMatchType = ConvertMatchType.IgnoreCase)
+        {
+            if (source != null)
+            {
+                if (source.GetType().GetInterface("IList", true) != null)
+                {
+                    var list = (System.Collections.IEnumerable)source;
+
+                    var result = targetType.CreateList();
+
+                    foreach (var item in list)
+                    {
+                        result.Add(item.ConvertTo(targetType, convertMatchType));
+                    }
+
+                    return result;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 创建
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static IList CreateList(this Type type)
+        {
+            return (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(new Type[] { type }));
+        }
         #endregion
 
         #region DataTable 与 Entity互相转换
@@ -1280,7 +1328,19 @@ namespace WEF
             return list;
         }
 
-
+        /// <summary>
+        /// 将数据表按指定字段排序
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="columnNames"></param>
+        /// <param name="sort"></param>
+        /// <returns></returns>
+        public static DataTable OrderBy(this DataTable dt, string columnNames, bool sort = true)
+        {
+            if (dt == null || dt.Rows.Count < 1) return dt;
+            dt.DefaultView.Sort = $"{columnNames} {(sort ? "ASC" : "DESC")}";
+            return dt.DefaultView.ToTable();
+        }
         /// <summary>
         /// 填充模型
         /// </summary>
@@ -1288,43 +1348,26 @@ namespace WEF
         /// <param name="source"></param>
         /// <param name="t2"></param>
         /// <param name="allowNull"></param>
+        /// <param name="fileds"></param>
         /// <returns></returns>
-        public static bool FillModel<T>(this T source, ref T t2, bool allowNull = false)
+        public static bool FillModel<T>(this T source, ref T t2, bool allowNull = false, List<string> fileds = null)
         {
-            try
+            if (source == null || t2 == null) return false;
+
+            var type = source.GetType();
+
+            var properties = type.GetProperties();
+
+            if (!allowNull)
             {
-                if (source != null)
+                if (fileds == null || fileds.Count < 1)
                 {
-                    var type = source.GetType();
-
-                    var properties = type.GetProperties();
-
-                    if (!allowNull)
+                    foreach (var item in properties)
                     {
-                        foreach (var item in properties)
+                        var v1 = item.GetValue(source, null);
+
+                        if (v1 != null)
                         {
-                            var v1 = item.GetValue(source, null);
-
-                            if (v1 != null)
-                            {
-                                var p2 = properties.Where(b => b.Name == item.Name).FirstOrDefault();
-
-                                if (p2 != null)
-                                {
-                                    if (item.PropertyType == p2.PropertyType)
-                                    {
-                                        p2.SetValue(t2, v1, null);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        foreach (var item in properties)
-                        {
-                            var v1 = item.GetValue(source, null);
-
                             var p2 = properties.Where(b => b.Name == item.Name).FirstOrDefault();
 
                             if (p2 != null)
@@ -1337,13 +1380,69 @@ namespace WEF
                         }
                     }
                 }
-                return true;
-            }
-            catch
-            {
+                else
+                {
+                    foreach (var item in properties)
+                    {
+                        var v1 = item.GetValue(source, null);
+
+                        if (v1 != null)
+                        {
+                            var p2 = properties.Where(b => b.Name == item.Name && fileds.Contains(b.Name)).FirstOrDefault();
+
+                            if (p2 != null)
+                            {
+                                if (item.PropertyType == p2.PropertyType)
+                                {
+                                    p2.SetValue(t2, v1, null);
+                                }
+                            }
+                        }
+                    }
+                }
 
             }
-            return false;
+            else
+            {
+                if (fileds == null || fileds.Count < 1)
+                {
+                    foreach (var item in properties)
+                    {
+                        var v1 = item.GetValue(source, null);
+
+                        var p2 = properties.Where(b => b.Name == item.Name).FirstOrDefault();
+
+                        if (p2 != null)
+                        {
+                            if (item.PropertyType == p2.PropertyType)
+                            {
+                                p2.SetValue(t2, v1, null);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var item in properties)
+                    {
+                        var v1 = item.GetValue(source, null);
+
+                        var p2 = properties.Where(b => b.Name == item.Name && fileds.Contains(b.Name)).FirstOrDefault();
+
+                        if (p2 != null)
+                        {
+                            if (item.PropertyType == p2.PropertyType)
+                            {
+                                p2.SetValue(t2, v1, null);
+                            }
+                        }
+                    }
+
+                }
+
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -1355,7 +1454,7 @@ namespace WEF
         /// <returns></returns>
         public static bool FillEntity<T>(this T source, ref T t2, bool allowNull = false) where T : Entity
         {
-            var result = FillModel(source, ref t2, allowNull);
+            var result = source.FillModel(ref t2, allowNull);
 
             t2.ClearModifyFields();
 
@@ -1363,7 +1462,7 @@ namespace WEF
         }
 
         /// <summary>
-        /// 从某个模型中填充当前实体
+        /// 从某个模型中取值填充当前实体
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
@@ -1372,9 +1471,24 @@ namespace WEF
         /// <param name="allowNull">是否填空值</param>
         public static bool FillFrom<T>(this IEntity entity, T target, ConvertMatchType convertMatchType = ConvertMatchType.IgnoreCase, bool allowNull = false) where T : class
         {
+            if (entity == null || target == null) return false;
             var s = (IEntity)target.ConvertTo(entity.GetType(), convertMatchType);
+            return s.FillModel(ref entity, allowNull, s.GetModifyFieldsStr());
+        }
 
-            return FillModel(s, ref entity, allowNull);
+        /// <summary>
+        /// 从某个模型中取值填充当前实体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="target"></param>
+        /// <param name="allowNull"></param>
+        /// <returns></returns>
+        public static bool CopyFrom<T>(this T entity, object target, bool allowNull = false) where T : Entity
+        {
+            if (entity == null || target == null) return false;
+            var s = SerializeHelper.Deserialize<T>(SerializeHelper.Serialize(target));
+            return s.FillModel(ref entity, allowNull, s.GetModifyFieldsStr());
         }
 
 
@@ -1515,6 +1629,8 @@ namespace WEF
                     return DbType.Guid;
                 case "Byte[]":
                     return DbType.Binary;
+                case "Boolean":
+                    return DbType.Boolean;
                 default:
                     throw new NotSupportedException("不支持的类型");
             }

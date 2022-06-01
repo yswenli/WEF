@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * 所属域：WENLI-PC
  * 登录用户：yswenli
@@ -10,9 +10,11 @@
  *****************************************************************************************************/
 
 using MySql.Data.MySqlClient;
+
 using System;
 using System.Data;
 using System.Data.Common;
+
 using WEF.Common;
 
 namespace WEF.Provider
@@ -54,13 +56,16 @@ namespace WEF.Provider
                     continue;
                 }
 
-                object value = p.Value;
+                MySqlParameter mySqlParam = (MySqlParameter)p;
+
+                object value = mySqlParam.Value;
+
                 if (value == DBNull.Value)
                 {
                     continue;
                 }
+
                 Type type = value.GetType();
-                MySqlParameter mySqlParam = (MySqlParameter)p;
 
                 if (type == typeof(Guid))
                 {
@@ -101,6 +106,59 @@ namespace WEF.Provider
                         {
                             mySqlParam.MySqlDbType = MySqlDbType.LongText;
                         }
+                        switch (type.Name)
+                        {
+                            case "Boolean":
+                                mySqlParam.MySqlDbType = MySqlDbType.Bit;
+                                break;
+                            case "Byte":
+                                mySqlParam.MySqlDbType = MySqlDbType.Byte;
+                                break;
+                            case "Int16":
+                                mySqlParam.MySqlDbType = MySqlDbType.Int16;
+                                break;
+                            case "Int32":
+                                mySqlParam.MySqlDbType = MySqlDbType.Int32;
+                                break;
+                            case "Int64":
+                                mySqlParam.MySqlDbType = MySqlDbType.Int64;
+                                break;
+                            case "Single":
+                                mySqlParam.MySqlDbType = MySqlDbType.Float;
+                                break;
+                            case "Double":
+                                mySqlParam.MySqlDbType = MySqlDbType.Double;
+                                break;
+                            case "Decimal":
+                                mySqlParam.MySqlDbType = MySqlDbType.Decimal;
+                                break;
+                            case "DateTime":
+                                mySqlParam.MySqlDbType = MySqlDbType.DateTime;
+                                break;
+                            case "Byte[]":
+                                var val = (byte[])value;
+                                if (val.Length < (2 ^ 8))
+                                {
+                                    mySqlParam.MySqlDbType = MySqlDbType.TinyBlob;
+                                }
+                                else if (val.Length < (2 ^ 16))
+                                {
+                                    mySqlParam.MySqlDbType = MySqlDbType.Blob;
+                                }
+                                else if (val.Length < (2 ^ 24))
+                                {
+                                    mySqlParam.MySqlDbType = MySqlDbType.MediumBlob;
+                                }
+                                else
+                                {
+                                    mySqlParam.MySqlDbType = MySqlDbType.LongBlob;
+                                }
+
+                                break;
+                        }
+                        break;
+                    case DbType.Boolean:
+                        mySqlParam.MySqlDbType = MySqlDbType.Bit;
                         break;
                     case DbType.Object:
                         mySqlParam.MySqlDbType = MySqlDbType.LongText;

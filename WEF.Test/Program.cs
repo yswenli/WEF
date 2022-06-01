@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using WEF.Common;
 using WEF.Expressions;
 using WEF.Models;
+using WEF.Test.Models;
 
 namespace WEF.Test
 {
@@ -25,6 +26,10 @@ namespace WEF.Test
     {
         static void Main(string[] args)
         {
+
+            //MySqlBitTypeTest.Test1();
+            MySqlBitTypeTest.Test3();
+
             //BatchTest.Test();
 
             //MutiTablesTest.Test();
@@ -36,8 +41,6 @@ namespace WEF.Test
             //Test4();
 
             //Test3();
-
-            MultyTableTest.Test();
 
             Console.ReadLine();
 
@@ -63,7 +66,7 @@ namespace WEF.Test
                 C_resv1 = "hello",
                 C_created = DateTime.Now
             };
-
+            
 
 
 
@@ -200,7 +203,7 @@ namespace WEF.Test
 
             var glist = giftwhere.ToList();
 
-            var glist2 = giftopt.Search().Where(b => b.Giftid.Like("1")).ToList();
+            var glist2 = giftopt.Search().Where(b => b.Giftid.Like("1") && b.Isdel.IsNotNull()).ToList();
 
             var giftids = giftopt.Search().Page(1, 10).ToList().Select(b => b.Giftid).ToList();
 
@@ -545,6 +548,6 @@ namespace WEF.Test
 
         }
 
-        
+
     }
 }

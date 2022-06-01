@@ -17,12 +17,9 @@
 *****************************************************************************/
 using Npgsql;
 
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
-
-using WEF.Provider;
 
 namespace WEF.Batcher
 {
@@ -67,8 +64,11 @@ namespace WEF.Batcher
         /// <param name="timeout"></param>
         public override void Execute(int batchSize = 10000, int timeout = 10 * 1000)
         {
-            _dataTable = ToDataTable(_list);
-            Execute(_dataTable);
+            lock (_locker)
+            {
+                _dataTable = ToDataTable(_list);
+                Execute(_dataTable);
+            }
         }
 
         /// <summary>
@@ -77,15 +77,13 @@ namespace WEF.Batcher
         /// <param name="dataTable"></param>
         public override void Execute(DataTable dataTable)
         {
-            NpgsqlConnection newConnection = (NpgsqlConnection)_database.CreateConnection();
+            if (dataTable == null || dataTable.Rows.Count == 0) return;
+
+            var newConnection = (NpgsqlConnection)_database.CreateConnection();
 
             try
             {
-                if (dataTable == null || dataTable.Rows.Count == 0) return;
-
                 var commandFormat = string.Format(CultureInfo.InvariantCulture, "COPY {0} FROM STDIN BINARY", dataTable.TableName);
-
-                newConnection.Open();
 
                 using (var writer = newConnection.BeginBinaryImport(commandFormat))
                 {

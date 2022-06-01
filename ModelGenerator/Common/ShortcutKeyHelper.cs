@@ -22,6 +22,13 @@ namespace WEF.ModelGenerator.Common
 {
     public class ShortcutKeyHelper
     {
+        public static void Enter(object sender, System.Windows.Forms.KeyEventArgs e, Action action)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                action?.Invoke();
+            }
+        }
 
         public static void AllSelect(object sender, System.Windows.Forms.KeyEventArgs e)
         {
@@ -70,14 +77,12 @@ namespace WEF.ModelGenerator.Common
         {
             if (e.KeyCode == Keys.Up)
             {
-                action1?.Invoke(-1);
-                e.Handled = true;
+                action1?.Invoke(-1);               
                 return;
             }
             if (e.KeyCode == Keys.Down)
             {
                 action1?.Invoke(1);
-                e.Handled = true;
                 return;
             }
             action2?.Invoke();
@@ -85,7 +90,20 @@ namespace WEF.ModelGenerator.Common
 
         public static void Save(object sender, System.Windows.Forms.KeyEventArgs e, Action action)
         {
-            if (e.Modifiers.CompareTo(Keys.Control) == 0 && e.KeyCode == Keys.C)
+            if (e.Modifiers.CompareTo(Keys.Control) == 0 && e.KeyCode == Keys.S)
+            {
+                action?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// 按下Ctrl+F
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="action"></param>
+        public static void Find(System.Windows.Forms.KeyEventArgs e, Action action)
+        {
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
             {
                 action?.Invoke();
             }

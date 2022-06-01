@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * 所属域：WENLI-PC
  * 登录用户：yswenli
@@ -1342,17 +1342,20 @@ namespace WEF.Common
 
         public static IEnumerable<T> ReaderToEnumerable<T>(this IDataReader reader)
         {
-            var info = new CacheInfo
+            using (reader)
             {
-                Deserializer = GetDeserializer(typeof(T), reader, 0, -1, false)
-            };
+                var info = new CacheInfo
+                {
+                    Deserializer = GetDeserializer(typeof(T), reader, 0, -1, false)
+                };
 
-            while (reader.Read())
-            {
-                dynamic next = info.Deserializer(reader);
+                while (reader.Read())
+                {
+                    dynamic next = info.Deserializer(reader);
 
-                yield return (T)next;
-            }
+                    yield return (T)next;
+                }
+            }                
         }
 
         /// <summary>

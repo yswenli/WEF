@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * 所属域：WENLI-PC
  * 登录用户：yswenli
@@ -300,6 +300,25 @@ namespace WEF.Expressions
             throw new Exception("暂时不支持的Lambda表达式写法！请使用经典写法！");
         }
 
+        static string GetTableName(System.Linq.Expressions.Expression expLeft)
+        {
+            var tableName = "";
+
+            if (expLeft is MemberExpression)
+            {
+                tableName = GetTableName("", ((MemberExpression)expLeft).Expression.Type);
+            }
+            else if (expLeft is MethodCallExpression)
+            {
+                tableName = GetTableName("", ((MemberExpression)(((MethodCallExpression)expLeft).Object)).Expression.Type);
+            }
+            else
+            {
+                tableName = GetTableName("", ((expLeft as UnaryExpression).Operand as MemberExpression).Expression.Type);
+            }
+            return tableName;
+        }
+
         private static WhereOperation LeftAndRight(string tableName, BinaryExpression be, QueryOperator co, WhereType wtype = WhereType.Where)
         {
             ColumnFunction leftFunction;
@@ -309,7 +328,7 @@ namespace WEF.Expressions
             System.Linq.Expressions.Expression expLeft = be.Left;
             System.Linq.Expressions.Expression expRight = be.Right;
 
-            tableName = GetTableName("", ((MemberExpression)expLeft).Expression.Type);
+            tableName = GetTableName(expLeft);
 
             if (be.Left.NodeType == ExpressionType.Convert)
             {

@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2019
+ * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * CLR版本：4.0.30319.42000
  * 唯一标识：fc1c123f-4e25-4cad-b5f8-10298585554f
@@ -255,7 +255,7 @@ namespace WEF
         }
 
         /// <summary>
-        /// 返回修改记录。v.10.5.5以上版本请不要使用此方法。
+        /// 返回修改记录
         /// </summary>
         public List<ModifyField> GetModifyFields()
         {
@@ -274,7 +274,7 @@ namespace WEF
             return _modifyFields;
         }
         /// <summary>
-        /// 返回修改记录。v.10.5.5及以下版本请不要使用此方法。
+        /// 返回修改记录
         /// </summary>
         public List<string> GetModifyFieldsStr()
         {

@@ -29,14 +29,19 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ContentForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tp1 = new System.Windows.Forms.TabPage();
             this.gridColumns = new System.Windows.Forms.DataGridView();
             this.contextMenuCopy = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.设为主键ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.取消主键ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.generateMarkDownDocToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -59,9 +64,7 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.cnnTxt = new System.Windows.Forms.TextBox();
             this.saveEntity = new System.Windows.Forms.SaveFileDialog();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.generateMarkDownDocToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button5 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tp1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridColumns)).BeginInit();
@@ -100,7 +103,7 @@
             this.tp1.Padding = new System.Windows.Forms.Padding(4);
             this.tp1.Size = new System.Drawing.Size(952, 777);
             this.tp1.TabIndex = 0;
-            this.tp1.Text = "生成设置";
+            this.tp1.Text = "代码生成设置";
             this.tp1.UseVisualStyleBackColor = true;
             // 
             // gridColumns
@@ -111,8 +114,24 @@
             this.gridColumns.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridColumns.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.gridColumns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridColumns.ContextMenuStrip = this.contextMenuCopy;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gridColumns.DefaultCellStyle = dataGridViewCellStyle2;
             this.gridColumns.Location = new System.Drawing.Point(4, 4);
             this.gridColumns.Margin = new System.Windows.Forms.Padding(4);
             this.gridColumns.Name = "gridColumns";
@@ -133,7 +152,7 @@
             this.toolStripSeparator2,
             this.generateMarkDownDocToolStripMenuItem});
             this.contextMenuCopy.Name = "contextMenuCopy";
-            this.contextMenuCopy.Size = new System.Drawing.Size(218, 140);
+            this.contextMenuCopy.Size = new System.Drawing.Size(218, 112);
             // 
             // copyToolStripMenuItem
             // 
@@ -141,6 +160,11 @@
             this.copyToolStripMenuItem.Size = new System.Drawing.Size(217, 24);
             this.copyToolStripMenuItem.Text = "复制";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(214, 6);
             // 
             // 设为主键ToolStripMenuItem
             // 
@@ -156,10 +180,23 @@
             this.取消主键ToolStripMenuItem.Text = "取消主键";
             this.取消主键ToolStripMenuItem.Click += new System.EventHandler(this.取消主键ToolStripMenuItem_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(214, 6);
+            // 
+            // generateMarkDownDocToolStripMenuItem
+            // 
+            this.generateMarkDownDocToolStripMenuItem.Name = "generateMarkDownDocToolStripMenuItem";
+            this.generateMarkDownDocToolStripMenuItem.Size = new System.Drawing.Size(217, 24);
+            this.generateMarkDownDocToolStripMenuItem.Text = "生成MarkDown文档";
+            this.generateMarkDownDocToolStripMenuItem.Click += new System.EventHandler(this.generateMarkDownDocToolStripMenuItem_Click);
+            // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.button5);
             this.groupBox1.Controls.Add(this.button4);
             this.groupBox1.Controls.Add(this.button3);
             this.groupBox1.Controls.Add(this.button2);
@@ -196,9 +233,9 @@
             this.button3.Location = new System.Drawing.Point(378, 275);
             this.button3.Margin = new System.Windows.Forms.Padding(4);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(121, 44);
+            this.button3.Size = new System.Drawing.Size(167, 44);
             this.button3.TabIndex = 8;
-            this.button3.Text = "生成Json";
+            this.button3.Text = "生成业务模型Json";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -230,9 +267,9 @@
             this.checkBox1.Location = new System.Drawing.Point(120, 220);
             this.checkBox1.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(134, 19);
+            this.checkBox1.Size = new System.Drawing.Size(149, 19);
             this.checkBox1.TabIndex = 6;
-            this.checkBox1.Text = "生成贫血实体类";
+            this.checkBox1.Text = "生成业务模型代码";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // cbToupperFrstword
@@ -314,7 +351,7 @@
             this.tp2.Padding = new System.Windows.Forms.Padding(4);
             this.tp2.Size = new System.Drawing.Size(952, 777);
             this.tp2.TabIndex = 1;
-            this.tp2.Text = "实体代码预览";
+            this.tp2.Text = "生成代码预览";
             this.tp2.UseVisualStyleBackColor = true;
             // 
             // txtContent
@@ -382,22 +419,16 @@
             this.cnnTxt.Size = new System.Drawing.Size(960, 25);
             this.cnnTxt.TabIndex = 7;
             // 
-            // toolStripSeparator1
+            // button5
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(214, 6);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(214, 6);
-            // 
-            // generateMarkDownDocToolStripMenuItem
-            // 
-            this.generateMarkDownDocToolStripMenuItem.Name = "generateMarkDownDocToolStripMenuItem";
-            this.generateMarkDownDocToolStripMenuItem.Size = new System.Drawing.Size(217, 24);
-            this.generateMarkDownDocToolStripMenuItem.Text = "生成MarkDown文档";
-            this.generateMarkDownDocToolStripMenuItem.Click += new System.EventHandler(this.generateMarkDownDocToolStripMenuItem_Click);
+            this.button5.Location = new System.Drawing.Point(553, 275);
+            this.button5.Margin = new System.Windows.Forms.Padding(4);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(199, 44);
+            this.button5.TabIndex = 10;
+            this.button5.Text = "生成数据表MarkDown文档";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // ContentForm
             // 
@@ -461,5 +492,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem generateMarkDownDocToolStripMenuItem;
+        private System.Windows.Forms.Button button5;
     }
 }

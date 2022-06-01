@@ -24,9 +24,11 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using System.Linq.Expressions;
 
 using WEF.Common;
+using WEF.Db;
 using WEF.MvcPager;
 using WEF.Section;
 
@@ -225,6 +227,18 @@ namespace WEF
         {
             return _db.Update(entities);
         }
+
+        /// <summary>
+        /// 更新实体
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public int Update(T entity, Expression<Func<T, bool>> lambdaWhere)
+        {
+            return _db.Update<T>(entity, lambdaWhere);
+        }
+
         /// <summary>
         /// 删除实体
         /// <param name="entity">传进的实体</param>
@@ -248,6 +262,7 @@ namespace WEF
             }
             return -1;
         }
+
         /// <summary>
         /// 删除
         /// </summary>
@@ -265,8 +280,9 @@ namespace WEF
 
         /// <summary>
         /// 批量删除实体
-        /// <param name="obj">传进的实体列表</param>
         /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
         public int Deletes(IEnumerable<T> entities)
         {
             var list = System.Linq.Enumerable.ToList(entities);
@@ -293,6 +309,16 @@ namespace WEF
         {
             var list = GetList(ids);
             return Deletes(list);
+        }
+
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public int Delete(Expression<Func<T, bool>> lambdaWhere)
+        {
+            return _db.Delete<T>(lambdaWhere);
         }
 
         /// <summary>
@@ -323,7 +349,7 @@ namespace WEF
         /// <summary>
         /// 批量持久化实体
         /// <param name="tran">事务</param>
-        /// <param name="entity">传进的实体列表</param>
+        /// <param name="entities">传进的实体列表</param>
         /// </summary>
         public int Save(DbTransaction tran, List<T> entities)
         {
@@ -338,12 +364,66 @@ namespace WEF
             return _db.FromSql(sql);
         }
         /// <summary>
+        /// 执行sql语句,带参数
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="inputParamas"></param>
+        /// <returns></returns>
+        public SqlSection FromSql(string sql, Dictionary<string, object> inputParamas)
+        {
+            return _db.FromSqlWithdAutomatic(sql, inputParamas.ToArray());
+        }
+        /// <summary>
+        /// 执行sql语句,带参数
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="inputParamas"></param>
+        /// <returns></returns>
+        public SqlSection FromSql<Model>(string sql, Model inputParamas) where Model : class, new()
+        {
+            return _db.FromSqlWithdModel(sql, inputParamas);
+        }
+
+        /// <summary>
         /// 执行存储过程
         /// <param name="procName"></param>
         /// </summary>
         public ProcSection FromProc(string procName)
         {
             return _db.FromProc(procName);
-        }        
+        }
+
+        /// <summary>
+        /// 执行存储过程，带参数
+        /// </summary>
+        /// <param name="procName"></param>
+        /// <param name="inputParamas"></param>
+        /// <returns></returns>
+        public ProcSection FromProc(string procName, Dictionary<string, object> inputParamas)
+        {
+            return _db.FromProc(procName, inputParamas);
+        }
+        /// <summary>
+        /// 执行存储过程，带参数
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="procName"></param>
+        /// <param name="inputParamas"></param>
+        /// <returns></returns>
+        public ProcSection FromProc<Model>(string procName, Model inputParamas) where Model : class, new()
+        {
+            return _db.FromProc(procName, inputParamas);
+        }
+
+        /// <summary>
+        /// 创建事务，使用事务curd时推荐方式 using(var tran=CreateTransaction()) tran.Commit() 方式
+        /// </summary>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
+        public DbTrans CreateTransaction(int timeout = 30)
+        {
+            return _db.BeginTransaction(timeout);
+        }
     }
 }

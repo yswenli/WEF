@@ -21,14 +21,9 @@
 *描述：
 *
 *****************************************************************************/
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using WEF.Common;
 using WEF.Db;
@@ -45,6 +40,8 @@ namespace WEF.Batcher
         string _tableName;
 
         int _timeout = 180;
+
+        object _locker = new object();
 
         /// <summary>
         /// ado批量操作类
@@ -68,7 +65,7 @@ namespace WEF.Batcher
         /// <returns></returns>
         public DataTable Fill(int size = 100)
         {
-            using (DbConnection connection = _database.GetConnection(true))
+            using (DbConnection connection = _database.CreateConnection())
             {
                 var selectCommand = _database.CreateCommandByCommandType(_timeout, CommandType.Text, $"select top {size} * from {_tableName}");
 
@@ -104,35 +101,38 @@ namespace WEF.Batcher
         /// <returns></returns>
         public int Update(DataTable updateData)
         {
-            if (updateData == null || updateData.Rows == null || updateData.Rows.Count < 1)
-                return -1;
-
-            using (DbConnection connection = _database.GetConnection(true))
+            lock (_locker)
             {
-                using (var tran = connection.BeginTransaction())
+                if (updateData == null || updateData.Rows == null || updateData.Rows.Count < 1)
+                    return -1;
+
+                using (DbConnection connection = _database.CreateConnection())
                 {
-                    var selectCommand = _database.CreateCommandByCommandType(_timeout, CommandType.Text, $"select * from {_tableName} where 1=2");
-
-                    if (_database.DbProvider.DatabaseType != DatabaseType.SqlServer && _database.DbProvider.DatabaseType != DatabaseType.SqlServer9)
+                    using (var tran = connection.BeginTransaction())
                     {
-                        selectCommand = _database.CreateCommandByCommandType(_timeout, CommandType.Text, $"select * from {_tableName} where 1=2");
-                    }
+                        var selectCommand = _database.CreateCommandByCommandType(_timeout, CommandType.Text, $"select * from {_tableName} where 1=2");
 
-                    _database.PrepareCommand(selectCommand, connection);
+                        if (_database.DbProvider.DatabaseType != DatabaseType.SqlServer && _database.DbProvider.DatabaseType != DatabaseType.SqlServer9)
+                        {
+                            selectCommand = _database.CreateCommandByCommandType(_timeout, CommandType.Text, $"select * from {_tableName} where 1=2");
+                        }
 
-                    selectCommand.Transaction = tran;
+                        _database.PrepareCommand(selectCommand, connection);
 
-                    using (DbDataAdapter adapter = _database.GetDataAdapter())
-                    {
-                        adapter.SelectCommand = selectCommand;
+                        selectCommand.Transaction = tran;
 
-                        _database.PrepareAdapter(adapter, tran);
+                        using (DbDataAdapter adapter = _database.GetDataAdapter())
+                        {
+                            adapter.SelectCommand = selectCommand;
 
-                        var count = adapter.Update(updateData);
+                            _database.PrepareAdapter(adapter, tran);
 
-                        tran.Commit();
+                            var count = adapter.Update(updateData);
 
-                        return count;
+                            tran.Commit();
+
+                            return count;
+                        }
                     }
                 }
             }

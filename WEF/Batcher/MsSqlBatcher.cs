@@ -15,7 +15,6 @@
 *版 本 号： V1.0.0.0
 *描    述：
 *****************************************************************************/
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -64,11 +63,14 @@ namespace WEF.Batcher
         /// <param name="timeout"></param>
         public override void Execute(int batchSize = 10000, int timeout = 10 * 1000)
         {
-            if (_list == null || !_list.Any()) return;
+            lock (_locker)
+            {
+                if (_list == null || !_list.Any()) return;
 
-            _dataTable = ToDataTable(_list);
+                _dataTable = ToDataTable(_list);
 
-            Execute(_dataTable);
+                Execute(_dataTable);
+            }            
         }
 
 
@@ -78,15 +80,13 @@ namespace WEF.Batcher
         /// <param name="dataTable"></param>
         public override void Execute(DataTable dataTable)
         {
-            if (_list == null || !_list.Any()) return;
+            if (dataTable == null || dataTable.Rows == null || dataTable.Rows.Count == 0) return;
 
-            SqlConnection newConnection = (SqlConnection)_database.CreateConnection();
+            var dbConnect = (SqlConnection)_database.CreateConnection();
 
             try
             {
-                if (dataTable == null || dataTable.Rows == null || dataTable.Rows.Count == 0) return;
-
-                var sbc = new SqlBulkCopy(newConnection);
+                var sbc = new SqlBulkCopy(dbConnect);
 
                 using (sbc)
                 {
@@ -94,11 +94,11 @@ namespace WEF.Batcher
 
                     sbc.DestinationTableName = dataTable.TableName;
 
-                    sbc.BulkCopyTimeout = 30*1000;
+                    sbc.BulkCopyTimeout = 30 * 1000;
 
-                    if (newConnection.State != ConnectionState.Open)
+                    if (dbConnect.State != ConnectionState.Open)
                     {
-                        newConnection.Open();
+                        dbConnect.Open();
                     }
 
                     sbc.WriteToServer(dataTable);
@@ -106,8 +106,8 @@ namespace WEF.Batcher
             }
             finally
             {
-                if (newConnection.State == ConnectionState.Open)
-                    newConnection.Close();
+                if (dbConnect.State == ConnectionState.Open)
+                    dbConnect.Close();
                 dataTable?.Clear();
                 _list.Clear();
             }

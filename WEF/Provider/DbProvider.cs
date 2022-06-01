@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * 所属域：WENLI-PC
  * 登录用户：yswenli
@@ -162,6 +162,10 @@ namespace WEF.Provider
             get
             {
                 return dbConnStrBuilder.ConnectionString;
+            }
+            internal set
+            {
+                dbConnStrBuilder.ConnectionString = value;
             }
         }
 
@@ -487,7 +491,6 @@ namespace WEF.Provider
                     }
                 }
                 catch { }
-
 
             }
         }

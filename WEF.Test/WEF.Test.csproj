@@ -49,9 +49,12 @@
     <Compile Include="BatchTest.cs" />
     <Compile Include="BatchTest2.cs" />
     <Compile Include="Models\ArticleKind.cs" />
+    <Compile Include="Models\DBOcJoybuycarriercode.cs" />
     <Compile Include="Models\DBGift.cs" />
+    <Compile Include="Models\DBOcWarehouseArea.cs" />
     <Compile Include="Models\DBTicketOrder.cs" />
     <Compile Include="Models\DBUserTask.cs" />
+    <Compile Include="Models\DBWarehouseInboundData.cs" />
     <Compile Include="Models\LiveLog.cs" />
     <Compile Include="Models\Rule.cs" />
     <Compile Include="Models\SUser.cs" />
@@ -62,6 +65,7 @@
     <Compile Include="Models\Users.cs" />
     <Compile Include="MultyTableTest.cs" />
     <Compile Include="MutiTablesTest.cs" />
+    <Compile Include="MySqlBitTypeTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

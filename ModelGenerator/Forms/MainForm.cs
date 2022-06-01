@@ -15,14 +15,15 @@
 *版 本 号： V1.0.0.0
 *描    述：
 *****************************************************************************/
+using CCWin;
+
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using CCWin;
+using TxtReplaceTool;
 
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Forms;
@@ -45,17 +46,41 @@ namespace WEF.ModelGenerator
             dockPanel.Theme = vS2015LightTheme1;
 
             this.SizeChanged += MainForm_SizeChanged;
+
+            MessageQueue.Instance.OnMessage += Instance_OnMessage;
+            MessageQueue.Instance.OnComplete += Instance_OnComplete;
+        }
+
+
+
+        private void Instance_OnMessage(string msg)
+        {
+            this.BeginInvoke(new Action(() =>
+            {
+                toolStripStatusLabel2.Text = msg;
+            }));
+        }
+
+        private void Instance_OnComplete()
+        {
+            this.BeginInvoke(new Action(() =>
+            {
+                toolStripStatusLabel2.Text = "就绪";
+            }));
         }
 
         private void MainForm_SizeChanged(object sender, EventArgs e)
         {
             dockPanel.Size = new Size(this.Size.Width - 10, this.Size.Height - 82);
+            toolStripStatusLabel2.Width = statusStrip1.Width - toolStripStatusLabel1.Width - 15;
         }
 
         #region 打开数据库视图
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            MessageQueue.Instance.SubMsg("正在初始化界面...");
+
             MainForm_SizeChanged(null, null);
 
             new Thread(new ThreadStart(() =>
@@ -68,6 +93,7 @@ namespace WEF.ModelGenerator
 
                     if (!DockContentHelper.Load(dockPanel))
                     {
+                        MessageQueue.Instance.SubMsg("正在加载服务器配置...");
                         _leftPannelForm.OnNewContentForm += lp_newcontentForm;
                         _leftPannelForm.OnNewSqlForm += lp_newsqlForm;
                         _leftPannelForm.OnNewDataForm += _leftPannelForm_OnNewDataForm;
@@ -75,15 +101,19 @@ namespace WEF.ModelGenerator
                         _leftPannelForm.DockTo(dockPanel, DockStyle.Left);
                     }
 
+                    MessageQueue.Instance.SubMsg("正在加载模板配置...");
+
                     _sqlTemplateForm = new SQLTemplateForm();
                     _sqlTemplateForm.Show(dockPanel);
                     _sqlTemplateForm.DockTo(dockPanel, DockStyle.Right);
+
+                    MessageQueue.Instance.SubMsg("正在加载内容项配置...");
 
                     _collectForm = new CollectForm();
                     _collectForm.Show(dockPanel);
                     _collectForm.DockTo(dockPanel, DockStyle.Right);
 
-                    
+                    MessageQueue.Instance.SubMsg("就绪");
                 });
             })).Start();
         }
@@ -199,6 +229,12 @@ namespace WEF.ModelGenerator
             }
 
         }
+
+        private void xSDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new XsdGeneratorForm().ShowDialog(this);
+        }
+
         /// <summary>
         /// json工具
         /// </summary>
@@ -224,9 +260,38 @@ namespace WEF.ModelGenerator
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cleanUpGarbageToolStripMenuItem_Click(object sender, EventArgs e)
+        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new FileCleaner.FileClearForm().ShowDialog(this);
+        }
+
+        /// <summary>
+        /// 文件文本查找替换
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void repalceFileTxtToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new TxtReplaceForm().ShowDialog(this);
+        }
+        /// <summary>
+        /// base64转码
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void base64ConvertToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new Base64Form().ShowDialog(this);
+        }
+
+        /// <summary>
+        /// log读取工具
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void log读取工具ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new ApiLogForm().ShowDialog(this);
         }
 
         #region 关于菜单
@@ -282,6 +347,8 @@ namespace WEF.ModelGenerator
             }
             catch { }
         }
+
+
 
 
 

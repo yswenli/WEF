@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2019
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * 所属域：WENLI-PC
  * 登录用户：yswenli
@@ -143,6 +143,7 @@ namespace WEF.ModelGenerator.Common
             //plus.AppendLine("using System.Collections.Generic;");
             //plus.AppendLine("using System.Data.Common;");
             //plus.AppendLine("using System.Linq.Expressions;");
+            plus.AppendLine("using System.Data;");
             plus.AppendLine("using System.Runtime.Serialization;");
             plus.AppendLine("using WEF;");
             plus.AppendLine("using WEF.Common;");
@@ -370,7 +371,59 @@ namespace WEF.ModelGenerator.Common
                 plus.AppendSpaceLine(3, "/// <summary>");
                 plus.AppendSpaceLine(3, "/// " + col.Name + " " + col.DeText);
                 plus.AppendSpaceLine(3, "/// </summary>");
-                plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName,\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
+
+                switch (col.DataTypeName)
+                {
+                    case "bool":
+                    case "bool?":
+                        plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName," + "DbType.Boolean,1" + ",\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
+                        break;
+                    case "byte":
+                    case "byte?":
+                        plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName," + "DbType.Byte,1" + ",\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
+                        break;
+                    case "short":
+                    case "short?":
+                        plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName," + "DbType.Int16,1" + ",\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
+                        break;
+                    case "int":
+                    case "int?":
+                        plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName," + "DbType.Int32,1" + ",\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
+                        break;
+                    case "long":
+                    case "long?":
+                        plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName," + "DbType.Int64,1" + ",\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
+                        break;
+                    case "float":
+                    case "float?":
+                        plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName," + "DbType.Single,1" + ",\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
+                        break;
+                    case "double":
+                    case "double?":
+                        plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName," + "DbType.Double,1" + ",\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
+                        break;
+                    case "decimal":
+                    case "decimal?":
+                        plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName," + "DbType.Decimal,1" + ",\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
+                        break;
+                    case "Enum":
+                    case "Enum?":
+                        plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName," + "DbType.Decimal,1" + ",\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
+                        break;
+                    case "DateTime":
+                    case "DateTime?":
+                        plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName," + "DbType.DateTime,1" + ",\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
+                        break;
+                    case "Guid":
+                    case "Guid?":
+                        plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName," + "DbType.Guid,1" + ",\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
+                        break;
+                    case "object":
+                    case "string":                        
+                    default:
+                        plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName,\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
+                        break;
+                }
             }
             plus.AppendSpaceLine(2, "}");
             plus.AppendSpaceLine(2, "#endregion");

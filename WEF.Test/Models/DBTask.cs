@@ -832,7 +832,7 @@ namespace WEF.Models
     /// <summary>
     /// 实体类DBTask操作类
     /// </summary>
-    public partial class DBTaskRepository : BaseRepository<DBTask>
+    public partial class DBTaskRepository : IRepository<DBTask>
     {
         DBContext db;
         /// <summary>
@@ -988,6 +988,11 @@ namespace WEF.Models
         public ProcSection FromProc(string procName)
         {
             return db.FromProc(procName);
+        }
+
+        public int Deletes(IEnumerable<DBTask> objs)
+        {
+            throw new NotImplementedException();
         }
     }
 

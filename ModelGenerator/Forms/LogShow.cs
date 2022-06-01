@@ -25,19 +25,22 @@ namespace WEF.ModelGenerator
         /// <param name="e"></param>
         private void LogShow_Load(object sender, EventArgs e)
         {
-            string[] files = Directory.GetFiles(Program.errorpath, "*.txt", SearchOption.TopDirectoryOnly);
-            List<Filepath> list = new List<Filepath>();
-            foreach (string file in files)
+            if (Directory.Exists(Program.errorpath))
             {
-                if (string.IsNullOrEmpty(file))
-                    continue;
+                string[] files = Directory.GetFiles(Program.errorpath, "*.txt", SearchOption.TopDirectoryOnly);
+                List<Filepath> list = new List<Filepath>();
+                foreach (string file in files)
+                {
+                    if (string.IsNullOrEmpty(file))
+                        continue;
 
-                list.Add(new Filepath(file));
+                    list.Add(new Filepath(file));
+                }
+                cbmerrorlist.Items.AddRange(list.ToArray());
+                cbmerrorlist.SelectedIndex = cbmerrorlist.Items.Count - 1;
+
+                geterror();
             }
-            cbmerrorlist.Items.AddRange(list.ToArray());
-            cbmerrorlist.SelectedIndex = cbmerrorlist.Items.Count - 1;
-
-            geterror();
         }
 
         public class Filepath

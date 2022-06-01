@@ -11,6 +11,8 @@ namespace WEF.DbDAL.SQLServer
         private SqlConnection _connect;
         private bool isdbosp = false;
 
+        object _locker = new object();
+
         public DbObject()
         {
             this._connect = new SqlConnection();
@@ -339,7 +341,7 @@ namespace WEF.DbDAL.SQLServer
 
         public DataTable GetDBList()
         {
-            string sQLString = "select name,user_name() cuser,'DB' type,crdate dates from sysdatabases";
+            string sQLString = "select name,user_name() cuser,'DB' type,crdate dates from sysdatabases order by name";
             return this.Query("master", sQLString).Tables[0];
         }
 
@@ -582,6 +584,7 @@ namespace WEF.DbDAL.SQLServer
 
         private SqlCommand OpenDB(string DbName)
         {
+
             try
             {
                 if (this._connect.ConnectionString == "")
@@ -608,21 +611,25 @@ namespace WEF.DbDAL.SQLServer
                 string message = exception.Message;
                 return null;
             }
+
         }
 
         public DataSet Query(string DbName, string SQLString)
         {
-            DataSet dataSet = new DataSet();
-            try
+            lock (_locker)
             {
-                this.OpenDB(DbName);
-                new SqlDataAdapter(SQLString, this._connect).Fill(dataSet, "ds");
+                DataSet dataSet = new DataSet();
+                try
+                {
+                    this.OpenDB(DbName);
+                    new SqlDataAdapter(SQLString, this._connect).Fill(dataSet, "ds");
+                }
+                catch (SqlException exception)
+                {
+                    throw new Exception(exception.Message + "\n" + SQLString);
+                }
+                return dataSet;
             }
-            catch (SqlException exception)
-            {
-                throw new Exception(exception.Message + "\n" + SQLString);
-            }
-            return dataSet;
         }
 
         public bool RenameTable(string DbName, string OldName, string NewName)

@@ -15,11 +15,10 @@
 *版 本 号： V1.0.0.0
 *描    述：
 *****************************************************************************/
-using System;
+using Oracle.ManagedDataAccess.Client;
+
 using System.Collections.Generic;
 using System.Data;
-
-using Oracle.ManagedDataAccess.Client;
 
 namespace WEF.Batcher
 {
@@ -64,8 +63,11 @@ namespace WEF.Batcher
         /// <param name="timeout"></param>
         public override void Execute(int batchSize = 10000, int timeout = 10 * 1000)
         {
-            _dataTable = ToDataTable(_list);
-            Execute(_dataTable);
+            lock (_locker)
+            {
+                _dataTable = ToDataTable(_list);
+                Execute(_dataTable);
+            }
         }
 
 
@@ -75,13 +77,13 @@ namespace WEF.Batcher
         /// <param name="dataTable"></param>
         public override void Execute(DataTable dataTable)
         {
-            OracleConnection newConnection = (OracleConnection)_database.CreateConnection();
+            if (dataTable == null || dataTable.Rows.Count == 0) return;
+
+            var dbConnect = (OracleConnection)_database.CreateConnection();
 
             try
             {
-                if (dataTable == null || dataTable.Rows.Count == 0) return;
-
-                var sbc = new OracleBulkCopy(newConnection);
+                var sbc = new OracleBulkCopy(dbConnect);
 
                 using (sbc)
                 {
@@ -91,9 +93,9 @@ namespace WEF.Batcher
 
                     sbc.BulkCopyTimeout = 30 * 1000;
 
-                    if (newConnection.State != ConnectionState.Open)
+                    if (dbConnect.State != ConnectionState.Open)
                     {
-                        newConnection.Open();
+                        dbConnect.Open();
                     }
 
                     sbc.WriteToServer(dataTable);
@@ -101,8 +103,8 @@ namespace WEF.Batcher
             }
             finally
             {
-                if (newConnection.State == ConnectionState.Open)
-                    newConnection.Close();
+                if (dbConnect.State == ConnectionState.Open)
+                    dbConnect.Close();
                 dataTable?.Clear();
                 _list.Clear();
             }

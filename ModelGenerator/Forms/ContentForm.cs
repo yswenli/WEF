@@ -306,16 +306,7 @@ namespace WEF.ModelGenerator
         {
             if (tabControl1.SelectedIndex == 1)
             {
-                GenerateModel(checkBox1.Checked);
-
-                if (_isOk)
-                {
-                    tabControl1.SelectedIndex = 1;
-                }
-                else
-                {
-                    tabControl1.SelectedIndex = 0;
-                }
+                button2_Click(null, null);
             }
         }
 
@@ -341,7 +332,7 @@ namespace WEF.ModelGenerator
         private void button3_Click(object sender, EventArgs e)
         {
             var json = GenerateJson();
-            new TextForm("WEF代码生成工具", json, true).ShowDialog(this);
+            new TextForm("生成Josn-WEF代码生成工具", json, true).ShowDialog(this);
         }
 
         //快捷业务代码生成
@@ -462,11 +453,18 @@ namespace WEF.ModelGenerator
                 {
                     sb.AppendLine($"|{row.Cells["ColumnName"].Value}|{row.Cells["TypeName"].Value}({row.Cells["Length"].Value})|{row.Cells["cisNull"].Value}|{row.Cells["defaultVal"].Value}|{row.Cells["deText"].Value}|");
                 }
-                Clipboard.SetText(sb.ToString());
-                MessageBox.Show(this, "已将结构文档生成到剪切板！", "生成MarkDown文档提示");
+                new TextForm("生成MarkDown文档-WEF代码生成工具", sb.ToString(), true).ShowDialog(this);
             }
         }
-
+        /// <summary>
+        /// 生成markdown文档
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button5_Click(object sender, EventArgs e)
+        {
+            generateMarkDownDocToolStripMenuItem_Click(null, null);
+        }
         #endregion
 
 

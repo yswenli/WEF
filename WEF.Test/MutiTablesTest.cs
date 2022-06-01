@@ -360,7 +360,7 @@ namespace WEF.Test
     /// <summary>
     /// 实体类Rules操作类
     /// </summary>
-    public partial class RulesRepository : BaseRepository<Rules>
+    public partial class RulesRepository : IRepository<Rules>
     {
         DBContext db;
         /// <summary>
@@ -570,6 +570,11 @@ namespace WEF.Test
         public ProcSection FromProc(string procName)
         {
             return db.FromProc(procName);
+        }
+
+        public int Deletes(IEnumerable<Rules> objs)
+        {
+            throw new NotImplementedException();
         }
     }
 

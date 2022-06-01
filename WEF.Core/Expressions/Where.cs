@@ -18,8 +18,11 @@ namespace WEF.Expressions
     public class Where<T> : WhereBuilder
         where T : Entity
     {
-        string _tableName ;
+        string _tableName;
 
+        /// <summary>
+        /// Where条件拼接
+        /// </summary>
         public Where()
         {
             _tableName = string.Empty;
@@ -35,12 +38,20 @@ namespace WEF.Expressions
         }
 
         /// <summary>
+        /// Where条件拼接
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        public Where(Expression<Func<T, bool>> lambdaWhere)
+        {
+            And(lambdaWhere);
+        }
+
+        /// <summary>
         /// AND
         /// </summary>
         public void And(Expression<Func<T, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(_tableName,lambdaWhere);
-            And(tempWhere);
+            And(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
         }
         /// <summary>
         /// AND
