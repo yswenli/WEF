@@ -383,4 +383,16 @@ ORDER BY total_worker_time DESC
 --mysql慢查询
 select * from information_schema.`PROCESSLIST` where info is not null ORDER BY Time desc limit 0,10</value>
   </data>
+  <data name="In排序" xml:space="preserve">
+    <value>sql查询按照in语句的顺序返回结果
+ 发表于2019-04-22  分类： sql  评论： 0  阅读：1580
+sqlite写法
+SELECT * FROM example WHERE id IN('4','3','2','1') ORDER BY INSTR('4,3,2,1',id);
+mysql写法
+SELECT * FROM example WHERE id IN(4,3,2,1) ORDER BY INSTR(',4,3,2,1,',CONCAT(',',id,','));
+oracle写法
+select name from example where id in（4,3,2,1）order by instr('4,3,2,1',id);
+sqlserver写法
+Select * From example Where id in (4,3,2,1)  Order By charindex(','+ id +',', ',4,3,2,1,');</value>
+  </data>
 </root>

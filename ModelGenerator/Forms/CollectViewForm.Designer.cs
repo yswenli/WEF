@@ -39,7 +39,7 @@ namespace WEF.ModelGenerator.Forms
             // skinWaterTextBox1
             // 
             this.skinWaterTextBox1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.skinWaterTextBox1.Location = new System.Drawing.Point(51, 52);
+            this.skinWaterTextBox1.Location = new System.Drawing.Point(10, 44);
             this.skinWaterTextBox1.MaxLength = 100;
             this.skinWaterTextBox1.Name = "skinWaterTextBox1";
             this.skinWaterTextBox1.Size = new System.Drawing.Size(574, 27);
@@ -50,7 +50,7 @@ namespace WEF.ModelGenerator.Forms
             // skinWaterTextBox2
             // 
             this.skinWaterTextBox2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.skinWaterTextBox2.Location = new System.Drawing.Point(51, 105);
+            this.skinWaterTextBox2.Location = new System.Drawing.Point(10, 80);
             this.skinWaterTextBox2.MaxLength = 500;
             this.skinWaterTextBox2.Multiline = true;
             this.skinWaterTextBox2.Name = "skinWaterTextBox2";
@@ -66,7 +66,7 @@ namespace WEF.ModelGenerator.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.skinWaterTextBox3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.skinWaterTextBox3.Location = new System.Drawing.Point(51, 276);
+            this.skinWaterTextBox3.Location = new System.Drawing.Point(10, 227);
             this.skinWaterTextBox3.Multiline = true;
             this.skinWaterTextBox3.Name = "skinWaterTextBox3";
             this.skinWaterTextBox3.ScrollBars = System.Windows.Forms.ScrollBars.Both;
@@ -77,7 +77,7 @@ namespace WEF.ModelGenerator.Forms
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(514, 774);
+            this.button1.Location = new System.Drawing.Point(473, 701);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(111, 48);
             this.button1.TabIndex = 3;
@@ -89,7 +89,7 @@ namespace WEF.ModelGenerator.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(684, 848);
+            this.ClientSize = new System.Drawing.Size(599, 757);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.skinWaterTextBox3);
             this.Controls.Add(this.skinWaterTextBox2);

@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Properties;
 
@@ -61,6 +62,7 @@ namespace WEF.ModelGenerator.Forms
             _dic.Add("分割字段并分组统计", Resources.分割字段并分组统计);
             _dic.Add("MSSQL启用ServiceBroker", Resources.MSSQL启用ServiceBroker);
             _dic.Add("SQL执行情况查询", Resources.SQL执行情况查询);
+            _dic.Add("In排序", Resources.In排序);
 
             comboBox1.Items.AddRange(_dic.Keys.ToArray());
 
@@ -77,6 +79,13 @@ namespace WEF.ModelGenerator.Forms
         private void textBox1_KeyUp(object sender, KeyEventArgs e)
         {
             ShortcutKeyHelper.AllSelect(sender, e);
+        }
+
+        private void textBox1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var title = comboBox1.Items[comboBox1.SelectedIndex].ToString();
+            var txt = textBox1.Text;
+            new TextForm(title, txt, true).ShowDialog(this);
         }
     }
 }

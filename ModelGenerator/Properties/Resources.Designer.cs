@@ -19,7 +19,7 @@ namespace WEF.ModelGenerator.Properties {
     // 类通过类似于 ResGen 或 Visual Studio 的工具自动生成的。
     // 若要添加或移除成员，请编辑 .ResX 文件，然后重新运行 ResGen
     // (以 /str 作为命令选项)，或重新生成 VS 项目。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -87,6 +87,24 @@ namespace WEF.ModelGenerator.Properties {
             get {
                 object obj = ResourceManager.GetObject("HR", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 sql查询按照in语句的顺序返回结果
+        /// 发表于2019-04-22  分类： sql  评论： 0  阅读：1580
+        ///sqlite写法
+        ///SELECT * FROM example WHERE id IN(&apos;4&apos;,&apos;3&apos;,&apos;2&apos;,&apos;1&apos;) ORDER BY INSTR(&apos;4,3,2,1&apos;,id);
+        ///mysql写法
+        ///SELECT * FROM example WHERE id IN(4,3,2,1) ORDER BY INSTR(&apos;,4,3,2,1,&apos;,CONCAT(&apos;,&apos;,id,&apos;,&apos;));
+        ///oracle写法
+        ///select name from example where id in（4,3,2,1）order by instr(&apos;4,3,2,1&apos;,id);
+        ///sqlserver写法
+        ///Select * From example Where id in (4,3,2,1)  Order By charindex(&apos;,&apos;+ id +&apos;,&apos;, &apos;,4,3,2,1,&apos;); 的本地化字符串。
+        /// </summary>
+        internal static string In排序 {
+            get {
+                return ResourceManager.GetString("In排序", resourceCulture);
             }
         }
         
