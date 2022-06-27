@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <RootNamespace>WEF</RootNamespace>
+    <AssemblyName>WEF</AssemblyName>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>3.0.0.1</Version>
+    <Authors>yswenli</Authors>
+    <Description>WEF is based on the c # data entity framework supports MSQSqlServer, MySql, Orcalce, etc of conventional database and fast development, which integrates a large amount of data set under the development experience of tools, such as the Lambada without SQL query expression, add and delete, entity cloning, bulk and the parameters of the table, transaction, round of entities or stored procedures, SQL entities, etc.
+
+WEF 是基于C#的数据实体框架，支持MSQSqlServer、MySql、Orcalce等等常规的数据库的快捷开发，其中集成了大量数据开发经验下的工具类集合，比如Lambada表达式查询、无sql的增删改查、实体克隆、批量、多表、事务、参数、SQL转实体或存储过程转实体等。</Description>
+    <Copyright>yswenli</Copyright>
+    <PackageProjectUrl>https://github.com/yswenli/WEF</PackageProjectUrl>
+    <PackageIcon>favicon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/yswenli/WEF</RepositoryUrl>
+    <RepositoryType>https://github.com/yswenli/WEF.git</RepositoryType>
+    <PackageTags>orm,datebase,wef</PackageTags>
+    <PackageReleaseNotes>WEF is based on the c # data entity framework supports MSQSqlServer, MySql, Orcalce, etc of conventional database and fast development, which integrates a large amount of data set under the development experience of tools, such as the Lambada without SQL query expression, add and delete, entity cloning, bulk and the parameters of the table, transaction, round of entities or stored procedures, SQL entities, etc.
+
+WEF 是基于C#的数据实体框架，支持MSQSqlServer、MySql、Orcalce等等常规的数据库的快捷开发，其中集成了大量数据开发经验下的工具类集合，比如Lambada表达式查询、无sql的增删改查、实体克隆、批量、多表、事务、参数、SQL转实体或存储过程转实体等。</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\favicon.png" Link="favicon.png">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </None>
+    <None Include="..\LICENSE" Link="LICENSE">
+      <PackagePath></PackagePath>
+      <Pack>True</Pack>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="MySql.Data" Version="8.0.29" />
+    <PackageReference Include="Npgsql" Version="6.0.5" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.151" />
+    <PackageReference Include="System.Data.OleDb" Version="5.0.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.116" />
+    <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.7.0" />
+    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
+  </ItemGroup>
+
+</Project>
