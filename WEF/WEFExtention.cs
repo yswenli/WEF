@@ -1591,7 +1591,12 @@ namespace WEF
         /// <returns></returns>
         public static string ToTitleCase(this string text)
         {
-            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(text.ToLower());
+            if (string.IsNullOrEmpty(text)) return null;
+            if (char.IsUpper(text.ToCharArray().First()))
+            {
+                return text;
+            }
+            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(text).Replace(" ", "");
         }
         #endregion
 

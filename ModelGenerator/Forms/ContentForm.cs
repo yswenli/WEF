@@ -11,9 +11,11 @@ using WEF.DbDAL;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Forms;
 
+using WeifenLuo.WinFormsUI.Docking;
+
 namespace WEF.ModelGenerator
 {
-    public partial class ContentForm : WeifenLuo.WinFormsUI.Docking.DockContent
+    public partial class ContentForm : DockContent
     {
         public ContentForm()
         {
@@ -128,8 +130,17 @@ namespace WEF.ModelGenerator
                         }
                         cbPrimarykey.SelectedIndex = 0;
                     }
+                    var className = TableName.Trim();
 
-                    var className = TableName.Trim().Replace("_", " ").ToLower().ToTitleCase().Replace(" ", "");
+                    if (TableName.IndexOf("_")>-1)
+                    {
+                        className = className.Replace("_", " ").ToTitleCase();
+                    }
+
+                    if (cbToupperFrstword.Checked)
+                    {
+                        className = className.ToTitleCase();
+                    }
 
                     if (className.StartsWith("DB", StringComparison.InvariantCultureIgnoreCase))
                     {

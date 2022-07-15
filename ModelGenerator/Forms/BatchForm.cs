@@ -255,9 +255,14 @@ namespace WEF.ModelGenerator
             {
                 var className = o.ToString().Trim();
 
+                if (className.IndexOf("_") > -1)
+                {
+                    className = className.Replace("_", " ");
+                }
+
                 if (_isTitleCase)
                 {
-                    className = className.Replace("_", " ").ToLower().ToTitleCase();
+                    className = className.ToTitleCase();
                 }
 
                 className = className.Replace(" ", "");

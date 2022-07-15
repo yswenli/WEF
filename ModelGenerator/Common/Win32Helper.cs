@@ -103,8 +103,6 @@ namespace WEF.ModelGenerator.Common
             HCBT_SETFOCUS = 9
         }
 
-
-
         [StructLayout(LayoutKind.Sequential)]
         public struct CWPRETSTRUCT
         {

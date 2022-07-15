@@ -275,6 +275,8 @@ namespace WEF.ModelGenerator.Common
 
         private string BuilderMethod()
         {
+            if (Columns == null || Columns.Count < 1) return String.Empty;
+
             StringPlus plus = new StringPlus();
 
             plus.AppendSpaceLine(2, "#region Method");

@@ -164,7 +164,6 @@ namespace WEF.ModelGenerator
 
         #endregion
 
-
         #region 菜单
         /// <summary>
         /// 新连接
@@ -293,6 +292,15 @@ namespace WEF.ModelGenerator
         {
             new ApiLogForm().ShowDialog(this);
         }
+        /// <summary>
+        /// ocr工具
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void oCR工具ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+           new OCRForm().ShowDialog(this);           
+        }
 
         #region 关于菜单
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -358,8 +366,9 @@ namespace WEF.ModelGenerator
 
 
 
+
         #endregion
 
-       
+        
     }
 }

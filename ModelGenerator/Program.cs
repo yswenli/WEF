@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 
 using WEF.ModelGenerator.Common;
+using WEF.ModelGenerator.Forms;
 
 namespace WEF.ModelGenerator
 {
@@ -18,6 +19,10 @@ namespace WEF.ModelGenerator
             Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            //Application.Run(new DesignForm());
+            //return;
+
             //MainForm
             SingleProcessHelper.ProcessRun<MainForm>((f) =>
             {
