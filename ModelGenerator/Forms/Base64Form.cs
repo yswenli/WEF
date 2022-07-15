@@ -67,19 +67,31 @@ namespace WEF.ModelGenerator.Forms
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 var filePath = openFileDialog1.FileName;
 
-                skinWaterTextBox3.Text = filePath;
+                skinWaterTextBox6.Text = filePath;
             }
         }
 
-        private void skinButton4_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e)
         {
-            var filePath = skinWaterTextBox3.Text;
+            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                var filePath = openFileDialog1.FileName;
+
+                skinWaterTextBox5.Text = filePath;
+            }
+        }
+
+        private void skinButton6_Click(object sender, EventArgs e)
+        {
+            var filePath = skinWaterTextBox6.Text;
+
+            var base64FilePath = skinWaterTextBox5.Text;
 
             if (!string.IsNullOrEmpty(filePath) && FileHelper.Exists(filePath))
             {
@@ -89,7 +101,7 @@ namespace WEF.ModelGenerator.Forms
                 }
                 else
                 {
-                    skinButton4.Enabled = false;
+                    skinButton6.Enabled = false;
 
                     Task.Run(() =>
                     {
@@ -103,34 +115,24 @@ namespace WEF.ModelGenerator.Forms
                             {
                                 this.Invoke(() =>
                                 {
-                                    if (WEFMessageBox.Show(this, "当前字符串过长，是否需要另存为txt文件？", "Base64转码",System.Windows.Forms.MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                                    var result = FileHelper.Write(base64FilePath, Encoding.UTF8.GetBytes(base64Str));
+
+                                    if (result)
                                     {
-                                        if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                                        {
-                                            var fileName = saveFileDialog1.FileName;
-
-                                            var result = FileHelper.Write(fileName, Encoding.UTF8.GetBytes(base64Str));
-
-                                            if (result)
-                                            {
-                                                WEFMessageBox.Show(this, "文件保存成功", "Base64转码");
-                                            }
-                                            else
-                                            {
-                                                WEFMessageBox.Show(this, "文件保存失败", "Base64转码");
-                                            }                                            
-                                        }
-                                        skinButton4.Enabled = true;
+                                        WEFMessageBox.Show(this, "文件保存成功", "Base64转码");
+                                    }
+                                    else
+                                    {
+                                        WEFMessageBox.Show(this, "文件保存失败", "Base64转码");
                                     }
                                 });
-                                
+
                             }
                             else
                             {
                                 this.Invoke(() =>
                                 {
-                                    skinWaterTextBox4.Text = base64Str;
-                                    skinButton4.Enabled = true;
+                                    skinButton6.Enabled = true;
                                 });
                             }
                         }
@@ -138,7 +140,7 @@ namespace WEF.ModelGenerator.Forms
                         {
                             this.Invoke(() =>
                             {
-                                skinButton4.Enabled = true;
+                                skinButton6.Enabled = true;
                             });
                         }
                     });
@@ -148,32 +150,35 @@ namespace WEF.ModelGenerator.Forms
             }
         }
 
-        private async void skinButton3_Click(object sender, EventArgs e)
+
+        private async void skinButton5_Click(object sender, EventArgs e)
         {
-            var base64Str = skinWaterTextBox4.Text;
+            var filePath = skinWaterTextBox6.Text;
 
-            if (!string.IsNullOrEmpty(base64Str))
+            var base64FilePath = skinWaterTextBox5.Text;
+
+            if(string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(base64FilePath))
             {
-                if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    var fileName = saveFileDialog1.FileName;
+                WEFMessageBox.Show(this, "文件保存成功", "Base64转码");
+                return;
+            }
 
-                    var result = await Task.Run(() =>
-                    {
-                        var bytes = Convert.FromBase64String(base64Str);
-                        return FileHelper.Write(fileName, bytes);
-                    });
+            var result = await Task.Run(() =>
+            {
+                var bytes = Convert.FromBase64String(FileHelper.ReadTxt(base64FilePath));
+                return FileHelper.Write(filePath, bytes);
+            });
 
-                    if (result)
-                    {
-                        WEFMessageBox.Show(this, "文件保存成功", "Base64转码");
-                    }
-                    else
-                    {
-                        WEFMessageBox.Show(this, "文件保存失败", "Base64转码");
-                    }
-                }
+            if (result)
+            {
+                WEFMessageBox.Show(this, "文件保存成功", "Base64转码");
+            }
+            else
+            {
+                WEFMessageBox.Show(this, "文件保存失败", "Base64转码");
             }
         }
+
+
     }
 }
