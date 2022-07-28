@@ -70,6 +70,7 @@ namespace WEF
         {
 
         }
+
         /// <summary>
         /// 构造方法
         /// <param name="dbType">数据库类型</param>
@@ -79,6 +80,7 @@ namespace WEF
         {
 
         }
+
         /// <summary>
         /// 当前db操作上下文
         /// </summary>
@@ -89,6 +91,7 @@ namespace WEF
                 return _db;
             }
         }
+
         /// <summary>
         /// 总数
         /// </summary>
@@ -100,6 +103,7 @@ namespace WEF
                 return Search().Count();
             }
         }
+
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
@@ -111,6 +115,7 @@ namespace WEF
             }
             return _db.Search<T>(tableName);
         }
+
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
@@ -171,6 +176,7 @@ namespace WEF
         {
             return this.Search().Page(pageIndex, pageSize).ToList();
         }
+
         /// <summary>
         /// 获取列表
         /// <param name="tableName">表名</param>
@@ -181,6 +187,32 @@ namespace WEF
         public List<T> GetList(string tableName, int pageIndex = 1, int pageSize = 12)
         {
             return this.Search(tableName).Page(pageIndex, pageSize).ToList();
+        }
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public PagedList<T> GetPagedList(int pageIndex, int pageSize, string orderBy = "ID", bool asc = true)
+        {
+            return Search().GetPagedList(pageIndex, pageSize, orderBy, asc);
+        }
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public PagedList<T> GetPagedList(Expression<Func<T, bool>> lambdaWhere, int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
+        {
+            return Search().GetPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
         }
         /// <summary>
         /// 分页查询
@@ -193,8 +225,9 @@ namespace WEF
         /// <returns></returns>
         public PagedList<T> GetPagedList(Expression<Func<T, bool>> lambdaWhere, string tableName = "", int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
         {
-            return this.Search(tableName).GetPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
+            return Search(tableName).GetPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
         }
+
         /// <summary>
         /// 添加实体
         /// <param name="entity">传进的实体</param>

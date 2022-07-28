@@ -105,6 +105,7 @@ namespace WEF.Section
                 return reader.ToList<TEntity>();
             }
         }
+
         /// <summary>
         /// 返回懒加载数据
         /// </summary>

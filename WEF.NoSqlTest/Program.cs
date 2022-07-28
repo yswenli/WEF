@@ -37,9 +37,6 @@ namespace WEF.NoSqlTest
             Console.ReadLine();
             #endregion
 
-
-
-
             Parallel.For(0, 10, i =>
             {
                 var customerOperator1 = MongoDBFactory.Create<Account>();

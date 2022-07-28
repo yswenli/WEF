@@ -93,7 +93,13 @@ namespace WEF.ModelGenerator.Forms
 
             var base64FilePath = skinWaterTextBox5.Text;
 
-            if (!string.IsNullOrEmpty(filePath) && FileHelper.Exists(filePath))
+            if (string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(base64FilePath))
+            {
+                WEFMessageBox.Show(this, "地址不能为空", "Base64转码");
+                return;
+            }
+
+            if (FileHelper.Exists(filePath))
             {
                 if (FileHelper.GetLenth(filePath) > 50 * 1024 * 1024)
                 {
@@ -157,9 +163,15 @@ namespace WEF.ModelGenerator.Forms
 
             var base64FilePath = skinWaterTextBox5.Text;
 
-            if(string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(base64FilePath))
+            if (string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(base64FilePath))
             {
-                WEFMessageBox.Show(this, "文件保存成功", "Base64转码");
+                WEFMessageBox.Show(this, "地址不能为空", "Base64转码");
+                return;
+            }
+
+            if (!FileHelper.Exists(base64FilePath))
+            {
+                WEFMessageBox.Show(this, "base64文件不存在", "Base64转码");
                 return;
             }
 

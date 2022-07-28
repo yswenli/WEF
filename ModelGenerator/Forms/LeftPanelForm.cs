@@ -42,6 +42,8 @@ namespace WEF.ModelGenerator
             Treeview.ExpandAll();
         }
 
+        public event Action<ConnectionModel> OnNewDesignForm;
+
         public delegate void OnNewContentFormHandler(ConnectionModel conModel);
 
         public event OnNewContentFormHandler OnNewContentForm;
@@ -947,9 +949,25 @@ namespace WEF.ModelGenerator
         }
 
         #region tree菜单
+
+        /// <summary>
+        /// sql查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void 执行SQLToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSQLForm();
+        }
+
+        /// <summary>
+        /// 创建表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void createTableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void sQL查询ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -972,6 +990,11 @@ namespace WEF.ModelGenerator
         {
             TreeNode node = Treeview.SelectedNode;
             Clipboard.SetText(node.Text);
+        }
+
+        private void modifyTableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
         //快捷生成业务代码
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
@@ -999,7 +1022,11 @@ namespace WEF.ModelGenerator
             new TemplateToCodeFastForm(tableName).ShowDialog();
         }
 
-
+        /// <summary>
+        /// 数据编辑窗口
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dataOperateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TreeNode node = Treeview.SelectedNode;
@@ -1028,6 +1055,58 @@ namespace WEF.ModelGenerator
         }
         #endregion
 
+        /// <summary>
+        /// 显示设计窗口
+        /// </summary>
+        /// <param name="tableName"></param>
+        public void ShowDesignForm(string tableName = "")
+        {
+            TreeNode node = Treeview.SelectedNode;
+
+            ConnectionModel conModel = null;
+
+            switch (node.Level)
+            {
+                case 3:
+                    conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Tag.ToString()); });
+                    conModel.Database = node.Parent.Text;
+                    break;
+                case 4:
+                    conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Parent.Parent.Tag.ToString()); });
+                    conModel.Database = node.Parent.Parent.Text;
+
+                    break;
+                default:
+                    conModel = _connectList.Find(delegate (ConnectionModel con) { return con.ID.ToString().Equals(node.Parent.Tag.ToString()); });
+                    conModel.Database = node.Text;
+                    break;
+            }
+
+            #region mysql
+            var index1 = conModel.ConnectionString.IndexOf("database=");
+
+            if (index1 > 0)
+            {
+                var str1 = conModel.ConnectionString.Substring(0, index1);
+
+                var str2 = conModel.ConnectionString.Substring(index1);
+
+                var index2 = str2.IndexOf(";");
+
+                str2 = str2.Substring(index2 + 1);
+
+                conModel.ConnectionString = $"{str1}database={conModel.Database};{str2}";
+            }
+
+            #endregion
+
+            OnNewDesignForm?.Invoke(conModel);
+        }
+
+        /// <summary>
+        /// sql查询窗口
+        /// </summary>
+        /// <param name="tableName"></param>
         public void ShowSQLForm(string tableName = "")
         {
             TreeNode node = Treeview.SelectedNode;
@@ -1072,6 +1151,10 @@ namespace WEF.ModelGenerator
             OnNewSqlForm?.Invoke(conModel);
         }
 
+        /// <summary>
+        /// 数据编辑窗口
+        /// </summary>
+        /// <param name="node"></param>
         public void ShowDataForm(TreeNode node)
         {
             ConnectionModel conModel = null;
