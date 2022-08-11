@@ -13,12 +13,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 
+using Google.Protobuf.WellKnownTypes;
+
+using MySqlX.XDevAPI;
+
+using WEF.Batcher;
 using WEF.Common;
+using WEF.Db;
 using WEF.Expressions;
 using WEF.Models;
+using WEF.Provider;
 using WEF.Test.Models;
+
 
 namespace WEF.Test
 {
@@ -26,11 +35,31 @@ namespace WEF.Test
     {
         static void Main(string[] args)
         {
+            //var cnnStr = "Data Source=LP20210416002\\MSSQLSERVER2014;Initial Catalog=Oceania_Test;Integrated Security=True";
+
+            //var version = DipBuilder.GetVersion();
+            //DbProvider provider = ProviderFactory.CreateDbProvider($"WEF.Standard.MSSQL, Version={version}, Culture=neutral, PublicKeyToken=null",
+            //    "WEF.Provider.SqlServer9Provider",
+            //    "",
+            //    null);
+
+
+
+            //var name = typeof(WEF.Provider.SqlServer9Provider).Assembly.FullName;
+            //var provider2 = DipBuilder.Create<WEF.Provider.SqlServer9Provider>(name, "WEF.Provider.SqlServer9Provider", new object[] { cnnStr });
+
+            //var batcher = (IBatcher<DBTicketOrder>)DipBuilder.CreateWithGeneric<DBTicketOrder>("WEF.Standard.MSSQL, Version=" + version + ", Culture=neutral, PublicKeyToken=null",
+            //    "WEF.Batcher.MsSqlBatcher",
+            //    new object[] { new Database(provider2) });
+
+
+
+            //var json2 = SerializeHelper.Serialize(new MvcPager.PagedList<DBTicketOrder>(1, 10, 22));
 
             //MySqlBitTypeTest.Test1();
-            MySqlBitTypeTest.Test3();
+            //MySqlBitTypeTest.Test3();
 
-            //BatchTest.Test();
+            BatchTest.Test();
 
             //MutiTablesTest.Test();
 
@@ -66,7 +95,7 @@ namespace WEF.Test
                 C_resv1 = "hello",
                 C_created = DateTime.Now
             };
-            
+
 
 
 
@@ -339,7 +368,7 @@ namespace WEF.Test
 
             var entityRepository = new Models.ArticleKindRepository();
 
-            var pagedList = entityRepository.Search(entity).GetPagedList(1, 100, "ID", true);
+            var pagedList = entityRepository.Search(entity).ToPagedList(1, 100, "ID", true);
 
             do
             {
@@ -510,9 +539,9 @@ namespace WEF.Test
 
         static void Test3()
         {
-            var list1 = new DBTaskRepository().Search().GetPagedList(1, 20, "begintime", true).Select(b => b.Begintime).ToList();
+            var list1 = new DBTaskRepository().Search().ToPagedList(1, 20, "begintime", true).Data.Select(b => b.Begintime).ToList();
 
-            var list2 = new DBTaskRepository().Search().GetPagedList(1, 20, "begintime", false).Select(b => b.Begintime).ToList();
+            var list2 = new DBTaskRepository().Search().ToPagedList(1, 20, "begintime", false).Data.Select(b => b.Begintime).ToList();
 
             if (list1.First() == list2.First())
             {

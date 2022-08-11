@@ -45,7 +45,7 @@ namespace WEF.Common
     public delegate void FastPropertySetHandler(object target, object parameter);
 
     /// <summary>
-    /// 
+    /// 动态调用
     /// </summary>
     public static class DynamicCalls
     {
@@ -54,6 +54,11 @@ namespace WEF.Common
         /// </summary>
         private static Dictionary<MethodInfo, FastInvokeHandler> dictInvoker = new Dictionary<MethodInfo, FastInvokeHandler>();
 
+        /// <summary>
+        /// GetMethodInvoker
+        /// </summary>
+        /// <param name="methodInfo"></param>
+        /// <returns></returns>
         public static FastInvokeHandler GetMethodInvoker(MethodInfo methodInfo)
         {
             lock (dictInvoker)
@@ -170,6 +175,11 @@ namespace WEF.Common
         /// </summary>
         private static Dictionary<PropertyInfo, FastPropertyGetHandler> dictGetter = new Dictionary<PropertyInfo, FastPropertyGetHandler>();
 
+        /// <summary>
+        /// GetPropertyGetter
+        /// </summary>
+        /// <param name="propInfo"></param>
+        /// <returns></returns>
         public static FastPropertyGetHandler GetPropertyGetter(PropertyInfo propInfo)
         {
             lock (dictGetter)
@@ -202,6 +212,11 @@ namespace WEF.Common
         /// </summary>
         private static Dictionary<PropertyInfo, FastPropertySetHandler> dictSetter = new Dictionary<PropertyInfo, FastPropertySetHandler>();
 
+        /// <summary>
+        /// GetPropertySetter
+        /// </summary>
+        /// <param name="propInfo"></param>
+        /// <returns></returns>
         public static FastPropertySetHandler GetPropertySetter(PropertyInfo propInfo)
         {
             lock (dictSetter)
@@ -232,7 +247,7 @@ namespace WEF.Common
         }
 
         /// <summary>
-        /// 
+        /// EmitCastToReference
         /// </summary>
         /// <param name="ilGenerator"></param>
         /// <param name="type"></param>
@@ -249,7 +264,7 @@ namespace WEF.Common
         }
 
         /// <summary>
-        /// 
+        /// EmitBoxIfNeeded
         /// </summary>
         /// <param name="ilGenerator"></param>
         /// <param name="type"></param>
@@ -262,7 +277,7 @@ namespace WEF.Common
         }
 
         /// <summary>
-        /// 
+        /// EmitFastInt
         /// </summary>
         /// <param name="ilGenerator"></param>
         /// <param name="value"></param>

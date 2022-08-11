@@ -358,7 +358,7 @@ namespace WEF.Test.Models
         /// <returns></returns>
         public PagedList<Rule> GetPagedList(Expression<Func<Rule, bool>> lambdaWhere, string tableName = "", int pageIndex = 1, int pageSize = 12, string orderBy = "Id", bool asc = true)
         {
-            return this.Search(tableName).GetPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
+            return this.Search(tableName).ToPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
         }
         /// <summary>
         /// 添加实体

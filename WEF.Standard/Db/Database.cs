@@ -1310,7 +1310,7 @@ namespace WEF.Db
                                             if (datetime != null)
                                             {
                                                 var dtVal = (DateTime)datetime;
-                                                newRow[j] = new MySql.Data.Types.MySqlDateTime(dtVal);
+                                                newRow[j] = dtVal.ToMysqlDateTime();
                                             }
                                         }
                                         else if (columns2[j].DataType.Name == "Image" || columns2[j].DataType.Name == "Byte[]" || columns2[j].DataType.Name == "Timespan")

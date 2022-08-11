@@ -16,13 +16,11 @@
 *描    述：
 *****************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 using System.Text;
-using System.Xml.Serialization;
-
-using WEFInternal.Newtonsoft.Json;
-using WEFInternal.Newtonsoft.Json.Serialization;
+using System.Xml;
 
 namespace WEF.Common
 {
@@ -32,334 +30,82 @@ namespace WEF.Common
     public static class SerializeHelper
     {
         /// <summary>
-        /// newton.json序列化
+        /// 序列化到XmlNode
         /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="indented"></param>
-        /// <param name="defalutVal"></param>
-        /// <param name="nullValue"></param>
-        /// <param name="camelCase"></param>
-        /// <returns></returns>
-        public static string Serialize(object obj, bool indented = false, bool defalutVal = true, bool nullValue = false, bool camelCase = false)
+        /// <typeparam name="T"></typeparam>
+        /// <param name="t"></param>
+        /// <param name="node"></param>
+        public static void XmlSerialize<T>(T t, out XmlNode node)
         {
-            var settings = new JsonSerializerSettings();
-            settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
-            settings.DefaultValueHandling = defalutVal ? DefaultValueHandling.Include : DefaultValueHandling.Ignore;
-            settings.NullValueHandling = nullValue ? NullValueHandling.Ignore : NullValueHandling.Include;
-            if (camelCase)
+            DataContractSerializer datacontractSerializer = new DataContractSerializer(typeof(T));
+            XmlDocument doc = new XmlDocument();
+            using (MemoryStream ms = new MemoryStream())
             {
-                settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                datacontractSerializer.WriteObject(ms, t);
+                ms.Position = 0;
+                doc.Load(ms);
+                node = doc.LastChild;
             }
-            settings.DateFormatString = "yyyy-MM-dd HH:mm:ss.fff";
-            return JsonConvert.SerializeObject(obj, indented ? Formatting.Indented : Formatting.None, settings);
+        }
+        /// <summary>
+        /// 反序列化XmlNode中的数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="node"></param>
+        /// <param name="t"></param>
+        public static void XmlDeserialize<T>(XmlNode node, out T t)
+        {
+            DataContractSerializer datacontractSerializer = new DataContractSerializer(typeof(T));
+            using (XmlReader reader = new XmlNodeReader(node))
+            {
+                t = (T)datacontractSerializer.ReadObject(reader);
+            }
         }
 
         /// <summary>
-        /// newton.json反序列化
+        /// json序列化
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string Serialize(object obj)
+        {
+            DataContractJsonSerializer json = new DataContractJsonSerializer(obj.GetType());
+            using (MemoryStream stream = new MemoryStream())
+            {
+                json.WriteObject(stream, obj);
+                string szJson = Encoding.UTF8.GetString(stream.ToArray());
+                return szJson;
+            }
+        }
+
+        /// <summary>
+        /// json反序列化
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="json"></param>
-        /// <param name="defalutVal"></param>
-        /// <param name="nullValue"></param>
         /// <returns></returns>
-        public static T Deserialize<T>(string json, bool defalutVal = true, bool nullValue = false)
+        public static T Deserialize<T>(string json)
         {
-            var settings = new JsonSerializerSettings();
-            settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
-            settings.DefaultValueHandling = defalutVal ? DefaultValueHandling.Include : DefaultValueHandling.Ignore;
-            settings.NullValueHandling = nullValue ? NullValueHandling.Ignore : NullValueHandling.Include;
-            settings.DateFormatString = "yyyy-MM-dd HH:mm:ss.fff";
-            return JsonConvert.DeserializeObject<T>(json, settings);
+            T obj = Activator.CreateInstance<T>();
+            using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(json)))
+            {
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
+                return (T)serializer.ReadObject(ms);
+            }
         }
-
         /// <summary>
-        /// newton.json反序列化
+        /// json反序列化
         /// </summary>
-        /// <param name="json"></param>
         /// <param name="type"></param>
-        /// <param name="defalutVal"></param>
-        /// <param name="nullValue"></param>
-        /// <returns></returns>
-        public static dynamic Deserialize(string json, Type type, bool defalutVal = true, bool nullValue = false)
-        {
-            var settings = new JsonSerializerSettings();
-            settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
-            settings.DefaultValueHandling = defalutVal ? DefaultValueHandling.Include : DefaultValueHandling.Ignore;
-            settings.NullValueHandling = nullValue ? NullValueHandling.Ignore : NullValueHandling.Include;
-            settings.DateFormatString = "yyyy-MM-dd HH:mm:ss.fff";
-            return JsonConvert.DeserializeObject(json, type, settings);
-        }
-
-        /// <summary>
-        /// newton.json反序列化
-        /// </summary>
         /// <param name="json"></param>
-        /// <param name="defalutVal"></param>
-        /// <param name="nullValue"></param>
         /// <returns></returns>
-        public static dynamic Deserialize(string json, bool defalutVal = true, bool nullValue = false)
+        public static dynamic Deserializ(Type type, string json)
         {
-            var settings = new JsonSerializerSettings();
-            settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
-            settings.DefaultValueHandling = defalutVal ? DefaultValueHandling.Include : DefaultValueHandling.Ignore;
-            settings.NullValueHandling = nullValue ? NullValueHandling.Ignore : NullValueHandling.Include;
-            settings.DateFormatString = "yyyy-MM-dd HH:mm:ss.fff";
-            return JsonConvert.DeserializeObject(json, settings);
-        }
-
-
-        /// <summary>
-        /// 深复制当前对象
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public static T DeepCloneForDynamic<T>(this T obj)
-        {
-            var json = Serialize(obj);
-            if (!string.IsNullOrEmpty(json))
-                return Deserialize<T>(json);
-            return default(T);
-        }
-
-        /// <summary>
-        /// 深复制当前对象
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public static T DeepCloneForDynamic<T>(this object obj)
-        {
-            var json = Serialize(obj);
-            if (!string.IsNullOrEmpty(json))
-                return Deserialize<T>(json);
-            return default(T);
-        }
-
-        /// <summary>
-        /// 转换成josn
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public static string ToJson(this object obj)
-        {
-            return ConvertJsonString(JsonConvert.SerializeObject(obj));
-        }
-
-        /// <summary>
-        /// 转json格式
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        private static string ConvertJsonString(string str)
-        {
-            var  serializer = new JsonSerializer();
-            TextReader tr = new StringReader(str);
-            var jtr = new JsonTextReader(tr);
-            object obj = serializer.Deserialize(jtr);
-            if (obj != null)
+            using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(json)))
             {
-                StringWriter textWriter = new StringWriter();
-                JsonTextWriter jsonWriter = new JsonTextWriter(textWriter)
-                {
-                    Formatting = Formatting.Indented,
-                    Indentation = 4,
-                    IndentChar = ' '
-                };
-                serializer.Serialize(jsonWriter, obj);
-                return textWriter.ToString();
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(type);
+                return serializer.ReadObject(ms);
             }
-            else
-            {
-                return str;
-            }
-        }
-
-
-        #region stuct
-
-        /// <summary>
-        /// The serialize delegate.
-        /// </summary>
-        /// <param name="obj">obj to be serialized.</param>
-        /// <returns></returns>
-        public delegate string TypeSerializeHandler(object obj);
-        /// <summary>
-        /// The deserialize delegate.
-        /// </summary>
-        /// <param name="data">the data to be deserialied.</param>
-        /// <returns></returns>
-        public delegate object TypeDeserializeHandler(string data);
-
-
-        private static Dictionary<Type, KeyValuePair<TypeSerializeHandler, TypeDeserializeHandler>> handlers = new Dictionary<Type, KeyValuePair<TypeSerializeHandler, TypeDeserializeHandler>>();
-
-        /// <summary>
-        /// Deserializes the specified return type.
-        /// </summary>
-        /// <param name="returnType">Type of the return.</param>
-        /// <param name="data">The data.</param>
-        /// <returns></returns>
-        public static object XmlDeserialize(Type returnType, string data)
-        {
-            if (data == null)
-            {
-                return null;
-            }
-
-            if (handlers.ContainsKey(returnType))
-            {
-                return handlers[returnType].Value(data);
-            }
-            else
-            {
-                var sr = new StringReader(data);
-                var  serializer = new XmlSerializer(returnType);
-                object obj = serializer.Deserialize(sr);
-                sr.Close();
-                return obj;
-            }
-        }
-
-        /// <summary>
-        /// 返序列化
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static T XmlDeserialize<T>(string data) where T : class
-        {
-            if (data == null)
-            {
-                return null;
-            }
-            var type = typeof(T);
-
-            if (handlers.ContainsKey(type))
-            {
-                return handlers[type].Value(data) as T;
-            }
-            else
-            {
-                using (var sr = new StringReader(data))
-                {
-                    var serializer = new XmlSerializer(type);
-                    return serializer.Deserialize(sr) as T;
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Serializes the specified obj.
-        /// </summary>
-        /// <param name="obj">The obj.</param>
-        /// <returns></returns>
-        public static string XmlSerialize(object obj)
-        {
-            if (obj == null)
-            {
-                return null;
-            }
-
-            if (handlers.ContainsKey(obj.GetType()))
-            {
-                return handlers[obj.GetType()].Key(obj);
-            }
-            else
-            {
-                var sb = new StringBuilder();
-                var sw = new StringWriter(sb);
-                XmlSerializer serializer = new XmlSerializer(obj.GetType());
-                serializer.Serialize(sw, obj);
-                sw.Close();
-                return sb.ToString();
-            }
-        }
-        #endregion
-
-        /// <summary>
-        /// 展开josn
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static string ExpandJson(string str)
-        {
-            try
-            {
-                var serializer = new JsonSerializer();
-                TextReader tr = new StringReader(str);
-                var jtr = new JsonTextReader(tr);
-                var obj = serializer.Deserialize(jtr);
-                if (obj != null)
-                {
-                    var textWriter = new StringWriter();
-                    var jsonWriter = new JsonTextWriter(textWriter)
-                    {
-                        Formatting = Formatting.Indented,
-                        Indentation = 4,
-                        IndentChar = ' '
-                    };
-                    serializer.Serialize(jsonWriter, obj);
-                    return textWriter.ToString();
-                }
-                return str;
-            }
-            catch (JsonReaderException ex)
-            {
-                return str;
-            }
-        }
-
-        /// <summary>
-        /// 收缩
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static string ContractJson(string str)
-        {
-            try
-            {
-                var serializer = new JsonSerializer();
-                TextReader tr = new StringReader(str);
-                var jtr = new JsonTextReader(tr);
-                var obj = serializer.Deserialize(jtr);
-                if (obj != null)
-                {
-                    var textWriter = new StringWriter();
-                    var jsonWriter = new JsonTextWriter(textWriter)
-                    {
-                        Formatting = Formatting.None
-                    };
-                    serializer.Serialize(jsonWriter, obj);
-                    return textWriter.ToString();
-                }
-                return str;
-            }
-            catch (JsonReaderException ex)
-            {
-                return str;
-            }
-        }
-
-        /// <summary>
-        /// 转义
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static string EscapeJson(string str)
-        {
-            return str.Replace("\"", "\\\"");
-        }
-
-        /// <summary>
-        /// 去掉转义
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static string UnEscapeJson(string str)
-        {
-            return str.Replace("\\\"", "\"");
         }
     }
 }

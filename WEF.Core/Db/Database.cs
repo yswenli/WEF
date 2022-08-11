@@ -1185,10 +1185,10 @@ namespace WEF.Db
 
             DbConnection connection = CreateConnection();
 
-            PrepareCommand(command, connection);
-
             try
             {
+                PrepareCommand(command, connection);
+
                 return DoExecuteReader(command, CommandBehavior.CloseConnection);
             }
             catch (Exception ex)

@@ -17,7 +17,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Test", "WEF.Test\WEF.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.ModelGenerator", "ModelGenerator\WEF.ModelGenerator.csproj", "{D618886E-5057-4B75-9E13-6FC75371718A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard", "WEF.Standard\WEF.Standard.csproj", "{BFA7E11E-9293-40F4-BCEA-40888D29BFFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Standard", "WEF.Standard\WEF.Standard.csproj", "{BFA7E11E-9293-40F4-BCEA-40888D29BFFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.MSSQL", "WEF.Standard.MSSQL\WEF.Standard.MSSQL.csproj", "{1D5BCAAA-472E-4710-86EA-2AA67B7685C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.MySQL", "WEF.Standard.MySQL\WEF.Standard.MySQL.csproj", "{B1EBDEB8-E6F6-4B1B-ADA6-757CF61FA688}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.Oracle", "WEF.Standard.Oracle\WEF.Standard.Oracle.csproj", "{7B71D1CE-698B-4840-9EBA-C1AADFFC7028}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.Postgre", "WEF.Standard.Postgre\WEF.Standard.Postgre.csproj", "{42727823-F5FD-44C4-9483-32DCC20D9E27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.SQLite", "WEF.Standard.SQLite\WEF.Standard.SQLite.csproj", "{A31AF5CC-4312-4551-BECD-C77C1CC8117A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.OLEDB", "WEF.Standard.OLEDB\WEF.Standard.OLEDB.csproj", "{5D9DB26D-BB45-4DEA-B270-F5E2E5E34ADE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +69,30 @@ Global
 		{BFA7E11E-9293-40F4-BCEA-40888D29BFFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFA7E11E-9293-40F4-BCEA-40888D29BFFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFA7E11E-9293-40F4-BCEA-40888D29BFFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D5BCAAA-472E-4710-86EA-2AA67B7685C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D5BCAAA-472E-4710-86EA-2AA67B7685C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D5BCAAA-472E-4710-86EA-2AA67B7685C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D5BCAAA-472E-4710-86EA-2AA67B7685C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1EBDEB8-E6F6-4B1B-ADA6-757CF61FA688}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1EBDEB8-E6F6-4B1B-ADA6-757CF61FA688}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1EBDEB8-E6F6-4B1B-ADA6-757CF61FA688}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1EBDEB8-E6F6-4B1B-ADA6-757CF61FA688}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B71D1CE-698B-4840-9EBA-C1AADFFC7028}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B71D1CE-698B-4840-9EBA-C1AADFFC7028}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B71D1CE-698B-4840-9EBA-C1AADFFC7028}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B71D1CE-698B-4840-9EBA-C1AADFFC7028}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42727823-F5FD-44C4-9483-32DCC20D9E27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42727823-F5FD-44C4-9483-32DCC20D9E27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42727823-F5FD-44C4-9483-32DCC20D9E27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42727823-F5FD-44C4-9483-32DCC20D9E27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A31AF5CC-4312-4551-BECD-C77C1CC8117A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A31AF5CC-4312-4551-BECD-C77C1CC8117A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A31AF5CC-4312-4551-BECD-C77C1CC8117A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A31AF5CC-4312-4551-BECD-C77C1CC8117A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D9DB26D-BB45-4DEA-B270-F5E2E5E34ADE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D9DB26D-BB45-4DEA-B270-F5E2E5E34ADE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D9DB26D-BB45-4DEA-B270-F5E2E5E34ADE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D9DB26D-BB45-4DEA-B270-F5E2E5E34ADE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

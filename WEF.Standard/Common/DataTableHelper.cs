@@ -152,7 +152,7 @@ namespace WEF.Common
                         {
                             if (colum.DataType.Name == "MySqlDateTime")
                             {
-                                sb.Append(((MySql.Data.Types.MySqlDateTime)val).GetDateTime().ToString("yyyy-MM-dd HH:mm:ss.fff"));
+                                sb.Append(val.FromMysqlDateTime().ToString("yyyy-MM-dd HH:mm:ss.fff"));
                             }
                             else
                             {

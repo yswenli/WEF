@@ -573,7 +573,7 @@ namespace WEF.Models
     /// <summary>
     /// 实体类DBTicketOrder操作类
     /// </summary>
-    public partial class DBTicketOrderRepository : IRepository<DBTicketOrder>
+    public partial class DBTicketOrderRepository : BaseRepository<DBTicketOrder>
     {
         DBContext db;
         /// <summary>

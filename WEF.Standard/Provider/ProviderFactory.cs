@@ -79,7 +79,7 @@ namespace WEF.Provider
                 //by default, using sqlserver db provider
                 if (string.IsNullOrEmpty(className))
                 {
-                    className = typeof(SqlServerProvider).ToString();
+                    className = "WEF.Provider.SqlServerProvider";
                     if (databaseType == null)
                     {
                         databaseType = DatabaseType.SqlServer;
@@ -87,7 +87,7 @@ namespace WEF.Provider
                 }
                 else if (String.Compare(className, "System.Data.SqlClient", StringComparison.OrdinalIgnoreCase) == 0 || String.Compare(className, "WEF.SqlServer", StringComparison.OrdinalIgnoreCase) == 0)
                 {
-                    className = typeof(SqlServerProvider).ToString();
+                    className = "WEF.Provider.SqlServerProvider";
                     if (databaseType == null)
                     {
                         databaseType = DatabaseType.SqlServer;
@@ -99,7 +99,7 @@ namespace WEF.Provider
                     || className.IndexOf("sqlserver2005", StringComparison.OrdinalIgnoreCase) >= 0
                     || className.IndexOf("sql2005", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    className = typeof(SqlServer9Provider).ToString();
+                    className = "WEF.Provider.SqlServer9Provider";
                     if (databaseType == null)
                     {
                         databaseType = DatabaseType.SqlServer9;
@@ -107,7 +107,7 @@ namespace WEF.Provider
                 }
                 else if (className.IndexOf("oracle", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    className = typeof(OracleProvider).ToString();
+                    className = "WEF.Provider.OracleProvider";
                     if (databaseType == null)
                     {
                         databaseType = DatabaseType.Oracle;
@@ -115,7 +115,7 @@ namespace WEF.Provider
                 }
                 else if (className.IndexOf("access", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    className = typeof(MsAccessProvider).ToString();
+                    className = "WEF.Provider.MsAccessProvider";
                     if (databaseType == null)
                     {
                         databaseType = DatabaseType.MsAccess;
@@ -123,7 +123,7 @@ namespace WEF.Provider
                 }
                 else if (className.IndexOf("mysql", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    className = typeof(MySqlProvider).ToString();
+                    className = "WEF.Provider.MySqlProvider";
                     if (databaseType == null)
                     {
                         databaseType = DatabaseType.MySql;
@@ -132,19 +132,13 @@ namespace WEF.Provider
                 else if (className.IndexOf("sqlite", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     className = "WEF.Sqlite.SqliteProvider";
-                    assemblyName = "MySql.Data";
                     if (databaseType == null)
                     {
                         databaseType = DatabaseType.Sqlite3;
                     }
                 }
 
-                System.Reflection.Assembly ass;
-
-                ass = assemblyName == null ? typeof(DbProvider).Assembly
-                    : System.Reflection.Assembly.Load(assemblyName);
-
-                DbProvider retProvider = ass.CreateInstance(className, false, System.Reflection.BindingFlags.Default, null, new object[] { connectionString }, null, null) as DbProvider;
+                DbProvider retProvider = DipBuilder.Create<DbProvider>(assemblyName,className,  new object[] { connectionString });
 
                 if (retProvider != null && databaseType != null)
                 {

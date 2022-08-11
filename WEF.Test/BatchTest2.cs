@@ -480,7 +480,7 @@ namespace WEF.Test
         /// <returns></returns>
         public PagedList<DBGiftbatchadd> GetPagedList(Expression<Func<DBGiftbatchadd, bool>> lambdaWhere, string tableName = "", int pageIndex = 1, int pageSize = 12, string orderBy = "Id", bool asc = true)
         {
-            return this.Search(tableName).GetPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
+            return this.Search(tableName).ToPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
         }
         /// <summary>
         /// 添加实体

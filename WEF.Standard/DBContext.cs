@@ -115,26 +115,26 @@ namespace WEF
             switch (dt)
             {
                 case DatabaseType.SqlServer9:
-                    provider = ProviderFactory.CreateDbProvider(null, typeof(SqlServer9Provider).FullName, connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.SqlServer9Provider", connStr, dt);
                     break;
                 case DatabaseType.SqlServer:
-                    provider = ProviderFactory.CreateDbProvider(null, typeof(SqlServerProvider).FullName, connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.SqlServerProvider", connStr, dt);
                     break;
                 case DatabaseType.Oracle:
-                    provider = ProviderFactory.CreateDbProvider(null, typeof(OracleProvider).FullName, connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.OracleProvider", connStr, dt);
                     break;
                 case DatabaseType.MariaDB:
                 case DatabaseType.MySql:
-                    provider = ProviderFactory.CreateDbProvider(null, typeof(MySqlProvider).FullName, connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.MySqlProvider", connStr, dt);
                     break;
                 case DatabaseType.Sqlite3:
-                    provider = ProviderFactory.CreateDbProvider(null, typeof(SqliteProvider).FullName, connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.SqliteProvider", connStr, dt);
                     break;
                 case DatabaseType.MsAccess:
-                    provider = ProviderFactory.CreateDbProvider(null, typeof(MsAccessProvider).FullName, connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.MsAccessProvider", connStr, dt);
                     break;
                 case DatabaseType.PostgreSQL:
-                    provider = ProviderFactory.CreateDbProvider(null, typeof(PostgreSqlProvider).FullName, connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.PostgreSqlProvider", connStr, dt);
                     break;
             }
             if (provider != null)
@@ -1806,7 +1806,7 @@ namespace WEF
             else
             {
                 object scalarValue = null;
-                if (Db.DbProvider is MsAccessProvider)
+                if (Db.DbProvider.GetType().Name == "MsAccessProvider")
                 {
                     if (tran == null)
                     {
@@ -1823,7 +1823,7 @@ namespace WEF
                     }
 
                 }
-                else if (Db.DbProvider is OracleProvider)
+                else if (Db.DbProvider.GetType().Name == "OracleProvider")
                 {
                     if (tran == null)
                     {

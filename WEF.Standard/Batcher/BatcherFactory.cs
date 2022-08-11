@@ -16,6 +16,8 @@
 *描    述：
 *****************************************************************************/
 using System;
+
+using WEF.Common;
 using WEF.Db;
 
 namespace WEF.Batcher
@@ -33,20 +35,21 @@ namespace WEF.Batcher
         /// <returns></returns>
         public static IBatcher<T> CreateBatcher<T>(Database database) where T : Entity
         {
+            var version = DipBuilder.GetVersion();
             switch (database.DbProvider.DatabaseType)
             {
                 case DatabaseType.SqlServer:
                 case DatabaseType.SqlServer9:
-                    return new MsSqlBatcher<T>(database);
+                    return (IBatcher<T>)DipBuilder.CreateWithGeneric<T>($"WEF.Standard.MSSQL, Version={version}, Culture=neutral, PublicKeyToken=null", "WEF.Batcher.MsSqlBatcher", new object[] { database });
                 case DatabaseType.MsAccess:
-                    return new MsAccessBatcher<T>(database);
+                    return (IBatcher<T>)DipBuilder.CreateWithGeneric<T>($"WEF.Standard.OLEDB, Version={version}, Culture=neutral, PublicKeyToken=null", "WEF.Batcher.MsAccessBatcher", new object[] { database });
                 case DatabaseType.MySql:
                 case DatabaseType.MariaDB:
-                    return new MySqlBatcher<T>(database);
+                    return (IBatcher<T>)DipBuilder.CreateWithGeneric<T>($"WEF.Standard.MySQL, Version={version}, Culture=neutral, PublicKeyToken=null", "WEF.Batcher.MySqlBatcher", new object[] { database });
                 case DatabaseType.Oracle:
-                    return new OracleBatcher<T>(database);
+                    return (IBatcher<T>)DipBuilder.CreateWithGeneric<T>($"WEF.Standard.Oracle, Version={version}, Culture=neutral, PublicKeyToken=null", "WEF.Batcher.OracleBatcher", new object[] { database });
                 case DatabaseType.PostgreSQL:
-                    return new PostgresSqlBatcher<T>(database);
+                    return (IBatcher<T>)DipBuilder.CreateWithGeneric<T>($"WEF.Standard.Postgre, Version={version}, Culture=neutral, PublicKeyToken=null", "WEF.Batcher.PostgresSqlBatcher", new object[] { database });
                 default:
                     throw new Exception("不支持的数据库类型：" + database.DbProvider.DatabaseType.ToString());
 

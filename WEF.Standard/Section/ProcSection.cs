@@ -63,9 +63,10 @@ namespace WEF.Section
         {
             get
             {
-                return !(_dbContext.Db.DbProvider is SqlServerProvider
-                           || _dbContext.Db.DbProvider is SqlServer9Provider
-                           || _dbContext.Db.DbProvider is MsAccessProvider);
+                var name = _dbContext.Db.DbProvider.GetType().Name;
+                return !(name == "SqlServerProvider"
+                           || name == "SqlServer9Provider"
+                           || name == "MsAccessProvider");
             }
         }
 

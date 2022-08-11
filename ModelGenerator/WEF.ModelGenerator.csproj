@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="..\packages\OpenCvSharp4.runtime.win.4.5.3.20211228\build\net461\OpenCvSharp4.runtime.win.props" Condition="Exists('..\packages\OpenCvSharp4.runtime.win.4.5.3.20211228\build\net461\OpenCvSharp4.runtime.win.props')" />
   <Import Project="..\packages\Sdcb.PaddleInference.runtime.win64.mkl.2.3.0\build\net\Sdcb.PaddleInference.runtime.win64.mkl.props" Condition="Exists('..\packages\Sdcb.PaddleInference.runtime.win64.mkl.2.3.0\build\net\Sdcb.PaddleInference.runtime.win64.mkl.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -46,12 +47,21 @@
     <StartupObject>WEF.ModelGenerator.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
-      <HintPath>..\packages\Portable.BouncyCastle.1.8.6\lib\net40\BouncyCastle.Crypto.dll</HintPath>
+    <Reference Include="BouncyCastle.Crypto, Version=1.9.0.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>..\packages\Portable.BouncyCastle.1.9.0\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="CSkin, Version=16.1.14.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dlls\CSkin.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf, Version=3.19.4.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Protobuf.3.19.4\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.3.3.11, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.3.3\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -59,12 +69,33 @@
     <Reference Include="JWT, Version=9.0.0.0, Culture=neutral, PublicKeyToken=6f98bca0f40f2ecf, processorArchitecture=MSIL">
       <HintPath>..\packages\JWT.9.0.3\lib\net40\JWT.dll</HintPath>
     </Reference>
+    <Reference Include="K4os.Compression.LZ4, Version=1.2.6.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Compression.LZ4.1.2.6\lib\net46\K4os.Compression.LZ4.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4.Streams, Version=1.2.6.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Compression.LZ4.Streams.1.2.6\lib\net46\K4os.Compression.LZ4.Streams.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Hash.xxHash, Version=1.0.6.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Hash.xxHash.1.0.6\lib\net46\K4os.Hash.xxHash.dll</HintPath>
+    </Reference>
     <Reference Include="Leigh.Wen.QRCode, Version=1.0.7495.20585, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dlls\Leigh.Wen.QRCode.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=8.0.30.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.30\lib\net452\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql, Version=6.0.5.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.6.0.5\lib\netstandard2.0\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="NPOI, Version=2.5.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.5.1\lib\net45\NPOI.dll</HintPath>
@@ -80,6 +111,9 @@
     </Reference>
     <Reference Include="OpenCvSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenCvSharp4.4.5.5.20211231\lib\netstandard2.0\OpenCvSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=2.0.19.1, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\packages\Oracle.ManagedDataAccess.Core.2.19.151\lib\netstandard2.0\Oracle.ManagedDataAccess.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="Sdcb.PaddleInference, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -98,24 +132,45 @@
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
+    <Reference Include="System.Collections.Immutable, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.6.0.0\lib\net461\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.ConfigurationManager, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Configuration.ConfigurationManager.6.0.0\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Common, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.Common.4.3.0\lib\net451\System.Data.Common.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Data.OleDb, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.OleDb.6.0.0\lib\net461\System.Data.OleDb.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.OracleClient" />
-    <Reference Include="System.Data.SqlClient, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SqlClient.4.3.0\lib\net451\System.Data.SqlClient.dll</HintPath>
+    <Reference Include="System.Data.SqlClient, Version=4.6.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SqlClient.4.8.3\lib\net461\System.Data.SqlClient.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.104.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.104.0\lib\net40\System.Data.SQLite.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Data.SQLite, Version=1.0.116.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\lib\net46\System.Data.SQLite.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.116.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.116.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.116.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.116.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.6.0.0\lib\net461\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
@@ -123,8 +178,36 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.AccessControl, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.AccessControl.6.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Permissions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Permissions.6.0.0\lib\net461\System.Security.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Text.Encoding.CodePages, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encoding.CodePages.5.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.6.0.0\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.6.0.0\lib\net461\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Channels, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Channels.6.0.0\lib\net461\System.Threading.Channels.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -134,6 +217,30 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Ubiety.Dns.Core, Version=2.2.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.30\lib\net452\Ubiety.Dns.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="WEF, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WEF.Standard.1.0.0.2\lib\netstandard2.0\WEF.dll</HintPath>
+    </Reference>
+    <Reference Include="WEF.Standard.MSSQL, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WEF.Standard.MSSQL.1.0.0.2\lib\netstandard2.0\WEF.Standard.MSSQL.dll</HintPath>
+    </Reference>
+    <Reference Include="WEF.Standard.MySQL, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WEF.Standard.MySQL.1.0.0.2\lib\netstandard2.0\WEF.Standard.MySQL.dll</HintPath>
+    </Reference>
+    <Reference Include="WEF.Standard.OLEDB, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WEF.Standard.OLEDB.1.0.0.2\lib\netstandard2.0\WEF.Standard.OLEDB.dll</HintPath>
+    </Reference>
+    <Reference Include="WEF.Standard.Oracle, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WEF.Standard.Oracle.1.0.0.2\lib\netstandard2.0\WEF.Standard.Oracle.dll</HintPath>
+    </Reference>
+    <Reference Include="WEF.Standard.Postgre, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WEF.Standard.Postgre.1.0.0.2\lib\netstandard2.0\WEF.Standard.Postgre.dll</HintPath>
+    </Reference>
+    <Reference Include="WEF.Standard.SQLite, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WEF.Standard.SQLite.1.0.0.2\lib\netstandard2.0\WEF.Standard.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
       <HintPath>..\packages\DockPanelSuite.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
     </Reference>
@@ -141,6 +248,9 @@
       <HintPath>..\packages\DockPanelSuite.ThemeVS2015.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
+    <Reference Include="ZstdNet, Version=1.4.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.30\lib\net452\ZstdNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ConfigHelper.cs" />
@@ -154,6 +264,199 @@
     <Compile Include="Common\InvokeHelper.cs" />
     <Compile Include="Common\ListBoxExtends.cs" />
     <Compile Include="Common\MessageQueue.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Bson\BsonBinaryType.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Bson\BsonBinaryWriter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Bson\BsonObjectId.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Bson\BsonReader.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Bson\BsonToken.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Bson\BsonType.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Bson\BsonWriter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\ConstructorHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\BinaryConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\BsonObjectIdConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\CustomCreationConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\DataSetConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\DataTableConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\DateTimeConverterBase.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\DiscriminatedUnionConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\EntityKeyMemberConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\ExpandoObjectConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\IsoDateTimeConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\JavaScriptDateTimeConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\JsonValueConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\KeyValuePairConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\RegexConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\StringEnumConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\VersionConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Converters\XmlNodeConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\DateFormatHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\DateParseHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\DateTimeZoneHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\DefaultValueHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\FloatFormatHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\FloatParseHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\FormatterAssemblyStyle.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Formatting.cs" />
+    <Compile Include="Common\Newtonsoft.Json\IJsonLineInfo.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonArrayAttribute.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonConstructorAttribute.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonContainerAttribute.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonConvert.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonConverterAttribute.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonConverterCollection.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonDictionaryAttribute.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonException.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonExtensionDataAttribute.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonIgnoreAttribute.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonObjectAttribute.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonPosition.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonPropertyAttribute.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonReader.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonReaderException.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonSerializationException.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonSerializer.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonSerializerSettings.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonTextReader.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonTextWriter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonToken.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonValidatingReader.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonWriter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\JsonWriterException.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\Extensions.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\IJEnumerable.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JArray.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JConstructor.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JContainer.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JEnumerable.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JObject.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JProperty.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JPropertyDescriptor.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JPropertyKeyedCollection.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JRaw.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JsonMergeSettings.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JsonPath\ArrayIndexFilter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JsonPath\ArrayMultipleIndexFilter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JsonPath\ArraySliceFilter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JsonPath\FieldFilter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JsonPath\FieldMultipleFilter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JsonPath\JPath.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JsonPath\PathFilter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JsonPath\QueryExpression.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JsonPath\QueryFilter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JsonPath\ScanFilter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JToken.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JTokenEqualityComparer.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JTokenReader.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JTokenType.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JTokenWriter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\JValue.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Linq\MergeArrayHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\MemberSerialization.cs" />
+    <Compile Include="Common\Newtonsoft.Json\MetadataPropertyHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\MissingMemberHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\NullValueHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\ObjectCreationHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\PreserveReferencesHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\ReferenceLoopHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Required.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\Extensions.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\JsonSchema.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\JsonSchemaBuilder.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\JsonSchemaConstants.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\JsonSchemaException.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\JsonSchemaGenerator.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\JsonSchemaModel.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\JsonSchemaModelBuilder.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\JsonSchemaNode.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\JsonSchemaNodeCollection.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\JsonSchemaResolver.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\JsonSchemaType.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\JsonSchemaWriter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\UndefinedSchemaIdHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\ValidationEventArgs.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Schema\ValidationEventHandler.cs" />
+    <Compile Include="Common\Newtonsoft.Json\SerializationBinder.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\CachedAttributeGetter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\CamelCasePropertyNamesContractResolver.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\DefaultContractResolver.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\DefaultReferenceResolver.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\DefaultSerializationBinder.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\DiagnosticsTraceWriter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\DynamicValueProvider.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\ErrorContext.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\ErrorEventArgs.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\ExpressionValueProvider.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\IAttributeProvider.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\IContractResolver.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\IReferenceResolver.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\ITraceWriter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\IValueProvider.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonArrayContract.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonContainerContract.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonContract.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonDictionaryContract.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonDynamicContract.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonFormatterConverter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonISerializableContract.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonLinqContract.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonObjectContract.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonPrimitiveContract.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonProperty.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonPropertyCollection.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonSerializerInternalBase.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonSerializerInternalReader.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonSerializerInternalWriter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonSerializerProxy.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonStringContract.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\JsonTypeReflector.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\MemoryTraceWriter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\ObjectConstructor.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\OnErrorAttribute.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\ReflectionAttributeProvider.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\ReflectionValueProvider.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\TraceJsonReader.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Serialization\TraceJsonWriter.cs" />
+    <Compile Include="Common\Newtonsoft.Json\StringEscapeHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\TraceLevel.cs" />
+    <Compile Include="Common\Newtonsoft.Json\TypeNameHandling.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\Base64Encoder.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\BidirectionalDictionary.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\CollectionUtils.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\CollectionWrapper.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\ConvertUtils.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\DateTimeParser.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\DateTimeUtils.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\DictionaryWrapper.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\DynamicProxy.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\DynamicProxyMetaObject.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\DynamicReflectionDelegateFactory.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\DynamicUtils.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\EnumUtils.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\EnumValue.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\ExpressionReflectionDelegateFactory.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\FSharpUtils.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\ILGeneratorExtensions.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\ImmutableCollectionsUtils.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\JavaScriptUtils.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\JsonTokenUtils.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\LateBoundReflectionDelegateFactory.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\LinqBridge.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\MathUtils.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\MethodCall.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\MiscellaneousUtils.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\PropertyNameTable.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\ReflectionDelegateFactory.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\ReflectionObject.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\ReflectionUtils.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\StringBuffer.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\StringReference.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\StringUtils.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\ThreadSafeStore.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\TypeExtensions.cs" />
+    <Compile Include="Common\Newtonsoft.Json\Utilities\ValidationUtils.cs" />
+    <Compile Include="Common\Newtonsoft.Json\WriteState.cs" />
+    <Compile Include="Common\SerializeHelper.cs" />
     <Compile Include="Common\WEFMessageBox.cs" />
     <Compile Include="Common\ShortcutKeyHelper.cs" />
     <Compile Include="Common\SingleProcessHelper.cs" />
@@ -614,22 +917,23 @@
       <Project>{2b45a9ed-d323-4dd7-95da-34066c226aff}</Project>
       <Name>WEF.NoSql</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WEF\WEF.csproj">
-      <Project>{6898486b-bd52-4add-9bb1-c397349be2fd}</Project>
-      <Name>WEF</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\System.Data.SQLite.Core.1.0.104.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.104.0\build\net40\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.104.0\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.104.0\build\net40\System.Data.SQLite.Core.targets'))" />
     <Error Condition="!Exists('..\packages\Sdcb.PaddleInference.runtime.win64.mkl.2.3.0\build\net\Sdcb.PaddleInference.runtime.win64.mkl.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Sdcb.PaddleInference.runtime.win64.mkl.2.3.0\build\net\Sdcb.PaddleInference.runtime.win64.mkl.props'))" />
     <Error Condition="!Exists('..\packages\OpenCvSharp4.runtime.win.4.5.3.20211228\build\net461\OpenCvSharp4.runtime.win.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OpenCvSharp4.runtime.win.4.5.3.20211228\build\net461\OpenCvSharp4.runtime.win.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets'))" />
   </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+  <Import Project="..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

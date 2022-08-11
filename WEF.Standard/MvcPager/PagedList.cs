@@ -14,7 +14,9 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace WEF.MvcPager
 {
@@ -22,8 +24,53 @@ namespace WEF.MvcPager
     /// 分页列表
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class PagedList<T> : List<T>
+    [Serializable, DataContract]
+    public class PagedList<T>
     {
+        /// <summary>
+        /// 当前页
+        /// </summary>
+        [DataMember(Name = "pageIndex")]
+        public int PageIndex { get; set; }
+        /// <summary>
+        /// 页容量
+        /// </summary>
+        [DataMember(Name = "pageSize")]
+        public int PageSize { get; set; }
+        /// <summary>
+        /// 总数
+        /// </summary>
+        [DataMember(Name = "totalItemCount")]
+        public int TotalItemCount { get; set; }
+        /// <summary>
+        /// 总页数
+        /// </summary>
+        [DataMember(Name = "totalPageCount")]
+        public int TotalPageCount { get; private set; }
+        /// <summary>
+        /// 开始页数
+        /// </summary>
+        [DataMember(Name = "startRecordIndex")]
+        public int StartRecordIndex { get; private set; }
+        /// <summary>
+        /// 结束页数
+        /// </summary>
+        [DataMember(Name = "endRecordIndex")]
+        public int EndRecordIndex { get; private set; }
+        /// <summary>
+        /// 数据
+        /// </summary>
+        [DataMember(Name = "data")]
+        public List<T> Data { get; set; } = new List<T>();
+
+        /// <summary>
+        /// 分页列表
+        /// </summary>
+        public PagedList()
+        {
+
+        }
+
         /// <summary>
         /// 分页列表
         /// </summary>
@@ -35,12 +82,12 @@ namespace WEF.MvcPager
             PageSize = pageSize;
             TotalItemCount = items.Count;
             TotalPageCount = (int)Math.Ceiling(TotalItemCount / (double)PageSize);
-            CurrentPageIndex = pageIndex;
-            StartRecordIndex = (CurrentPageIndex - 1) * PageSize + 1;
+            PageIndex = pageIndex;
+            StartRecordIndex = (PageIndex - 1) * PageSize + 1;
             EndRecordIndex = TotalItemCount > pageIndex * pageSize ? pageIndex * pageSize : TotalItemCount;
             for (int i = StartRecordIndex - 1; i < EndRecordIndex; i++)
             {
-                Add(items[i]);
+                Data.Add(items[i]);
             }
         }
 
@@ -53,10 +100,10 @@ namespace WEF.MvcPager
         /// <param name="totalItemCount"></param>
         public PagedList(IList<T> items, int pageIndex, int pageSize, int totalItemCount)
         {
-            AddRange(items);
+            Data.AddRange(items);
             TotalItemCount = totalItemCount;
             TotalPageCount = (int)Math.Ceiling(totalItemCount / (double)pageSize);
-            CurrentPageIndex = pageIndex;
+            PageIndex = pageIndex;
             PageSize = pageSize;
             StartRecordIndex = (pageIndex - 1) * pageSize + 1;
             EndRecordIndex = TotalItemCount > pageIndex * pageSize ? pageIndex * pageSize : totalItemCount;
@@ -69,12 +116,12 @@ namespace WEF.MvcPager
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <param name="totalItemCount"></param>
-        public PagedList(IEnumerable<T>  items, int pageIndex, int pageSize, int totalItemCount)
+        public PagedList(IEnumerable<T> items, int pageIndex, int pageSize, int totalItemCount)
         {
-            AddRange(items);
+            Data.AddRange(items);
             TotalItemCount = totalItemCount;
             TotalPageCount = (int)Math.Ceiling(totalItemCount / (double)pageSize);
-            CurrentPageIndex = pageIndex;
+            PageIndex = pageIndex;
             PageSize = pageSize;
             StartRecordIndex = (pageIndex - 1) * pageSize + 1;
             EndRecordIndex = TotalItemCount > pageIndex * pageSize ? pageIndex * pageSize : totalItemCount;
@@ -91,34 +138,9 @@ namespace WEF.MvcPager
             PageSize = pageSize;
             TotalItemCount = totalItemCount;
             TotalPageCount = (int)Math.Ceiling(TotalItemCount / (double)PageSize);
-            CurrentPageIndex = pageIndex;
-            StartRecordIndex = (CurrentPageIndex - 1) * PageSize + 1;
+            PageIndex = pageIndex;
+            StartRecordIndex = (PageIndex - 1) * PageSize + 1;
             EndRecordIndex = TotalItemCount > pageIndex * pageSize ? pageIndex * pageSize : TotalItemCount;
         }
-
-        /// <summary>
-        /// 当前页
-        /// </summary>
-        public int CurrentPageIndex { get; set; }
-        /// <summary>
-        /// 页容量
-        /// </summary>
-        public int PageSize { get; set; }
-        /// <summary>
-        /// 总数
-        /// </summary>
-        public int TotalItemCount { get; set; }
-        /// <summary>
-        /// 总页数
-        /// </summary>
-        public int TotalPageCount { get; private set; }
-        /// <summary>
-        /// 开始页数
-        /// </summary>
-        public int StartRecordIndex { get; private set; }
-        /// <summary>
-        /// 结束页数
-        /// </summary>
-        public int EndRecordIndex { get; private set; }
     }
 }

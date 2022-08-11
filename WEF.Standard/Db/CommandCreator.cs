@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Text;
+
 using WEF.Common;
 using WEF.Expressions;
 using WEF.Provider;
@@ -247,7 +248,7 @@ namespace WEF.Db
             var identityExist = !Field.IsNullOrEmpty(identityField);
             var isSequence = false;
 
-            if (_db.DbProvider is OracleProvider)
+            if (_db.DbProvider.GetType().Name == "OracleProvider")
             {
                 if (!string.IsNullOrEmpty(EntityCache.GetSequence<TEntity>()))
                     isSequence = true;

@@ -146,7 +146,7 @@ namespace WEF
         /// <summary>
         /// 设置 distinct
         /// </summary>
-        internal string DistinctString
+        public string DistinctString
         {
             set
             {
@@ -157,7 +157,7 @@ namespace WEF
         /// <summary>
         /// 前置值如 Top N
         /// </summary>
-        internal string PrefixString
+        public string PrefixString
         {
             set
             {
@@ -258,7 +258,7 @@ namespace WEF
                 StringBuilder fromstring = new StringBuilder();
 
                 //处理ACCESS 的多表联合查询
-                if (_database.DbProvider is MsAccessProvider)
+                if (_database.DbProvider.GetType().Name == "MsAccessProvider")
                 {
                     fromstring.Append('(', _joins.Count);
                     fromstring.Append(_tableName);
@@ -356,7 +356,7 @@ namespace WEF
             {
                 return _tableName;
             }
-            internal set
+            set
             {
                 _tableName = value;
 
@@ -374,7 +374,7 @@ namespace WEF
             {
                 return _orderBy;
             }
-            internal set
+            set
             {
                 _orderBy = value;
             }
@@ -456,7 +456,7 @@ namespace WEF
 
                 return ps;
             }
-            internal set
+            set
             {
                 this._parameters = value;
             }
@@ -714,7 +714,7 @@ namespace WEF
         /// </summary>
         /// <param name="fields"></param>
         /// <returns></returns>
-        internal Search AddSelect(params Field[] fields)
+        public Search AddSelect(params Field[] fields)
         {
             if (null != fields && fields.Length > 0)
             {
@@ -808,7 +808,7 @@ namespace WEF
         public int Count()
         {
             return Count(GetPagedFromSection());
-        }        
+        }
 
         /// <summary>
         /// 获取记录数(内部使用)
@@ -864,7 +864,7 @@ namespace WEF
             }
             return this;
         }
-        
+
 
         /// <summary>
         /// 创建  查询的DbCommand

@@ -83,10 +83,10 @@ namespace WEF
 
 
 
-        PagedList<T> GetPagedList(int pageIndex, int pageSize, string orderBy, bool asc);
+        PagedList<T> ToPagedList(int pageIndex, int pageSize, string orderBy, bool asc);
 
-        PagedList<T> GetPagedList(Expression<Func<T, bool>> lambdaWhere, int pageIndex, int pageSize, string orderBy, bool asc);
+        PagedList<T> ToPagedList(Expression<Func<T, bool>> lambdaWhere, int pageIndex, int pageSize, string orderBy, bool asc);
 
-        PagedList<T> GetPagedList(Where where, int pageIndex, int pageSize, string orderBy, bool asc);
+        PagedList<T> ToPagedList(Where where, int pageIndex, int pageSize, string orderBy, bool asc);
     }
 }

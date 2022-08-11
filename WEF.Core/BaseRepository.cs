@@ -192,7 +192,7 @@ namespace WEF
         /// <returns></returns>
         public PagedList<T> GetPagedList(int pageIndex, int pageSize, string orderBy = "ID", bool asc = true)
         {
-            return Search().GetPagedList(pageIndex, pageSize, orderBy, asc);
+            return Search().ToPagedList(pageIndex, pageSize, orderBy, asc);
         }
         /// <summary>
         /// 分页查询
@@ -205,7 +205,7 @@ namespace WEF
         /// <returns></returns>
         public PagedList<T> GetPagedList(Expression<Func<T, bool>> lambdaWhere, int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
         {
-            return Search().GetPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
+            return Search().ToPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
         }
         /// <summary>
         /// 分页查询
@@ -216,9 +216,9 @@ namespace WEF
         /// <param name="asc">升降</param>
         /// </summary>
         /// <returns></returns>
-        public PagedList<T> GetPagedList(Expression<Func<T, bool>> lambdaWhere, string tableName = "", int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
+        public PagedList<T> GetPagedList(Expression<Func<T, bool>> lambdaWhere, string tableName, int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
         {
-            return Search(tableName).GetPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
+            return Search(tableName).ToPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
         }
 
         /// <summary>

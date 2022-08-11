@@ -92,7 +92,7 @@ namespace WEF.Test
 
             var list2 = rr.Search("rules1").Where(b => b.enabled == true).ToList();
 
-            var list3 = rr.Search("rules1").Where(b => b.enabled == true).GetPagedList(1, 20, "id", true);
+            var list3 = rr.Search("rules1").Where(b => b.enabled == true).ToPagedList(1, 20, "id", true);
 
             var st1 = rr.Search("rules1").Where(b => b.enabled == true).First();
 
@@ -475,7 +475,7 @@ namespace WEF.Test
         /// <returns></returns>
         public PagedList<Rules> GetPagedList(Expression<Func<Rules, bool>> lambdaWhere, string tableName = "", int pageIndex = 1, int pageSize = 12, string orderBy = "id", bool asc = true)
         {
-            return this.Search(tableName).GetPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
+            return this.Search(tableName).ToPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
         }
         /// <summary>
         /// 添加实体

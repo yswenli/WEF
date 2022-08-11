@@ -42,41 +42,32 @@ namespace WEF.ModelGenerator.Common
 
         static Dictionary<string, string> loadType()
         {
+            var types = new Dictionary<string, string>();
 
-            Dictionary<string, string> types = WEF.Cache.Cache.Default.GetCache(cachekeystring) as Dictionary<string, string>;
+            XmlDocument doc = new XmlDocument();
 
-            if (null == types)
+            doc.Load(DbTypePath);
+
+            XmlNodeList nodes = doc.SelectNodes("//type");
+
+            if (null != nodes && nodes.Count > 0)
             {
-
-                types = new Dictionary<string, string>();
-
-                XmlDocument doc = new XmlDocument();
-
-                doc.Load(DbTypePath);
-
-                XmlNodeList nodes = doc.SelectNodes("//type");
-
-                if (null != nodes && nodes.Count > 0)
+                foreach (XmlNode node in nodes)
                 {
-                    foreach (XmlNode node in nodes)
+                    XmlAttribute att = node.Attributes["dbtype"];
+                    if (null != att)
                     {
-                        XmlAttribute att = node.Attributes["dbtype"];
-                        if (null != att)
+                        string dbtypeStr = att.Value.Trim().ToLower();
+                        if (!types.ContainsKey(dbtypeStr))
                         {
-                            string dbtypeStr = att.Value.Trim().ToLower();
-                            if (!types.ContainsKey(dbtypeStr))
+                            XmlAttribute attcstype = node.Attributes["cstype"];
+                            if (null != attcstype)
                             {
-                                XmlAttribute attcstype = node.Attributes["cstype"];
-                                if (null != attcstype)
-                                {
-                                    types.Add(dbtypeStr, attcstype.Value);
-                                }
+                                types.Add(dbtypeStr, attcstype.Value);
                             }
                         }
                     }
                 }
-
-                Cache.Cache.Default.AddCacheFilesDependency(cachekeystring, types, DbTypePath);
             }
 
             return types;

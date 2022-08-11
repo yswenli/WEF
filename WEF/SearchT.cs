@@ -1018,7 +1018,7 @@ namespace WEF
         /// <param name="order"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public PagedList<T> GetPagedList(int pageIndex, int pageSize, string order, bool asc)
+        public PagedList<T> ToPagedList(int pageIndex, int pageSize, string order, bool asc)
         {
             var total = this.Count();
 
@@ -1036,7 +1036,7 @@ namespace WEF
         /// <param name="orderBy"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public PagedList<T> GetPagedList(Expression<Func<T, bool>> lambdaWhere, int pageIndex, int pageSize, string orderBy, bool asc)
+        public PagedList<T> ToPagedList(Expression<Func<T, bool>> lambdaWhere, int pageIndex, int pageSize, string orderBy, bool asc)
         {
             var total = this.Where(lambdaWhere).Count();
 
@@ -1054,7 +1054,7 @@ namespace WEF
         /// <param name="orderBy"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public PagedList<T> GetPagedList(Where where, int pageIndex, int pageSize, string orderBy, bool asc)
+        public PagedList<T> ToPagedList(Where where, int pageIndex, int pageSize, string orderBy, bool asc)
         {
             var total = this.Where(where).Count();
 

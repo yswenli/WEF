@@ -90,7 +90,7 @@ namespace WEF
         public DataTable GetTypeAndLength(string tableName, string columnName)
         {
             DataTable dt = new DataTable();
-            if (Db.DbProvider is SqlServer9Provider || Db.DbProvider is SqlServerProvider)
+            if (Db.DbProvider.GetType().Name== "SqlServer9Provider" || Db.DbProvider.GetType().Name == "SqlServerProvider")
             {
                 string sql = "";
                 if (string.IsNullOrEmpty(tableName))
