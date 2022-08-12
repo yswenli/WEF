@@ -55,18 +55,18 @@ namespace WEF.ModelGenerator
 
         private void Instance_OnMessage(string msg)
         {
-            this.BeginInvoke(new Action(() =>
+            this.Invoke(() =>
             {
                 toolStripStatusLabel2.Text = msg;
-            }));
+            });
         }
 
         private void Instance_OnComplete()
         {
-            this.BeginInvoke(new Action(() =>
+            this.Invoke(() =>
             {
                 toolStripStatusLabel2.Text = "就绪";
-            }));
+            });
         }
 
         private void MainForm_SizeChanged(object sender, EventArgs e)

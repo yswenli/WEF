@@ -42,7 +42,14 @@ namespace WEF.ModelGenerator.Common
         public static void Invoke(this Form owner, Action action)
         {
             if (!owner.IsHandleCreated) throw new InvalidOperationException("父对象必须是从UI线程上创建的");
-            owner.Invoke(action);
+            if (owner.InvokeRequired)
+            {
+                owner.Invoke(action);
+            }
+            else
+            {
+                action();
+            }
         }
 
         /// <summary>
@@ -90,7 +97,7 @@ namespace WEF.ModelGenerator.Common
         {
             Task.Run(() =>
             {
-                owner.Invoke(new Action(() =>
+                owner.Invoke(() =>
                 {
                     Task.Run(() =>
                     {
@@ -100,10 +107,10 @@ namespace WEF.ModelGenerator.Common
                         {
                             var visiable = true;
 
-                            owner.Invoke(new Action(() =>
+                            owner.Invoke(() =>
                             {
                                 visiable = form.Visible;
-                            }));
+                            });
 
                             if (!visiable)
                             {
@@ -112,14 +119,14 @@ namespace WEF.ModelGenerator.Common
 
                             var seconds = (stopwatch.ElapsedMilliseconds / 1000).ToString("N");
 
-                            owner.Invoke(new Action(() => action.Invoke(seconds)));
+                            owner.Invoke(() => action.Invoke(seconds));
 
                             Thread.Sleep(time);
                         }
                     });
                     if (!form.Visible)
                         form.ShowDialog(owner);
-                }));
+                });
             });
         }
 
