@@ -3,12 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF", "WEF\WEF.csproj", "{6898486B-BD52-4ADD-9BB1-C397349BE2FD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Core", "WEF.Core\WEF.Core.csproj", "{2452D01C-9B88-4DA6-84CA-D2E6F4CBC133}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Core.Test", "WEF.Core.Test\WEF.Core.Test.csproj", "{036EEE17-3F09-4064-9A8D-53D75743D2E8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.NoSql", "WEF.NoSql\WEF.NoSql.csproj", "{2B45A9ED-D323-4DD7-95DA-34066C226AFF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.NoSqlTest", "WEF.NoSqlTest\WEF.NoSqlTest.csproj", "{9F3C9523-86EA-4EC1-B656-6E9E2265F0E4}"
@@ -19,17 +13,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.ModelGenerator", "Model
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Standard", "WEF.Standard\WEF.Standard.csproj", "{BFA7E11E-9293-40F4-BCEA-40888D29BFFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.MSSQL", "WEF.Standard.MSSQL\WEF.Standard.MSSQL.csproj", "{1D5BCAAA-472E-4710-86EA-2AA67B7685C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Standard.MSSQL", "WEF.Standard.MSSQL\WEF.Standard.MSSQL.csproj", "{1D5BCAAA-472E-4710-86EA-2AA67B7685C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.MySQL", "WEF.Standard.MySQL\WEF.Standard.MySQL.csproj", "{B1EBDEB8-E6F6-4B1B-ADA6-757CF61FA688}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Standard.MySQL", "WEF.Standard.MySQL\WEF.Standard.MySQL.csproj", "{B1EBDEB8-E6F6-4B1B-ADA6-757CF61FA688}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.Oracle", "WEF.Standard.Oracle\WEF.Standard.Oracle.csproj", "{7B71D1CE-698B-4840-9EBA-C1AADFFC7028}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Standard.Oracle", "WEF.Standard.Oracle\WEF.Standard.Oracle.csproj", "{7B71D1CE-698B-4840-9EBA-C1AADFFC7028}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.Postgre", "WEF.Standard.Postgre\WEF.Standard.Postgre.csproj", "{42727823-F5FD-44C4-9483-32DCC20D9E27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Standard.Postgre", "WEF.Standard.Postgre\WEF.Standard.Postgre.csproj", "{42727823-F5FD-44C4-9483-32DCC20D9E27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.SQLite", "WEF.Standard.SQLite\WEF.Standard.SQLite.csproj", "{A31AF5CC-4312-4551-BECD-C77C1CC8117A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Standard.SQLite", "WEF.Standard.SQLite\WEF.Standard.SQLite.csproj", "{A31AF5CC-4312-4551-BECD-C77C1CC8117A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.OLEDB", "WEF.Standard.OLEDB\WEF.Standard.OLEDB.csproj", "{5D9DB26D-BB45-4DEA-B270-F5E2E5E34ADE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Standard.OLEDB", "WEF.Standard.OLEDB\WEF.Standard.OLEDB.csproj", "{5D9DB26D-BB45-4DEA-B270-F5E2E5E34ADE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,18 +31,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6898486B-BD52-4ADD-9BB1-C397349BE2FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6898486B-BD52-4ADD-9BB1-C397349BE2FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6898486B-BD52-4ADD-9BB1-C397349BE2FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6898486B-BD52-4ADD-9BB1-C397349BE2FD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2452D01C-9B88-4DA6-84CA-D2E6F4CBC133}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2452D01C-9B88-4DA6-84CA-D2E6F4CBC133}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2452D01C-9B88-4DA6-84CA-D2E6F4CBC133}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2452D01C-9B88-4DA6-84CA-D2E6F4CBC133}.Release|Any CPU.Build.0 = Release|Any CPU
-		{036EEE17-3F09-4064-9A8D-53D75743D2E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{036EEE17-3F09-4064-9A8D-53D75743D2E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{036EEE17-3F09-4064-9A8D-53D75743D2E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{036EEE17-3F09-4064-9A8D-53D75743D2E8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2B45A9ED-D323-4DD7-95DA-34066C226AFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2B45A9ED-D323-4DD7-95DA-34066C226AFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B45A9ED-D323-4DD7-95DA-34066C226AFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
