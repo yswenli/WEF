@@ -8,11 +8,14 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
-using Npgsql;
-using NpgsqlTypes;
 using System;
 using System.Data;
 using System.Data.Common;
+
+using Npgsql;
+
+using NpgsqlTypes;
+
 using WEF.Common;
 
 namespace WEF.Provider
@@ -24,6 +27,7 @@ namespace WEF.Provider
         public PostgreSqlProvider(string connectionString)
             : base(connectionString, global::Npgsql.NpgsqlFactory.Instance, '\"', '\"', '@')
         {
+            this.DatabaseType = DatabaseType.PostgreSQL;
         }
 
         public override string RowAutoID

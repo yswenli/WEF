@@ -26,6 +26,7 @@ namespace WEF.Provider
         public SqlServerProvider(string connectionString)
             : this(connectionString, SqlClientFactory.Instance)
         {
+            this.DatabaseType = DatabaseType.SqlServer;
         }
 
         public SqlServerProvider(string connectionString, DbProviderFactory dbFactory)

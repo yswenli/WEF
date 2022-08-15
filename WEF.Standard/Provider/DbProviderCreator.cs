@@ -45,32 +45,32 @@ namespace WEF.Provider
             {
                 case DatabaseType.SqlServer9:
                     provider = ProviderFactory.CreateDbProvider($"WEF.Standard.MSSQL, Version={version}, Culture=neutral, PublicKeyToken=null",
-                        "WEF.Provider.SqlServer9Provider", connStr, dt);
+                        "WEF.Provider.SqlServer9Provider", connStr);
                     break;
                 case DatabaseType.SqlServer:
                     provider = ProviderFactory.CreateDbProvider($"WEF.Standard.MSSQL, Version={version}, Culture=neutral, PublicKeyToken=null",
-                        "WEF.Provider.SqlServerProvider", connStr, dt);
+                        "WEF.Provider.SqlServerProvider", connStr);
                     break;
                 case DatabaseType.Oracle:
                     provider = ProviderFactory.CreateDbProvider($"WEF.Standard.Oracle, Version={version}, Culture=neutral, PublicKeyToken=null",
-                        "WEF.ProviderOracleProvider", connStr, dt);
+                        "WEF.ProviderOracleProvider", connStr);
                     break;
                 case DatabaseType.MariaDB:
                 case DatabaseType.MySql:
                     provider = ProviderFactory.CreateDbProvider($"WEF.Standard.MySQL, Version={version}, Culture=neutral, PublicKeyToken=null",
-                        "WEF.Provider.MySqlProvider", connStr, dt);
+                        "WEF.Provider.MySqlProvider", connStr);
                     break;
                 case DatabaseType.Sqlite3:
                     provider = ProviderFactory.CreateDbProvider($"WEF.Standard.SQLite, Version={version}, Culture=neutral, PublicKeyToken=null",
-                        "WEF.Provider.SqliteProvider", connStr, dt);
+                        "WEF.Provider.SqliteProvider", connStr);
                     break;
                 case DatabaseType.MsAccess:
                     provider = ProviderFactory.CreateDbProvider($"WEF.Standard.OLEDB, Version={version}, Culture=neutral, PublicKeyToken=null",
-                        "WEF.Provider.MsAccessProvider", connStr, dt);
+                        "WEF.Provider.MsAccessProvider", connStr);
                     break;
                 case DatabaseType.PostgreSQL:
                     provider = ProviderFactory.CreateDbProvider($"WEF.Standard.Postgre, Version={version}, Culture=neutral, PublicKeyToken=null",
-                        "WEF.Provider.PostgreSqlProvider", connStr, dt);
+                        "WEF.Provider.PostgreSqlProvider", connStr);
                     break;
             }
             if (provider != null)

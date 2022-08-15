@@ -29,6 +29,7 @@ namespace WEF.Provider
         public OracleProvider(string connectionString)
             : base(connectionString, OracleClientFactory.Instance, '"', '"', ':')
         {
+            this.DatabaseType = DatabaseType.Oracle;
         }
 
         public override string RowAutoID

@@ -114,26 +114,26 @@ namespace WEF
             switch (dt)
             {
                 case DatabaseType.SqlServer9:
-                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.SqlServer9Provider", connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.SqlServer9Provider", connStr);
                     break;
                 case DatabaseType.SqlServer:
-                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.SqlServerProvider", connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.SqlServerProvider", connStr);
                     break;
                 case DatabaseType.Oracle:
-                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.OracleProvider", connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.OracleProvider", connStr);
                     break;
                 case DatabaseType.MariaDB:
                 case DatabaseType.MySql:
-                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.MySqlProvider", connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.MySqlProvider", connStr);
                     break;
                 case DatabaseType.Sqlite3:
-                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.SqliteProvider", connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.SqliteProvider", connStr);
                     break;
                 case DatabaseType.MsAccess:
-                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.MsAccessProvider", connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.MsAccessProvider", connStr);
                     break;
                 case DatabaseType.PostgreSQL:
-                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.PostgreSqlProvider", connStr, dt);
+                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.PostgreSqlProvider", connStr);
                     break;
             }
             if (provider != null)
@@ -217,7 +217,7 @@ namespace WEF
         /// <param name="timeout"></param>
         public DBContext(string assemblyName, string className, string connStr, int timeout = 120)
         {
-            DbProvider provider = ProviderFactory.CreateDbProvider(assemblyName, className, connStr, null);
+            DbProvider provider = ProviderFactory.CreateDbProvider(assemblyName, className, connStr);
             if (provider == null)
             {
                 throw new NotSupportedException(string.Format("Cannot construct DbProvider by specified parameters: {0}, {1}, {2}",

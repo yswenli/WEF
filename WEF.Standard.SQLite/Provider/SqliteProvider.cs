@@ -27,6 +27,7 @@ namespace WEF.Provider
         public SqliteProvider(string connectionString)
             : base(connectionString, System.Data.SQLite.SQLiteFactory.Instance, '[', ']', '@')
         {
+            this.DatabaseType = DatabaseType.Sqlite3;
         }
 
         public override string RowAutoID

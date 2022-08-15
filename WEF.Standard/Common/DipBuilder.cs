@@ -25,6 +25,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Reflection;
 
+using WEF.Provider;
+
 namespace WEF.Common
 {
     /// <summary>
@@ -64,15 +66,14 @@ namespace WEF.Common
         /// <returns></returns>
         public static object Create(string assemblyName, string typeName, object[] args = null)
         {
-            var ass = _typeCache.GetOrAdd(assemblyName, (a)=> Assembly.Load(assemblyName));
-            return _instanceCahce.GetOrAdd(typeName,
-                     ass.CreateInstance(typeName,
+            var ass = _typeCache.GetOrAdd(assemblyName, (a) => Assembly.Load(assemblyName));
+            return ass.CreateInstance(typeName,
                          true,
                          BindingFlags.Default,
                          null,
                          args,
                          System.Globalization.CultureInfo.InvariantCulture,
-                         null));
+                         null);
         }
         /// <summary>
         /// 创建实例
@@ -85,6 +86,18 @@ namespace WEF.Common
         public static T Create<T>(string assemblyName, string typeName, object[] args = null)
         {
             return (T)Create(assemblyName, typeName, args);
+        }
+
+        /// <summary>
+        /// 创建DbProvider实例
+        /// </summary>
+        /// <param name="assemblyName"></param>
+        /// <param name="typeName"></param>
+        /// <param name="connStr"></param>
+        /// <returns></returns>
+        public static DbProvider CreateDbProvider(string assemblyName, string typeName, string connStr)
+        {
+            return (DbProvider)_instanceCahce.GetOrAdd(assemblyName + typeName + connStr, (a) => Create<DbProvider>(assemblyName, typeName, new object[] { connStr }));
         }
 
         /// <summary>

@@ -43,7 +43,7 @@ namespace WEF.Provider
         /// <param name="connectionString">The conn STR.</param>
         /// <param name="databaseType">The DatabaseType.</param>
         /// <returns>The db provider.</returns>
-        public static DbProvider CreateDbProvider(string assemblyName, string className, string connectionString, DatabaseType? databaseType)
+        public static DbProvider CreateDbProvider(string assemblyName, string className, string connectionString)
         {
             Check.Require(connectionString, "connectionString", Check.NotNullOrEmpty);
 
@@ -83,19 +83,11 @@ namespace WEF.Provider
                     if (string.IsNullOrEmpty(className))
                     {
                         className = "WEF.Provider.SqlServerProvider";
-                        if (databaseType == null)
-                        {
-                            databaseType = DatabaseType.SqlServer;
-                        }
                     }
                     else if (String.Compare(className, "System.Data.SqlClient", StringComparison.OrdinalIgnoreCase) == 0 || 
                         String.Compare(className, "WEF.Standard.MSSQL", StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         className = "WEF.Provider.SqlServerProvider";
-                        if (databaseType == null)
-                        {
-                            databaseType = DatabaseType.SqlServer;
-                        }
                     }
                     else if (String.Compare(className, "WEF.SqlServer9", StringComparison.OrdinalIgnoreCase) == 0
                         || String.Compare(className, "WEF.Provider.SqlServerProvider", StringComparison.OrdinalIgnoreCase) == 0
@@ -104,54 +96,29 @@ namespace WEF.Provider
                         || className.IndexOf("sql2005", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         className = "WEF.Provider.SqlServer9Provider";
-                        if (databaseType == null)
-                        {
-                            databaseType = DatabaseType.SqlServer9;
-                        }
                     }
                     else if (className.IndexOf("oracle", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         className = "WEF.Provider.OracleProvider";
-                        if (databaseType == null)
-                        {
-                            databaseType = DatabaseType.Oracle;
-                        }
                     }
                     else if (className.IndexOf("access", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         className = "WEF.Provider.MsAccessProvider";
-                        if (databaseType == null)
-                        {
-                            databaseType = DatabaseType.MsAccess;
-                        }
                     }
                     else if (className.IndexOf("mysql", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         className = "WEF.Provider.MySqlProvider";
-                        if (databaseType == null)
-                        {
-                            databaseType = DatabaseType.MySql;
-                        }
                     }
                     else if (className.IndexOf("sqlite", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         className = "WEF.Sqlite.SqliteProvider";
-                        if (databaseType == null)
-                        {
-                            databaseType = DatabaseType.Sqlite3;
-                        }
                     }
 
-                    DbProvider retProvider = DipBuilder.Create<DbProvider>(assemblyName, className, new object[] { connectionString });
+                    var provider = DipBuilder.CreateDbProvider(assemblyName, className, connectionString);
 
-                    if (retProvider != null && databaseType != null)
-                    {
-                        retProvider.DatabaseType = databaseType.Value;
-                    }
+                    _providerCache[cacheKey] = provider;
 
-                    _providerCache[cacheKey] = retProvider;
-
-                    return retProvider;
+                    return provider;
                 }
             }
         }
@@ -173,11 +140,11 @@ namespace WEF.Provider
                         string[] assAndClass = connStrSetting.ProviderName.Split(',');
                         if (assAndClass.Length > 1)
                         {
-                            dbProvider = CreateDbProvider(assAndClass[1].Trim(), assAndClass[0].Trim(), connStrSetting.ConnectionString, null);
+                            dbProvider = CreateDbProvider(assAndClass[1].Trim(), assAndClass[0].Trim(), connStrSetting.ConnectionString);
                         }
                         else
                         {
-                            dbProvider = CreateDbProvider(null, assAndClass[0].Trim(), connStrSetting.ConnectionString, null);
+                            dbProvider = CreateDbProvider(null, assAndClass[0].Trim(), connStrSetting.ConnectionString);
                         }
 
                         dbProvider.ConnectionStringsName = connStrSetting.Name;
@@ -215,8 +182,8 @@ namespace WEF.Provider
                 }
                 var assAndClass = connStrSetting.ProviderName.Split(',');
                 var dbProvider = assAndClass.Length > 1
-                    ? CreateDbProvider(assAndClass[0].Trim(), assAndClass[1].Trim(), connStrSetting.ConnectionString, null)
-                    : CreateDbProvider(null, assAndClass[0].Trim(), connStrSetting.ConnectionString, null);
+                    ? CreateDbProvider(assAndClass[0].Trim(), assAndClass[1].Trim(), connStrSetting.ConnectionString)
+                    : CreateDbProvider(null, assAndClass[0].Trim(), connStrSetting.ConnectionString);
                 dbProvider.ConnectionStringsName = connStrName;
                 return dbProvider;
             }

@@ -9,11 +9,11 @@
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
 
-using MySql.Data.MySqlClient;
-
 using System;
 using System.Data;
 using System.Data.Common;
+
+using MySql.Data.MySqlClient;
 
 using WEF.Common;
 
@@ -26,6 +26,7 @@ namespace WEF.Provider
         public MySqlProvider(string connectionString)
             : base(connectionString, global::MySql.Data.MySqlClient.MySqlClientFactory.Instance, '`', '`', '?')
         {
+            this.DatabaseType = DatabaseType.MySql;
         }
 
         public override string RowAutoID

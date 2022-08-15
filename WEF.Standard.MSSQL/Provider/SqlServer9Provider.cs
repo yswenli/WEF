@@ -8,12 +8,7 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Text;
-using WEF;
 using WEF.Common;
-using WEF.Section;
 using WEF.Expressions;
 
 namespace WEF.Provider
@@ -27,6 +22,7 @@ namespace WEF.Provider
         public SqlServer9Provider(string connectionString)
             : base(connectionString)
         {
+            this.DatabaseType=DatabaseType.SqlServer9;
         }
 
 
