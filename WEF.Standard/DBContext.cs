@@ -100,7 +100,6 @@ namespace WEF
         /// <summary>
         /// 开始批处理
         /// </summary>
-        /// <param name="batchSize">1000</param>
         /// <returns></returns>
         public IBatcher<T> CreateBatch<T>() where T : Entity
         {
