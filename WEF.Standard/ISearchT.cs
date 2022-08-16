@@ -43,7 +43,7 @@ namespace WEF
         Search<T> Refresh();
         Search<T> RightJoin<TEntity>(WhereOperation where) where TEntity : Entity;
         Search<T> Select(Expression<Func<T, bool>> lambdaSelect);
-        Search<T> Select(Expression<Func<T, object>> lambdaSelect);
+        Search<T> Select(params Expression<Func<T, object>>[] lambdaSelects);
         Search<T> Select(params Field[] fields);
         Search<T> Select<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> lambdaWhere);
         Search<T> Select<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, object>> lambdaSelect);

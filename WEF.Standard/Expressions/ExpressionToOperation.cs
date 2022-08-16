@@ -541,9 +541,23 @@ namespace WEF.Expressions
             throw new Exception("暂时不支持的Order by lambda写法！请使用经典写法！");
         }
 
-        public static Field[] ToSelect(string tableName, Expression<Func<T, object>> expr)
+
+        /// <summary>
+        /// ToSelect
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="exprs"></param>
+        /// <returns></returns>
+        public static Field[] ToSelect(string tableName, params Expression<Func<T, object>>[] exprs)
         {
-            return ToSelectChild(tableName, expr.Body);
+            var list = new List<Field>();
+            foreach (var expr in exprs)
+            {
+                var fields = ToSelectChild(tableName, expr.Body);
+                if (fields == null || fields.Length < 1) continue;
+                list.AddRange(fields);
+            }
+            return list.ToArray();
         }
 
         public static Field[] ToSelect<T2>(string tableName, Expression<Func<T, T2, object>> expr)

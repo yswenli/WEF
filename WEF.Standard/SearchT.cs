@@ -530,15 +530,17 @@ namespace WEF
         {
             return (Search<T>)base.Select(fields);
         }
+
         /// <summary>
-        /// 
+        /// Select
         /// </summary>
-        /// <param name="lambdaSelect"></param>
+        /// <param name="lambdaSelects"></param>
         /// <returns></returns>
-        public Search<T> Select(Expression<Func<T, object>> lambdaSelect)
+        public Search<T> Select(params Expression<Func<T, object>>[] lambdaSelects)
         {
-            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
+            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelects));
         }
+
         /// <summary>
         /// 
         /// </summary>
