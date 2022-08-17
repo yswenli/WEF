@@ -18,6 +18,7 @@
  *****************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 using WEF.Common;
 
@@ -420,8 +421,12 @@ namespace WEF.ModelGenerator.Common
                     case "Guid?":
                         plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName," + "DbType.Guid,1" + ",\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
                         break;
+                    case "byte[]":
+                    case "byte[]?":
+                        plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName," + "DbType.Binary, " + col.MaxLength + ",\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
+                        break;
                     case "object":
-                    case "string":                        
+                    case "string":
                     default:
                         plus.AppendSpaceLine(3, "public readonly static Field " + col.Name + " = new Field(\"" + col.ColumnNameRealName + "\",m_tableName,\"" + (string.IsNullOrEmpty(col.DeText) ? col.ColumnNameRealName : col.DeText) + "\");");
                         break;
