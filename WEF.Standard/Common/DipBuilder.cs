@@ -25,6 +25,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Reflection;
 
+using WEF.Batcher;
+using WEF.Db;
 using WEF.Provider;
 
 namespace WEF.Common
@@ -36,7 +38,7 @@ namespace WEF.Common
     {
         static ConcurrentDictionary<string, Assembly> _typeCache;
 
-        static ConcurrentDictionary<string, object> _instanceCahce;
+        static ConcurrentDictionary<string, dynamic> _instanceCahce;
 
         /// <summary>
         /// 依赖倒置工具类
@@ -45,7 +47,7 @@ namespace WEF.Common
         {
             _typeCache = new ConcurrentDictionary<string, Assembly>();
 
-            _instanceCahce = new ConcurrentDictionary<string, object>();
+            _instanceCahce = new ConcurrentDictionary<string, dynamic>();
         }
 
         /// <summary>
@@ -97,7 +99,8 @@ namespace WEF.Common
         /// <returns></returns>
         public static DbProvider CreateDbProvider(string assemblyName, string typeName, string connStr)
         {
-            return (DbProvider)_instanceCahce.GetOrAdd(assemblyName + typeName + connStr, (a) => Create<DbProvider>(assemblyName, typeName, new object[] { connStr }));
+            var key = assemblyName + typeName + connStr;
+            return (DbProvider)_instanceCahce.GetOrAdd(key, (a) => Create<DbProvider>(assemblyName, typeName, new object[] { connStr }));
         }
 
         /// <summary>
@@ -108,15 +111,46 @@ namespace WEF.Common
         /// <param name="typeName"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static object CreateWithGeneric<T>(string assemblyName, string typeName, object[] args = null)
+        public static dynamic CreateWithGeneric<T>(string assemblyName, string typeName, object[] args = null)
         {
-            var key = $"{typeName}`1, {assemblyName}";
+            var fullName = $"{typeName}`1,{assemblyName}";
+            var key = fullName + typeof(T).Name;
             return _instanceCahce.GetOrAdd(key, (k) =>
             {
-                Type classType = Type.GetType(key);
+                Type classType = Type.GetType(fullName);
                 Type constructedType = classType.MakeGenericType(typeof(T));
                 return Activator.CreateInstance(constructedType, args);
             });
+        }
+
+        /// <summary>
+        /// 创建一个批量对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="database"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static IBatcher<T> CreateBatcher<T>(Database database) where T : Entity
+        {
+            var version = DipBuilder.GetVersion();
+            switch (database.DbProvider.DatabaseType)
+            {
+                case DatabaseType.SqlServer:
+                case DatabaseType.SqlServer9:
+                    return (IBatcher<T>)DipBuilder.CreateWithGeneric<T>($"WEF.Standard.MSSQL, Version={version}, Culture=neutral, PublicKeyToken=null", "WEF.Batcher.MsSqlBatcher", new object[] { database });
+                case DatabaseType.MsAccess:
+                    return (IBatcher<T>)DipBuilder.CreateWithGeneric<T>($"WEF.Standard.OLEDB, Version={version}, Culture=neutral, PublicKeyToken=null", "WEF.Batcher.MsAccessBatcher", new object[] { database });
+                case DatabaseType.MySql:
+                case DatabaseType.MariaDB:
+                    return (IBatcher<T>)DipBuilder.CreateWithGeneric<T>($"WEF.Standard.MySQL, Version={version}, Culture=neutral, PublicKeyToken=null", "WEF.Batcher.MySqlBatcher", new object[] { database });
+                case DatabaseType.Oracle:
+                    return (IBatcher<T>)DipBuilder.CreateWithGeneric<T>($"WEF.Standard.Oracle, Version={version}, Culture=neutral, PublicKeyToken=null", "WEF.Batcher.OracleBatcher", new object[] { database });
+                case DatabaseType.PostgreSQL:
+                    return (IBatcher<T>)DipBuilder.CreateWithGeneric<T>($"WEF.Standard.Postgre, Version={version}, Culture=neutral, PublicKeyToken=null", "WEF.Batcher.PostgresSqlBatcher", new object[] { database });
+                default:
+                    throw new Exception("不支持的数据库类型：" + database.DbProvider.DatabaseType.ToString());
+
+            }
         }
 
         /// <summary>

@@ -17,10 +17,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 
 using WEF.Batcher;
 using WEF.Common;
@@ -103,45 +101,9 @@ namespace WEF
         /// <returns></returns>
         public IBatcher<T> CreateBatch<T>() where T : Entity
         {
-            return BatcherFactory.CreateBatcher<T>(_db);
+            return DipBuilder.CreateBatcher<T>(_db);
         }
         #endregion
-
-
-        private static DbProvider CreateDbProvider(DatabaseType dt, string connStr)
-        {
-            DbProvider provider = null;
-            switch (dt)
-            {
-                case DatabaseType.SqlServer9:
-                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.SqlServer9Provider", connStr);
-                    break;
-                case DatabaseType.SqlServer:
-                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.SqlServerProvider", connStr);
-                    break;
-                case DatabaseType.Oracle:
-                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.OracleProvider", connStr);
-                    break;
-                case DatabaseType.MariaDB:
-                case DatabaseType.MySql:
-                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.MySqlProvider", connStr);
-                    break;
-                case DatabaseType.Sqlite3:
-                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.SqliteProvider", connStr);
-                    break;
-                case DatabaseType.MsAccess:
-                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.MsAccessProvider", connStr);
-                    break;
-                case DatabaseType.PostgreSQL:
-                    provider = ProviderFactory.CreateDbProvider(null, "WEF.Provider.PostgreSqlProvider", connStr);
-                    break;
-            }
-            if (provider != null)
-            {
-                provider.DatabaseType = dt;
-            }
-            return provider;
-        }
 
         #region 构造函数
 

@@ -8,12 +8,11 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
-using WEF.Common;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using WEF.Db;
-using System.Collections.Concurrent;
+
+using WEF.Common;
 
 namespace WEF.Provider
 {
@@ -41,7 +40,6 @@ namespace WEF.Provider
         /// <param name="assemblyName">Name of the assembly.</param>
         /// <param name="className">Name of the class.</param>
         /// <param name="connectionString">The conn STR.</param>
-        /// <param name="databaseType">The DatabaseType.</param>
         /// <returns>The db provider.</returns>
         public static DbProvider CreateDbProvider(string assemblyName, string className, string connectionString)
         {

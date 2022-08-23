@@ -22,34 +22,56 @@
 *
 *****************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using CCWin;
 
 using OpenCvSharp;
+using OpenCvSharp.Aruco;
 
 using Sdcb.PaddleOCR;
-using Sdcb.PaddleOCR.KnownModels;
+using Sdcb.PaddleOCR.Models;
+using Sdcb.PaddleOCR.Models.Online;
 
 namespace WEF.ModelGenerator.Forms
 {
     public partial class OCRForm : Skin_Mac
     {
-        OCRModel _model;
+        FullOcrModel _model;
 
         public OCRForm()
         {
             InitializeComponent();
-            _model = KnownOCRModel.PPOcrServerV2;
-            _model.EnsureAll();
 
-            label1.Text = "";
+            DownloadModelAsync(() =>
+            {
+                if (this.InvokeRequired)
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        comboBox1.SelectedIndex = 0;
+
+                        label1.Text = "";
+                    }));
+                }
+                else
+                {
+
+                    comboBox1.SelectedIndex = 0;
+
+                    label1.Text = "";
+                }
+            });
+
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -77,15 +99,15 @@ namespace WEF.ModelGenerator.Forms
 
             button2.Enabled = false;
             label1.Text = "正在识别中...";
-            var sw = Stopwatch.StartNew();
 
             Task.Factory.StartNew(() =>
             {
+                var sw = Stopwatch.StartNew();
                 try
                 {
-                    using (PaddleOcrAll all = new PaddleOcrAll(_model.RootDirectory, _model.KeyPath)
+                    using (PaddleOcrAll all = new PaddleOcrAll(_model)
                     {
-                        AllowRotateDetection = true, /* 允许识别有角度的文字 */
+                        AllowRotateDetection = false, /* 允许识别有角度的文字 */
                         Enable180Classification = false, /* 允许识别旋转角度大于90度的文字 */
                     })
                     {
@@ -99,13 +121,13 @@ namespace WEF.ModelGenerator.Forms
                             {
                                 this.Invoke(new Action(() =>
                                 {
-                                    if (region.Score >= 0.7)
-                                    {
-                                        //sb.AppendLine($"Index:{index},Text: {region.Text},Score:{region.Score}, RectCenter:{region.Rect.Center}, RectSize:{region.Rect.Size}, Angle:{region.Rect.Angle} {Environment.NewLine}");
-                                        sb.AppendLine($"Index:{index},Text: {region.Text}");
-                                        DrawRectangle(region, index);
-                                        index += 1;
-                                    }
+                                    //if (region.Score >= 0.7)
+                                    //{
+                                    //sb.AppendLine($"Index:{index},Text: {region.Text},Score:{region.Score}, RectCenter:{region.Rect.Center}, RectSize:{region.Rect.Size}, Angle:{region.Rect.Angle} {Environment.NewLine}");
+                                    sb.AppendLine($"Index:{index},Text: {region.Text}");
+                                    DrawRectangle(region, index);
+                                    index += 1;
+                                    //}
                                 }));
                             }
                             sw.Stop();
@@ -282,6 +304,43 @@ namespace WEF.ModelGenerator.Forms
             }
         }
 
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedIndex > -1)
+            {
+                var selected = comboBox1.Items[comboBox1.SelectedIndex].ToString();
+                switch (selected)
+                {
+                    case "V2":
+                        _model = GetModel(1);
+                        break;
+                    case "V3":
+                        _model = GetModel(2);
+                        break;
+                    default:
+                        _model = GetModel(0);
+                        break;
+                }
+                //_model.EnsureAll();
+            }
+        }
 
+
+
+        Dictionary<int, FullOcrModel> _dic = null;
+
+        async void DownloadModelAsync(Action done = null)
+        {
+            _dic = new Dictionary<int, FullOcrModel>();
+            _dic.Add(0, await OnlineFullModels.ChineseServerV2.DownloadAsync());
+            _dic.Add(1, await OnlineFullModels.ChineseV2.DownloadAsync());
+            _dic.Add(2, await OnlineFullModels.ChineseV3.DownloadAsync());
+            done?.Invoke();
+        }
+
+        FullOcrModel GetModel(int type)
+        {
+            return _dic[type];
+        }
     }
 }

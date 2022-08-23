@@ -59,6 +59,7 @@ namespace WEF.ModelGenerator.Forms
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.button3 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -87,7 +88,7 @@ namespace WEF.ModelGenerator.Forms
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(11, 29);
+            this.button1.Location = new System.Drawing.Point(11, 33);
             this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(156, 29);
@@ -98,7 +99,7 @@ namespace WEF.ModelGenerator.Forms
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(11, 63);
+            this.button2.Location = new System.Drawing.Point(11, 102);
             this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(156, 29);
@@ -115,7 +116,7 @@ namespace WEF.ModelGenerator.Forms
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(11, 96);
+            this.button3.Location = new System.Drawing.Point(11, 135);
             this.button3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(156, 29);
@@ -127,17 +128,32 @@ namespace WEF.ModelGenerator.Forms
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 130);
+            this.label1.Location = new System.Drawing.Point(11, 169);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(82, 24);
             this.label1.TabIndex = 3;
             this.label1.Text = "label1";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "V2",
+            "V3",
+            "serverV2"});
+            this.comboBox1.Location = new System.Drawing.Point(15, 66);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(150, 32);
+            this.comboBox1.TabIndex = 4;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // OCRForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(760, 564);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -163,5 +179,6 @@ namespace WEF.ModelGenerator.Forms
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
