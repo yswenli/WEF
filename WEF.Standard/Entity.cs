@@ -15,7 +15,9 @@
  *****************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
@@ -300,6 +302,7 @@ namespace WEF
         {
             return false;
         }
+
         /// <summary>
         /// 获取表名
         /// </summary>
@@ -348,6 +351,45 @@ namespace WEF
         public string GetTableAsName()
         {
             return _tableAsName;
+        }
+
+
+        [XmlIgnore]
+        [NonSerialized]
+        static readonly Dictionary<string, string> _conlumDescriptions = new Dictionary<string, string>();
+
+        /// <summary>
+        /// 获取字段描述
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, string> GetConlumDescriptions<T>()
+        {
+            if (_conlumDescriptions.Count < 1)
+            {
+                var propertities = typeof(T).GetProperties();
+                foreach (var item in propertities)
+                {
+                    var des = item.Name;
+                    var attrs = item.GetCustomAttributes(true);
+                    if (attrs != null && attrs.Length > 0)
+                    {
+                        foreach (var attr in attrs)
+                        {
+                            DescriptionAttribute da = attr as DescriptionAttribute;
+                            if (da != null)
+                            {
+                                des = da.Description;
+                                if (string.IsNullOrEmpty(des))
+                                {
+                                    des = item.Name;
+                                }
+                            }
+                        }
+                    }
+                    _conlumDescriptions.Add(item.Name, des);
+                }
+            }
+            return _conlumDescriptions;
         }
     }
 }

@@ -832,7 +832,7 @@ namespace WEF.Models
     /// <summary>
     /// 实体类DBTask操作类
     /// </summary>
-    public partial class DBTaskRepository : IRepository<DBTask>
+    public partial class DBTaskRepository : BaseRepository<DBTask>
     {
         DBContext db;
         /// <summary>

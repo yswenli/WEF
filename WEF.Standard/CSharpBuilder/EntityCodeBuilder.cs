@@ -1,29 +1,36 @@
-﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
- *****************************************************************************************************
- * 所属域：WENLI-PC
- * 登录用户：yswenli
- * CLR版本：4.0.30319.17929
- * 唯一标识：1e7ab7e0-8733-46b2-a556-1fbb0ad96298
- * 机器名称：WENLI-PC
- * 联系人邮箱：wenguoli_520@qq.com
- *****************************************************************************************************
- * 命名空间：WEF.ModelGenerator.Common
- * 类名称：EntityCodeBuilder
- * 文件名：EntityCodeBuilder
- * 创建年份：2015
- * 创建时间：2015-09-23 14:54:06
- * 创建人：Wenli
- * 创建说明：
- *****************************************************************************************************/
+﻿/****************************************************************************
+*Copyright (c) 2022 RiverLand All Rights Reserved.
+*CLR版本： 4.0.30319.42000
+*机器名称：WALLE
+*公司名称：RiverLand
+*命名空间：WEF.CSharpBuilder
+*文件名： EntityCodeBuilder
+*版本号： V1.0.0.0
+*唯一标识：90cf894b-0d82-4d0d-9a84-c716220b6836
+*当前的用户域：WALLE
+*创建人： wenli
+*电子邮箱：walle.wen@tjingcai.com
+*创建时间：2022/8/24 10:08:51
+*描述：
+*
+*=================================================
+*修改标记
+*修改时间：2022/8/24 10:08:51
+*修改人： yswen
+*版本号： V1.0.0.0
+*描述：
+*
+*****************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 using WEF.Common;
 
-namespace WEF.ModelGenerator.Common
+namespace WEF.CSharpBuilder
 {
+    /// <summary>
+    /// 实体代码生成
+    /// </summary>
     public class EntityCodeBuilder
     {
         private List<ColumnInfo> _columns = new List<ColumnInfo>();
@@ -39,23 +46,40 @@ namespace WEF.ModelGenerator.Common
         private bool _isView = false;
 
         private bool _isSZMDX = false;
-
+        /// <summary>
+        /// 实体代码生成
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="nameSpace"></param>
+        /// <param name="className"></param>
+        /// <param name="columns"></param>
+        /// <param name="isView"></param>
         public EntityCodeBuilder(string tableName, string nameSpace, string className, List<ColumnInfo> columns, bool isView)
             : this(tableName, nameSpace, className, columns, isView, false)
         {
 
         }
 
+        /// <summary>
+        /// 实体代码生成
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="nameSpace"></param>
+        /// <param name="className"></param>
+        /// <param name="columns"></param>
+        /// <param name="isView"></param>
+        /// <param name="isSZMDX"></param>
+        /// <param name="dbType"></param>
         public EntityCodeBuilder(string tableName, string nameSpace, string className, List<ColumnInfo> columns, bool isView, bool isSZMDX, string dbType = null)
         {
             _isSZMDX = isSZMDX;
-            _className = UtilsHelper.ReplaceSpace(className);
-            _nameSpace = UtilsHelper.ReplaceSpace(nameSpace);
+            _className = StringPlus.ReplaceSpace(className);
+            _nameSpace = StringPlus.ReplaceSpace(nameSpace);
             _tableName = tableName;
             _dbType = dbType;
             if (_isSZMDX)
             {
-                _className = UtilsHelper.ToUpperFirstword(_className);
+                _className = StringPlus.ToUpperFirstword(_className);
             }
             _isView = isView;
 
@@ -63,13 +87,13 @@ namespace WEF.ModelGenerator.Common
 
             foreach (ColumnInfo col in columns)
             {
-                col.Name = UtilsHelper.ReplaceSpace(col.Name);
+                col.Name = StringPlus.ReplaceSpace(col.Name);
                 if (_isSZMDX)
                 {
-                    col.Name = UtilsHelper.ToUpperFirstword(col.Name);
+                    col.Name = StringPlus.ToUpperFirstword(col.Name);
                 }
 
-                col.DeText = UtilsHelper.ReplaceSpace(col.DeText);
+                col.DeText = StringPlus.ReplaceSpace(col.DeText);
                 _columns.Add(col);
             }
 
@@ -105,8 +129,12 @@ namespace WEF.ModelGenerator.Common
             get { return _isView; }
             set { _isView = value; }
         }
-
-        public string Builder(bool simple = false)
+        /// <summary>
+        /// Build
+        /// </summary>
+        /// <param name="simple"></param>
+        /// <returns></returns>
+        public string Build(bool simple = false)
         {
             if (!simple)
             {
@@ -139,11 +167,6 @@ namespace WEF.ModelGenerator.Common
             plus.AppendLine();
             plus.AppendLine();
 
-
-            plus.AppendLine("using System;");
-            //plus.AppendLine("using System.Collections.Generic;");
-            //plus.AppendLine("using System.Data.Common;");
-            //plus.AppendLine("using System.Linq.Expressions;");
             plus.AppendLine("using System.Data;");
             plus.AppendLine("using System.Runtime.Serialization;");
             plus.AppendLine("using WEF;");
@@ -168,7 +191,7 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(2, "/// 实体类" + ClassName + "");
             plus.AppendSpaceLine(2, "/// <param name=\"tableName\">表名</param>");
             plus.AppendSpaceLine(2, "/// </summary>");
-            plus.AppendSpaceLine(2, "public " + ClassName + "(string tableName):base(tableName) { m_tableName=tableName;}");
+            plus.AppendSpaceLine(2, "public " + ClassName + "(string tableName) : base(tableName) { m_tableName=tableName;}");
             plus.AppendLine();
             plus.AppendLine(BuilderModel());
             plus.AppendLine(BuilderMethod());
@@ -208,6 +231,7 @@ namespace WEF.ModelGenerator.Common
 
 
             plus.AppendLine("using System;");
+            plus.AppendLine("using System.ComponentModel;");
             plus.AppendLine("using System.Runtime.Serialization;");
 
             plus.AppendLine();
@@ -256,7 +280,7 @@ namespace WEF.ModelGenerator.Common
                 plus3.AppendSpaceLine(2, "/// <summary>");
                 plus3.AppendSpaceLine(2, "/// " + column.Name + " " + column.DeText);
                 plus3.AppendSpaceLine(2, "/// </summary>");
-                plus3.AppendSpaceLine(2, "[DataMember]");
+                plus3.AppendSpaceLine(2, $"[DataMember, Description(\"{column.DeText}\")]");
                 plus3.AppendSpaceLine(2, "public " + column.DataTypeName + " " + column.Name);
                 plus3.AppendSpaceLine(2, "{");
                 plus3.AppendSpaceLine(3, "get{ return _" + column.Name + "; }");
@@ -488,223 +512,9 @@ namespace WEF.ModelGenerator.Common
             plus.AppendSpaceLine(3, "_db = new DBContext(dbType, connStr);");
             plus.AppendSpaceLine(2, "}");
 
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 当前db操作上下文");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "public DBContext DBContext");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "get");
-            //plus.AppendSpaceLine(3, "{");
-            //plus.AppendSpaceLine(4, "return db;");
-            //plus.AppendSpaceLine(3, "}");
-            //plus.AppendSpaceLine(2, "}");
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 总数");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "/// <returns></returns>");
-            //plus.AppendSpaceLine(2, "public int Total");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "get");
-            //plus.AppendSpaceLine(3, "{");
-            //plus.AppendSpaceLine(4, "return Search().Count();");
-            //plus.AppendSpaceLine(3, "}");
-            //plus.AppendSpaceLine(2, "}");
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 当前实体查询上下文");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "public ISearch<" + ClassName + "> Search(string tableName=\"\")");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "if (string.IsNullOrEmpty(tableName))");
-            //plus.AppendSpaceLine(3, "{");
-            //plus.AppendSpaceLine(4, "tableName=\"" + TableName + "\";");
-            //plus.AppendSpaceLine(3, "}");
-            //plus.AppendSpaceLine(4, "return db.Search<" + ClassName + ">(tableName);");
-            //plus.AppendSpaceLine(2, "}");
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 当前实体查询上下文");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "public ISearch<" + ClassName + "> Search(" + ClassName + " entity)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(4, "return db.Search<" + ClassName + ">(entity);");
-            //plus.AppendSpaceLine(2, "}");
-
-            //ColumnInfo identityColumn = Columns.Find(delegate (ColumnInfo col) { return col.IsPrimaryKey; });
-
-            //if (identityColumn == null) return string.Empty;
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 获取实体");
-            //plus.AppendSpaceLine(2, $"/// <param name=\"{identityColumn.Name}\">{identityColumn.Name}</param>");
-            //plus.AppendSpaceLine(2, "/// <param name=\"tableName\">表名</param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "/// <returns></returns>");
-            //plus.AppendSpaceLine(2, "public " + ClassName + " Get" + ClassName + $"({identityColumn.DataTypeName} {identityColumn.Name}, string tableName = \"\")");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, $"return Search(tableName).Where(b => b.{identityColumn.Name} == {identityColumn.Name}).First();");
-            //plus.AppendSpaceLine(2, "}");
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 获取列表");
-            //plus.AppendSpaceLine(2, "/// <param name=\"pageIndex\">分页第几页</param>");
-            //plus.AppendSpaceLine(2, "/// <param name=\"pageSize\">分页一页取值</param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "/// <returns></returns>");
-            //plus.AppendSpaceLine(2, "public List<" + ClassName + "> GetList(int pageIndex, int pageSize)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "return this.Search().Page(pageIndex, pageSize).ToList();");
-            //plus.AppendSpaceLine(2, "}");
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 获取列表");
-            //plus.AppendSpaceLine(2, "/// <param name=\"tableName\">表名</param>");
-            //plus.AppendSpaceLine(2, "/// <param name=\"pageIndex\">分页第几页</param>");
-            //plus.AppendSpaceLine(2, "/// <param name=\"pageSize\">分页一页取值</param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "/// <returns></returns>");
-            //plus.AppendSpaceLine(2, "public List<" + ClassName + "> GetList(string tableName, int pageIndex=1, int pageSize=12)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "return this.Search(tableName).Page(pageIndex, pageSize).ToList();");
-            //plus.AppendSpaceLine(2, "}");
-
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 分页查询");
-            //plus.AppendSpaceLine(2, "/// <param name=\"lambdaWhere\">查询表达式</param>");
-            //plus.AppendSpaceLine(2, "/// <param name=\"pageIndex\">分页第几页</param>");
-            //plus.AppendSpaceLine(2, "/// <param name=\"pageSize\">分页一页取值</param>");
-            //plus.AppendSpaceLine(2, "/// <param name=\"orderBy\">排序</param>");
-            //plus.AppendSpaceLine(2, "/// <param name=\"asc\">升降</param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "/// <returns></returns>");
-            //plus.AppendSpaceLine(2, $"public PagedList<{ClassName}> GetPagedList(Expression<Func<{ClassName}, bool>> lambdaWhere,string tableName=\"\", int pageIndex=1, int pageSize=12, string orderBy=\"{identityColumn.Name}\", bool asc=true)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "return this.Search(tableName).GetPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);");
-            //plus.AppendSpaceLine(2, "}");
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 添加实体");
-            //plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "public int Insert(" + ClassName + " entity)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "return db.Insert(entity);");
-            //plus.AppendSpaceLine(2, "}");
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 批量添加实体");
-            //plus.AppendSpaceLine(2, "/// <param name=\"entities\">传进的实体列表</param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "public void BulkInsert(IEnumerable<" + ClassName + "> entities)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "db.BulkInsert(entities);");
-            //plus.AppendSpaceLine(2, "}");
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 更新实体");
-            //plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "public int Update(" + ClassName + " entity)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "return db.Update(entity);");
-            //plus.AppendSpaceLine(2, "}");
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 更新实体");
-            //plus.AppendSpaceLine(2, "/// <param name=\"entities\">传进的实体</param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "public int Update(IEnumerable<" + ClassName + "> entities)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "return db.Update(entities);");
-            //plus.AppendSpaceLine(2, "}");
-
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 删除实体");
-            //plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "public int Delete(" + ClassName + " entity)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "return db.Delete(entity);");
-            //plus.AppendSpaceLine(2, "}");
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 批量删除实体");
-            //plus.AppendSpaceLine(2, "/// <param name=\"obj\">传进的实体列表</param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "public int Deletes(List<" + ClassName + "> entities)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "return db.Delete<" + ClassName + ">(entities);");
-            //plus.AppendSpaceLine(2, "}");
-
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 持久化实体");
-            //plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "public int Save(" + ClassName + " entity)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(entity);");
-            //plus.AppendSpaceLine(2, "}");
-
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 批量持久化实体");
-            //plus.AppendSpaceLine(2, "/// <param name=\"entities\">传进的实体列表</param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "public int Save(List<" + ClassName + "> entities)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(entities);");
-            //plus.AppendSpaceLine(2, "}");
-
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 持久化实体");
-            //plus.AppendSpaceLine(2, "/// <param name=\"tran\">事务</param>");
-            //plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体</param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "public int Save(DbTransaction tran," + ClassName + " entity)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(tran, entity);");
-            //plus.AppendSpaceLine(2, "}");
-
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 批量持久化实体");
-            //plus.AppendSpaceLine(2, "/// <param name=\"tran\">事务</param>");
-            //plus.AppendSpaceLine(2, "/// <param name=\"entity\">传进的实体列表</param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "public int Save(DbTransaction tran, List<" + ClassName + "> entities)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "return db.Save<" + ClassName + ">(tran, entities);");
-            //plus.AppendSpaceLine(2, "}");
-
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 执行sql语句");
-            //plus.AppendSpaceLine(2, "/// <param name=\"sql\"></param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "public SqlSection FromSql(string sql)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "return db.FromSql(sql);");
-            //plus.AppendSpaceLine(2, "}");
-
-
-            //plus.AppendSpaceLine(2, "/// <summary>");
-            //plus.AppendSpaceLine(2, "/// 执行存储过程");
-            //plus.AppendSpaceLine(2, "/// <param name=\"procName\"></param>");
-            //plus.AppendSpaceLine(2, "/// </summary>");
-            //plus.AppendSpaceLine(2, "public ProcSection FromProc(string procName)");
-            //plus.AppendSpaceLine(2, "{");
-            //plus.AppendSpaceLine(3, "return db.FromProc(procName);");
-            //plus.AppendSpaceLine(2, "}");
-
             plus.AppendSpaceLine(1, "}");
             return plus.ToString();
         }
 
     }
-
 }

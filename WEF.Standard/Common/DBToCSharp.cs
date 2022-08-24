@@ -1,32 +1,35 @@
-﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
- *****************************************************************************************************
- * 所属域：WENLI-PC
- * 登录用户：yswenli
- * CLR版本：4.0.30319.17929
- * 唯一标识：1e7ab7e0-8733-46b2-a556-1fbb0ad96298
- * 机器名称：WENLI-PC
- * 联系人邮箱：wenguoli_520@qq.com
- *****************************************************************************************************
- * 命名空间：WEF.ModelGenerator.Common
- * 类名称：DBToCSharp
- * 文件名：DBToCSharp
- * 创建年份：2015
- * 创建时间：2015-09-23 14:54:06
- * 创建人：Wenli
- * 创建说明：
- *****************************************************************************************************/
-
+﻿/****************************************************************************
+*Copyright (c) 2022 RiverLand All Rights Reserved.
+*CLR版本： 4.0.30319.42000
+*机器名称：WALLE
+*公司名称：RiverLand
+*命名空间：WEF.Common
+*文件名： DBToCSharp
+*版本号： V1.0.0.0
+*唯一标识：88ca6e0c-836e-45a4-bf71-02fac8715600
+*当前的用户域：WALLE
+*创建人： wenli
+*电子邮箱：walle.wen@tjingcai.com
+*创建时间：2022/8/24 10:54:01
+*描述：
+*
+*=================================================
+*修改标记
+*修改时间：2022/8/24 10:54:01
+*修改人： yswen
+*版本号： V1.0.0.0
+*描述：
+*
+*****************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using System.IO;
 using System.Xml;
-using WEF.Common;
 
-namespace WEF.ModelGenerator.Common
+namespace WEF.Common
 {
     /// <summary>
-    /// 从配置中读取数据类型映射到C#类型
+    /// 数据库类型转换居C#数据类型
     /// </summary>
     public class DBToCSharp
     {
@@ -34,12 +37,14 @@ namespace WEF.ModelGenerator.Common
         /// <summary>
         /// 类型配置文件
         /// </summary>
-        public static readonly string DbTypePath = Application.StartupPath + "/Config/dbtype.xml";
-
+        public static readonly string DbTypePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "/Config/dbtype.xml");
 
         private const string cachekeystring = "_dbtype_cache_";
 
-
+        /// <summary>
+        /// 类型配置文件
+        /// </summary>
+        /// <returns></returns>
         static Dictionary<string, string> loadType()
         {
             var types = new Dictionary<string, string>();
@@ -149,6 +154,5 @@ namespace WEF.ModelGenerator.Common
 
             return columns;
         }
-
     }
 }

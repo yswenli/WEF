@@ -17,11 +17,13 @@
 *****************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Text;
+
 using WEF.Common;
 using WEF.MvcPager;
 using WEF.Section;
@@ -71,7 +73,7 @@ namespace WEF.Test
 
             var count = 0;
 
-            var dbContext=  new DBContext();
+            var dbContext = new DBContext();
 
             var sql = $"select user_recoreds.uid, sum(score) Score from rules right join user_recoreds on rules.id=user_recoreds.rid where uid=?uid1 group by user_recoreds.uid order by Score desc limit {(pageIndex - 1) * pageSize},{pageSize}";
 
@@ -159,7 +161,7 @@ namespace WEF.Test
         /// <summary>
         /// id auto_increment
         /// </summary>
-        [DataMember]
+        [DataMember, Description("")]
         public int id
         {
             get { return _id; }
@@ -360,7 +362,7 @@ namespace WEF.Test
     /// <summary>
     /// 实体类Rules操作类
     /// </summary>
-    public partial class RulesRepository : IRepository<Rules>
+    public partial class RulesRepository : BaseRepository<Rules>
     {
         DBContext db;
         /// <summary>

@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
+using WEF.CSharpBuilder;
 using WEF.DbDAL;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Model;

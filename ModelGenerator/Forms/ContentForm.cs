@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using WEF.Common;
+using WEF.CSharpBuilder;
 using WEF.DbDAL;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Forms;
@@ -132,7 +133,7 @@ namespace WEF.ModelGenerator
                     }
                     var className = TableName.Trim();
 
-                    if (TableName.IndexOf("_")>-1)
+                    if (TableName.IndexOf("_") > -1)
                     {
                         className = className.Replace("_", " ").ToTitleCase();
                     }

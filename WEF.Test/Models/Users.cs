@@ -153,7 +153,7 @@ namespace WEF.Models
     /// <summary>
     /// 实体类Users操作类
     /// </summary>
-    public partial class UsersRepository : IRepository<Users>
+    public partial class UsersRepository : BaseRepository<Users>
     {
         DBContext db;
         /// <summary>

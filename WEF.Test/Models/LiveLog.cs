@@ -362,7 +362,7 @@ namespace WEF.Test.Models
     /// <summary>
     /// 实体类LiveLog操作类
     /// </summary>
-    public partial class LiveLogRepository : IRepository<LiveLog>
+    public partial class LiveLogRepository : BaseRepository<LiveLog>
     {
         DBContext db;
         /// <summary>
