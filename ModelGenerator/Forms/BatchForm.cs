@@ -275,7 +275,7 @@ namespace WEF.ModelGenerator
 
                 builder = new EntityCodeBuilder(o.ToString(), txtNamaspace.Text, className, UtilsHelper.GetColumnInfos(dbObject.GetColumnInfoList(DatabaseName, o.ToString())), tableview[o.ToString()], _isTitleCase);
 
-                var cs = builder.Builder();
+                var cs = builder.Build();
 
                 if (!string.IsNullOrEmpty(cs))
                 {

@@ -203,7 +203,7 @@ namespace WEF.ModelGenerator
 
             EntityCodeBuilder builder = new EntityCodeBuilder(TableName, txtnamespace.Text, txtClassName.Text, columns, IsView, cbToupperFrstword.Checked, ConnectionModel.DbType);
 
-            var cs = builder.Builder(simple);
+            var cs = builder.Build(simple);
 
             if (string.IsNullOrEmpty(cs))
             {

@@ -37,7 +37,7 @@ namespace WEF.Common
         /// <summary>
         /// 类型配置文件
         /// </summary>
-        public static readonly string DbTypePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "/Config/dbtype.xml");
+        public static readonly string DbTypePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "dbtype.xml");
 
         private const string cachekeystring = "_dbtype_cache_";
 

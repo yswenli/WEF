@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -55,6 +56,8 @@ namespace WEF.Test
 
 
             //var json2 = SerializeHelper.Serialize(new MvcPager.PagedList<DBTicketOrder>(1, 10, 22));
+
+            //var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "dbtype.xml");
 
             //MySqlBitTypeTest.Test1();
             //MySqlBitTypeTest.Test3();
