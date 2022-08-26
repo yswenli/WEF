@@ -11,71 +11,66 @@
 *创建人： wenli
 *电子邮箱：walle.wen@tjingcai.com
 *创建时间：2022/8/24 10:54:01
-*描述：
+*描述：数据库类型转换C#数据类型
 *
 *=================================================
 *修改标记
 *修改时间：2022/8/24 10:54:01
 *修改人： yswen
 *版本号： V1.0.0.0
-*描述：
+*描述：数据库类型转换C#数据类型
 *
 *****************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Xml;
 
 namespace WEF.Common
 {
     /// <summary>
-    /// 数据库类型转换居C#数据类型
+    /// 数据库类型转换C#数据类型
     /// </summary>
-    public class DBToCSharp
+    public static class DBToCSharp
     {
+        static Lazy<Dictionary<string, string>> _cache;
 
         /// <summary>
-        /// 类型配置文件
+        /// 数据库类型转换C#数据类型
         /// </summary>
-        public static readonly string DbTypePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "dbtype.xml");
-
-        private const string cachekeystring = "_dbtype_cache_";
-
-        /// <summary>
-        /// 类型配置文件
-        /// </summary>
-        /// <returns></returns>
-        static Dictionary<string, string> loadType()
+        static DBToCSharp()
         {
-            var types = new Dictionary<string, string>();
-
-            XmlDocument doc = new XmlDocument();
-
-            doc.Load(DbTypePath);
-
-            XmlNodeList nodes = doc.SelectNodes("//type");
-
-            if (null != nodes && nodes.Count > 0)
+            _cache = new Lazy<Dictionary<string, string>>(() =>
             {
-                foreach (XmlNode node in nodes)
+                var types = new Dictionary<string, string>();
+
+                XmlDocument doc = new XmlDocument();
+
+                doc.LoadXml(Resource1.DbTypeToCsType);
+
+                XmlNodeList nodes = doc.SelectNodes("//type");
+
+                if (null != nodes && nodes.Count > 0)
                 {
-                    XmlAttribute att = node.Attributes["dbtype"];
-                    if (null != att)
+                    foreach (XmlNode node in nodes)
                     {
-                        string dbtypeStr = att.Value.Trim().ToLower();
-                        if (!types.ContainsKey(dbtypeStr))
+                        XmlAttribute att = node.Attributes["dbtype"];
+                        if (null != att)
                         {
-                            XmlAttribute attcstype = node.Attributes["cstype"];
-                            if (null != attcstype)
+                            string dbtypeStr = att.Value.Trim().ToLower();
+                            if (!types.ContainsKey(dbtypeStr))
                             {
-                                types.Add(dbtypeStr, attcstype.Value);
+                                XmlAttribute attcstype = node.Attributes["cstype"];
+                                if (null != attcstype)
+                                {
+                                    types.Add(dbtypeStr, attcstype.Value);
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            return types;
+                return types;
+            });
         }
 
 
@@ -87,7 +82,7 @@ namespace WEF.Common
         /// <returns></returns>
         public static List<ColumnInfo> DbtoCSColumns(List<ColumnInfo> columns, string dbType)
         {
-            Dictionary<string, string> types = loadType();
+            var types = _cache.Value;
 
             foreach (ColumnInfo column in columns)
             {
