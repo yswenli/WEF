@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 using WEF.Common;
 using WEF.Db;
@@ -227,6 +228,46 @@ namespace WEF
         {
             return Search(tableName).ToPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
         }
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public PagedList<Model> GetPagedList<Model>(int pageIndex, int pageSize, string orderBy = "ID", bool asc = true)
+        {
+            return Search().ToPagedList<Model>(pageIndex, pageSize, orderBy, asc);
+        }
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public PagedList<Model> GetPagedList<Model>(Expression<Func<T, bool>> lambdaWhere, int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
+        {
+            return Search().ToPagedList<Model>(lambdaWhere, pageIndex, pageSize, orderBy, asc);
+        }
+        /// <summary>
+        /// 分页查询
+        /// <param name="lambdaWhere">查询表达式</param>
+        /// <param name="pageIndex">分页第几页</param>
+        /// <param name="pageSize">分页一页取值</param>
+        /// <param name="orderBy">排序</param>
+        /// <param name="asc">升降</param>
+        /// </summary>
+        /// <returns></returns>
+        public PagedList<Model> GetPagedList<Model>(Expression<Func<T, bool>> lambdaWhere, string tableName = "", int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
+        {
+            return Search(tableName).ToPagedList<Model>(lambdaWhere, pageIndex, pageSize, orderBy, asc);
+        }
+
 
         /// <summary>
         /// 添加实体

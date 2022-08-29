@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 using Google.Protobuf.WellKnownTypes;
@@ -317,6 +318,11 @@ namespace WEF.Test
                             .Page(2, 2)
                             .ToList();
 
+            var list3 = dbTaskRepository.Search().LeftJoin<DBGift>((x, y) => x.Taskbuttontext == y.Supservicename)
+                .Where(where1)
+                .Page(3, 2)
+                .ToList<DBGift>();
+
             //多表条件拼接
 
             //var where2 = new Where<table>();
@@ -569,7 +575,6 @@ namespace WEF.Test
             });
 
             var e = usersRepository.GetUsers(id);
-
 
             e.Name = "Chewang";
 

@@ -32,7 +32,7 @@ namespace WEF
     /// 查询
     /// </summary>
     /// <typeparam name="T"></typeparam>    
-    public class Search<T> : Search, ISearch<T> where T : Entity
+    public class Search<T> : Search,  ISearch<T> where T : Entity
     {
 
         /// <summary>
@@ -68,6 +68,11 @@ namespace WEF
         }
 
         #region 连接  Join
+        /// <summary>
+        /// InnerJoin
+        /// </summary>
+        /// <param name="fs"></param>
+        /// <returns></returns>
         public Search<T> InnerJoin(Search fs)
         {
             return Join(EntityCache.GetTableName<T>(), EntityCache.GetUserName<T>(), _where, JoinType.InnerJoin);
@@ -727,28 +732,30 @@ namespace WEF
 
 
         private readonly string[] _notClass = new string[] { "String" };
+
+
         /// <summary>
-        /// 
+        /// ToList<Model>
         /// </summary>
-        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="Model"></typeparam>
         /// <returns></returns>
-        public List<TResult> ToList<TResult>()
+        public List<Model> ToList<Model>()
         {
-            var typet = typeof(TResult);
+            var typet = typeof(Model);
 
             if (typet == typeof(T))
             {
-                return ToList() as List<TResult>;
+                return ToList() as List<Model>;
             }
 
             var from = GetPagedFromSection();
 
             if (typet.IsClass && !_notClass.Contains(typet.Name))
             {
-                List<TResult> result = null;
+                List<Model> result = null;
                 using (var reader = ToDataReader(from))
                 {
-                    result = EntityUtils.ReaderToEnumerable<TResult>(reader).ToList();
+                    result = EntityUtils.ReaderToEnumerable<Model>(reader).ToList();
                     reader.Close();
                 }
                 return result;
@@ -762,13 +769,13 @@ namespace WEF
                 throw new Exception(".ToList<" + typet.Name + ">()最多.Select()一个字段！");
             }
 
-            var list = new List<TResult>();
+            var list = new List<Model>();
 
             using (var reader = ToDataReader(@from))
             {
                 while (reader.Read())
                 {
-                    var t = DataUtils.ConvertValue<TResult>(reader[@from.Fields[0].Name]);
+                    var t = DataUtils.ConvertValue<Model>(reader[@from.Fields[0].Name]);
 
                     var st = t as Entity;
 
@@ -867,9 +874,9 @@ namespace WEF
         /// 返回第一个实体，同ToFirst()。无数据返回Null。
         /// </summary>
         /// <returns></returns>
-        public TResult First<TResult>() where TResult : class
+        public Model First<Model>() where Model : class
         {
-            return ToFirst<TResult>();
+            return ToFirst<Model>();
         }
 
 
@@ -877,20 +884,20 @@ namespace WEF
         /// 返回第一个实体 ，同First()。无数据返回Null。
         /// </summary>
         /// <returns></returns>
-        public TResult ToFirst<TResult>() where TResult : class
+        public Model ToFirst<Model>() where Model : class
         {
-            var typet = typeof(TResult);
+            var typet = typeof(Model);
             if (typet == typeof(T))
             {
-                return ToFirst() as TResult;
+                return ToFirst() as Model;
             }
             Search from = this.Top(1).GetPagedFromSection();
 
-            TResult t = null;
+            Model t = null;
 
             using (IDataReader reader = ToDataReader(from))
             {
-                var result = EntityUtils.ReaderToEnumerable<TResult>(reader).ToArray();
+                var result = EntityUtils.ReaderToEnumerable<Model>(reader).ToArray();
 
                 if (result.Any())
                 {
@@ -1065,6 +1072,58 @@ namespace WEF
         }
 
 
+        /// <summary>
+        /// 获取分页
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="order"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public PagedList<Model> ToPagedList<Model>(int pageIndex, int pageSize, string order, bool asc)
+        {
+            var total = this.Count();
+
+            var list = this.OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<Model>();
+
+            return new PagedList<Model>(list, pageIndex, pageSize, total);
+        }
+
+        /// <summary>
+        /// 获取分页
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public PagedList<Model> ToPagedList<Model>(Expression<Func<T, bool>> lambdaWhere, int pageIndex, int pageSize, string orderBy, bool asc)
+        {
+            var total = this.Where(lambdaWhere).Count();
+
+            var list = this.Where(lambdaWhere).OrderBy(new OrderByOperation(orderBy, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<Model>();
+
+            return new PagedList<Model>(list, pageIndex, pageSize, total);
+        }
+
+        /// <summary>
+        /// 获取分页
+        /// </summary>
+        /// <param name="where"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public PagedList<Model> ToPagedList<Model>(Where where, int pageIndex, int pageSize, string orderBy, bool asc)
+        {
+            var total = this.Where(where).Count();
+
+            var list = this.Where(where).OrderBy(new OrderByOperation(orderBy, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<Model>();
+
+            return new PagedList<Model>(list, pageIndex, pageSize, total);
+        }
 
     }
 }
