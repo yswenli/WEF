@@ -175,7 +175,7 @@ namespace WEF
         /// <returns></returns>
         public List<T> GetList(int pageIndex, int pageSize)
         {
-            return this.Search().Page(pageIndex, pageSize).ToList();
+            return Search().Page(pageIndex, pageSize).ToList();
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace WEF
         /// <returns></returns>
         public List<T> GetList(string tableName, int pageIndex = 1, int pageSize = 12)
         {
-            return this.Search(tableName).Page(pageIndex, pageSize).ToList();
+            return Search(tableName).Page(pageIndex, pageSize).ToList();
         }
 
         /// <summary>
@@ -232,6 +232,7 @@ namespace WEF
         /// <summary>
         /// 分页查询
         /// </summary>
+        /// <typeparam name="Model">自定义模型</typeparam>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <param name="orderBy"></param>
@@ -244,6 +245,7 @@ namespace WEF
         /// <summary>
         /// 分页查询
         /// </summary>
+        /// <typeparam name="Model">自定义模型</typeparam>
         /// <param name="lambdaWhere"></param>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
@@ -256,7 +258,9 @@ namespace WEF
         }
         /// <summary>
         /// 分页查询
+        /// <typeparam name="Model">自定义模型</typeparam>
         /// <param name="lambdaWhere">查询表达式</param>
+        /// <param name="tableName">表名</param>
         /// <param name="pageIndex">分页第几页</param>
         /// <param name="pageSize">分页一页取值</param>
         /// <param name="orderBy">排序</param>
@@ -268,6 +272,16 @@ namespace WEF
             return Search(tableName).ToPagedList<Model>(lambdaWhere, pageIndex, pageSize, orderBy, asc);
         }
 
+
+        /// <summary>
+        /// 是否存在
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public bool Exists(Expression<Func<T, bool>> lambdaWhere)
+        {
+            return Search().Top(1).Where(lambdaWhere).First() != null;
+        }
 
         /// <summary>
         /// 添加实体

@@ -15,8 +15,7 @@ namespace WEF.Expressions
     /// Where条件拼接
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Where<T> : WhereBuilder
-        where T : Entity
+    public class Where<T> : WhereBuilder<T> where T : Entity
     {
         string _tableName;
 

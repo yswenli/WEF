@@ -640,7 +640,12 @@ namespace WEF
             this._orderBy = temporderby;
             return this;
         }
-
+        /// <summary>
+        /// OrderBy
+        /// </summary>
+        /// <param name="asc"></param>
+        /// <param name="desc"></param>
+        /// <returns></returns>
         public Search OrderBy(IEnumerable<string> asc, IEnumerable<string> desc)
         {
             var orderBys = new List<OrderByOperation>();
@@ -783,12 +788,12 @@ namespace WEF
         /// 格式化sql语句
         /// </summary>
         /// <param name="sql"></param>
-        /// <param name="from"></param>
+        /// <param name="search"></param>
         /// <returns></returns>
-        protected string formatSql(string sql, Search from)
+        public string FormatSql(string sql, Search search)
         {
-            string tempSql = DataUtils.FormatSQL(sql, from._dbProvider.LeftToken, from._dbProvider.RightToken);
-            List<Parameter> listPara = from.Parameters;
+            string tempSql = DataUtils.FormatSQL(sql, search._dbProvider.LeftToken, search._dbProvider.RightToken);
+            List<Parameter> listPara = search.Parameters;
             foreach (Parameter p in listPara)
             {
                 tempSql = tempSql.Replace(p.ParameterName, p.ParameterValue == null ? string.Empty : p.ParameterValue.ToString());
@@ -954,7 +959,7 @@ namespace WEF
         /// <param name="where"></param>
         /// <param name="joinType"></param>
         /// <returns></returns>
-        protected Search join(string tableName, string userName, WhereOperation where, JoinType joinType)
+        protected Search Join(string tableName, string userName, WhereOperation where, JoinType joinType)
         {
             if (string.IsNullOrEmpty(tableName) || WhereOperation.IsNullOrEmpty(where))
                 return this;
@@ -1013,7 +1018,7 @@ namespace WEF
         /// <returns></returns>
         public Search InnerJoin(string tableName, WhereOperation where, string userName = null)
         {
-            return join(tableName, userName, where, JoinType.InnerJoin);
+            return Join(tableName, userName, where, JoinType.InnerJoin);
         }
 
 
@@ -1027,7 +1032,7 @@ namespace WEF
         /// <returns></returns>
         public Search LeftJoin(string tableName, WhereOperation where, string userName = null)
         {
-            return join(tableName, userName, where, JoinType.LeftJoin);
+            return Join(tableName, userName, where, JoinType.LeftJoin);
         }
 
 
@@ -1041,7 +1046,7 @@ namespace WEF
         /// <returns></returns>
         public Search RightJoin(string tableName, WhereOperation where, string userName = null)
         {
-            return join(tableName, userName, where, JoinType.RightJoin);
+            return Join(tableName, userName, where, JoinType.RightJoin);
         }
 
 
@@ -1054,7 +1059,7 @@ namespace WEF
         /// <returns></returns>
         public Search CrossJoin(string tableName, WhereOperation where, string userName = null)
         {
-            return join(tableName, userName, where, JoinType.CrossJoin);
+            return Join(tableName, userName, where, JoinType.CrossJoin);
         }
 
 
@@ -1068,7 +1073,7 @@ namespace WEF
         /// <returns></returns>
         public Search FullJoin(string tableName, WhereOperation where, string userName = null)
         {
-            return join(tableName, userName, where, JoinType.FullJoin);
+            return Join(tableName, userName, where, JoinType.FullJoin);
         }
 
         #endregion

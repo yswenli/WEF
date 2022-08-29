@@ -79,6 +79,12 @@ namespace WEF
         T ToFirst();
         Model ToFirst<Model>() where Model : class;
         T ToFirstDefault();
+        T Single();
+        T ToSingle();
+        Model Single<Model>() where Model : class;
+        Model ToSingle<Model>() where Model : class;
+
+
         List<T> ToList();
         List<Model> ToList<Model>();
         Search<T> Top(int topCount);

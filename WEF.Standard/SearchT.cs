@@ -19,6 +19,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 
 using WEF.Common;
@@ -205,7 +206,7 @@ namespace WEF
         /// <returns></returns>
         private Search<T> Join(string tableName, string userName, WhereOperation where, JoinType joinType)
         {
-            return (Search<T>)base.join(tableName, userName, where, joinType);
+            return (Search<T>)base.Join(tableName, userName, where, joinType);
         }
 
         #endregion
@@ -273,7 +274,7 @@ namespace WEF
             return (Search<T>)base.Where(where);
         }
         /// <summary>
-        /// 
+        /// Where
         /// </summary>
         /// <param name="whereParam"></param>
         /// <returns></returns>
@@ -282,7 +283,7 @@ namespace WEF
             return (Search<T>)base.Where(whereParam.ToWhereClip());
         }
         /// <summary>
-        /// 
+        /// Where
         /// </summary>
         /// <param name="whereParam"></param>
         /// <returns></returns>
@@ -292,7 +293,7 @@ namespace WEF
         }
 
         /// <summary>
-        /// 
+        /// Where
         /// </summary>
         /// <param name="lambdaWheres"></param>
         /// <returns></returns>
@@ -947,6 +948,100 @@ namespace WEF
             return t;
         }
 
+
+        /// <summary>
+        /// Single,有则返回，无则null，多于一个则error
+        /// </summary>
+        /// <returns></returns>
+        public T Single()
+        {
+            return ToSingle();
+        }
+
+        /// <summary>
+        /// ToSingle,有则返回，无则null，多于一个则error
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public T ToSingle()
+        {
+            Search search = this.Top(2).GetPagedFromSection();
+
+            T t = null;
+
+            using (IDataReader reader = ToDataReader(search))
+            {
+                var result = EntityUtils.ReaderToEnumerable<T>(reader).ToArray();
+
+                if (result.Any())
+                {
+                    if (result.Length > 1) throw new Exception("There are multiple records for the acquired data");
+
+                    t = result.First();
+                }
+            }
+
+            if (t != null)
+            {
+                t.SetTableName(_tableName);
+                t.ClearModifyFields();
+            }
+
+            return t;
+        }
+
+        /// <summary>
+        /// Single,有则返回，无则null，多于一个则error
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <returns></returns>
+        public Model Single<Model>() where Model : class
+        {
+            return ToSingle<Model>();
+        }
+
+        /// <summary>
+        /// ToSingle,有则返回，无则null，多于一个则error
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <returns></returns>
+        public Model ToSingle<Model>() where Model : class
+        {
+            var typet = typeof(Model);
+            if (typet == typeof(T))
+            {
+                return ToSingle() as Model;
+            }
+
+            var search = this.Top(2).GetPagedFromSection();
+
+            Model m = null;
+
+            using (IDataReader reader = ToDataReader(search))
+            {
+                var result = EntityUtils.ReaderToEnumerable<Model>(reader).ToArray();
+
+                if (result.Any())
+                {
+                    if (result.Length > 1) throw new Exception("There are multiple records for the acquired data");
+
+                    m = result.First();
+
+                    if (m != null)
+                    {
+                        var st = m as Entity;
+
+                        if (st != null)
+                        {
+                            st.ClearModifyFields();
+                            st.SetTableName(_tableName);
+                        }
+                    }
+                }
+            }
+
+            return m;
+        }
         #endregion
 
         #region Union

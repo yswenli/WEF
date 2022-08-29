@@ -11,24 +11,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-using Google.Protobuf.WellKnownTypes;
-
-using MySqlX.XDevAPI;
-
-using WEF.Batcher;
 using WEF.Common;
-using WEF.Db;
 using WEF.Expressions;
 using WEF.Models;
-using WEF.Provider;
-using WEF.Test.Models;
 
 
 namespace WEF.Test
@@ -318,10 +307,11 @@ namespace WEF.Test
                             .Page(2, 2)
                             .ToList();
 
+            where1.And<DBGift>((m, n) => m.Name.Like(n.Name));
+
             var list3 = dbTaskRepository.Search().LeftJoin<DBGift>((x, y) => x.Taskbuttontext == y.Supservicename)
                 .Where(where1)
-                .Page(3, 2)
-                .ToList<DBGift>();
+                .ToPagedList<User>(1, 10, "Name", true);
 
             //多表条件拼接
 
