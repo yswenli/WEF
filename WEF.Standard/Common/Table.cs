@@ -72,8 +72,17 @@ namespace WEF.Common
         {
             var type = typeof(T);
 
+            return GetTableName(type);           
+        }
+
+        /// <summary>
+        /// 根据类型获取表名
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string GetTableName(Type type)
+        {
             return _dic.GetOrAdd(type, (k) => ((TableAttribute)type.GetCustomAttributes(true).Where(b => b.GetType().Name == "TableAttribute").First()).GetTableName());
-           
         }
     }
 }

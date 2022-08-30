@@ -67,5 +67,12 @@ namespace WEF.Test
 
             var d = r.Insert(e);
         }
+
+        public void Test2()
+        {
+            var r = new DBFileDataRepository(DatabaseType.SqlServer, _cnnStr);
+
+            r.Search().LeftJoin<DBUserPoint>((a, b) => a.MD5 == b.Uid).Select<DBUserPoint>((a, b) => new { a.MD5, b.Points }).ToList();
+        }
     }
 }

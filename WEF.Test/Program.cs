@@ -52,7 +52,7 @@ namespace WEF.Test
             //MySqlBitTypeTest.Test1();
             //MySqlBitTypeTest.Test3();
 
-            new BytesTest().Test();
+            new BytesTest().Test2();
 
             BatchTest.Test();
 

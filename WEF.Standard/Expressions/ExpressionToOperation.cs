@@ -635,6 +635,10 @@ namespace WEF.Expressions
                 var i = 0;
                 foreach (var item in exNew.Arguments)
                 {
+                    var propertyType = ((MemberExpression)item).Expression.Type;
+
+                    tableName = TableAttribute.GetTableName(propertyType);
+
                     var aliasName = exNew.Members[i].Name;
 
                     if (item is MemberExpression)
