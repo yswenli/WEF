@@ -265,7 +265,7 @@ namespace WEF.Db
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        public ISearch<TEntity> Search<TEntity>()
+        public Search<TEntity> Search<TEntity>()
             where TEntity : Entity
         {
             return new Search<TEntity>(DBContext.Db, _trans);
@@ -275,7 +275,7 @@ namespace WEF.Db
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        public ISearch<TEntity> Search<TEntity>(string asName)
+        public Search<TEntity> Search<TEntity>(string asName)
             where TEntity : Entity
         {
             return new Search<TEntity>(DBContext.Db, _trans, asName);
@@ -286,7 +286,7 @@ namespace WEF.Db
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public ISearch Search(string tableName)
+        public Search Search(string tableName)
         {
             return new Search(DBContext.Db, tableName, "", _trans);
         }

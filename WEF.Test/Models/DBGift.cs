@@ -1099,7 +1099,7 @@ namespace WEF.Models
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<DBGift> Search(string tableName = "")
+        public Search<DBGift> Search(string tableName = "")
         {
             if (string.IsNullOrEmpty(tableName))
             {
@@ -1110,7 +1110,7 @@ namespace WEF.Models
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<DBGift> Search(DBGift entity)
+        public Search<DBGift> Search(DBGift entity)
         {
             return db.Search<DBGift>(entity);
         }

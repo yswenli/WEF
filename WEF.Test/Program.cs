@@ -231,10 +231,16 @@ namespace WEF.Test
 
             var giftids = giftopt.Search().Page(1, 10).ToList().Select(b => b.Giftid).ToList();
 
+            var count = giftopt.Search().Count(q => q.Supservicesku);
+
             var sum = giftopt.Search().Select(b => b.Supporttype.Sum()).ToFirstDefault().Supporttype;
 
             var avg = giftopt.Search().Select(b => b.Supporttype.Avg()).ToFirstDefault().Supporttype;
 
+            var select = giftopt.Search().LeftJoin<DBTask>((m, n) => m.Name == n.Name).Select<DBTask>((a, b) => new { a.Activename, b.Daylimit });
+
+            var select2 = giftopt.Search().LeftJoin2<DBTask>((m, n) => m.Name == n.Name).Select((a, b) => new { a.Activename, b.Daylimit });
+            
             var glist22 = giftopt.Search().Where(b => b.Giftid.In(giftids)).ToList();
 
             var gids = new List<string>();

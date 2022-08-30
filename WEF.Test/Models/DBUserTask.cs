@@ -519,7 +519,7 @@ namespace WEF.Models
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<DBUserTask> Search(string tableName = "")
+        public Search<DBUserTask> Search(string tableName = "")
         {
             if (string.IsNullOrEmpty(tableName))
             {
@@ -530,7 +530,7 @@ namespace WEF.Models
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<DBUserTask> Search(DBUserTask entity)
+        public Search<DBUserTask> Search(DBUserTask entity)
         {
             return db.Search<DBUserTask>(entity);
         }

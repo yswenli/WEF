@@ -420,7 +420,7 @@ namespace WEF.Test.Models
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<LiveLog> Search(string tableName = "")
+        public Search<LiveLog> Search(string tableName = "")
         {
             if (string.IsNullOrEmpty(tableName))
             {
@@ -431,7 +431,7 @@ namespace WEF.Test.Models
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<LiveLog> Search(LiveLog entity)
+        public Search<LiveLog> Search(LiveLog entity)
         {
             return db.Search<LiveLog>(entity);
         }

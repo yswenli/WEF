@@ -39,7 +39,7 @@ namespace WEF
     /// Repository基础类，具体业务可以继承此类，或直接使用此类
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class BaseRepository<T> : IRepository<T> where T : Entity, new()
+    public class BaseRepository<T> where T : Entity, new()
     {
         protected DBContext _db;
 
@@ -108,7 +108,7 @@ namespace WEF
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<T> Search(string tableName = "")
+        public Search<T> Search(string tableName = "")
         {
             if (string.IsNullOrEmpty(tableName))
             {
@@ -120,7 +120,7 @@ namespace WEF
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<T> Search(T entity)
+        public Search<T> Search(T entity)
         {
             return _db.Search<T>(entity);
         }

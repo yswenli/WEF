@@ -560,6 +560,13 @@ namespace WEF.Expressions
             return list.ToArray();
         }
 
+        /// <summary>
+        /// ToSelect
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="expr"></param>
+        /// <returns></returns>
         public static Field[] ToSelect<T2>(string tableName, Expression<Func<T, T2, object>> expr)
         {
             return ToSelectChild(tableName, expr.Body);
@@ -724,7 +731,6 @@ namespace WEF.Expressions
             var result = string.Empty;
 
             if (!string.IsNullOrEmpty(tableName))
-
             {
                 result = tableName;
             }

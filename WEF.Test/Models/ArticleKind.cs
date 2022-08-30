@@ -275,7 +275,7 @@ namespace WEF.Test.Models
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<ArticleKind> Search(string tableName = "")
+        public Search<ArticleKind> Search(string tableName = "")
         {
             if (string.IsNullOrEmpty(tableName))
             {
@@ -286,7 +286,7 @@ namespace WEF.Test.Models
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<ArticleKind> Search(ArticleKind entity)
+        public Search<ArticleKind> Search(ArticleKind entity)
         {
             return db.Search<ArticleKind>(entity);
         }

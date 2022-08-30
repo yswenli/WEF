@@ -423,7 +423,7 @@ namespace WEF.Test
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<DBGiftbatchadd> Search(string tableName = "")
+        public Search<DBGiftbatchadd> Search(string tableName = "")
         {
             if (string.IsNullOrEmpty(tableName))
             {
@@ -434,7 +434,7 @@ namespace WEF.Test
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<DBGiftbatchadd> Search(DBGiftbatchadd entity)
+        public Search<DBGiftbatchadd> Search(DBGiftbatchadd entity)
         {
             return db.Search<DBGiftbatchadd>(entity);
         }

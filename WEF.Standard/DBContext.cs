@@ -203,7 +203,7 @@ namespace WEF
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        public ISearch<TEntity> Search<TEntity>(string tableName = "")
+        public Search<TEntity> Search<TEntity>(string tableName = "")
             where TEntity : Entity
         {
             return new Search<TEntity>(_db, null, tableName);
@@ -214,7 +214,7 @@ namespace WEF
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public ISearch Search(string tableName)
+        public Search Search(string tableName)
         {
             return new Search(_db, tableName);
         }
@@ -226,7 +226,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public ISearch<TEntity> Search<TEntity>(TEntity entity)
+        public Search<TEntity> Search<TEntity>(TEntity entity)
            where TEntity : Entity
         {
             return new Search<TEntity>(_db, null, entity.GetTableName());

@@ -579,7 +579,7 @@ namespace WEF.Models
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<DBTicketOrder> Search(string tableName = "")
+        public Search<DBTicketOrder> Search(string tableName = "")
         {
             if (string.IsNullOrEmpty(tableName))
             {
@@ -590,7 +590,7 @@ namespace WEF.Models
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<DBTicketOrder> Search(DBTicketOrder entity)
+        public Search<DBTicketOrder> Search(DBTicketOrder entity)
         {
             return db.Search<DBTicketOrder>(entity);
         }

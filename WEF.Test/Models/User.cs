@@ -148,7 +148,7 @@ namespace WEF.Models
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<User> Search(string tableName = "")
+        public Search<User> Search(string tableName = "")
         {
             if (string.IsNullOrEmpty(tableName))
             {

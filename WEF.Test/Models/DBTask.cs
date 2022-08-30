@@ -838,7 +838,7 @@ namespace WEF.Models
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<DBTask> Search(string tableName = "")
+        public Search<DBTask> Search(string tableName = "")
         {
             if (string.IsNullOrEmpty(tableName))
             {
@@ -849,7 +849,7 @@ namespace WEF.Models
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<DBTask> Search(DBTask entity)
+        public Search<DBTask> Search(DBTask entity)
         {
             return db.Search<DBTask>(entity);
         }

@@ -420,7 +420,7 @@ namespace WEF.Test
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<Rules> Search(string tableName = "")
+        public Search<Rules> Search(string tableName = "")
         {
             if (string.IsNullOrEmpty(tableName))
             {
@@ -431,7 +431,7 @@ namespace WEF.Test
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
-        public ISearch<Rules> Search(Rules entity)
+        public Search<Rules> Search(Rules entity)
         {
             return db.Search<Rules>(entity);
         }

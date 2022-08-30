@@ -33,7 +33,7 @@ namespace WEF
     /// 查询
     /// </summary>
     /// <typeparam name="T"></typeparam>    
-    public class Search<T> : Search,  ISearch<T> where T : Entity
+    public class Search<T> : Search where T : Entity
     {
 
         /// <summary>
@@ -173,17 +173,42 @@ namespace WEF
         {
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, JoinType.LeftJoin);
         }
+
         /// <summary>
         /// Left Join。Lambda写法：.LeftJoin&lt;Model2>((d1,d2) => d1.ID == d2.ID)
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="lambdaWhere"></param>
+        /// <param name="lambdaJoin"></param>
         /// <returns></returns>
-        public Search<T> LeftJoin<TEntity>(Expression<Func<T, TEntity, bool>> lambdaWhere)
+        public Search<T> LeftJoin<TEntity>(Expression<Func<T, TEntity, bool>> lambdaJoin)
              where TEntity : Entity
         {
-            return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), ExpressionToOperation<T>.ToJoinWhere(_tableName, lambdaWhere), JoinType.LeftJoin);
+            return Join(EntityCache.GetTableName<TEntity>(),
+                EntityCache.GetUserName<TEntity>(),
+                ExpressionToOperation<T>.ToJoinWhere(_tableName, lambdaJoin),
+                JoinType.LeftJoin);
         }
+
+        #region 多表左链
+
+        /// <summary>
+        /// Left Join。Lambda写法：.LeftJoin&lt;Model2>((d1,d2) => d1.ID == d2.ID)
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="lambdaJoin"></param>
+        /// <returns></returns>
+        public Search<T, T2> LeftJoin2<T2>(Expression<Func<T, T2, bool>> lambdaJoin)
+             where T2 : Entity
+        {
+            return (Search<T, T2>)base.Join(EntityCache.GetTableName<T2>(),
+                EntityCache.GetUserName<T2>(),
+                ExpressionToOperation<T>.ToJoinWhere(_tableName, lambdaJoin),
+                JoinType.LeftJoin);
+        }
+
+        #endregion
+
+
         /// <summary>
         /// Full Join
         /// </summary>
@@ -374,56 +399,66 @@ namespace WEF
         }
 
         /// <summary>
-        /// 
+        /// Select
         /// </summary>
-        /// <param name="lambdaWhere"></param>
         /// <typeparam name="T2"></typeparam>
+        /// <param name="lambdaSelect"></param>
         /// <returns></returns>
-        public Search<T> Select<T2>(Expression<Func<T, T2, bool>> lambdaWhere)
+        public Search<T> Select<T2>(Expression<Func<T, T2, object>> lambdaSelect)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
+            return (Search<T>)AddSelect(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
         }
         /// <summary>
-        /// 
+        /// Select
         /// </summary>
-        /// <param name="lambdaWhere"></param>
         /// <typeparam name="T2"></typeparam>
         /// <typeparam name="T3"></typeparam>
+        /// <param name="lambdaSelect"></param>
         /// <returns></returns>
-        public Search<T> Select<T2, T3>(Expression<Func<T, T2, T3, bool>> lambdaWhere)
+        public Search<T> Select<T2, T3>(Expression<Func<T, T2, T3, object>> lambdaSelect)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
+            return (Search<T>)AddSelect(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
         }
         /// <summary>
-        /// 
+        /// Select
         /// </summary>
-        /// <param name="lambdaWhere"></param>
         /// <typeparam name="T2"></typeparam>
         /// <typeparam name="T3"></typeparam>
         /// <typeparam name="T4"></typeparam>
+        /// <param name="lambdaSelect"></param>
         /// <returns></returns>
-        public Search<T> Select<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> lambdaWhere)
+        public Search<T> Select<T2, T3, T4>(Expression<Func<T, T2, T3, T4, object>> lambdaSelect)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
-        }
-        public Search<T> Select<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> lambdaWhere)
-        {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
+            return (Search<T>)AddSelect(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
         }
         /// <summary>
-        /// 
+        /// Select
         /// </summary>
-        /// <param name="lambdaWhere"></param>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <typeparam name="T4"></typeparam>
+        /// <typeparam name="T5"></typeparam>
+        /// <param name="lambdaSelect"></param>
+        /// <returns></returns>
+        public Search<T> Select<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, object>> lambdaSelect)
+        {
+            return (Search<T>)AddSelect(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
+        }
+        /// <summary>
+        /// Select
+        /// </summary>
         /// <typeparam name="T2"></typeparam>
         /// <typeparam name="T3"></typeparam>
         /// <typeparam name="T4"></typeparam>
         /// <typeparam name="T5"></typeparam>
         /// <typeparam name="T6"></typeparam>
+        /// <param name="lambdaSelect"></param>
         /// <returns></returns>
-        public Search<T> Select<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> lambdaWhere)
+        public Search<T> Select<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, object>> lambdaSelect)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
+            return (Search<T>)AddSelect(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
         }
+
         /// <summary>
         /// groupby
         /// </summary>
@@ -547,66 +582,6 @@ namespace WEF
             return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelects));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T2"></typeparam>
-        /// <param name="lambdaSelect"></param>
-        /// <returns></returns>
-        public Search<T> Select<T2>(Expression<Func<T, T2, object>> lambdaSelect)
-        {
-            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T2"></typeparam>
-        /// <typeparam name="T3"></typeparam>
-        /// <param name="lambdaSelect"></param>
-        /// <returns></returns>
-        public Search<T> Select<T2, T3>(Expression<Func<T, T2, T3, object>> lambdaSelect)
-        {
-            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T2"></typeparam>
-        /// <typeparam name="T3"></typeparam>
-        /// <typeparam name="T4"></typeparam>
-        /// <param name="lambdaSelect"></param>
-        /// <returns></returns>
-        public Search<T> Select<T2, T3, T4>(Expression<Func<T, T2, T3, T4, object>> lambdaSelect)
-        {
-            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T2"></typeparam>
-        /// <typeparam name="T3"></typeparam>
-        /// <typeparam name="T4"></typeparam>
-        /// <typeparam name="T5"></typeparam>
-        /// <param name="lambdaSelect"></param>
-        /// <returns></returns>
-        public Search<T> Select<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, object>> lambdaSelect)
-        {
-            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T2"></typeparam>
-        /// <typeparam name="T3"></typeparam>
-        /// <typeparam name="T4"></typeparam>
-        /// <typeparam name="T5"></typeparam>
-        /// <typeparam name="T6"></typeparam>
-        /// <param name="lambdaSelect"></param>
-        /// <returns></returns>
-        public Search<T> Select<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, object>> lambdaSelect)
-        {
-            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
-        }
         /// <summary>
         /// 
         /// </summary>

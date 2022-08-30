@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 using WEF.Common;
@@ -30,7 +31,7 @@ namespace WEF
     /// <summary>
     /// DBContext的查询对象
     /// </summary>    
-    public class Search : ISearch
+    public class Search
     {
         #region 变量
         /// <summary>
@@ -725,7 +726,7 @@ namespace WEF
             {
                 foreach (Field field in fields)
                 {
-                    Field f = this._fields.Find(fi => fi.Name.Equals(field.Name) && fi.TableName.Equals(field.TableName));
+                    Field f = _fields.Find(fi => fi.Name.Equals(field.Name) && fi.TableName.Equals(field.TableName));
                     if (Field.IsNullOrEmpty(f))
                         this._fields.Add(field);
                 }
