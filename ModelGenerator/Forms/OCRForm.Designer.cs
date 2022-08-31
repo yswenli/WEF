@@ -164,6 +164,7 @@ namespace WEF.ModelGenerator.Forms
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "OCRForm";
             this.Text = "OCR developed by walle";
+            this.Load += new System.EventHandler(this.OCRForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

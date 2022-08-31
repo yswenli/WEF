@@ -28,14 +28,12 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using CCWin;
 
 using OpenCvSharp;
-using OpenCvSharp.Aruco;
 
 using Sdcb.PaddleOCR;
 using Sdcb.PaddleOCR.Models;
@@ -43,6 +41,9 @@ using Sdcb.PaddleOCR.Models.Online;
 
 namespace WEF.ModelGenerator.Forms
 {
+    /// <summary>
+    /// OCRForm
+    /// </summary>
     public partial class OCRForm : Skin_Mac
     {
         FullOcrModel _model;
@@ -70,9 +71,18 @@ namespace WEF.ModelGenerator.Forms
                     label1.Text = "";
                 }
             });
+        }
 
+        /// <summary>
+        /// OCRForm
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OCRForm_Load(object sender, EventArgs e)
+        {
 
         }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
