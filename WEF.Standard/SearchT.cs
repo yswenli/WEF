@@ -222,6 +222,49 @@ namespace WEF
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity1"></typeparam>
+        /// <typeparam name="TEntity2"></typeparam>
+        /// <param name="lambdaJoin"></param>
+        /// <param name="joinType"></param>
+        /// <returns></returns>
+        public Search<T> Join<TEntity1, TEntity2>(Expression<Func<TEntity1, TEntity2, bool>> lambdaJoin, JoinType joinType)
+            where TEntity1 : Entity
+            where TEntity2 : Entity
+        {
+            var where = ExpressionToOperation<TEntity1>.ToJoinWhere(EntityCache.GetTableName<TEntity1>(), lambdaJoin);
+
+            return (Search<T>)base.Join(EntityCache.GetTableName<TEntity1>(), EntityCache.GetUserName<TEntity1>(), where, joinType);
+        }
+
+        /// <summary>
+        /// 连接
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="lambdaJoin"></param>
+        /// <param name="joinType"></param>
+        /// <returns></returns>
+        public Search<T> Join<TEntity>(Expression<Func<T, TEntity, bool>> lambdaJoin, JoinType joinType) where TEntity : Entity
+        {
+            return Join<TEntity>(ExpressionToOperation<T>.ToJoinWhere(_tableName, lambdaJoin),
+                joinType);
+        }
+
+        /// <summary>
+        /// 连接
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="where"></param>
+        /// <param name="joinType"></param>
+        /// <returns></returns>
+        private Search<T> Join<TEntity>(WhereOperation where, JoinType joinType) where TEntity : Entity
+        {
+            return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, joinType);
+        }
+
+
+        /// <summary>
         /// 连接
         /// </summary>
         /// <param name="tableName"></param>

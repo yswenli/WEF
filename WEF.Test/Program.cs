@@ -216,7 +216,7 @@ namespace WEF.Test
 
             new DBTaskRepository().Delete("");
 
-            var giftopt = new DBGiftRepository();
+            var giftopt = new DBGiftRepository(DatabaseType.SqlServer, "");
 
             var giftwhere = giftopt.Search().Where(b => b.Giftid.Contains("1"));
 
@@ -240,7 +240,13 @@ namespace WEF.Test
             var select = giftopt.Search().LeftJoin<DBTask>((m, n) => m.Name == n.Name).Select<DBTask>((a, b) => new { a.Activename, b.Daylimit });
 
             var select2 = giftopt.Search().LeftJoin2<DBTask>((m, n) => m.Name == n.Name).Select((a, b) => new { a.Activename, b.Daylimit });
-            
+
+            //不同表的join
+            var select3 = giftopt.Search()
+                .Join<DBTask>((m, n) => m.Name == n.Name, JoinType.InnerJoin)
+                .Join<DBTask, DBUserPoint>((m, n) => m.Name == n.Uid, JoinType.LeftJoin)
+                .Select<DBTask>((a, b) => new { a.Activename, b.Daylimit });
+
             var glist22 = giftopt.Search().Where(b => b.Giftid.In(giftids)).ToList();
 
             var gids = new List<string>();

@@ -1130,6 +1130,15 @@ namespace WEF.Models
             db = new DBContext(connStrName);
         }
         /// <summary>
+        /// 构造方法
+        /// </summary>
+        /// <param name="databaseType"></param>
+        /// <param name="connStr"></param>
+        public DBGiftRepository(DatabaseType databaseType, string connStr)
+        {
+            db = new DBContext(databaseType, connStr);
+        }
+        /// <summary>
         /// 当前db操作上下文
         /// </summary>
         public DBContext DBContext
