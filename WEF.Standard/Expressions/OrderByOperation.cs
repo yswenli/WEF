@@ -38,8 +38,6 @@ namespace WEF.Expressions
     [Serializable]
     public class OrderByOperation
     {
-
-
         private Dictionary<string, OrderByOperater> orderByOperation = new Dictionary<string, OrderByOperater>();
 
         /// <summary>
@@ -51,11 +49,20 @@ namespace WEF.Expressions
         {
         }
 
+        /// <summary>
+        /// 排序
+        /// </summary>
+        /// <param name="fieldName"></param>
+        /// <param name="orderBy"></param>
         public OrderByOperation(string fieldName, OrderByOperater orderBy)
         {
             orderByOperation.Add(fieldName, orderBy);
         }
 
+        /// <summary>
+        /// 排序
+        /// </summary>
+        /// <param name="field"></param>
         public OrderByOperation(Field field)
             : this(field.TableFieldName, OrderByOperater.ASC)
         {
@@ -143,7 +150,7 @@ namespace WEF.Expressions
         }
 
         /// <summary>
-        /// 
+        /// ToString
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -214,6 +221,7 @@ namespace WEF.Expressions
             get
             {
                 if (this.orderByOperation.Count == 0)
+
                     return string.Empty;
 
                 return string.Concat(" ORDER BY ", this.ToString());
