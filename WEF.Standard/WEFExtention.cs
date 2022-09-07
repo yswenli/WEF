@@ -16,6 +16,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -1493,6 +1494,63 @@ namespace WEF
 
 
         #endregion
+
+        #region 获取列描述
+        /// <summary>
+        /// 获取字段描述
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static Dictionary<string, string> GetConlumDescriptions(Type type)
+        {
+            var _conlumDescriptions = new Dictionary<string, string>();
+            var propertities = type.GetProperties();
+            foreach (var item in propertities)
+            {
+                var des = item.Name;
+                var attrs = item.GetCustomAttributes(true);
+                if (attrs != null && attrs.Length > 0)
+                {
+                    foreach (var attr in attrs)
+                    {
+                        var da = attr as DescriptionAttribute;
+                        if (da != null)
+                        {
+                            des = da.Description;
+                            if (string.IsNullOrEmpty(des))
+                            {
+                                des = item.Name;
+                            }
+                        }
+                    }
+                }
+                _conlumDescriptions.Add(item.Name, des);
+            }
+            return _conlumDescriptions;
+        }
+
+        /// <summary>
+        /// 获取字段描述
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public static Dictionary<string, string> GetConlumDescriptions(this IEntity entity)
+        {
+            return GetConlumDescriptions(entity.GetType());
+        }
+
+        /// <summary>
+        /// 获取字段描述
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static Dictionary<string, string> GetConlumDescriptions<T>() where T : Entity
+        {
+            return GetConlumDescriptions(typeof(T));
+        }
+
+        #endregion
+
 
         #region 连接字符串处理
 

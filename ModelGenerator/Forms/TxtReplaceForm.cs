@@ -15,6 +15,12 @@ namespace TxtReplaceTool
         public TxtReplaceForm()
         {
             InitializeComponent();
+        }
+
+
+
+        private void TxtReplaceForm_Load(object sender, EventArgs e)
+        {
             toolStripProgressBar1.Style = ProgressBarStyle.Marquee;
             toolStripProgressBar1.MarqueeAnimationSpeed = 10;
         }

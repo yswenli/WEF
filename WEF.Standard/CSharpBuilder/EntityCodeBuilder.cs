@@ -281,7 +281,7 @@ namespace WEF.CSharpBuilder
                 plus3.AppendSpaceLine(2, "/// <summary>");
                 plus3.AppendSpaceLine(2, "/// " + column.Name + " " + column.DeText);
                 plus3.AppendSpaceLine(2, "/// </summary>");
-                plus3.AppendSpaceLine(2, $"[DataMember, Description(\"{column.DeText}\")]");
+                plus3.AppendSpaceLine(2, $"[DataMember, Description(\"{(string.IsNullOrEmpty(column.DeText) ? column.Name : column.DeText)}\")]");
                 plus3.AppendSpaceLine(2, "public " + column.DataTypeName + " " + column.Name);
                 plus3.AppendSpaceLine(2, "{");
                 plus3.AppendSpaceLine(3, "get{ return _" + column.Name + "; }");
