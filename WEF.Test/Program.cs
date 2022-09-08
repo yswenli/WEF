@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -456,8 +457,6 @@ namespace WEF.Test
                 var tb1 = new DBTaskRepository().GetList(1, 10);
 
                 tran1.Update(tb1);
-
-                tran1.Commit();
             }
             catch
             {
@@ -476,9 +475,17 @@ namespace WEF.Test
                 new DBTaskRepository().DBContext.Delete(tran2, new DBTask() { Taskid = "123" });
 
                 tran2.Delete(ut);
-
-                tran2.Commit();
             }
+
+            //or
+            ur.DBContext.BeginTransaction().TryCommit((tran3) => {
+                
+                tran3.Insert(ut);
+
+                tran3.Delete(new DBTask() { Taskid = "123" });
+
+                tran3.Delete(ut);
+            });
 
             #endregion
 

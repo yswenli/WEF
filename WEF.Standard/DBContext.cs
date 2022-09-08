@@ -759,8 +759,6 @@ namespace WEF
             using (DbTrans trans = BeginTransaction())
             {
                 UpdateAll<TEntity>(trans, entities);
-
-                trans.Commit();
             }
         }
 
@@ -883,7 +881,6 @@ namespace WEF
             using (DbTrans trans = BeginTransaction())
             {
                 count = Update<TEntity>(trans, entities);
-                trans.Commit();
             }
             return count;
         }
@@ -1600,7 +1597,6 @@ namespace WEF
             using (var trans = this.BeginTransaction())
             {
                 count = Insert(trans, entities);
-                trans.Commit();
             }
             return count;
         }
@@ -1894,7 +1890,6 @@ namespace WEF
                             break;
                     }
                 }
-                trans.Commit();
             }
             return count;
         }

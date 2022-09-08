@@ -64,7 +64,6 @@ namespace WEF.Test
             using (var tran = repository.CreateTransaction())
             {
                 tran.Insert(area);
-                tran.Commit();
             }
             Console.WriteLine("mysql bit tran 测试");
         }
@@ -119,7 +118,6 @@ namespace WEF.Test
                 var data = tran.Search<DBWarehouseInboundData>().Where(q => q.ID == "2f7a92eb536a11eca88d0050568338d8").First();
                 data.ApplyQty = 22;
                 var result = tran.Update(data);
-                tran.Commit();
             }
             Console.WriteLine("mysql bit tran 测试");
         }

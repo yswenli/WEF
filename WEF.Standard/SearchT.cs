@@ -222,7 +222,9 @@ namespace WEF
         }
 
         /// <summary>
-        /// 
+        /// Join多表，
+        /// 需要注意泛型参数顺序，
+        /// join的目标表名取第一个泛型参数TEntity1
         /// </summary>
         /// <typeparam name="TEntity1"></typeparam>
         /// <typeparam name="TEntity2"></typeparam>

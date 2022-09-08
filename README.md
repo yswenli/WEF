@@ -20,6 +20,7 @@ WEF类似MEF上手简单，0学习成本。使用方便，按照sql书写习惯�
 
 ```CSharp
 
+
 db.Search<Area>(tableName)    //Model.table1类通过<a href="https://github.com/yswenli/WEF/tree/master/WEF.ModelGenerator">WEF数据库工具生成</a>
 
     .Select(d => new { d.id, d.price })
@@ -52,59 +53,91 @@ db.Search<Area>(tableName)    //Model.table1类通过<a href="https://github.com
 	
     .ToList();    //默认返回List<table1>，也可自定义Map类.ToList<T>();
 
+
+
 ```
 
 ## 多where条件拼接
 
 ```CSharp
 
-            //Where条件拼接一：
-            var dbTestRepository = new DBTestRepository();
+            
+    //Where条件拼接一：
+    var dbTestRepository = new DBTestRepository();
 
-            var where1 = new Where<DBTest>();
-            where1.And(d => d.Operator != "");
-            where1.And(d => d.Totallimit >= 0);
+    var where1 = new Where<DBTest>();
+    where1.And(d => d.Operator != "");
+    where1.And(d => d.Totallimit >= 0);
 
-            var list1 = dbTestRepository.Search()
-                            .Where(where1)
-                            .Page(1, 2)
-                            .ToList();
+    var list1 = dbTestRepository.Search()
+                    .Where(where1)
+                    .Page(1, 2)
+                    .ToList();
 
 
-            //多表条件拼接
-            var where2 = new Where<table>();
-            where2.And(a => a.id == 1);
-            where2.And<table2>((a, b) => b.id == 2);
-            where2.And<table3>((a, c) => c.id == 3);
+    //多表条件拼接
+    var where2 = new Where<table>();
+    where2.And(a => a.id == 1);
+    where2.And<table2>((a, b) => b.id == 2);
+    where2.And<table3>((a, c) => c.id == 3);
 
-            var list2 = new DBContext().Search<table>()
-                            .InnerJoin<table2>((a, b) => a.id == b.aid)
-                            .InnerJoin<table3>((a, c) => a.id == c.aid)
-                            .Where(where1)
-                            .ToList();
+    var list2 = new DBContext().Search<table>()
+                    .InnerJoin<table2>((a, b) => a.id == b.aid)
+                    .InnerJoin<table3>((a, c) => a.id == c.aid)
+                    .Where(where1)
+                    .ToList();
 
-            //上面的where还可以这样写：
-            var where3 = new Where<table>();
-            where3.And<table2, table3>((a, b, c) => a.id == 1 && b.id == 2 && c.id == 3);
-
+    //上面的where还可以这样写：
+    var where3 = new Where<table>();
+    where3.And<table2, table3>((a, b, c) => a.id == 1 && b.id == 2 && c.id == 3);
 
 ```
 
 ## 执行sql
 
 ```CSharp
-            #region 无实体sql操作，自定义参数            
+    #region 无实体sql操作，自定义参数            
 
-            var dt1 = new DBContext().FromSql("select * from tb_task where taskid=@taskID").AddInParameter("@taskID", System.Data.DbType.String, 200, "10B676E5BC852464DE0533C5610ACC53").ToFirst<DBTask>();
+    var dt1 = new DBContext().FromSql("select * from tb_task where taskid=@taskID").AddInParameter("@taskID", System.Data.DbType.String, 200, "10B676E5BC852464DE0533C5610ACC53").ToFirst<DBTask>();
 
-            var count = new DBContext().Search<DBTask>().Where(b => b.Crc32.Avg() > 1).Count();
+    var count = new DBContext().Search<DBTask>().Where(b => b.Crc32.Avg() > 1).Count();
 
-            var dt2=new DBContext().ToList<DBTask>("select * from tb_task");
+    var dt2=new DBContext().ToList<DBTask>("select * from tb_task");
 
-            #endregion
+    #endregion
 
 ```
 
+## 聚合函数及Select
+
+```CSharp
+var count = giftopt.Search().Count(q => q.Supservicesku);
+
+var sum = giftopt.Search().Select(b => b.Supporttype.Sum()).ToFirstDefault().Supporttype;
+
+var avg = giftopt.Search().Select(b => b.Supporttype.Avg()).ToFirstDefault().Supporttype;
+
+var select = giftopt.Search().LeftJoin<DBTask>((m, n) => m.Name == n.Name).Select<DBTask>((a, b) => new { a.Activename, b.Daylimit });
+
+var select2 = giftopt.Search().LeftJoin2<DBTask>((m, n) => m.Name == n.Name).Select((a, b) => new { a.Activename, b.Daylimit });
+            
+```
+## 事务
+
+```CSharp
+var repository = new DBOcWarehouseAreaRepository(DatabaseType.MySql, cnnStr);
+
+using (var tran = repository.CreateTransaction())
+{
+     tran.Insert(area);
+}
+
+//或者
+repository.CreateTransaction().TryCommit((tran)=>{
+  //todo
+});
+            
+```
 
 ## WEF数据库工具
 

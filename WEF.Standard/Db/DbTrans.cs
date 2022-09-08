@@ -120,12 +120,18 @@ namespace WEF.Db
         /// </summary>
         public void Commit()
         {
-            if (!_isCommitOrRollback)
+            try
             {
-                _trans.Commit();
-                _isCommitOrRollback = true;
+                if (!_isCommitOrRollback)
+                {
+                    _trans.Commit();
+                    _isCommitOrRollback = true;
+                }
             }
-            Close();
+            catch(Exception ex)
+            {
+                Rollback();
+            }
         }
 
 
@@ -139,7 +145,6 @@ namespace WEF.Db
                 _trans.Rollback();
                 _isCommitOrRollback = true;
             }
-            Close();
         }
 
 
@@ -162,13 +167,6 @@ namespace WEF.Db
             if (_isClose)
                 return;
 
-            if (!_isCommitOrRollback)
-            {
-                _isCommitOrRollback = true;
-
-                _trans?.Rollback();
-            }
-
             if (_conn.State != ConnectionState.Closed)
             {
                 _conn.Close();
@@ -183,6 +181,7 @@ namespace WEF.Db
 
 
         #region IDisposable 成员
+
         /// <summary>
         /// 关闭连接并释放资源
         /// </summary>
@@ -750,14 +749,14 @@ namespace WEF.Db
                 var ex = work.Invoke();
                 if (ex == null)
                 {
-                    this.Dispose();
+                    Close();
                     return ex;
                 }
                 Thread.Sleep(sleep);
                 count++;
                 if (count >= tryCount)
                 {
-                    this.Dispose();
+                    Close();
                     return ex;
                 }
             }
