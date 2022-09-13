@@ -27,6 +27,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -52,6 +53,8 @@ namespace WEF.ModelGenerator.Forms
         {
             InitializeComponent();
 
+            label1.Text = "";
+
             DownloadModelAsync(() =>
             {
                 if (this.InvokeRequired)
@@ -59,16 +62,11 @@ namespace WEF.ModelGenerator.Forms
                     this.Invoke(new Action(() =>
                     {
                         comboBox1.SelectedIndex = 0;
-
-                        label1.Text = "";
                     }));
                 }
                 else
                 {
-
                     comboBox1.SelectedIndex = 0;
-
-                    label1.Text = "";
                 }
             });
         }
@@ -127,7 +125,8 @@ namespace WEF.ModelGenerator.Forms
                             PaddleOcrResult result = all.Run(src);
                             int index = 0;
                             var sb = new StringBuilder();
-                            foreach (PaddleOcrResultRegion region in result.Regions)
+                            var regions = result.Regions.Reverse();
+                            foreach (PaddleOcrResultRegion region in regions)
                             {
                                 this.Invoke(new Action(() =>
                                 {
