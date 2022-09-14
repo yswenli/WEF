@@ -580,7 +580,6 @@ namespace WEF
             return this;
         }
 
-
         /// <summary>
         /// groupby
         /// </summary>

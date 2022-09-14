@@ -72,7 +72,7 @@ namespace WEF.Common
         {
             var type = typeof(T);
 
-            return GetTableName(type);           
+            return GetTableName(type);
         }
 
         /// <summary>

@@ -872,24 +872,24 @@ namespace WEF
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
-        public int Update<TEntity>(params TEntity[] entities)
+        public List<int> Update<TEntity>(params TEntity[] entities)
             where TEntity : Entity
         {
             if (null == entities || entities.Length == 0)
-                return 0;
-            int count = 0;
+                return null;
+            var result = new List<int>();
             using (DbTrans trans = BeginTransaction())
             {
-                count = Update<TEntity>(trans, entities);
+                result.Add(Update<TEntity>(trans, entities));
             }
-            return count;
+            return result;
         }
         /// <summary>
         /// 更新  
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
-        public int Update<TEntity>(IEnumerable<TEntity> entities)
+        public List<int> Update<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : Entity
         {
             return Update(entities.ToArray());
@@ -899,7 +899,7 @@ namespace WEF
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
-        public int Update<TEntity>(List<TEntity> entities)
+        public List<int> Update<TEntity>(List<TEntity> entities)
             where TEntity : Entity
         {
             return Update(entities.ToArray());
@@ -920,7 +920,7 @@ namespace WEF
         }
 
         /// <summary>
-        /// Update<TEntity>
+        /// 更新
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
@@ -933,13 +933,18 @@ namespace WEF
         }
 
         /// <summary>
-        /// 
+        /// 更新
         /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
         public int Update<TEntity>(TEntity entity, Where where)
             where TEntity : Entity
         {
             return Update<TEntity>(entity, where.ToWhereClip());
         }
+
         /// <summary>
         /// 更新
         /// </summary>
@@ -1588,17 +1593,17 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public int Insert<TEntity>(params TEntity[] entities)
+        public List<int> Insert<TEntity>(params TEntity[] entities)
             where TEntity : Entity
         {
             if (null == entities || entities.Length == 0)
-                return 0;
-            int count;
+                return null;
+            var result = new List<int>();
             using (var trans = this.BeginTransaction())
             {
-                count = Insert(trans, entities);
+                result.Add(Insert(trans, entities));
             }
-            return count;
+            return result;
         }
         /// <summary>
         /// 添加
@@ -1606,7 +1611,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public int Insert<TEntity>(IEnumerable<TEntity> entities)
+        public List<int> Insert<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : Entity
         {
             return Insert(entities.ToArray());
@@ -1617,7 +1622,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public int Insert<TEntity>(List<TEntity> entities)
+        public List<int> Insert<TEntity>(List<TEntity> entities)
             where TEntity : Entity
         {
             return Insert(entities.ToArray());
@@ -2353,7 +2358,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public int Import<TEntity>(string filePath) where TEntity : Entity
+        public List<int> Import<TEntity>(string filePath) where TEntity : Entity
         {
             var dataTable = DataTableHelper.ReadFromCSV(filePath);
 

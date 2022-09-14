@@ -10,12 +10,12 @@
 *当前的用户域：OCEANIA
 *创建人： Mason.Wen
 *电子邮箱：Mason.Wen@oceania-inc.com
-*创建时间：2021/5/20 15:11:37
+*创建时间：2019/5/20 15:11:37
 *描述：
 *
 *=====================================================================
 *修改标记
-*修改时间：2021/5/20 15:11:37
+*修改时间：2022/9/14 15:11:37
 *修改人： Mason.Wen
 *版本号： V1.0.0.0
 *描述：
@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 using WEF.Common;
 using WEF.Db;
@@ -41,6 +40,9 @@ namespace WEF
     /// <typeparam name="T"></typeparam>
     public class BaseRepository<T> where T : Entity, new()
     {
+        /// <summary>
+        /// DBContext
+        /// </summary>
         protected DBContext _db;
 
         private T _entity;
@@ -146,6 +148,24 @@ namespace WEF
         }
 
         /// <summary>
+        /// 返回全部
+        /// </summary>
+        /// <returns></returns>
+        public List<T> GetAll()
+        {
+            return Search().ToList();
+        }
+
+        /// <summary>
+        /// 返回总数
+        /// </summary>
+        /// <returns></returns>
+        public int Count()
+        {
+            return Search().Count();
+        }
+
+        /// <summary>
         /// 获取列表
         /// </summary>
         /// <param name="ids"></param>
@@ -215,14 +235,16 @@ namespace WEF
         {
             return Search().ToPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
         }
+
         /// <summary>
         /// 分页查询
-        /// <param name="lambdaWhere">查询表达式</param>
-        /// <param name="pageIndex">分页第几页</param>
-        /// <param name="pageSize">分页一页取值</param>
-        /// <param name="orderBy">排序</param>
-        /// <param name="asc">升降</param>
         /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
         /// <returns></returns>
         public PagedList<T> GetPagedList(Expression<Func<T, bool>> lambdaWhere, string tableName = "", int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
         {
@@ -291,6 +313,17 @@ namespace WEF
         {
             return _db.Insert(entity);
         }
+
+        /// <summary>
+        /// 添加实体
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public List<int> Insert(IEnumerable<T> entities)
+        {
+            return _db.Insert(entities);
+        }
+
         /// <summary>
         /// 批量添加实体
         /// <param name="entities">传进的实体列表</param>
@@ -307,11 +340,12 @@ namespace WEF
         {
             return _db.Update(entity);
         }
+
         /// <summary>
         /// 更新实体
         /// <param name="entities">传进的实体</param>
         /// </summary>
-        public int Update(IEnumerable<T> entities)
+        public List<int> Update(IEnumerable<T> entities)
         {
             return _db.Update(entities);
         }
@@ -505,7 +539,7 @@ namespace WEF
         }
 
         /// <summary>
-        /// 创建事务，使用事务curd时推荐方式 using(var tran=CreateTransaction()) tran.Commit() 方式
+        /// 创建事务，使用事务curd时推荐方式 using(var tran=CreateTransaction()) 方式
         /// </summary>
         /// <param name="timeout"></param>
         /// <returns></returns>

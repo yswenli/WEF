@@ -19,7 +19,6 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
 
 using WEF.Common;
@@ -751,15 +750,279 @@ namespace WEF
 
         #region 查询
 
-
         private readonly string[] _notClass = new string[] { "String" };
 
+        public T ToFirstDefault()
+        {
+            T t = this.ToFirst();
+            if (t == null)
+            {
+                t = DataUtils.Create<T>();
+                t.SetTableName(_tableName);
+            }
+            return t;
+        }
 
         /// <summary>
-        /// ToList<Model>
+        /// 同ToFirstDefault， 返回第一个实体  如果为null，则默认实例化一个
+        /// </summary>
+        /// <returns></returns>
+        public T FirstDefault()
+        {
+            return ToFirstDefault();
+        }
+
+        /// <summary>
+        /// 返回第一个实体，同ToFirst()。无数据返回Null。
+        /// </summary>
+        /// <returns></returns>
+        public T First()
+        {
+            return ToFirst();
+        }
+        /// <summary>
+        /// 返回第一个实体，同ToFirst()。无数据返回Null。
+        /// </summary>
+        /// <returns></returns>
+        public Model First<Model>() where Model : class
+        {
+            return ToFirst<Model>();
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public T First(Expression<Func<T, bool>> lambdaWhere)
+        {
+            var where = new Where<T>(lambdaWhere);
+
+            Search search = this.Top(1).GetPagedFromSection().Where(where.ToWhereClip());
+
+            T t = null;
+
+            using (IDataReader reader = ToDataReader(search))
+            {
+                var result = EntityUtils.ReaderToEnumerable<T>(reader).ToArray();
+
+                if (result.Any())
+                {
+                    t = result.First();
+                }
+            }
+
+            if (t != null)
+            {
+                t.SetTableName(_tableName);
+                t.ClearModifyFields();
+            }
+
+            return t;
+        }
+
+        /// <summary>
+        /// 返回第一个实体 ，同First()。无数据返回Null。
+        /// </summary>
+        /// <returns></returns>
+        public Model ToFirst<Model>() where Model : class
+        {
+            var typet = typeof(Model);
+            if (typet == typeof(T))
+            {
+                return ToFirst() as Model;
+            }
+            Search from = this.Top(1).GetPagedFromSection();
+
+            Model t = null;
+
+            using (IDataReader reader = ToDataReader(from))
+            {
+                var result = EntityUtils.ReaderToEnumerable<Model>(reader).ToArray();
+
+                if (result.Any())
+                {
+                    t = result.First();
+
+                    if (t != null)
+                    {
+                        var st = t as Entity;
+
+                        if (st != null)
+                        {
+                            st.ClearModifyFields();
+                            st.SetTableName(_tableName);
+                        }
+                    }
+                }
+            }
+
+            return t;
+        }
+        /// <summary>
+        /// 返回第一个实体 ，同First()。无数据返回Null。
+        /// </summary>
+        /// <returns></returns>
+        public T ToFirst()
+        {
+            Search search = this.Top(1).GetPagedFromSection();
+
+            T t = null;
+
+            using (IDataReader reader = ToDataReader(search))
+            {
+                var result = EntityUtils.ReaderToEnumerable<T>(reader).ToArray();
+
+                if (result.Any())
+                {
+                    t = result.First();
+                }
+            }
+
+            if (t != null)
+            {
+                t.SetTableName(_tableName);
+                t.ClearModifyFields();
+            }
+
+            return t;
+        }
+
+        /// <summary>
+        /// Single,有则返回，无则null，多于一个则error
+        /// </summary>
+        /// <returns></returns>
+        public T Single()
+        {
+            return ToSingle();
+        }
+
+        /// <summary>
+        /// ToSingle,有则返回，无则null，多于一个则error
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public T ToSingle()
+        {
+            Search search = this.Top(2).GetPagedFromSection();
+
+            T t = null;
+
+            using (IDataReader reader = ToDataReader(search))
+            {
+                var result = EntityUtils.ReaderToEnumerable<T>(reader).ToArray();
+
+                if (result.Any())
+                {
+                    if (result.Length > 1) throw new Exception("There are multiple records for the acquired data");
+
+                    t = result.First();
+                }
+            }
+
+            if (t != null)
+            {
+                t.SetTableName(_tableName);
+                t.ClearModifyFields();
+            }
+
+            return t;
+        }
+
+        /// <summary>
+        /// 有则返回，无则null，多于一个则error
+        /// </summary>
+        /// <param name="expressionWhere"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public T Single(Expression<Func<T, bool>> expressionWhere)
+        {
+            Search search = this.Top(2).GetPagedFromSection().Where(new Where<T>(expressionWhere).ToWhereClip());
+
+            T t = null;
+
+            using (IDataReader reader = ToDataReader(search))
+            {
+                var result = EntityUtils.ReaderToEnumerable<T>(reader).ToArray();
+
+                if (result.Any())
+                {
+                    if (result.Length > 1) throw new Exception("There are multiple records for the acquired data");
+
+                    t = result.First();
+                }
+            }
+
+            if (t != null)
+            {
+                t.SetTableName(_tableName);
+                t.ClearModifyFields();
+            }
+
+            return t;
+        }
+
+        /// <summary>
+        /// Single,有则返回，无则null，多于一个则error
         /// </summary>
         /// <typeparam name="Model"></typeparam>
         /// <returns></returns>
+        public Model Single<Model>() where Model : class
+        {
+            return ToSingle<Model>();
+        }
+
+        /// <summary>
+        /// ToSingle,有则返回，无则null，多于一个则error
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <returns></returns>
+        public Model ToSingle<Model>() where Model : class
+        {
+            var typet = typeof(Model);
+            if (typet == typeof(T))
+            {
+                return ToSingle() as Model;
+            }
+
+            var search = this.Top(2).GetPagedFromSection();
+
+            Model m = null;
+
+            using (IDataReader reader = ToDataReader(search))
+            {
+                var result = EntityUtils.ReaderToEnumerable<Model>(reader).ToArray();
+
+                if (result.Any())
+                {
+                    if (result.Length > 1) throw new Exception("There are multiple records for the acquired data");
+
+                    m = result.First();
+
+                    if (m != null)
+                    {
+                        var st = m as Entity;
+
+                        if (st != null)
+                        {
+                            st.ClearModifyFields();
+                            st.SetTableName(_tableName);
+                        }
+                    }
+                }
+            }
+
+            return m;
+        }
+
+
+        /// <summary>
+        /// ToList
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public List<Model> ToList<Model>()
         {
             var typet = typeof(Model);
@@ -838,6 +1101,33 @@ namespace WEF
             }
             return list;
         }
+
+        /// <summary>
+        /// tolist
+        /// </summary>
+        /// <param name="expressionWhere"></param>
+        /// <returns></returns>
+        public List<T> ToList(Expression<Func<T, bool>> expressionWhere)
+        {
+            var from = GetPagedFromSection().Where(new Where<T>(expressionWhere).ToWhereClip());
+
+            List<T> list;
+            using (var reader = ToDataReader(from))
+            {
+                list = EntityUtils.ReaderToEnumerable<T>(reader).ToList();
+            }
+
+            foreach (var m in list)
+            {
+                if (m != null)
+                {
+                    m.ClearModifyFields();
+                    m.SetTableName(_tableName);
+                }
+            }
+            return list;
+        }
+
         /// <summary>
         /// 返回懒加载数据
         /// </summary>
@@ -863,205 +1153,6 @@ namespace WEF
         /// 返回第一个实体  如果为null，则默认实例化一个
         /// </summary>
         /// <returns></returns>
-        public T ToFirstDefault()
-        {
-            T t = this.ToFirst();
-            if (t == null)
-            {
-                t = DataUtils.Create<T>();
-                t.SetTableName(_tableName);
-            }
-            return t;
-        }
-
-        /// <summary>
-        /// 同ToFirstDefault， 返回第一个实体  如果为null，则默认实例化一个
-        /// </summary>
-        /// <returns></returns>
-        public T FirstDefault()
-        {
-            return ToFirstDefault();
-        }
-
-        /// <summary>
-        /// 返回第一个实体，同ToFirst()。无数据返回Null。
-        /// </summary>
-        /// <returns></returns>
-        public T First()
-        {
-            return ToFirst();
-        }
-        /// <summary>
-        /// 返回第一个实体，同ToFirst()。无数据返回Null。
-        /// </summary>
-        /// <returns></returns>
-        public Model First<Model>() where Model : class
-        {
-            return ToFirst<Model>();
-        }
-
-
-        /// <summary>
-        /// 返回第一个实体 ，同First()。无数据返回Null。
-        /// </summary>
-        /// <returns></returns>
-        public Model ToFirst<Model>() where Model : class
-        {
-            var typet = typeof(Model);
-            if (typet == typeof(T))
-            {
-                return ToFirst() as Model;
-            }
-            Search from = this.Top(1).GetPagedFromSection();
-
-            Model t = null;
-
-            using (IDataReader reader = ToDataReader(from))
-            {
-                var result = EntityUtils.ReaderToEnumerable<Model>(reader).ToArray();
-
-                if (result.Any())
-                {
-                    t = result.First();
-
-                    if (t != null)
-                    {
-                        var st = t as Entity;
-
-                        if (st != null)
-                        {
-                            st.ClearModifyFields();
-                            st.SetTableName(_tableName);
-                        }
-                    }
-                }
-            }
-
-            return t;
-        }
-        /// <summary>
-        /// 返回第一个实体 ，同First()。无数据返回Null。
-        /// </summary>
-        /// <returns></returns>
-        public T ToFirst()
-        {
-            Search search = this.Top(1).GetPagedFromSection();
-
-            T t = null;
-
-            using (IDataReader reader = ToDataReader(search))
-            {
-                var result = EntityUtils.ReaderToEnumerable<T>(reader).ToArray();
-
-                if (result.Any())
-                {
-                    t = result.First();
-                }
-            }
-
-            if (t != null)
-            {
-                t.SetTableName(_tableName);
-                t.ClearModifyFields();
-            }
-
-            return t;
-        }
-
-
-        /// <summary>
-        /// Single,有则返回，无则null，多于一个则error
-        /// </summary>
-        /// <returns></returns>
-        public T Single()
-        {
-            return ToSingle();
-        }
-
-        /// <summary>
-        /// ToSingle,有则返回，无则null，多于一个则error
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public T ToSingle()
-        {
-            Search search = this.Top(2).GetPagedFromSection();
-
-            T t = null;
-
-            using (IDataReader reader = ToDataReader(search))
-            {
-                var result = EntityUtils.ReaderToEnumerable<T>(reader).ToArray();
-
-                if (result.Any())
-                {
-                    if (result.Length > 1) throw new Exception("There are multiple records for the acquired data");
-
-                    t = result.First();
-                }
-            }
-
-            if (t != null)
-            {
-                t.SetTableName(_tableName);
-                t.ClearModifyFields();
-            }
-
-            return t;
-        }
-
-        /// <summary>
-        /// Single,有则返回，无则null，多于一个则error
-        /// </summary>
-        /// <typeparam name="Model"></typeparam>
-        /// <returns></returns>
-        public Model Single<Model>() where Model : class
-        {
-            return ToSingle<Model>();
-        }
-
-        /// <summary>
-        /// ToSingle,有则返回，无则null，多于一个则error
-        /// </summary>
-        /// <typeparam name="Model"></typeparam>
-        /// <returns></returns>
-        public Model ToSingle<Model>() where Model : class
-        {
-            var typet = typeof(Model);
-            if (typet == typeof(T))
-            {
-                return ToSingle() as Model;
-            }
-
-            var search = this.Top(2).GetPagedFromSection();
-
-            Model m = null;
-
-            using (IDataReader reader = ToDataReader(search))
-            {
-                var result = EntityUtils.ReaderToEnumerable<Model>(reader).ToArray();
-
-                if (result.Any())
-                {
-                    if (result.Length > 1) throw new Exception("There are multiple records for the acquired data");
-
-                    m = result.First();
-
-                    if (m != null)
-                    {
-                        var st = m as Entity;
-
-                        if (st != null)
-                        {
-                            st.ClearModifyFields();
-                            st.SetTableName(_tableName);
-                        }
-                    }
-                }
-            }
-
-            return m;
-        }
         #endregion
 
         #region Union
@@ -1133,6 +1224,8 @@ namespace WEF
 
         #endregion
 
+
+        #region 分页列表
         /// <summary>
         /// 获取分页
         /// </summary>
@@ -1239,6 +1332,9 @@ namespace WEF
 
             return new PagedList<Model>(list, pageIndex, pageSize, total);
         }
+
+        #endregion
+
 
     }
 }
