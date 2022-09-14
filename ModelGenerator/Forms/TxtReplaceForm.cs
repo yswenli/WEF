@@ -156,22 +156,7 @@ namespace TxtReplaceTool
         /// <param name="e"></param>
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if (listBox1.SelectedItems != null && listBox1.SelectedItems.Count > 0)
-                {
-                    var items = new List<string>();
-                    foreach (var item in listBox1.SelectedItems)
-                    {
-                        items.Add(item.ToString());
-                    }
-                    foreach (var item in items)
-                    {
-                        listBox1.Items.Remove(item);
-                    }
-                }
-            }
-            catch { }
+            listBox1.DeleteSelectedItems();
         }
 
         /// <summary>
@@ -187,16 +172,7 @@ namespace TxtReplaceTool
                 {
                     if (MessageBox.Show(this, "确认要删除这些文件吗？", "文件查找替换工具", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
-                        var items = new List<string>();
-                        foreach (var item in listBox1.SelectedItems)
-                        {
-                            items.Add(item.ToString());
-                            FileHelper.Delete(item.ToString());
-                        }
-                        foreach (var item in items)
-                        {
-                            listBox1.Items.Remove(item);
-                        }
+                        listBox1.DeleteSelectedItems((item)=> FileHelper.Delete(item));
                     }
                 }
             }

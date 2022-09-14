@@ -61,11 +61,31 @@ namespace WEF.ModelGenerator.Common
             {
                 point.Y += 20;
                 listBox.Location = point;
-            }            
+            }
             listBox.SelectedIndex = 0;
             var size = listBox.CreateGraphics().MeasureString(maxLengthStr, listBox.Font);
             listBox.Width = Convert.ToInt32(size.Width) + 20;
             listBox.Show();
+        }
+
+        /// <summary>
+        /// 删除项
+        /// </summary>
+        /// <param name="listBox"></param>
+        /// <param name="invoke"></param>
+        public static void DeleteSelectedItems(this ListBox listBox, Action<string> invoke = null)
+        {
+            if (listBox.SelectedItems == null || listBox.SelectedItems.Count < 1) return;
+            var items = new List<string>();
+            foreach (var item in listBox.SelectedItems)
+            {
+                items.Add(item.ToString());
+            }
+            foreach (var item in items)
+            {
+                listBox.Items.Remove(item);
+                invoke?.Invoke(item);
+            }
         }
     }
 }
