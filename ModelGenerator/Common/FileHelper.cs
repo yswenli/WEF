@@ -116,16 +116,15 @@ namespace WEF.ModelGenerator.Common
 
             List<string> files = new List<string>();
 
-            foreach (var filter in filterArr)
+            Parallel.ForEach(filterArr, filter =>
             {
                 try
                 {
                     var data = dirInfo.GetFiles(filter).Select(q => q.FullName);
-                    if (data == null) continue;
-                    files.AddRange(data);
+                    if (data != null) files.AddRange(data);
                 }
                 catch { }
-            }
+            });
 
             if (files != null && files.Any())
             {
@@ -139,7 +138,7 @@ namespace WEF.ModelGenerator.Common
 
                     if (dirs != null && dirs.Length > 0)
                     {
-                        foreach (var dir in dirs)
+                        Parallel.ForEach(dirs, dir =>
                         {
                             try
                             {
@@ -150,7 +149,7 @@ namespace WEF.ModelGenerator.Common
                                 }
                             }
                             catch { }
-                        }
+                        });
                     }
                 }
                 catch
@@ -210,17 +209,28 @@ namespace WEF.ModelGenerator.Common
             var files = GetFiles(path, filters);
             if (files != null && files.Count > 0)
             {
-                Parallel.ForEach(files, (file) =>
+                if (string.IsNullOrEmpty(str))
                 {
-                    var txt = ReadTxt(file);
-                    if (!string.IsNullOrEmpty(txt))
+                    foreach (var file in files)
                     {
-                        if (txt.IndexOf(str, StringComparison.InvariantCultureIgnoreCase) > -1)
-                        {
-                            concurrentBag.Add(file);
-                        }
+                        concurrentBag.Add(file);
                     }
-                });
+                }
+                else
+                {
+                    Parallel.ForEach(files, (file) =>
+                    {
+                        var txt = ReadTxt(file);
+                        if (!string.IsNullOrEmpty(txt))
+                        {
+                            if (txt.IndexOf(str, StringComparison.InvariantCultureIgnoreCase) > -1)
+                            {
+                                concurrentBag.Add(file);
+                            }
+                        }
+                    });
+                }
+
                 return concurrentBag.ToList();
             }
             return null;
@@ -250,6 +260,15 @@ namespace WEF.ModelGenerator.Common
             });
 
             return concurrentBag.ToList();
+        }
+
+        /// <summary>
+        /// 删除文件
+        /// </summary>
+        /// <param name="filePath"></param>
+        public static void Delete(string filePath)
+        {
+            File.Delete(filePath);
         }
     }
 }

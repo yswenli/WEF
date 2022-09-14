@@ -49,16 +49,10 @@ namespace TxtReplaceTool
                 MessageBox.Show(this, "文件类型不能为空");
                 return;
             }
-            if (string.IsNullOrEmpty(str))
-            {
-                MessageBox.Show(this, "查找内容不能为空");
-                return;
-            }
 
             button2.Enabled = button3.Enabled = false;
             label5.Text = "正在查找文件...";
             toolStripProgressBar1.Visible = true;
-            listBox1.DataSource = null;
 
             Task.Run(() =>
             {
@@ -72,7 +66,11 @@ namespace TxtReplaceTool
                         button3.Enabled = true;
                         _fileList.Clear();
                         _fileList = list;
-                        listBox1.DataSource = list;
+                        listBox1.Items.Clear();
+                        foreach (var item in list)
+                        {
+                            listBox1.Items.Add(item);
+                        }
                     }
                     else
                     {
@@ -149,6 +147,62 @@ namespace TxtReplaceTool
                 }
             }
             catch { }
+        }
+
+        /// <summary>
+        /// 排除
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listBox1.SelectedItems != null && listBox1.SelectedItems.Count > 0)
+                {
+                    var items = new List<string>();
+                    foreach (var item in listBox1.SelectedItems)
+                    {
+                        items.Add(item.ToString());
+                    }
+                    foreach (var item in items)
+                    {
+                        listBox1.Items.Remove(item);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listBox1.SelectedItems != null && listBox1.SelectedItems.Count > 0)
+                {
+                    if (MessageBox.Show(this, "确认要删除这些文件吗？", "文件查找替换工具", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    {
+                        var items = new List<string>();
+                        foreach (var item in listBox1.SelectedItems)
+                        {
+                            items.Add(item.ToString());
+                            FileHelper.Delete(item.ToString());
+                        }
+                        foreach (var item in items)
+                        {
+                            listBox1.Items.Remove(item);
+                        }
+                    }
+                }
+            }
+            catch { }
+
+
         }
     }
 }
