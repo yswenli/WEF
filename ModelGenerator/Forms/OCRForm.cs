@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -40,6 +41,10 @@ using Sdcb.PaddleOCR;
 using Sdcb.PaddleOCR.Models;
 using Sdcb.PaddleOCR.Models.Online;
 
+using static System.Net.Mime.MediaTypeNames;
+
+using Image = System.Drawing.Image;
+
 namespace WEF.ModelGenerator.Forms
 {
     /// <summary>
@@ -54,7 +59,15 @@ namespace WEF.ModelGenerator.Forms
             InitializeComponent();
 
             label1.Text = "";
+        }
 
+        /// <summary>
+        /// OCRForm
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OCRForm_Load(object sender, EventArgs e)
+        {
             DownloadModelAsync(() =>
             {
                 if (this.InvokeRequired)
@@ -71,16 +84,6 @@ namespace WEF.ModelGenerator.Forms
             });
         }
 
-        /// <summary>
-        /// OCRForm
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OCRForm_Load(object sender, EventArgs e)
-        {
-
-        }
-
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -89,6 +92,7 @@ namespace WEF.ModelGenerator.Forms
                 var imageFile = openFileDialog1.FileName;
                 try
                 {
+                    pictureBox1.Image?.Dispose();
                     pictureBox1.Image = Image.FromFile(imageFile);
                     pictureBox1.Tag = imageFile;
                 }
@@ -108,6 +112,8 @@ namespace WEF.ModelGenerator.Forms
             button2.Enabled = false;
             label1.Text = "正在识别中...";
 
+            var image = Image.FromFile(pictureBox1.Tag.ToString());
+
             Task.Factory.StartNew(() =>
             {
                 var sw = Stopwatch.StartNew();
@@ -126,6 +132,10 @@ namespace WEF.ModelGenerator.Forms
                             int index = 0;
                             var sb = new StringBuilder();
                             var regions = result.Regions.Reverse();
+
+
+                            
+
                             foreach (PaddleOcrResultRegion region in regions)
                             {
                                 this.Invoke(new Action(() =>
@@ -134,7 +144,7 @@ namespace WEF.ModelGenerator.Forms
                                     //{
                                     //sb.AppendLine($"Index:{index},Text: {region.Text},Score:{region.Score}, RectCenter:{region.Rect.Center}, RectSize:{region.Rect.Size}, Angle:{region.Rect.Angle} {Environment.NewLine}");
                                     sb.AppendLine($"Index:{index},Text: {region.Text}");
-                                    DrawRectangle(region, index);
+                                    DrawRectangle(image,region, index);
                                     index += 1;
                                     //}
                                 }));
@@ -142,6 +152,8 @@ namespace WEF.ModelGenerator.Forms
                             sw.Stop();
                             this.Invoke(new Action(() =>
                             {
+                                pictureBox2.Image?.Dispose();
+                                pictureBox2.Image = image;
                                 textBox1.Text += sb.ToString();
                                 button2.Enabled = true;
                                 label1.Text = $"操作完成，用时:{sw.ElapsedMilliseconds}ms";
@@ -168,19 +180,28 @@ namespace WEF.ModelGenerator.Forms
             string fileName = pictureBox1.Tag?.ToString() ?? null;
             if (string.IsNullOrEmpty(fileName)) return;
             pictureBox1.Image = Image.FromFile(fileName);
+            pictureBox2.Image?.Dispose();
+            pictureBox2.Image = null;
         }
 
         /// <summary>
         /// 划线
         /// </summary>
+        /// <param name="image"></param>
         /// <param name="region"></param>
         /// <param name="index"></param>
-        void DrawRectangle(PaddleOcrResultRegion region, int index)
+        void DrawRectangle(Image image, PaddleOcrResultRegion region, int index)
         {
+            if (IsPixelFormatIndexed(image.PixelFormat))
+            {
+                image = IndexedImageConvert((Bitmap)image);
+            }
+
             var pen = new Pen(Color.Red, 1);
+
             pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
 
-            using (var g = pictureBox1.CreateGraphics())
+            using (var g = Graphics.FromImage(image))
             {
                 var size = region.Rect.Size;
                 if (region.Rect.Angle >= 80 && region.Rect.Angle <= 110)
@@ -197,7 +218,8 @@ namespace WEF.ModelGenerator.Forms
                     g.DrawRectangle(pen, x, y, size.Width, size.Height);
                     g.DrawString(index.ToString(), new Font("微软雅黑", 10, FontStyle.Bold), Brushes.Red, x + 3, y + 3);
                 }
-                g.Save();
+                g.ResetTransform();
+                g.Save();                
             };
         }
 
@@ -351,5 +373,51 @@ namespace WEF.ModelGenerator.Forms
         {
             return _dic[type];
         }
+
+
+        #region gif格式
+
+        private static PixelFormat[] indexedPixelFormats =
+        {
+            PixelFormat.Undefined,
+            PixelFormat.DontCare,
+            PixelFormat.Format16bppArgb1555,
+            PixelFormat.Format1bppIndexed,
+            PixelFormat.Format4bppIndexed,
+            PixelFormat.Format8bppIndexed
+        };
+        /// <summary>
+        /// 索引格式图片判断
+        /// </summary>
+        /// <param name="imgPixelFormat"></param>
+        /// <returns></returns>
+        public static bool IsPixelFormatIndexed(PixelFormat imgPixelFormat)
+        {
+            foreach (PixelFormat pf in indexedPixelFormats)
+            {
+                if (pf.Equals(imgPixelFormat)) return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 索引图片转换（gif等）
+        /// </summary>
+        /// <param name="img"></param>
+        /// <returns></returns>
+        public static Bitmap IndexedImageConvert(Bitmap img)
+        {
+            Bitmap bmp = new Bitmap(img.Width, img.Height, PixelFormat.Format32bppArgb);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.SmoothingMode = SmoothingMode.HighQuality;
+                g.CompositingQuality = CompositingQuality.HighQuality;
+                g.DrawImage(img, 0, 0);
+            }
+            return bmp;
+        }
+        #endregion
     }
 }
