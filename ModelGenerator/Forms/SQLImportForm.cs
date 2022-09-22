@@ -58,40 +58,60 @@ namespace WEF.ModelGenerator.Forms
                 return;
             }
 
-            if (fileName.EndsWith(".xls") || fileName.EndsWith(".xlsx"))
-            {
-                dt = ExcelHelper.ImportFromFile(fileName);
-            }
-            else if(fileName.EndsWith(".csv"))
-            {
-                dt = CsvHelper.ImportToDataTable(fileName);
-            }
-            else if (fileName.EndsWith(".sql"))
-            {
-                var context= DBObjectHelper.GetDBContext(Connection);
-                var sqls=FileHelper.ReadTxt(fileName);
-                var result= context.ExecuteNonQuery(sqls);
-                MessageBox.Show($"操作完成，已成功导入{result}条");
-                return;
-            }
-            else
-            {
-                MessageBox.Show(this, "暂不支持的文件类型");
-                return;
-            }
+            skinWaterTextBox1.Enabled = false;
+            button1.Enabled = false;
+            button2.Enabled = false;
 
-            try
+            Task.Factory.StartNew(() =>
             {
-                DBContext dBContext = DBObjectHelper.GetDBContext(Connection);
+                try
+                {
+                    var result = 0;
 
-                var result = dBContext.BulkInsert(TableName, dt);
+                    if (fileName.EndsWith(".xls") || fileName.EndsWith(".xlsx"))
+                    {
+                        dt = ExcelHelper.ImportFromFile(fileName);
+                    }
+                    else if (fileName.EndsWith(".csv"))
+                    {
+                        dt = CsvHelper.ImportToDataTable(fileName);
+                    }
+                    else if (fileName.EndsWith(".sql"))
+                    {
+                        var context = DBObjectHelper.GetDBContext(Connection);
+                        var sqls = FileHelper.ReadTxt(fileName);
+                        result = context.ExecuteNonQuery(sqls);
+                        this.Invoke(() => MessageBox.Show($"操作完成，已成功导入{result}条"));
+                        return;
+                    }
+                    else
+                    {
+                        this.Invoke(() => MessageBox.Show(this, "暂不支持的文件类型"));
+                        return;
+                    }
 
-                MessageBox.Show($"操作完成，已成功导入{result}条");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, "导入数据失败，" + ex.Message);
-            }
+                    DBContext dBContext = DBObjectHelper.GetDBContext(Connection);
+
+                    result = dBContext.BulkInsert(TableName, dt);
+
+                    this.Invoke(() => MessageBox.Show(this, $"操作完成，已成功导入{result}条"));
+                }
+                catch (Exception ex)
+                {
+                    this.Invoke(() => MessageBox.Show(this, "导入数据失败，" + (ex.Message.Length > 500 ? ex.Message.Substring(0, 500) : ex.Message)));
+                }
+                finally
+                {
+                    this.Invoke(() =>
+                    {
+                        skinWaterTextBox1.Enabled = true;
+                        button1.Enabled = true;
+                        button2.Enabled = true;
+                    });
+                }
+            });
+
+
         }
     }
 }
