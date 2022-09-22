@@ -179,6 +179,21 @@ namespace WEF.ModelGenerator.Common
         }
 
         /// <summary>
+        /// 读取行
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static string[] ReadLines(string filePath)
+        {
+            try
+            {
+                return File.ReadAllLines(filePath);
+            }
+            catch { }
+            return null;
+        }
+
+        /// <summary>
         /// 写入内容
         /// </summary>
         /// <param name="filePath"></param>

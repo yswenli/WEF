@@ -58,13 +58,26 @@ namespace WEF.ModelGenerator.Forms
                 return;
             }
 
-            if (fileName.EndsWith("*.xls"))
+            if (fileName.EndsWith(".xls") || fileName.EndsWith(".xlsx"))
             {
                 dt = ExcelHelper.ImportFromFile(fileName);
             }
-            else
+            else if(fileName.EndsWith(".csv"))
             {
                 dt = CsvHelper.ImportToDataTable(fileName);
+            }
+            else if (fileName.EndsWith(".sql"))
+            {
+                var context= DBObjectHelper.GetDBContext(Connection);
+                var sqls=FileHelper.ReadTxt(fileName);
+                var result= context.ExecuteNonQuery(sqls);
+                MessageBox.Show($"操作完成，已成功导入{result}条");
+                return;
+            }
+            else
+            {
+                MessageBox.Show(this, "暂不支持的文件类型");
+                return;
             }
 
             try
