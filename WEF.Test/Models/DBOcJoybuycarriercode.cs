@@ -167,14 +167,14 @@ namespace WEF.Test.Models
 		/// </summary>
 		public DBOcJoybuycarriercodeRepository() : base()
 		{
-			_db = new DBContext();
+			_dbContext = new DBContext();
 		}
 		/// <summary>
 		/// DBOcJoybuycarriercode构造方法
 		/// </summary>
 		public DBOcJoybuycarriercodeRepository(DBContext dbContext) : base(dbContext)
 		{
-			_db = dbContext;
+			_dbContext = dbContext;
 		}
 		/// <summary>
 		/// DBOcJoybuycarriercode构造方法
@@ -182,7 +182,7 @@ namespace WEF.Test.Models
 		/// </summary>
 		public DBOcJoybuycarriercodeRepository(string connStrName) : base(connStrName)
 		{
-			_db = new DBContext(connStrName);
+			_dbContext = new DBContext(connStrName);
 		}
 		/// <summary>
 		/// DBOcJoybuycarriercode构造方法
@@ -191,7 +191,7 @@ namespace WEF.Test.Models
 		/// </summary>
 		public DBOcJoybuycarriercodeRepository(DatabaseType dbType, string connStr) : base(dbType, connStr)
 		{
-			_db = new DBContext(dbType, connStr);
+			_dbContext = new DBContext(dbType, connStr);
 		}
 	}
 

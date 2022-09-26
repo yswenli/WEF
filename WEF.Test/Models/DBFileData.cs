@@ -266,14 +266,14 @@ namespace WEF.Models
         /// </summary>
         public DBFileDataRepository() : base()
         {
-            _db = new DBContext();
+            _dbContext = new DBContext();
         }
         /// <summary>
         /// DBFileData构造方法
         /// </summary>
         public DBFileDataRepository(DBContext dbContext) : base(dbContext)
         {
-            _db = dbContext;
+            _dbContext = dbContext;
         }
         /// <summary>
         /// DBFileData构造方法
@@ -281,7 +281,7 @@ namespace WEF.Models
         /// </summary>
         public DBFileDataRepository(string connStrName) : base(connStrName)
         {
-            _db = new DBContext(connStrName);
+            _dbContext = new DBContext(connStrName);
         }
         /// <summary>
         /// DBFileData构造方法
@@ -290,7 +290,7 @@ namespace WEF.Models
         /// </summary>
         public DBFileDataRepository(DatabaseType dbType, string connStr) : base(dbType, connStr)
         {
-            _db = new DBContext(dbType, connStr);
+            _dbContext = new DBContext(dbType, connStr);
         }
     }
 

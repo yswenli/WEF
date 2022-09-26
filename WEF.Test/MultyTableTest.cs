@@ -148,14 +148,14 @@ namespace WEF.Test
 		/// </summary>
 		public DBARepository() : base()
 		{
-			_db = new DBContext();
+			_dbContext = new DBContext();
 		}
 		/// <summary>
 		/// DBA构造方法
 		/// </summary>
 		public DBARepository(DBContext dbContext) : base(dbContext)
 		{
-			_db = dbContext;
+			_dbContext = dbContext;
 		}
 		/// <summary>
 		/// DBA构造方法
@@ -163,7 +163,7 @@ namespace WEF.Test
 		/// </summary>
 		public DBARepository(string connStrName) : base(connStrName)
 		{
-			_db = new DBContext(connStrName);
+			_dbContext = new DBContext(connStrName);
 		}
 		/// <summary>
 		/// DBA构造方法
@@ -172,7 +172,7 @@ namespace WEF.Test
 		/// </summary>
 		public DBARepository(DatabaseType dbType, string connStr) : base(dbType, connStr)
 		{
-			_db = new DBContext(dbType, connStr);
+			_dbContext = new DBContext(dbType, connStr);
 		}
 	}
 
@@ -286,14 +286,14 @@ namespace WEF.Test
 		/// </summary>
 		public DBBRepository() : base()
 		{
-			_db = new DBContext();
+			_dbContext = new DBContext();
 		}
 		/// <summary>
 		/// DBB构造方法
 		/// </summary>
 		public DBBRepository(DBContext dbContext) : base(dbContext)
 		{
-			_db = dbContext;
+			_dbContext = dbContext;
 		}
 		/// <summary>
 		/// DBB构造方法
@@ -301,7 +301,7 @@ namespace WEF.Test
 		/// </summary>
 		public DBBRepository(string connStrName) : base(connStrName)
 		{
-			_db = new DBContext(connStrName);
+			_dbContext = new DBContext(connStrName);
 		}
 		/// <summary>
 		/// DBB构造方法
@@ -310,7 +310,7 @@ namespace WEF.Test
 		/// </summary>
 		public DBBRepository(DatabaseType dbType, string connStr) : base(dbType, connStr)
 		{
-			_db = new DBContext(dbType, connStr);
+			_dbContext = new DBContext(dbType, connStr);
 		}
 	}
 

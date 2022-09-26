@@ -943,7 +943,7 @@ namespace WEF.Models
         /// </summary>
         /// <param name="objs"></param>
         /// <returns></returns>
-        public int Update(List<DBTask> objs)
+        public List<int> Update(List<DBTask> objs)
         {
             return db.Update(objs);
         }

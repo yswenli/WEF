@@ -510,7 +510,7 @@ namespace WEF.Test
         /// 更新实体
         /// <param name="entities">传进的实体</param>
         /// </summary>
-        public int Update(IEnumerable<DBGiftbatchadd> entities)
+        public List<int> Update(IEnumerable<DBGiftbatchadd> entities)
         {
             return db.Update(entities);
         }

@@ -491,7 +491,7 @@ namespace WEF.Test.Models
         /// 批量添加实体
         /// <param name="entities">传进的实体列表</param>
         /// </summary>
-        public int Insert(IEnumerable<LiveLog> entities)
+        public List<int> Insert(IEnumerable<LiveLog> entities)
         {
             return db.Insert(entities);
         }
@@ -507,7 +507,7 @@ namespace WEF.Test.Models
         /// 更新实体
         /// <param name="entities">传进的实体</param>
         /// </summary>
-        public int Update(IEnumerable<LiveLog> entities)
+        public List<int> Update(IEnumerable<LiveLog> entities)
         {
             return db.Update(entities);
         }

@@ -446,14 +446,14 @@ namespace WEF.Models
 		/// </summary>
 		public DBOcWarehouseAreaRepository() : base()
 		{
-			_db = new DBContext();
+			_dbContext = new DBContext();
 		}
 		/// <summary>
 		/// DBOcWarehouseArea构造方法
 		/// </summary>
 		public DBOcWarehouseAreaRepository(DBContext dbContext) : base(dbContext)
 		{
-			_db = dbContext;
+			_dbContext = dbContext;
 		}
 		/// <summary>
 		/// DBOcWarehouseArea构造方法
@@ -461,7 +461,7 @@ namespace WEF.Models
 		/// </summary>
 		public DBOcWarehouseAreaRepository(string connStrName) : base(connStrName)
 		{
-			_db = new DBContext(connStrName);
+			_dbContext = new DBContext(connStrName);
 		}
 		/// <summary>
 		/// DBOcWarehouseArea构造方法
@@ -470,7 +470,7 @@ namespace WEF.Models
 		/// </summary>
 		public DBOcWarehouseAreaRepository(DatabaseType dbType, string connStr) : base(dbType, connStr)
 		{
-			_db = new DBContext(dbType, connStr);
+			_dbContext = new DBContext(dbType, connStr);
 		}
 	}
 

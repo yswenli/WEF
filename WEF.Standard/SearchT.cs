@@ -34,6 +34,14 @@ namespace WEF
     /// <typeparam name="T"></typeparam>    
     public class Search<T> : Search where T : Entity
     {
+        /// <summary>
+        /// 查询
+        /// </summary>
+        public Search()
+           : this(new DBContext().Db)
+        {
+
+        }
 
         /// <summary>
         /// 构造函数

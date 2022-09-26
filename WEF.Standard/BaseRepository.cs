@@ -38,27 +38,27 @@ namespace WEF
     /// Repository基础类，具体业务可以继承此类，或直接使用此类
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class BaseRepository<T> where T : Entity, new()
+    public class BaseRepository<T> : Search<T> where T : Entity, new()
     {
         /// <summary>
         /// DBContext
         /// </summary>
-        protected DBContext _db;
+        protected DBContext _dbContext;
 
         private T _entity;
 
         /// <summary>
-        /// 构造方法
+        /// Repository基础类，具体业务可以继承此类，或直接使用此类
         /// </summary>
-        public BaseRepository(DBContext dbContext)
+        public BaseRepository(DBContext dbContext) : base(dbContext.Db)
         {
-            _db = dbContext;
+            _dbContext = dbContext;
 
             _entity = new T();
         }
 
         /// <summary>
-        /// 构造方法
+        /// Repository基础类，具体业务可以继承此类，或直接使用此类
         /// </summary>
         public BaseRepository() : this(new DBContext())
         {
@@ -66,7 +66,7 @@ namespace WEF
         }
 
         /// <summary>
-        /// 构造方法
+        /// Repository基础类，具体业务可以继承此类，或直接使用此类
         /// <param name="connStrName">连接字符串中的名称</param>
         /// </summary>
         public BaseRepository(string connStrName) : this(new DBContext(connStrName))
@@ -75,7 +75,7 @@ namespace WEF
         }
 
         /// <summary>
-        /// 构造方法
+        /// Repository基础类，具体业务可以继承此类，或直接使用此类
         /// <param name="dbType">数据库类型</param>
         /// <param name="connStr">连接字符串</param>
         /// </summary>
@@ -91,7 +91,7 @@ namespace WEF
         {
             get
             {
-                return _db;
+                return _dbContext;
             }
         }
 
@@ -110,21 +110,25 @@ namespace WEF
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
         public Search<T> Search(string tableName = "")
         {
             if (string.IsNullOrEmpty(tableName))
             {
                 tableName = TableAttribute.GetTableName<T>();
             }
-            return _db.Search<T>(tableName);
+            return _dbContext.Search<T>(tableName);
         }
 
         /// <summary>
         /// 当前实体查询上下文
         /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public Search<T> Search(T entity)
         {
-            return _db.Search<T>(entity);
+            return _dbContext.Search<T>(entity);
         }
 
         /// <summary>
@@ -134,7 +138,7 @@ namespace WEF
         /// <returns></returns>
         public T Get(string id)
         {
-            return _db.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name}='{id}'").ToFirst<T>();
+            return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name}='{id}'").First<T>();
         }
 
         /// <summary>
@@ -144,7 +148,7 @@ namespace WEF
         /// <returns></returns>
         public T Get(int id)
         {
-            return _db.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name}={id}").ToFirst<T>();
+            return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name}={id}").First<T>();
         }
 
         /// <summary>
@@ -173,7 +177,7 @@ namespace WEF
         public List<T> GetList(IEnumerable<string> ids)
         {
             var idsStr = $"'{string.Join("','", System.Linq.Enumerable.ToArray(ids))}'";
-            return _db.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name} in({idsStr})").ToList<T>();
+            return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name} in({idsStr})").ToList<T>();
         }
 
         /// <summary>
@@ -184,7 +188,7 @@ namespace WEF
         public List<T> GetList(IEnumerable<int> ids)
         {
             var idsStr = $"'{string.Join("','", System.Linq.Enumerable.ToArray(ids))}'";
-            return _db.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name} in({idsStr})").ToList<T>();
+            return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name} in({idsStr})").ToList<T>();
         }
 
         /// <summary>
@@ -311,7 +315,7 @@ namespace WEF
         /// </summary>
         public int Insert(T entity)
         {
-            return _db.Insert(entity);
+            return _dbContext.Insert(entity);
         }
 
         /// <summary>
@@ -321,7 +325,7 @@ namespace WEF
         /// <returns></returns>
         public List<int> Insert(IEnumerable<T> entities)
         {
-            return _db.Insert(entities);
+            return _dbContext.Insert(entities);
         }
 
         /// <summary>
@@ -330,7 +334,7 @@ namespace WEF
         /// </summary>
         public void BulkInsert(IEnumerable<T> entities)
         {
-            _db.BulkInsert(entities);
+            _dbContext.BulkInsert(entities);
         }
         /// <summary>
         /// 更新实体
@@ -338,7 +342,7 @@ namespace WEF
         /// </summary>
         public int Update(T entity)
         {
-            return _db.Update(entity);
+            return _dbContext.Update(entity);
         }
 
         /// <summary>
@@ -347,7 +351,7 @@ namespace WEF
         /// </summary>
         public List<int> Update(IEnumerable<T> entities)
         {
-            return _db.Update(entities);
+            return _dbContext.Update(entities);
         }
 
         /// <summary>
@@ -358,7 +362,7 @@ namespace WEF
         /// <returns></returns>
         public int Update(T entity, Expression<Func<T, bool>> lambdaWhere)
         {
-            return _db.Update<T>(entity, lambdaWhere);
+            return _dbContext.Update<T>(entity, lambdaWhere);
         }
 
         /// <summary>
@@ -367,7 +371,7 @@ namespace WEF
         /// </summary>
         public int Delete(T entity)
         {
-            return _db.Delete(entity);
+            return _dbContext.Delete(entity);
         }
 
         /// <summary>
@@ -408,7 +412,7 @@ namespace WEF
         public int Deletes(IEnumerable<T> entities)
         {
             var list = System.Linq.Enumerable.ToList(entities);
-            return _db.Delete(list);
+            return _dbContext.Delete(list);
         }
 
         /// <summary>
@@ -440,7 +444,7 @@ namespace WEF
         /// <returns></returns>
         public int Delete(Expression<Func<T, bool>> lambdaWhere)
         {
-            return _db.Delete<T>(lambdaWhere);
+            return _dbContext.Delete<T>(lambdaWhere);
         }
 
         /// <summary>
@@ -449,7 +453,7 @@ namespace WEF
         /// </summary>
         public int Save(T entity)
         {
-            return _db.Save(entity);
+            return _dbContext.Save(entity);
         }
         /// <summary>
         /// 批量持久化实体
@@ -457,7 +461,7 @@ namespace WEF
         /// </summary>
         public int Save(List<T> entities)
         {
-            return _db.Save(entities);
+            return _dbContext.Save(entities);
         }
         /// <summary>
         /// 持久化实体
@@ -466,7 +470,7 @@ namespace WEF
         /// </summary>
         public int Save(DbTransaction tran, T entity)
         {
-            return _db.Save(tran, entity);
+            return _dbContext.Save(tran, entity);
         }
         /// <summary>
         /// 批量持久化实体
@@ -475,7 +479,7 @@ namespace WEF
         /// </summary>
         public int Save(DbTransaction tran, List<T> entities)
         {
-            return _db.Save(tran, entities);
+            return _dbContext.Save(tran, entities);
         }
         /// <summary>
         /// 执行sql语句
@@ -483,7 +487,7 @@ namespace WEF
         /// </summary>
         public SqlSection FromSql(string sql)
         {
-            return _db.FromSql(sql);
+            return _dbContext.FromSql(sql);
         }
         /// <summary>
         /// 执行sql语句,带参数
@@ -493,7 +497,7 @@ namespace WEF
         /// <returns></returns>
         public SqlSection FromSql(string sql, Dictionary<string, object> inputParamas)
         {
-            return _db.FromSqlWithdAutomatic(sql, inputParamas.ToArray());
+            return _dbContext.FromSqlWithdAutomatic(sql, inputParamas.ToArray());
         }
         /// <summary>
         /// 执行sql语句,带参数
@@ -504,7 +508,7 @@ namespace WEF
         /// <returns></returns>
         public SqlSection FromSql<Model>(string sql, Model inputParamas) where Model : class, new()
         {
-            return _db.FromSqlWithdModel(sql, inputParamas);
+            return _dbContext.FromSqlWithdModel(sql, inputParamas);
         }
 
         /// <summary>
@@ -513,7 +517,7 @@ namespace WEF
         /// </summary>
         public ProcSection FromProc(string procName)
         {
-            return _db.FromProc(procName);
+            return _dbContext.FromProc(procName);
         }
 
         /// <summary>
@@ -524,7 +528,7 @@ namespace WEF
         /// <returns></returns>
         public ProcSection FromProc(string procName, Dictionary<string, object> inputParamas)
         {
-            return _db.FromProc(procName, inputParamas);
+            return _dbContext.FromProc(procName, inputParamas);
         }
         /// <summary>
         /// 执行存储过程，带参数
@@ -535,7 +539,7 @@ namespace WEF
         /// <returns></returns>
         public ProcSection FromProc<Model>(string procName, Model inputParamas) where Model : class, new()
         {
-            return _db.FromProc(procName, inputParamas);
+            return _dbContext.FromProc(procName, inputParamas);
         }
 
         /// <summary>
@@ -545,7 +549,7 @@ namespace WEF
         /// <returns></returns>
         public DbTrans CreateTransaction(int timeout = 30)
         {
-            return _db.BeginTransaction(timeout);
+            return _dbContext.BeginTransaction(timeout);
         }
     }
 }

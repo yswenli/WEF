@@ -93,17 +93,17 @@ namespace WEF.Test
             };
 
 
-
-
             var c_price = (decimal)(((float)dbtickerOrder.C_amount) * dbtickerOrder.C_discountrate / 100F);
 
             dbtickerOrder.C_price = c_price;
 
-            if (new DBTicketOrderRepository().Insert(dbtickerOrder) > 0)
+            var ticketOrderRepository = new DBTicketOrderRepository();
+
+            if (ticketOrderRepository.Insert(dbtickerOrder) > 0)
             {
                 Console.WriteLine($"DBTicketOrder数据插入成功,{dbtickerOrder.C_price}");
 
-                var newdbtickerOrder = new DBTicketOrderRepository().GetDBTicketOrder(dbtickerOrder.C_id);
+                var newdbtickerOrder = ticketOrderRepository.GetDBTicketOrder(dbtickerOrder.C_id);
 
                 Console.WriteLine($"DBTicketOrder数据查询成功,{newdbtickerOrder.C_price}");
 
@@ -113,13 +113,13 @@ namespace WEF.Test
 
                 if (new DBTicketOrderRepository().Update(newdbtickerOrder) > 0)
                 {
-                    var newdbtickerOrder2 = new DBTicketOrderRepository().GetDBTicketOrder(c_id);
+                    var newdbtickerOrder2 = ticketOrderRepository.GetDBTicketOrder(c_id);
 
                     Console.WriteLine($"DBTicketOrder数据查询成功,{newdbtickerOrder2.C_price}");
                 }
             }
 
-            new DBTicketOrderRepository().Delete(c_id);
+            ticketOrderRepository.Delete(c_id);
 
             Console.ReadLine();
 
@@ -478,8 +478,9 @@ namespace WEF.Test
             }
 
             //or
-            ur.DBContext.BeginTransaction().TryCommit((tran3) => {
-                
+            ur.DBContext.BeginTransaction().TryCommit((tran3) =>
+            {
+
                 tran3.Insert(ut);
 
                 tran3.Delete(new DBTask() { Taskid = "123" });
