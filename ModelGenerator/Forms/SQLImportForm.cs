@@ -90,7 +90,7 @@ namespace WEF.ModelGenerator.Forms
                         return;
                     }
 
-                    DBContext dBContext = DBObjectHelper.GetDBContext(Connection);
+                    var dBContext = DBObjectHelper.GetDBContext(Connection);
 
                     result = dBContext.BulkInsert(TableName, dt);
 

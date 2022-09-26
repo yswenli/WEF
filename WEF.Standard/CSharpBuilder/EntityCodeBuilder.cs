@@ -482,7 +482,7 @@ namespace WEF.CSharpBuilder
             plus.AppendSpaceLine(2, "/// </summary>");
             plus.AppendSpaceLine(2, "public " + ClassName + "Repository() : base()");
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "_db = new DBContext();");
+            plus.AppendSpaceLine(3, "_dbContext = new DBContext();");
             plus.AppendSpaceLine(2, "}");
 
 
@@ -491,7 +491,7 @@ namespace WEF.CSharpBuilder
             plus.AppendSpaceLine(2, "/// </summary>");
             plus.AppendSpaceLine(2, "public " + ClassName + "Repository(DBContext dbContext) : base(dbContext)");
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "_db = dbContext;");
+            plus.AppendSpaceLine(3, "_dbContext = dbContext;");
             plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");
@@ -500,7 +500,7 @@ namespace WEF.CSharpBuilder
             plus.AppendSpaceLine(2, "/// </summary>");
             plus.AppendSpaceLine(2, "public " + ClassName + "Repository(string connStrName) : base(connStrName)");
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "_db = new DBContext(connStrName);");
+            plus.AppendSpaceLine(3, "_dbContext = new DBContext(connStrName);");
             plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(2, "/// <summary>");
@@ -510,7 +510,7 @@ namespace WEF.CSharpBuilder
             plus.AppendSpaceLine(2, "/// </summary>");
             plus.AppendSpaceLine(2, "public " + ClassName + "Repository(DatabaseType dbType, string connStr) : base(dbType, connStr)");
             plus.AppendSpaceLine(2, "{");
-            plus.AppendSpaceLine(3, "_db = new DBContext(dbType, connStr);");
+            plus.AppendSpaceLine(3, "_dbContext = new DBContext(dbType, connStr);");
             plus.AppendSpaceLine(2, "}");
 
             plus.AppendSpaceLine(1, "}");
