@@ -38,7 +38,7 @@ namespace WEF
     /// Repository基础类，具体业务可以继承此类，或直接使用此类
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class BaseRepository<T> : Search<T> where T : Entity, new()
+    public class BaseRepository<T> where T : Entity, new()
     {
         /// <summary>
         /// DBContext
@@ -50,7 +50,7 @@ namespace WEF
         /// <summary>
         /// Repository基础类，具体业务可以继承此类，或直接使用此类
         /// </summary>
-        public BaseRepository(DBContext dbContext) : base(dbContext.Db)
+        public BaseRepository(DBContext dbContext) : base()
         {
             _dbContext = dbContext;
 
