@@ -42,12 +42,11 @@ namespace WEF.Expressions
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
         /// <param name="e"></param>
         /// <returns></returns>
-        public static WhereOperation ToJoinWhere<TEntity>(string tableName, Expression<Func<T, TEntity, bool>> e)
+        public static WhereOperation ToJoinWhere<TEntity>(Expression<Func<T, TEntity, bool>> e)
         {
-            return ToWhereOperationChild(tableName, e.Body, WhereType.JoinWhere);
+            return ToWhereOperationChild(e.Body, WhereType.JoinWhere);
         }
         /// <summary>
         /// ToWhereOperation
@@ -57,47 +56,47 @@ namespace WEF.Expressions
         /// <returns></returns>
         public static WhereOperation ToWhereOperation(string tableName, Expression<Func<T, bool>> e)
         {
-            return ToWhereOperationChild(tableName, e.Body);
+            return ToWhereOperationChild(e.Body);
         }
 
         public static WhereOperation ToWhereOperation<T2>(string tableName, Expression<Func<T, T2, bool>> e)
         {
-            return ToWhereOperationChild(tableName, e.Body);
+            return ToWhereOperationChild(e.Body);
         }
 
         public static WhereOperation ToWhereOperation<T2, T3>(string tableName, Expression<Func<T, T2, T3, bool>> e)
         {
-            return ToWhereOperationChild(tableName, e.Body);
+            return ToWhereOperationChild(e.Body);
         }
 
         public static WhereOperation ToWhereOperation<T2, T3, T4>(string tableName, Expression<Func<T, T2, T3, T4, bool>> e)
         {
-            return ToWhereOperationChild(tableName, e.Body);
+            return ToWhereOperationChild(e.Body);
         }
 
         public static WhereOperation ToWhereOperation<T2, T3, T4, T5>(string tableName, Expression<Func<T, T2, T3, T4, T5, bool>> e)
         {
-            return ToWhereOperationChild(tableName, e.Body);
+            return ToWhereOperationChild(e.Body);
         }
 
         public static WhereOperation ToWhereOperation<T2, T3, T4, T5, T6>(string tableName, Expression<Func<T, T2, T3, T4, T5, T6, bool>> e)
         {
-            return ToWhereOperationChild(tableName, e.Body);
+            return ToWhereOperationChild(e.Body);
         }
 
-        private static WhereOperation ToWhereOperationChild(string tableName, System.Linq.Expressions.Expression e, WhereType wt = WhereType.Where)
+        private static WhereOperation ToWhereOperationChild(System.Linq.Expressions.Expression e, WhereType wt = WhereType.Where)
         {
             if (e is BinaryExpression)
             {
-                return ConvertBinary(tableName, (BinaryExpression)e, wt);
+                return ConvertBinary((BinaryExpression)e, wt);
             }
             if (e is MethodCallExpression)
             {
-                return ConvertMethodCall(tableName, (MethodCallExpression)e);
+                return ConvertMethodCall((MethodCallExpression)e);
             }
             if (e is UnaryExpression)
             {
-                return ConvertUnary(tableName, (UnaryExpression)e);
+                return ConvertUnary((UnaryExpression)e);
             }
             if (IsBoolFieldOrProperty(e))
             {
@@ -135,44 +134,46 @@ namespace WEF.Expressions
         /// <param name="ue"></param>
         /// <param name="wtype"></param>
         /// <returns></returns>
-        private static WhereOperation ConvertUnary(string tableName, UnaryExpression ue, WhereType wtype = WhereType.Where)
+        private static WhereOperation ConvertUnary(UnaryExpression ue, WhereType wtype = WhereType.Where)
         {
             switch (ue.NodeType)
             {
                 case ExpressionType.Not:
-                    return !ToWhereOperationChild(tableName, ue.Operand, wtype);
+                    return !ToWhereOperationChild(ue.Operand, wtype);
             }
             throw new Exception("暂时不支持的NodeType(" + ue.NodeType + ") lambda写法！请使用经典写法！");
         }
 
-        private static WhereOperation ConvertBinary(string tableName, BinaryExpression be, WhereType wt = WhereType.Where)
+        private static WhereOperation ConvertBinary(BinaryExpression be, WhereType wt = WhereType.Where)
         {
             switch (be.NodeType)
             {
                 case ExpressionType.Equal:
-                    return LeftAndRight(tableName, be, QueryOperator.Equal, wt);
+                    return LeftAndRight(be, QueryOperator.Equal, wt);
                 case ExpressionType.GreaterThan:
-                    return LeftAndRight(tableName, be, QueryOperator.Greater, wt);
+                    return LeftAndRight(be, QueryOperator.Greater, wt);
                 case ExpressionType.GreaterThanOrEqual:
-                    return LeftAndRight(tableName, be, QueryOperator.GreaterOrEqual, wt);
+                    return LeftAndRight(be, QueryOperator.GreaterOrEqual, wt);
                 case ExpressionType.LessThan:
-                    return LeftAndRight(tableName, be, QueryOperator.Less, wt);
+                    return LeftAndRight(be, QueryOperator.Less, wt);
                 case ExpressionType.LessThanOrEqual:
-                    return LeftAndRight(tableName, be, QueryOperator.LessOrEqual, wt);
+                    return LeftAndRight(be, QueryOperator.LessOrEqual, wt);
                 case ExpressionType.NotEqual:
-                    return LeftAndRight(tableName, be, QueryOperator.NotEqual, wt);
+                    return LeftAndRight(be, QueryOperator.NotEqual, wt);
                 case ExpressionType.AndAlso:
-                    return ToWhereOperationChild(tableName, be.Left, wt) && ToWhereOperationChild(tableName, be.Right, wt);
+                    return ToWhereOperationChild(be.Left, wt) && ToWhereOperationChild(be.Right, wt);
                 case ExpressionType.OrElse:
-                    return ToWhereOperationChild(tableName, be.Left, wt) || ToWhereOperationChild(tableName, be.Right, wt);
+                    return ToWhereOperationChild(be.Left, wt) || ToWhereOperationChild(be.Right, wt);
                 default:
                     throw new Exception("暂时不支持的Where条件(" + be.NodeType + ")Lambda表达式写法！请使用经典写法！");
             }
         }
 
 
-        private static WhereOperation ConvertMethodCall(string tableName, MethodCallExpression mce)
+        private static WhereOperation ConvertMethodCall(MethodCallExpression mce)
         {
+            var tableName = GetTableNameByExpression(mce);
+
             switch (mce.Method.Name)
             {
                 case "StartsWith":
@@ -300,26 +301,31 @@ namespace WEF.Expressions
             throw new Exception("暂时不支持的Lambda表达式写法！请使用经典写法！");
         }
 
-        static string GetTableName(System.Linq.Expressions.Expression expLeft)
+        /// <summary>
+        /// 根据表达式获取表名
+        /// </summary>
+        /// <param name="expLeft"></param>
+        /// <returns></returns>
+        static string GetTableNameByExpression(System.Linq.Expressions.Expression expLeft)
         {
             var tableName = "";
 
             if (expLeft is MemberExpression)
             {
-                tableName = GetTableName("", ((MemberExpression)expLeft).Expression.Type);
+                tableName = GetTableNameByType("", ((MemberExpression)expLeft).Expression.Type);
             }
             else if (expLeft is MethodCallExpression)
             {
-                tableName = GetTableName("", ((MemberExpression)(((MethodCallExpression)expLeft).Object)).Expression.Type);
+                tableName = GetTableNameByType("", ((MemberExpression)(((MethodCallExpression)expLeft).Object)).Expression.Type);
             }
             else
             {
-                tableName = GetTableName("", ((expLeft as UnaryExpression).Operand as MemberExpression).Expression.Type);
+                tableName = GetTableNameByType("", ((expLeft as UnaryExpression).Operand as MemberExpression).Expression.Type);
             }
             return tableName;
         }
 
-        private static WhereOperation LeftAndRight(string tableName, BinaryExpression be, QueryOperator co, WhereType wtype = WhereType.Where)
+        private static WhereOperation LeftAndRight(BinaryExpression be, QueryOperator co, WhereType wtype = WhereType.Where)
         {
             ColumnFunction leftFunction;
             ColumnFunction rightFunction;
@@ -328,7 +334,7 @@ namespace WEF.Expressions
             System.Linq.Expressions.Expression expLeft = be.Left;
             System.Linq.Expressions.Expression expRight = be.Right;
 
-            tableName = GetTableName(expLeft);
+            var tableName = GetTableNameByExpression(expLeft);
 
             if (be.Left.NodeType == ExpressionType.Convert)
             {
@@ -367,7 +373,7 @@ namespace WEF.Expressions
                             }
                             else
                             {
-                                return new WhereOperation(CreateField(GetTableName("", ((MemberExpression)be.Right).Expression.Type), keyRightName, rightMe.Expression.Type), CreateField(tableName, keyLeft, left.Expression.Type), co);
+                                return new WhereOperation(CreateField(GetTableNameByType("", ((MemberExpression)be.Right).Expression.Type), keyRightName, rightMe.Expression.Type), CreateField(tableName, keyLeft, left.Expression.Type), co);
                             }
                         }
                     }
@@ -381,7 +387,7 @@ namespace WEF.Expressions
                         return new WhereOperation(" 1=1 ");
                     }
 
-                    var rigthTableName = GetTableName("", ((MemberExpression)be.Right).Expression.Type);
+                    var rigthTableName = GetTableNameByType("", ((MemberExpression)be.Right).Expression.Type);
 
                     if (value != null)
                     {
@@ -420,7 +426,7 @@ namespace WEF.Expressions
                     var right = (MemberExpression)expRight;
                     if (right.Expression != null && (wtype == WhereType.JoinWhere || right.Expression == leftMe.Expression))
                     {
-                        var rigthTableName = GetTableName("", ((MemberExpression)be.Right).Expression.Type);
+                        var rigthTableName = GetTableNameByType("", ((MemberExpression)be.Right).Expression.Type);
 
                         var keyRight = GetMemberName(expRight, out ColumnFunction functionRight, out right);
 
@@ -647,7 +653,7 @@ namespace WEF.Expressions
                         var filedProp = GetFieldName(member.Member);
                         if (aliasName == "All")
                         {
-                            f[i] = new Field("*", GetTableName(tableName, member.Expression.Type));
+                            f[i] = new Field("*", GetTableNameByType(tableName, member.Expression.Type));
                         }
                         else if ((filedProp[0] == filedProp[1] && filedProp[0] != aliasName) || (filedProp[0] != aliasName && filedProp[1] != aliasName))
                         {
@@ -730,7 +736,7 @@ namespace WEF.Expressions
         /// <param name="tableName"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static string GetTableName(string tableName, Type type)
+        public static string GetTableNameByType(string tableName, Type type)
         {
             var result = string.Empty;
 
@@ -779,7 +785,7 @@ namespace WEF.Expressions
         private static Field CreateField(string tableName, MemberInfo mi, Type t)
         {
             var filedProp = GetFieldName(mi);
-            return new Field(filedProp[0], GetTableName(tableName, t), null, null, null, filedProp[1] == filedProp[0] ? null : filedProp[1]);
+            return new Field(filedProp[0], GetTableNameByType(tableName, t), null, null, null, filedProp[1] == filedProp[0] ? null : filedProp[1]);
         }
 
         /// <summary>
@@ -796,7 +802,7 @@ namespace WEF.Expressions
                 filedProp[0] = "*";
             }
 
-            return new Field(filedProp[0], GetTableName(tableName, t));
+            return new Field(filedProp[0], GetTableNameByType(tableName, t));
         }
 
         private static Field CreateField(string tableName, string[] filedProp, Type t, string aliasName)
@@ -810,7 +816,7 @@ namespace WEF.Expressions
                 filedProp[0] = "*";
             }
 
-            return new Field(filedProp[0], GetTableName(tableName, t), null, null, null, aliasName);
+            return new Field(filedProp[0], GetTableNameByType(tableName, t), null, null, null, aliasName);
         }
     }
 }

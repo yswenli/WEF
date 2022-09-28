@@ -108,7 +108,7 @@ namespace WEF
         public Search<T> InnerJoin<TEntity>(Expression<Func<T, TEntity, bool>> lambdaWhere, string asName = "")
              where TEntity : Entity
         {
-            return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), ExpressionToOperation<T>.ToJoinWhere(_tableName, lambdaWhere), JoinType.InnerJoin);
+            return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), ExpressionToOperation<T>.ToJoinWhere(lambdaWhere), JoinType.InnerJoin);
         }
         /// <summary>
         /// Cross Join
@@ -192,7 +192,7 @@ namespace WEF
         {
             return Join(EntityCache.GetTableName<TEntity>(),
                 EntityCache.GetUserName<TEntity>(),
-                ExpressionToOperation<T>.ToJoinWhere(_tableName, lambdaJoin),
+                ExpressionToOperation<T>.ToJoinWhere(lambdaJoin),
                 JoinType.LeftJoin);
         }
 
@@ -209,7 +209,7 @@ namespace WEF
         {
             return (Search<T, T2>)base.Join(EntityCache.GetTableName<T2>(),
                 EntityCache.GetUserName<T2>(),
-                ExpressionToOperation<T>.ToJoinWhere(_tableName, lambdaJoin),
+                ExpressionToOperation<T>.ToJoinWhere(lambdaJoin),
                 JoinType.LeftJoin);
         }
 
@@ -242,7 +242,7 @@ namespace WEF
             where TEntity1 : Entity
             where TEntity2 : Entity
         {
-            var where = ExpressionToOperation<TEntity1>.ToJoinWhere(EntityCache.GetTableName<TEntity1>(), lambdaJoin);
+            var where = ExpressionToOperation<TEntity1>.ToJoinWhere(lambdaJoin);
 
             return (Search<T>)base.Join(EntityCache.GetTableName<TEntity1>(), EntityCache.GetUserName<TEntity1>(), where, joinType);
         }
@@ -256,7 +256,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Join<TEntity>(Expression<Func<T, TEntity, bool>> lambdaJoin, JoinType joinType) where TEntity : Entity
         {
-            return Join<TEntity>(ExpressionToOperation<T>.ToJoinWhere(_tableName, lambdaJoin),
+            return Join<TEntity>(ExpressionToOperation<T>.ToJoinWhere(lambdaJoin),
                 joinType);
         }
 
