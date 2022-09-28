@@ -2185,7 +2185,7 @@ namespace WEF
         /// <returns></returns>
         public List<T> ToList<T>(string sql, params DbParameter[] dbParameters)
         {
-            return ExecuteReader(sql, dbParameters).ToList<T>();
+            return ExecuteReader(sql, dbParameters).ReaderToEnumerable<T>().ToList();
         }
 
         /// <summary>

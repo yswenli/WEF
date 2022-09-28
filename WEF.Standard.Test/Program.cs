@@ -1,29 +1,14 @@
-﻿/*
-* 描述： 详细描述类能干什么
-* 创建人：wenli
-* 创建时间：2017/3/2 14:26:21
-*/
-/*
-*修改人：wenli
-*修改时间：2017/3/2 14:26:21
-*修改内容：xxxxxxx
-*/
-
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 using WEF.Common;
 using WEF.Expressions;
 using WEF.Models;
+using WEF.Test;
+using WEF.Test.Models;
 
-
-namespace WEF.Test
+namespace WEF.Standard.Test
 {
-    class Program
+    internal class Program
     {
         static void Main(string[] args)
         {
@@ -52,6 +37,16 @@ namespace WEF.Test
 
             //MySqlBitTypeTest.Test1();
             //MySqlBitTypeTest.Test3();
+
+            List<DBArticle> articleList;
+            List<DBComment> commentList;
+
+            var tuple = new DBArticleRepository(WEF.DatabaseType.SqlServer, "Data Source=47.103.135.84;Initial Catalog=tejingcaiV2;User Id=testuser;Password=testuser")
+                .FromSql("select top 10 * from Article;select top 10 * from Comment")
+                .ToMultipleList<DBArticle, DBComment>();
+
+            articleList = tuple.Item1;
+            commentList = tuple.Item2;
 
             new BytesTest().Test2();
 
@@ -378,9 +373,9 @@ namespace WEF.Test
 
             string result = string.Empty;
 
-            var entity = new Models.ArticleKind();
+            var entity = new ArticleKind();
 
-            var entityRepository = new Models.ArticleKindRepository();
+            var entityRepository = new ArticleKindRepository();
 
             var pagedList = entityRepository.Search(entity).ToPagedList(1, 100, "ID", true);
 
@@ -599,4 +594,5 @@ namespace WEF.Test
 
 
     }
+
 }

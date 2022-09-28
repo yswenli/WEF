@@ -120,8 +120,16 @@ var avg = giftopt.Search().Select(b => b.Supporttype.Avg()).ToFirstDefault().Sup
 var select = giftopt.Search().LeftJoin<DBTask>((m, n) => m.Name == n.Name).Select<DBTask>((a, b) => new { a.Activename, b.Daylimit });
 
 var select2 = giftopt.Search().LeftJoin2<DBTask>((m, n) => m.Name == n.Name).Select((a, b) => new { a.Activename, b.Daylimit });
+
+//多表多关系的join
+var giftopt = new DBGiftRepository(DatabaseType.SqlServer, "");
+var select3 = giftopt.Search()
+    .Join<DBTask>((m, n) => m.Name == n.Name, JoinType.InnerJoin)
+    .Join<DBTask, DBUserPoint>((m, n) => m.Name == n.Uid, JoinType.LeftJoin)
+    .Select<DBTask>((a, b) => new { a.Activename, b.Daylimit });
             
 ```
+
 ## 事务
 
 ```CSharp
@@ -139,6 +147,15 @@ repository.CreateTransaction().TryCommit((tran)=>{
             
 ```
 
+## 获取多表集合
+```CSharp
+var tuple = new DBArticleRepository(WEF.DatabaseType.SqlServer, "Data Source=localhost;Initial Catalog=template;User Id=testuser;Password=testuser")
+    .FromSql("select top 10 * from Article;select top 10 * from Comment")
+    .ToMultipleList<DBArticle, DBComment>();
+
+List<DBArticle> articleList = tuple.Item1;
+List<DBComment> commentList = tuple.Item2;
+```
 ## WEF数据库工具
 
 WEF数据库工具是基于WEF的winform项目，可以快捷对数据库进行可视化操作的同时，高效生成基于WEF的ORM操作

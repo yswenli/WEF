@@ -1192,7 +1192,12 @@ namespace WEF.Common
                 Interlocked.Increment(ref hitCount);
             }
         }
-
+        /// <summary>
+        /// ReaderToEnumerable
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="reader"></param>
+        /// <returns></returns>
         public static IEnumerable<T> ReaderToEnumerable<T>(this IDataReader reader)
         {
             var info = new CacheInfo
@@ -1207,16 +1212,25 @@ namespace WEF.Common
                 yield return (T)next;
             }
         }
-
         /// <summary>
-        /// 转换成List
+        /// ReaderToEnumerable
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
+        /// <param name="type"></param>
         /// <returns></returns>
-        public static List<T> ToList<T>(this IDataReader reader)
+        public static IEnumerable<dynamic> ReaderToEnumerable(this IDataReader reader, Type type)
         {
-            return reader.ReaderToEnumerable<T>().ToList();
+            var info = new CacheInfo
+            {
+                Deserializer = GetDeserializer(type, reader, 0, -1, false)
+            };
+
+            while (reader.Read())
+            {
+                dynamic next = info.Deserializer(reader);
+
+                yield return next;
+            }
         }
     }
 }
