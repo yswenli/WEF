@@ -316,7 +316,16 @@ namespace WEF.Expressions
             }
             else if (expLeft is MethodCallExpression)
             {
-                tableName = GetTableNameByType("", ((MemberExpression)(((MethodCallExpression)expLeft).Object)).Expression.Type);
+                var methodObj = ((MethodCallExpression)expLeft).Object;
+                if (methodObj == null)
+                {
+                    var args = ((MethodCallExpression)expLeft).Arguments[0];
+                    tableName = GetTableNameByType("", ((MemberExpression)args).Expression.Type);
+                }
+                else
+                {
+                    tableName = GetTableNameByType("", ((MemberExpression)methodObj).Expression.Type);
+                }
             }
             else
             {
@@ -461,19 +470,28 @@ namespace WEF.Expressions
         {
             return fastEvaluator.Eval(right);
         }
-
-        public static GroupByOperation ToGroupByClip(string tableName, Expression<Func<T, object>> expr)
+        /// <summary>
+        /// ToGroupByClip
+        /// </summary>
+        /// <param name="expr"></param>
+        /// <returns></returns>
+        public static GroupByOperation ToGroupByClip(Expression<Func<T, object>> expr)
         {
-            return ToGroupByClipChild(tableName, expr.Body);
+            return ToGroupByClipChild(expr.Body);
         }
-
-        private static GroupByOperation ToGroupByClipChild(string tableName, System.Linq.Expressions.Expression exprBody)
+        /// <summary>
+        /// ToGroupByClipChild
+        /// </summary>
+        /// <param name="exprBody"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static GroupByOperation ToGroupByClipChild(System.Linq.Expressions.Expression exprBody)
         {
             if (exprBody is MemberExpression)
             {
                 var e = (MemberExpression)exprBody;
                 var filedProp = GetFieldName(e.Member);
-                return new GroupByOperation(CreateField(tableName, filedProp, e.Expression.Type));
+                return new GroupByOperation(CreateField(string.Empty, filedProp, e.Expression.Type));
             }
             if (exprBody is NewExpression)
             {
@@ -481,28 +499,28 @@ namespace WEF.Expressions
                 var type = exNew.Constructor.DeclaringType;
                 var list = new List<string>(exNew.Arguments.Count);
                 return exNew.Arguments.Cast<MemberExpression>().Aggregate(GroupByOperation.None, (current, member)
-                    => current && CreateField(tableName, GetFieldName(member.Member), member.Expression.Type).GroupBy);
+                    => current && CreateField(string.Empty, GetFieldName(member.Member), member.Expression.Type).GroupBy);
             }
             if (exprBody is UnaryExpression)
             {
                 var exNew = (UnaryExpression)exprBody;
-                return ToGroupByClipChild(tableName, exNew.Operand);
+                return ToGroupByClipChild(exNew.Operand);
             }
 
             throw new Exception("暂时不支持的Group by lambda写法！请使用经典写法！");
         }
 
-        public static OrderByOperation ToOrderByClip(string tableName, Expression<Func<T, object>> expr)
+        public static OrderByOperation ToOrderByClip(Expression<Func<T, object>> expr)
         {
-            return ToOrderByClipChild(tableName, expr.Body, OrderByOperater.ASC);
+            return ToOrderByClipChild(expr.Body, OrderByOperater.ASC);
         }
 
         public static OrderByOperation ToOrderByDescendingClip(string tableName, Expression<Func<T, object>> expr)
         {
-            return ToOrderByClipChild(tableName, expr.Body, OrderByOperater.DESC);
+            return ToOrderByClipChild(expr.Body, OrderByOperater.DESC);
         }
 
-        private static OrderByOperation ToOrderByClipChild(string tableName, System.Linq.Expressions.Expression exprBody, OrderByOperater orderBy)
+        private static OrderByOperation ToOrderByClipChild(System.Linq.Expressions.Expression exprBody, OrderByOperater orderBy)
         {
             if (exprBody is MemberExpression)
             {
@@ -511,11 +529,11 @@ namespace WEF.Expressions
                 var filedProp = GetFieldName(e.Member);
                 if (orderBy == OrderByOperater.DESC)
                 {
-                    gb = gb && CreateField(tableName, filedProp, e.Expression.Type).Desc;
+                    gb = gb && CreateField(string.Empty, filedProp, e.Expression.Type).Desc;
                 }
                 else
                 {
-                    gb = gb && CreateField(tableName, filedProp, e.Expression.Type).Asc;
+                    gb = gb && CreateField(string.Empty, filedProp, e.Expression.Type).Asc;
                 }
                 return gb;
             }
@@ -530,11 +548,11 @@ namespace WEF.Expressions
                     var filedProp = GetFieldName(member.Member);
                     if (orderBy == OrderByOperater.DESC)
                     {
-                        gb = gb && CreateField(tableName, filedProp, member.Expression.Type).Desc;
+                        gb = gb && CreateField(string.Empty, filedProp, member.Expression.Type).Desc;
                     }
                     else
                     {
-                        gb = gb && CreateField(tableName, filedProp, member.Expression.Type).Asc;
+                        gb = gb && CreateField(string.Empty, filedProp, member.Expression.Type).Asc;
                     }
                 }
                 return gb;
@@ -542,7 +560,7 @@ namespace WEF.Expressions
             if (exprBody is UnaryExpression)
             {
                 var ueEx = (UnaryExpression)exprBody;
-                return ToOrderByClipChild(tableName, ueEx.Operand, orderBy);
+                return ToOrderByClipChild(ueEx.Operand, orderBy);
             }
             throw new Exception("暂时不支持的Order by lambda写法！请使用经典写法！");
         }
@@ -588,7 +606,7 @@ namespace WEF.Expressions
             return ToSelectChild(tableName, expr.Body);
         }
         /// <summary>
-        /// 
+        /// ToSelect
         /// </summary>
         /// <typeparam name="T2"></typeparam>
         /// <typeparam name="T3"></typeparam>
@@ -600,12 +618,27 @@ namespace WEF.Expressions
         {
             return ToSelectChild(tableName, expr.Body);
         }
-
+        /// <summary>
+        /// ToSelect
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <typeparam name="T4"></typeparam>
+        /// <typeparam name="T5"></typeparam>
+        /// <typeparam name="T6"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="expr"></param>
+        /// <returns></returns>
         public static Field[] ToSelect<T2, T3, T4, T5, T6>(string tableName, Expression<Func<T, T2, T3, T4, T5, T6, object>> expr)
         {
             return ToSelectChild(tableName, expr.Body);
         }
-
+        /// <summary>
+        /// ToSelect
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="expr"></param>
+        /// <returns></returns>
         public static Field[] ToSelect(string tableName, Expression<Func<T, bool>> expr)
         {
             return ToSelectChild(tableName, expr.Body);

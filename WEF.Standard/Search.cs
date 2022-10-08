@@ -818,13 +818,13 @@ namespace WEF
         /// <summary>
         /// 获取记录数(内部使用)
         /// </summary>
-        /// <param name="from"></param>
+        /// <param name="search"></param>
         /// <returns></returns>
-        internal int Count(Search from)
+        internal int Count(Search search)
         {
-            DbCommand dbCommand = _database.GetSqlStringCommand(from.CountSqlString);
+            DbCommand dbCommand = _database.GetSqlStringCommand(search.CountSqlString);
 
-            _database.AddCommandParameter(dbCommand, from.Parameters.ToArray());
+            _database.AddCommandParameter(dbCommand, search.Parameters.ToArray());
 
             int returnValue;
             if (trans == null)
@@ -835,23 +835,19 @@ namespace WEF
             return returnValue;
         }
 
-
-
-
-
         /// <summary>
         /// To DataSet
         /// </summary>
         /// <returns></returns>
         public DataSet ToDataSet()
         {
-            Search from = GetPagedFromSection();
+            Search search = GetPagedFromSection();
 
             DataSet ds;
             if (trans == null)
-                ds = _database.ExecuteDataSet(CreateDbCommand(from));
+                ds = _database.ExecuteDataSet(CreateDbCommand(search));
             else
-                ds = _database.ExecuteDataSet(CreateDbCommand(from), trans);
+                ds = _database.ExecuteDataSet(CreateDbCommand(search), trans);
 
             return ds;
         }
@@ -875,10 +871,10 @@ namespace WEF
         /// 创建  查询的DbCommand
         /// </summary>
         /// <returns></returns>
-        protected DbCommand CreateDbCommand(Search from)
+        protected DbCommand CreateDbCommand(Search search)
         {
-            var dbCommand = _database.GetSqlStringCommand(from.SqlString);
-            _database.AddCommandParameter(dbCommand, from.Parameters.ToArray());
+            var dbCommand = _database.GetSqlStringCommand(search.SqlString);
+            _database.AddCommandParameter(dbCommand, search.Parameters.ToArray());
             return dbCommand;
         }
 
@@ -894,13 +890,13 @@ namespace WEF
         /// <summary>
         ///  To DataReader
         /// </summary>
-        /// <param name="from"></param>
+        /// <param name="search"></param>
         /// <returns></returns>
-        protected IDataReader ToDataReader(Search from)
+        protected IDataReader ToDataReader(Search search)
         {
             return trans == null
-                ? _database.ExecuteReader(CreateDbCommand(@from))
-                : _database.ExecuteReader(CreateDbCommand(@from), trans);
+                ? _database.ExecuteReader(CreateDbCommand(search))
+                : _database.ExecuteReader(CreateDbCommand(search), trans);
         }
 
         /// <summary>
@@ -921,15 +917,15 @@ namespace WEF
             Check.Require(this._fields.Count == 1, "fields must be one!");
             Check.Require(!this._fields[0].PropertyName.Trim().Equals("*"), "fields cound not be * !");
 
-            Search from = GetPagedFromSection();
+            Search search = GetPagedFromSection();
 
 
             object returnValue;
 
             if (trans == null)
-                returnValue = _database.ExecuteScalar(CreateDbCommand(from));
+                returnValue = _database.ExecuteScalar(CreateDbCommand(search));
             else
-                returnValue = _database.ExecuteScalar(CreateDbCommand(from), trans);
+                returnValue = _database.ExecuteScalar(CreateDbCommand(search), trans);
 
             return returnValue;
 

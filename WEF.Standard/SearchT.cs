@@ -514,6 +514,8 @@ namespace WEF
         /// <summary>
         /// groupby
         /// </summary>
+        /// <param name="groupBy"></param>
+        /// <returns></returns>
         public new Search<T> GroupBy(GroupByOperation groupBy)
         {
             return (Search<T>)base.GroupBy(groupBy);
@@ -525,11 +527,76 @@ namespace WEF
         {
             return (Search<T>)base.GroupBy(fields);
         }
-        public Search<T> GroupBy(Expression<Func<T, object>> lambdaGroupBy)//new 
+        /// <summary>
+        /// groupby
+        /// </summary>
+        /// <param name="lambdaGroupBy"></param>
+        /// <returns></returns>
+        public Search<T> GroupBy(Expression<Func<T, object>> lambdaGroupBy)
         {
-            return (Search<T>)base.GroupBy(ExpressionToOperation<T>.ToGroupByClip(_tableName, lambdaGroupBy));
+            return (Search<T>)base.GroupBy(ExpressionToOperation<T>.ToGroupByClip(lambdaGroupBy));
         }
-        #region 2015-09-08新增
+        /// <summary>
+        /// groupby
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="lambdaGroupBy"></param>
+        /// <returns></returns>
+        public Search<T> GroupBy<T2>(Expression<Func<T, T2, object>> lambdaGroupBy)
+        {
+            return (Search<T>)base.GroupBy(ExpressionToOperation<T>.ToSelect(null, lambdaGroupBy));
+        }
+        /// <summary>
+        /// groupby
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <param name="lambdaGroupBy"></param>
+        /// <returns></returns>
+        public Search<T> GroupBy<T2, T3>(Expression<Func<T, T2, T3, object>> lambdaGroupBy)
+        {
+            return (Search<T>)base.GroupBy(ExpressionToOperation<T>.ToSelect(null, lambdaGroupBy));
+        }
+        /// <summary>
+        /// groupby
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <typeparam name="T4"></typeparam>
+        /// <param name="lambdaGroupBy"></param>
+        /// <returns></returns>
+        public Search<T> GroupBy<T2, T3, T4>(Expression<Func<T, T2, T3, T4, object>> lambdaGroupBy)
+        {
+            return (Search<T>)base.GroupBy(ExpressionToOperation<T>.ToSelect(null, lambdaGroupBy));
+        }
+        /// <summary>
+        /// groupby
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <typeparam name="T4"></typeparam>
+        /// <typeparam name="T5"></typeparam>
+        /// <param name="lambdaGroupBy"></param>
+        /// <returns></returns>
+        public Search<T> GroupBy<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, object>> lambdaGroupBy)
+        {
+            return (Search<T>)base.GroupBy(ExpressionToOperation<T>.ToSelect(null, lambdaGroupBy));
+        }
+        /// <summary>
+        /// groupby
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <typeparam name="T4"></typeparam>
+        /// <typeparam name="T5"></typeparam>
+        /// <typeparam name="T6"></typeparam>
+        /// <param name="lambdaGroupBy"></param>
+        /// <returns></returns>
+        public Search<T> GroupBy<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, object>> lambdaGroupBy)
+        {
+            return (Search<T>)base.GroupBy(ExpressionToOperation<T>.ToSelect(null, lambdaGroupBy));
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -581,7 +648,7 @@ namespace WEF
 
             return this;
         }
-        #endregion
+
         /// <summary>
         /// 
         /// </summary>
@@ -594,9 +661,9 @@ namespace WEF
         /// <summary>
         /// orderby
         /// </summary>
-        public Search<T> OrderBy(Expression<Func<T, object>> lambdaOrderBy)//new 
+        public Search<T> OrderBy(Expression<Func<T, object>> lambdaOrderBy)
         {
-            return (Search<T>)base.OrderBy(ExpressionToOperation<T>.ToOrderByClip(_tableName, lambdaOrderBy));
+            return (Search<T>)base.OrderBy(ExpressionToOperation<T>.ToOrderByClip(lambdaOrderBy));
         }
         /// <summary>
         /// 

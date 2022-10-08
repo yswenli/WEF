@@ -15,6 +15,7 @@ using System.Data.Common;
 using System.Linq;
 
 using WEF.Common;
+using WEF.MvcPager;
 
 namespace WEF.Section
 {
@@ -35,7 +36,7 @@ namespace WEF.Section
         public Section(DBContext dbContext)
         {
             Check.Require(dbContext, "dbContext", Check.NotNullOrEmpty);
-            this._dbContext = dbContext;
+            _dbContext = dbContext;
         }
 
         #region 执行
@@ -291,7 +292,6 @@ namespace WEF.Section
         }
 
         #endregion
-
     }
 }
 
