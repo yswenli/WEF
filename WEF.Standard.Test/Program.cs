@@ -12,7 +12,7 @@ namespace WEF.Standard.Test
     {
         static void Main(string[] args)
         {
-            //var cnnStr = "Data Source=LP20210416002\\MSSQLSERVER2014;Initial Catalog=Oceania_Test;Integrated Security=True";
+            //var cnnStr = "";
 
             //var version = DipBuilder.GetVersion();
             //DbProvider provider = ProviderFactory.CreateDbProvider($"WEF.Standard.MSSQL, Version={version}, Culture=neutral, PublicKeyToken=null",
@@ -41,12 +41,18 @@ namespace WEF.Standard.Test
             List<DBArticle> articleList;
             List<DBComment> commentList;
 
-            var tuple = new DBArticleRepository(WEF.DatabaseType.SqlServer, "Data Source=47.103.135.84;Initial Catalog=tejingcaiV2;User Id=testuser;Password=testuser")
-                .FromSql("select top 10 * from Article;select top 10 * from Comment")
+            var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, "");
+
+            var tuple = dbarticleRepository.FromSql("select top 10 * from Article;select top 10 * from Comment")
                 .ToMultipleList<DBArticle, DBComment>();
 
             articleList = tuple.Item1;
             commentList = tuple.Item2;
+
+            var dic1111 = new Dictionary<string, dynamic>();
+
+            var articlePagedList= dbarticleRepository.FromSql("select * from Article", 1, 10, "ID", true, dic1111)
+                .ToPagedList<DBArticle>();
 
             new BytesTest().Test2();
 

@@ -25,18 +25,30 @@ namespace WEF.Section
     /// </summary>
     public abstract class Section
     {
+        DbCommand _dbCountCommand;
+
         protected DBContext _dbContext;
-        protected DbCommand _dbCommand;
+        protected DbCommand _dbCommand;        
         protected DbTransaction _dbTransaction = null;
+
+
+        int _pageIndex = 1;
+        int _pageSize = 100;
 
         /// <summary>
         /// Section
         /// </summary>
         /// <param name="dbContext"></param>
-        public Section(DBContext dbContext)
+        /// <param name="sql"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        public Section(DBContext dbContext, string sql, int pageIndex = 1, int pageSize = 100)
         {
             Check.Require(dbContext, "dbContext", Check.NotNullOrEmpty);
             _dbContext = dbContext;
+            _dbCountCommand = dbContext.Db.GetSqlStringCommand($"SELECT COUNT(1) FROM ({sql}) AS _WEF_TEMP_");
+            _pageIndex = pageIndex;
+            _pageSize = pageSize;
         }
 
         #region 执行
@@ -95,6 +107,16 @@ namespace WEF.Section
         public virtual int ExecuteNonQuery()
         {
             return (_dbTransaction == null ? this._dbContext.ExecuteNonQuery(_dbCommand) : this._dbContext.ExecuteNonQuery(_dbCommand, _dbTransaction));
+        }
+
+        /// <summary>
+        /// 数量
+        /// </summary>
+        /// <returns></returns>
+        public int Count()
+        {
+            var obj = (_dbTransaction == null ? this._dbContext.ExecuteScalar(_dbCountCommand) : this._dbContext.ExecuteScalar(_dbCountCommand, _dbTransaction));
+            return DataUtils.ConvertValue<int>(obj);
         }
         #endregion
 
@@ -289,6 +311,24 @@ namespace WEF.Section
                 }
             }
             return keyValuePairs;
+        }
+
+        #endregion
+
+
+
+        #region 获取分页结果
+
+        /// <summary>
+        /// 获取分页结果
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public PagedList<T> ToPagedList<T>()
+        {
+            var total = Count();
+
+            return new PagedList<T>(ToList<T>(), _pageIndex, _pageSize, total);
         }
 
         #endregion

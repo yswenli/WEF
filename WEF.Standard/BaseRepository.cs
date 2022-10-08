@@ -510,6 +510,28 @@ namespace WEF
         {
             return _dbContext.FromSqlWithdModel(sql, inputParamas);
         }
+        /// <summary>
+        /// 执行sql语句
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <param name="keyValuePairs"></param>
+        /// <returns></returns>
+        public SqlSection FromSql(string sql, int pageIndex, int pageSize, string orderBy, bool asc = true, Dictionary<string, dynamic> keyValuePairs = null)
+        {
+            var sqlSection = _dbContext.FromSql(sql, pageIndex, pageSize, orderBy, asc);
+            if (keyValuePairs != null && keyValuePairs.Count > 0)
+            {
+                foreach (var item in keyValuePairs)
+                {
+                    sqlSection = sqlSection.AddInParameter(item.Key, item.Value);
+                }
+            }
+            return sqlSection;
+        }
 
         /// <summary>
         /// 执行存储过程

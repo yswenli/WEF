@@ -8,7 +8,6 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -26,7 +25,6 @@ namespace WEF.Section
     /// </summary>
     public class SqlSection : Section
     {
-
         /// <summary>
         /// 执行sql语句
         /// </summary>
@@ -34,7 +32,7 @@ namespace WEF.Section
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         public SqlSection(DBContext dbContext, string sql, params Parameter[] parameters)
-            : base(dbContext)
+            : base(dbContext, sql)
         {
 
             Check.Require(sql, "sql", Check.NotNullOrEmpty);
@@ -57,7 +55,7 @@ namespace WEF.Section
         /// <param name="sql"></param>
         /// <param name="keyValuePairs"></param>
         public SqlSection(DBContext dbContext, string sql, IEnumerable<KeyValuePair<string, object>> keyValuePairs)
-            : base(dbContext)
+            : base(dbContext, sql)
         {
 
             Check.Require(sql, "sql", Check.NotNullOrEmpty);
@@ -78,12 +76,12 @@ namespace WEF.Section
         /// <param name="orderBy"></param>
         /// <param name="asc"></param>
         public SqlSection(DBContext dbContext, string sql, int pageIndex, int pageSize, string orderBy, bool asc = true)
-            : base(dbContext)
+            : base(dbContext, sql, pageIndex, pageSize)
         {
 
             Check.Require(sql, "sql", Check.NotNullOrEmpty);
 
-            this._dbCommand = dbContext.Db.GetSqlStringCommand(sql, pageIndex, pageSize, orderBy, asc);
+            _dbCommand = dbContext.Db.GetSqlStringCommand(sql, pageIndex, pageSize, orderBy, asc);
         }
 
         /// <summary>
@@ -96,9 +94,8 @@ namespace WEF.Section
         /// <param name="orderBys"></param>
         /// <param name="parameters"></param>
         public SqlSection(DBContext dbContext, string sql, int pageIndex, int pageSize, Dictionary<string, OrderByOperater> orderBys, params Parameter[] parameters)
-           : base(dbContext)
+           : base(dbContext, sql, pageIndex, pageSize)
         {
-
             Check.Require(sql, "sql", Check.NotNullOrEmpty);
 
             this._dbCommand = dbContext.Db.GetSqlStringCommand(sql, pageIndex, pageSize, orderBys);
@@ -122,7 +119,7 @@ namespace WEF.Section
         /// <param name="orderBys"></param>
         /// <param name="keyValuePairs"></param>
         public SqlSection(DBContext dbContext, string sql, int pageIndex, int pageSize, Dictionary<string, OrderByOperater> orderBys, KeyValuePair<string, object>[] keyValuePairs)
-           : base(dbContext)
+           : base(dbContext, sql, pageIndex, pageSize)
         {
             Check.Require(sql, "sql", Check.NotNullOrEmpty);
 

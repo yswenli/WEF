@@ -14,7 +14,6 @@ using System.Data.Common;
 using System.Reflection;
 
 using WEF.Common;
-using WEF.Provider;
 
 namespace WEF.Section
 {
@@ -26,15 +25,13 @@ namespace WEF.Section
     /// </summary>
     public class ProcSection : Section
     {
-
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="dbSession"></param>
         /// <param name="procName"></param>
         public ProcSection(DBContext dbSession, string procName)
-            : base(dbSession)
+            : base(dbSession, procName)
         {
             Check.Require(procName, "procName", Check.NotNullOrEmpty);
             this._dbCommand = dbSession.Db.GetStoredProcCommand(procName);
