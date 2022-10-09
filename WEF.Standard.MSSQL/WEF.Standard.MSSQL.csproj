@@ -20,6 +20,7 @@ WEF 是基于C#的数据实体框架，支持MSQSqlServer、MySql、Orcalce等�
 
 WEF 是基于C#的数据实体框架，支持MSQSqlServer、MySql、Orcalce等等常规的数据库的快捷开发，其中集成了大量数据开发经验下的工具类集合，比如Lambada表达式查询、无sql的增删改查、实体克隆、批量、多表、事务、参数、SQL转实体或存储过程转实体等。</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <AssemblyName>WEF.MSSQL</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
