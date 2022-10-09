@@ -165,6 +165,7 @@ namespace WEF.Section
             Check.Require(dbType, "dbType", Check.NotNullOrEmpty);
 
             _dbContext.Db.AddInParameter(this._dbCommand, parameterName, dbType, size, value);
+            _dbContext.Db.AddInParameter(this._dbCountCommand, parameterName, dbType, size, value);
             return this;
         }
 

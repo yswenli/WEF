@@ -25,12 +25,10 @@ namespace WEF.Section
     /// </summary>
     public abstract class Section
     {
-        DbCommand _dbCountCommand;
-
         protected DBContext _dbContext;
-        protected DbCommand _dbCommand;        
+        protected DbCommand _dbCommand;
+        protected DbCommand _dbCountCommand;
         protected DbTransaction _dbTransaction = null;
-
 
         int _pageIndex = 1;
         int _pageSize = 100;

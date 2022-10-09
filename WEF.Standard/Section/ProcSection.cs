@@ -129,6 +129,7 @@ namespace WEF.Section
             Check.Require(dbType, "dbType", Check.NotNullOrEmpty);
 
             _dbContext.Db.AddInParameter(this._dbCommand, parameterName, dbType, size, value);
+            _dbContext.Db.AddInParameter(this._dbCountCommand, parameterName, dbType, size, value);
             return this;
         }
 
@@ -205,6 +206,7 @@ namespace WEF.Section
             Check.Require(dbType, "dbType", Check.NotNullOrEmpty);
 
             _dbContext.Db.AddOutParameter(this._dbCommand, parameterName, dbType, size);
+            _dbContext.Db.AddOutParameter(this._dbCountCommand, parameterName, dbType, size);
             outParameters.Add(parameterName);
             return this;
         }
@@ -237,6 +239,7 @@ namespace WEF.Section
             Check.Require(dbType, "dbType", Check.NotNullOrEmpty);
 
             _dbContext.Db.AddInputOutputParameter(this._dbCommand, parameterName, dbType, size, value);
+            _dbContext.Db.AddInputOutputParameter(this._dbCountCommand, parameterName, dbType, size, value);
 
             outParameters.Add(parameterName);
 
@@ -267,6 +270,7 @@ namespace WEF.Section
             Check.Require(dbType, "dbType", Check.NotNullOrEmpty);
 
             _dbContext.Db.AddReturnValueParameter(this._dbCommand, parameterName, dbType, size);
+            _dbContext.Db.AddReturnValueParameter(this._dbCountCommand, parameterName, dbType, size);
             outParameters.Add(parameterName);
             return this;
         }
