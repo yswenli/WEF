@@ -145,6 +145,10 @@ namespace WEF.Section
         /// <summary>
         /// 添加参数
         /// </summary>
+        /// <param name="parameterName"></param>
+        /// <param name="dbType"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public SqlSection AddInParameter(string parameterName, DbType dbType, object value)
         {
             Check.Require(parameterName, "parameterName", Check.NotNullOrEmpty);
@@ -156,8 +160,9 @@ namespace WEF.Section
         /// 添加参数
         /// </summary>
         /// <param name="parameterName"></param>
-        /// <param name="value"
         /// <param name="dbType"></param>
+        /// <param name="size"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public SqlSection AddInParameter(string parameterName, DbType dbType, int size, object value)
         {
