@@ -54,6 +54,8 @@ namespace WEF.Standard.Test
             var articlePagedList= dbarticleRepository.FromSql("select * from Article", 1, 10, "ID", true, dic1111)
                 .ToPagedList<DBArticle>();
 
+            var articlePagedList2 = dbarticleRepository.Search().ToPagedList(1, 10, "ID", true);
+
             new BytesTest().Test2();
 
             BatchTest.Test();

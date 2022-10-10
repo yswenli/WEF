@@ -71,6 +71,7 @@ namespace WEF.Common
         /// <returns></returns>
         public void Append(dynamic text)
         {
+            if (text == null) return;
             _sb.Append(text);
         }
 
@@ -79,8 +80,9 @@ namespace WEF.Common
         /// </summary>
         /// <param name="text"></param>
         /// <param name="repeatCount"></param>
-        public void Append(dynamic text,int repeatCount)
+        public void Append(dynamic text, int repeatCount)
         {
+            if (text == null) return;
             _sb.Append(text, repeatCount);
         }
 
@@ -100,6 +102,7 @@ namespace WEF.Common
         /// <returns></returns>
         public void AppendLine(dynamic text)
         {
+            if (text == null) return;
             _sb.Append(text + "\r\n");
         }
 
@@ -111,6 +114,7 @@ namespace WEF.Common
         /// <returns></returns>
         public void AppendSpace(int spaceNum, dynamic text)
         {
+            if (text == null) return;
             for (int i = 0; i < spaceNum; i++)
             {
                 _sb.Append("\t");  //制表符
@@ -126,6 +130,7 @@ namespace WEF.Common
         /// <returns></returns>
         public void AppendSpaceLine(int spaceNum, dynamic text)
         {
+            if (text == null) return;
             for (int i = 0; i < spaceNum; i++)
             {
                 _sb.Append("\t");  //制表符
@@ -140,7 +145,7 @@ namespace WEF.Common
         public void DelLastChar(string strchar)
         {
             string str = _sb.ToString();
-            if(string.IsNullOrEmpty(str) || string.IsNullOrEmpty(strchar)) return;
+            if (string.IsNullOrEmpty(str) || string.IsNullOrEmpty(strchar)) return;
             int index = str.LastIndexOf(strchar);
             if (index > -1)
             {
@@ -175,6 +180,7 @@ namespace WEF.Common
         /// <returns></returns>
         public void Insert(int index, dynamic text)
         {
+            if (text == null) return;
             _sb.Insert(index, text);
         }
         /// <summary>
@@ -213,7 +219,7 @@ namespace WEF.Common
         /// <param name="start"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public string ToString(int start,int count)
+        public string ToString(int start, int count)
         {
             return _sb.ToString(start, count);
         }
@@ -232,7 +238,7 @@ namespace WEF.Common
         /// 隐式转换
         /// </summary>
         /// <param name="sp"></param>
-        public static implicit operator StringBuilder (StringPlus sp)
+        public static implicit operator StringBuilder(StringPlus sp)
         {
             return new StringBuilder(sp.ToString());
         }
