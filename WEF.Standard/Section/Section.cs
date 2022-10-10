@@ -124,58 +124,58 @@ namespace WEF.Section
         /// 返回第一个实体，同ToFirst()。无数据返回Null。
         /// </summary>
         /// <returns></returns>
-        public TEntity First<TEntity>()
+        public TModel First<TModel>()
         {
-            return ToFirst<TEntity>();
+            return ToFirst<TModel>();
         }
         /// <summary>
         /// 返回单个实体
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public TEntity ToFirst<TEntity>()
+        public TModel ToFirst<TModel>()
         {
             using (IDataReader reader = ToDataReader())
             {
-                return reader.ReaderToEnumerable<TEntity>().FirstOrDefault();
+                return reader.ReaderToEnumerable<TModel>().FirstOrDefault();
             }
         }
 
         /// <summary>
         /// 返回单个实体
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public TEntity ToFirstDefault<TEntity>()
-            where TEntity : Entity
+        public TModel ToFirstDefault<TModel>()
+            where TModel : Entity
         {
-            TEntity t = ToFirst<TEntity>();
+            TModel t = ToFirst<TModel>();
 
             if (t == null)
-                t = DataUtils.Create<TEntity>();
+                t = DataUtils.Create<TModel>();
             return t;
         }
         /// <summary>
         /// 返回实体列表
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public List<TEntity> ToList<TEntity>()
+        public List<TModel> ToList<TModel>()
         {
             using (IDataReader reader = ToDataReader())
             {
-                return reader.ReaderToEnumerable<TEntity>().ToList();
+                return reader.ReaderToEnumerable<TModel>().ToList();
             }
         }
         /// <summary>
         /// 返回懒加载数据
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<TEntity> ToEnumerable<TEntity>()
+        public IEnumerable<TModel> ToEnumerable<TModel>()
         {
             using (IDataReader reader = ToDataReader())
             {
-                return reader.ReaderToEnumerable<TEntity>();
+                return reader.ReaderToEnumerable<TModel>();
             }
         }
 
@@ -320,13 +320,13 @@ namespace WEF.Section
         /// <summary>
         /// 获取分页结果
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public PagedList<T> ToPagedList<T>()
+        public PagedList<TModel> ToPagedList<TModel>()
         {
             var total = Count();
 
-            return new PagedList<T>(ToList<T>(), _pageIndex, _pageSize, total);
+            return new PagedList<TModel>(ToList<TModel>(), _pageIndex, _pageSize, total);
         }
 
         #endregion
