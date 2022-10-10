@@ -15,7 +15,6 @@ using System.Data;
 using System.Data.Common;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 
 using WEF.Common;
 using WEF.Expressions;
@@ -133,7 +132,7 @@ namespace WEF.Db
         {
             if (OnLog != null)
             {
-                StringBuilder sb = new StringBuilder();
+                StringPlus sb = new StringPlus();
 
                 sb.Append(string.Format("{0}:\t{1}\t\r\n", command.CommandType, command.CommandText));
                 if (command.Parameters != null && command.Parameters.Count > 0)
@@ -219,7 +218,7 @@ namespace WEF.Db
 
         private DbCommand CreateCommandByCommandType(CommandType commandType, string commandText, int pageIndex, int pageSize, Dictionary<string, OrderByOperater> orderBys)
         {
-            StringBuilder orderByBuilder = new StringBuilder();
+            StringPlus orderByBuilder = new StringPlus();
             foreach (var item in orderBys)
             {
                 orderByBuilder.Append($",{item.Key} {item.Value}");
@@ -469,34 +468,25 @@ namespace WEF.Db
         /// <exception cref="Exception"></exception>
         public DbConnection CreateConnection(string cnnStr = "")
         {
-            DbConnection connection = _dbProvider.DbProviderFactory.CreateConnection();
-
-            if (!string.IsNullOrEmpty(cnnStr) && !cnnStr.Equals(ConnectionString))
-            {
-                connection.ConnectionString = cnnStr;
-            }
-            else
-            {
-                connection.ConnectionString = ConnectionString;
-            }
-
             try
             {
+                DbConnection connection = _dbProvider.DbProviderFactory.CreateConnection();
+
+                if (!string.IsNullOrEmpty(cnnStr) && !cnnStr.Equals(ConnectionString))
+                {
+                    ConnectionString = cnnStr;
+                }
+
+                connection.ConnectionString = ConnectionString;
+
                 connection.Open();
+
+                return connection;
             }
             catch (Exception ex)
             {
-                try
-                {
-                    connection?.Close();
-                }
-                finally
-                {
-                    throw new Exception($"CreateConnection 异常， ConnectionString:{ConnectionString}", ex);
-                }
+                throw new Exception($"CreateConnection 异常， ConnectionString:{ConnectionString}", ex);
             }
-
-            return connection;
         }
 
         /// <summary>
@@ -584,7 +574,6 @@ namespace WEF.Db
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <param name="orderBys"></param>
-        /// <param name="parameters"></param>
         /// <returns></returns>
         public DbCommand GetSqlStringCommand(string query, int pageIndex, int pageSize, Dictionary<string, OrderByOperater> orderBys)
         {

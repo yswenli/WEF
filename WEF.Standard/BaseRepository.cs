@@ -38,7 +38,8 @@ namespace WEF
     /// Repository基础类，具体业务可以继承此类，或直接使用此类
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class BaseRepository<T> where T : Entity, new()
+    public class BaseRepository<T> : IDisposable
+        where T : Entity, new()
     {
         /// <summary>
         /// DBContext
@@ -268,6 +269,7 @@ namespace WEF
         {
             return Search().ToPagedList<Model>(pageIndex, pageSize, orderBy, asc);
         }
+
         /// <summary>
         /// 分页查询
         /// </summary>
@@ -282,6 +284,7 @@ namespace WEF
         {
             return Search().ToPagedList<Model>(lambdaWhere, pageIndex, pageSize, orderBy, asc);
         }
+
         /// <summary>
         /// 分页查询
         /// <typeparam name="Model">自定义模型</typeparam>
@@ -572,6 +575,14 @@ namespace WEF
         public DbTrans CreateTransaction(int timeout = 30)
         {
             return _dbContext.BeginTransaction(timeout);
+        }
+
+        /// <summary>
+        /// 释放资源
+        /// </summary>
+        public void Dispose()
+        {
+            _dbContext.Dispose();
         }
     }
 }

@@ -32,58 +32,106 @@ namespace WEF.Common
     /// <summary>
     /// 字符串处理类
     /// </summary>
-    public class StringPlus
+    public class StringPlus : IDisposable
     {
-        private StringBuilder str = new StringBuilder();
+        private readonly StringBuilder _sb;
 
-        public string Append(string Text)
+        /// <summary>
+        /// Length
+        /// </summary>
+        public int Length
         {
-            this.str.Append(Text);
-            return this.str.ToString();
+            get
+            {
+                return _sb.Length;
+            }
         }
+
+        /// <summary>
+        /// 字符串处理类
+        /// </summary>
+        public StringPlus()
+        {
+            _sb = new StringBuilder();
+        }
+
+        /// <summary>
+        /// 字符串处理类
+        /// </summary>
+        /// <param name="str"></param>
+        public StringPlus(string str) : this()
+        {
+            _sb.Append(str);
+        }
+
+        /// <summary>
+        /// Append
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public void Append(dynamic text)
+        {
+            _sb.Append(text);
+        }
+
+        /// <summary>
+        /// Append
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="repeatCount"></param>
+        public void Append(dynamic text,int repeatCount)
+        {
+            _sb.Append(text, repeatCount);
+        }
+
         /// <summary>
         /// 添加空行
         /// </summary>
         /// <returns></returns>
-        public string AppendLine()
+        public void AppendLine()
         {
-            this.str.Append("\r\n");
-            return this.str.ToString();
+            _sb.Append("\r\n");
         }
+
         /// <summary>
         /// 添加一行字符串
         /// </summary>
-        /// <param name="Text"></param>
+        /// <param name="text"></param>
         /// <returns></returns>
-        public string AppendLine(string Text)
+        public void AppendLine(dynamic text)
         {
-            this.str.Append(Text + "\r\n");
-            return this.str.ToString();
+            _sb.Append(text + "\r\n");
         }
+
         /// <summary>
         /// 添加若干个空格符后的文本内容
         /// </summary>
-        /// <param name="SpaceNum"></param>
-        /// <param name="Text"></param>
+        /// <param name="spaceNum"></param>
+        /// <param name="text"></param>
         /// <returns></returns>
-        public string AppendSpace(int SpaceNum, string Text)
+        public void AppendSpace(int spaceNum, dynamic text)
         {
-            this.str.Append(this.Space(SpaceNum));
-            this.str.Append(Text);
-            return this.str.ToString();
+            for (int i = 0; i < spaceNum; i++)
+            {
+                _sb.Append("\t");  //制表符
+            }
+            _sb.Append(text);
         }
+
         /// <summary>
         /// 添加若干个空格符后的文本，并换行
         /// </summary>
-        /// <param name="SpaceNum">空格数</param>
-        /// <param name="Text"></param>
+        /// <param name="spaceNum">空格数</param>
+        /// <param name="text"></param>
         /// <returns></returns>
-        public string AppendSpaceLine(int SpaceNum, string Text)
+        public void AppendSpaceLine(int spaceNum, dynamic text)
         {
-            this.str.Append(this.Space(SpaceNum));
-            this.str.Append(Text);
-            this.str.Append("\r\n");
-            return this.str.ToString();
+            for (int i = 0; i < spaceNum; i++)
+            {
+                _sb.Append("\t");  //制表符
+            }
+            _sb.Append(text);
+            _sb.Append("\r\n");
         }
         /// <summary>
         /// 删除末尾指定字符串
@@ -91,58 +139,102 @@ namespace WEF.Common
         /// <param name="strchar"></param>
         public void DelLastChar(string strchar)
         {
-            string str = this.str.ToString();
-            int length = str.LastIndexOf(strchar);
-            if (length > 0)
+            string str = _sb.ToString();
+            if(string.IsNullOrEmpty(str) || string.IsNullOrEmpty(strchar)) return;
+            int index = str.LastIndexOf(strchar);
+            if (index > -1)
             {
-                this.str = new StringBuilder();
-                this.str.Append(str.Substring(0, length));
+                _sb.Remove(index, strchar.Length);
             }
         }
+
         /// <summary>
         /// 删除最后一个逗号
         /// </summary>
         public void DelLastComma()
         {
-            string str = this.str.ToString();
-            int length = str.LastIndexOf(",");
-            if (length > 0)
-            {
-                this.str = new StringBuilder();
-                this.str.Append(str.Substring(0, length));
-            }
+            DelLastChar(",");
         }
 
-        public void Remove(int Start, int Num)
+        /// <summary>
+        /// Remove
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="num"></param>
+        public void Remove(int start, int num)
         {
-            this.str.Remove(Start, Num);
+            _sb.Remove(start, num);
+        }
+
+
+        /// <summary>
+        /// 插入
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public void Insert(int index, dynamic text)
+        {
+            _sb.Insert(index, text);
         }
         /// <summary>
-        /// 空格串
+        /// Replace
         /// </summary>
-        /// <param name="SpaceNum"></param>
-        /// <returns></returns>
-        public string Space(int SpaceNum)
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
+        public void Replace(string oldValue, string newValue)
         {
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < SpaceNum; i++)
-            {
-                builder.Append("\t");  //制表符
-            }
-            return builder.ToString();
+            _sb.Replace(oldValue, newValue);
         }
 
+        /// <summary>
+        /// Replace
+        /// </summary>
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="count"></param>
+        public void Replace(string oldValue, string newValue, int startIndex, int count)
+        {
+            _sb.Replace(oldValue, newValue, startIndex, count);
+        }
+
+        /// <summary>
+        /// ToString
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
-            return this.str.ToString();
+            return _sb.ToString();
         }
-
+        /// <summary>
+        /// ToString
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public string ToString(int start,int count)
+        {
+            return _sb.ToString(start, count);
+        }
+        /// <summary>
+        /// Value
+        /// </summary>
         public string Value
         {
             get
             {
-                return this.str.ToString();
+                return _sb.ToString();
             }
+        }
+
+        /// <summary>
+        /// 隐式转换
+        /// </summary>
+        /// <param name="sp"></param>
+        public static implicit operator StringBuilder (StringPlus sp)
+        {
+            return new StringBuilder(sp.ToString());
         }
 
 
@@ -233,7 +325,7 @@ namespace WEF.Common
                 value = "_" + value;
             }
             return regSpace.Replace(value.Trim(), " ");
-        }        
+        }
 
         /// <summary>
         /// 首字母大写
@@ -245,6 +337,14 @@ namespace WEF.Common
             if (string.IsNullOrEmpty(value))
                 return string.Empty;
             return value.Substring(0, 1).ToUpper() + value.Substring(1);
+        }
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        public void Dispose()
+        {
+            _sb.Clear();
         }
     }
 }

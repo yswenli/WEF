@@ -19,7 +19,6 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 
 using WEF.Common;
 using WEF.Db;
@@ -1239,7 +1238,7 @@ namespace WEF
         /// <returns></returns>
         public new Search<T> Union(Search fromSection)
         {
-            StringBuilder tname = new StringBuilder();
+            StringPlus tname = new StringPlus();
 
             tname.Append("(");
 
@@ -1272,7 +1271,7 @@ namespace WEF
         /// <returns></returns>
         public new Search<T> UnionAll(Search fromSection)
         {
-            StringBuilder tname = new StringBuilder();
+            StringPlus tname = new StringPlus();
 
             tname.Append("(");
 

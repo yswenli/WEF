@@ -16,10 +16,10 @@
  * 创建人：Wenli
  * 创建说明：
  *****************************************************************************************************/
-using WEF.Common;
 using System;
 using System.Collections.Generic;
-using System.Text;
+
+using WEF.Common;
 
 namespace WEF.Expressions
 {
@@ -155,7 +155,7 @@ namespace WEF.Expressions
         /// <returns></returns>
         public override string ToString()
         {
-            StringBuilder orderBy = new StringBuilder();
+            StringPlus orderBy = new StringPlus();
             foreach (KeyValuePair<string, OrderByOperater> kv in this.orderByOperation)
             {
                 orderBy.Append(",");

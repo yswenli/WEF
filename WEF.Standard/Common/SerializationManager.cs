@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace WEF.Common
@@ -64,7 +63,7 @@ namespace WEF.Common
             }
             else
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringPlus();
                 StringWriter sw = new StringWriter(sb);
                 XmlSerializer serializer = new XmlSerializer(obj.GetType());
                 serializer.Serialize(sw, obj);

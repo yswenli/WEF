@@ -11,11 +11,9 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Text;
 
 using WEF.Common;
 using WEF.Expressions;
-using WEF.Provider;
 
 namespace WEF.Db
 {
@@ -117,7 +115,7 @@ namespace WEF.Db
             if (WhereOperation.IsNullOrEmpty(where))
                 where = WhereOperation.All;
 
-            var sql = new StringBuilder();
+            var sql = new StringPlus();
             sql.Append("UPDATE ");
             tableName = string.IsNullOrEmpty(tableName) ? _db.DbProvider.BuildTableName(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>()) : tableName;
             sql.Append(tableName);
@@ -126,7 +124,7 @@ namespace WEF.Db
             var identityField = EntityCache.GetIdentityField<TEntity>();
             var identityExist = !Field.IsNullOrEmpty(identityField);
             var list = new List<Parameter>();
-            var colums = new StringBuilder();
+            var colums = new StringPlus();
             for (var i = 0; i < length; i++)
             {
                 if (identityExist)
@@ -185,7 +183,7 @@ namespace WEF.Db
             if (WhereOperation.IsNullOrEmpty(where))
                 throw new Exception("请传入删除条件，删除整表数据请使用.DeleteAll<T>()方法。");
 
-            StringBuilder sql = new StringBuilder();
+            StringPlus sql = new StringPlus();
             sql.Append("DELETE FROM ");
             sql.Append(_db.DbProvider.BuildTableName(tableName, userName));
             sql.Append(where.WhereString);
@@ -238,7 +236,7 @@ namespace WEF.Db
             if (null == fields || fields.Length == 0 || null == values || values.Length == 0)
                 return null;
 
-            var sql = new StringBuilder();
+            var sql = new StringPlus();
             sql.Append("INSERT INTO ");
             tableName = string.IsNullOrEmpty(tableName) ? _db.DbProvider.BuildTableName(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>()) : tableName;
             sql.Append(tableName);
@@ -277,8 +275,8 @@ namespace WEF.Db
                 var p = new Parameter(panme, values[i], fields[i].ParameterDbType, fields[i].ParameterSize);
                 parameters.Add(p);
             }
-            var fs = new StringBuilder();
-            var ps = new StringBuilder();
+            var fs = new StringPlus();
+            var ps = new StringPlus();
 
             foreach (var kv in insertFields)
             {

@@ -18,7 +18,6 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
 using System.Threading;
 
 namespace WEF.Common
@@ -140,7 +139,7 @@ namespace WEF.Common
         /// <returns></returns>
         public static string SetDocumentValueString(Dictionary<Field, object> fieldvalues, string prefix)
         {
-            StringBuilder script = new StringBuilder();
+            StringPlus script = new StringPlus();
             script.AppendLine();
             foreach (KeyValuePair<Field, object> fieldvalue in fieldvalues)
             {
@@ -233,7 +232,7 @@ namespace WEF.Common
         public static string SetDocumentValueClearString<TEntity>(string prefix)
              where TEntity : Entity
         {
-            StringBuilder script = new StringBuilder();
+            StringPlus script = new StringPlus();
             script.AppendLine();
             TEntity t = DataUtils.Create<TEntity>();
             Dictionary<Field, object> fieldvalues = DataUtils.FieldValueToDictionary(t.GetFields(), t.GetValues());

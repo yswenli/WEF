@@ -18,8 +18,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 
 using WEF.Common;
 using WEF.Db;
@@ -104,9 +102,9 @@ namespace WEF
         protected int? timeout;
 
         /// <summary>
-        /// 
+        /// 某种类型的数据库表名，例如：[User]或`User`
         /// </summary>
-        protected string typeTableName;
+        protected string _typeTableName;
 
         /// <summary>
         /// 是否重新加载
@@ -188,7 +186,7 @@ namespace WEF
         {
             get
             {
-                StringBuilder sql = new StringBuilder();
+                StringPlus sql = new StringPlus();
 
                 if (GroupByOperation.IsNullOrEmpty(_groupBy) && string.IsNullOrEmpty(_distinctString))
                 {
@@ -220,7 +218,7 @@ namespace WEF
         {
             get
             {
-                StringBuilder sql = new StringBuilder();
+                StringPlus sql = new StringPlus();
 
                 sql.Append(" SELECT ");
                 sql.Append(_distinctString);
@@ -256,7 +254,7 @@ namespace WEF
         {
             get
             {
-                StringBuilder fromstring = new StringBuilder();
+                StringPlus fromstring = new StringPlus();
 
                 //处理ACCESS 的多表联合查询
                 if (_database.DbProvider.GetType().Name == "MsAccessProvider")
@@ -315,7 +313,7 @@ namespace WEF
         {
             get
             {
-                StringBuilder sql = new StringBuilder();
+                StringPlus sql = new StringPlus();
 
                 sql.Append(" SELECT ");
                 sql.Append(_distinctString);
@@ -475,7 +473,7 @@ namespace WEF
                 if (_fields.Count == 0)
                     return "*";
 
-                StringBuilder columns = new StringBuilder();
+                StringPlus columns = new StringPlus();
                 foreach (Field filed in _fields)
                 {
                     columns.Append(",");
@@ -538,7 +536,7 @@ namespace WEF
             this._database = database;
             this._tableName = tableName;
             this._asName = asName;
-            this.typeTableName = tableName.Trim(_dbProvider.LeftToken, _dbProvider.RightToken);
+            this._typeTableName = tableName.Trim(_dbProvider.LeftToken, _dbProvider.RightToken);
         }
 
         #endregion
@@ -994,7 +992,6 @@ namespace WEF
                     where.expressionString = where.expressionString.Replace(realTableName, realTableName + index);
                 }
 
-
                 _joins.Add(tableName, new KeyValuePair<string, WhereOperation>(joinString, where));
 
                 if (where.Parameters.Count > 0)
@@ -1083,7 +1080,7 @@ namespace WEF
         /// <returns></returns>
         public Search Union(Search Search)
         {
-            StringBuilder tname = new StringBuilder();
+            StringPlus tname = new StringPlus();
 
             tname.Append("(");
 
@@ -1096,7 +1093,7 @@ namespace WEF
             tname.Append(") tempuniontable ");
 
             Search tmpSearch = new Search(this._database, tname.ToString());
-            tmpSearch.typeTableName = this.typeTableName;
+            tmpSearch._typeTableName = this._typeTableName;
             tmpSearch.timeout = this.timeout;
             tmpSearch.isRefresh = this.isRefresh;
 
@@ -1114,7 +1111,7 @@ namespace WEF
         /// <returns></returns>
         public Search UnionAll(Search Search)
         {
-            StringBuilder tname = new StringBuilder();
+            StringPlus tname = new StringPlus();
 
             tname.Append("(");
 
@@ -1127,7 +1124,7 @@ namespace WEF
             tname.Append(") tempuniontable ");
 
             Search tmpSearch = new Search(this._database, tname.ToString());
-            tmpSearch.typeTableName = this.typeTableName;
+            tmpSearch._typeTableName = this._typeTableName;
             tmpSearch.timeout = this.timeout;
             tmpSearch.isRefresh = this.isRefresh;
 

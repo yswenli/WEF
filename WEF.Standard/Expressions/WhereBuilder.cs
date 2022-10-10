@@ -19,11 +19,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
+
+using WEF.Common;
 
 namespace WEF.Expressions
 {
-    
+
     /// <summary>
     /// Where条件拼接，同Where类
     /// </summary>
@@ -57,7 +58,7 @@ namespace WEF.Expressions
         /// <summary>
         /// 条件字符串
         /// </summary>
-        private StringBuilder expressionStringBuilder = new StringBuilder();
+        private StringPlus expressionStringPlus = new StringPlus();
 
         /// <summary>
         /// 条件参数
@@ -82,7 +83,7 @@ namespace WEF.Expressions
         {
             _tablename = tableName;
 
-            expressionStringBuilder.Append(where.ToString());
+            expressionStringPlus.Append(where.ToString());
 
             parameters.AddRange(where.Parameters);
 
@@ -97,16 +98,16 @@ namespace WEF.Expressions
                 return;
 
 
-            if (expressionStringBuilder.Length > 0)
+            if (expressionStringPlus.Length > 0)
             {
-                expressionStringBuilder.Append(" AND ");
-                expressionStringBuilder.Append(where.ToString());
-                expressionStringBuilder.Append(")");
-                expressionStringBuilder.Insert(0, "(");
+                expressionStringPlus.Append(" AND ");
+                expressionStringPlus.Append(where.ToString());
+                expressionStringPlus.Append(")");
+                expressionStringPlus.Insert(0, "(");
             }
             else
             {
-                expressionStringBuilder.Append(where.ToString());
+                expressionStringPlus.Append(where.ToString());
             }
 
             parameters.AddRange(where.Parameters);
@@ -122,16 +123,16 @@ namespace WEF.Expressions
                 return;
 
 
-            if (expressionStringBuilder.Length > 0)
+            if (expressionStringPlus.Length > 0)
             {
-                expressionStringBuilder.Append(" OR ");
-                expressionStringBuilder.Append(where.ToString());
-                expressionStringBuilder.Append(")");
-                expressionStringBuilder.Insert(0, "(");
+                expressionStringPlus.Append(" OR ");
+                expressionStringPlus.Append(where.ToString());
+                expressionStringPlus.Append(")");
+                expressionStringPlus.Insert(0, "(");
             }
             else
             {
-                expressionStringBuilder.Append(where.ToString());
+                expressionStringPlus.Append(where.ToString());
             }
 
 
@@ -145,7 +146,7 @@ namespace WEF.Expressions
         /// <returns></returns>
         public WhereOperation ToWhereClip()
         {
-            return new WhereOperation(expressionStringBuilder.ToString(), parameters.ToArray());
+            return new WhereOperation(expressionStringPlus.ToString(), parameters.ToArray());
         }
     }
 }

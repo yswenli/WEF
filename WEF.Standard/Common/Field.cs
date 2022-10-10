@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
 
 using WEF.Expressions;
 
@@ -759,11 +758,11 @@ namespace WEF.Common
             Check.Require((null != values && values.Length > 0),
                 "values could not be null or empty");
 
-            var whereString = new StringBuilder(field.TableFieldName);
+            var whereString = new StringPlus(field.TableFieldName);
             whereString.Append(join);
             whereString.Append("(");
             var ps = new List<Parameter>();
-            var inWhere = new StringBuilder();
+            var inWhere = new StringPlus();
             var i = 0;
             foreach (T value in values)
             {

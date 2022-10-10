@@ -16,9 +16,9 @@
  * 创建人：Wenli
  * 创建说明：
  *****************************************************************************************************/
-using WEF.Common;
 using System;
-using System.Text;
+
+using WEF.Common;
 
 namespace WEF.Expressions
 {
@@ -87,7 +87,7 @@ namespace WEF.Expressions
             if (string.IsNullOrEmpty(groupc.groupByClip))
                 return groupc;
 
-            StringBuilder gstring = new StringBuilder();
+            StringPlus gstring = new StringPlus();
             string[] fs = groupc.groupByClip.Split(',');
             foreach (string s in fs)
             {

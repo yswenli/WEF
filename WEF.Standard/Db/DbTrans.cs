@@ -128,7 +128,7 @@ namespace WEF.Db
                     _isCommitOrRollback = true;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Rollback();
             }

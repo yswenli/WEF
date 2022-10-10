@@ -78,7 +78,6 @@ namespace WEF.Section
         public SqlSection(DBContext dbContext, string sql, int pageIndex, int pageSize, string orderBy, bool asc = true)
             : base(dbContext, sql, pageIndex, pageSize)
         {
-
             Check.Require(sql, "sql", Check.NotNullOrEmpty);
 
             _dbCommand = dbContext.Db.GetSqlStringCommand(sql, pageIndex, pageSize, orderBy, asc);

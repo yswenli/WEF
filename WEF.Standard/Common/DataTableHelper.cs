@@ -112,7 +112,7 @@ namespace WEF.Common
         /// <param name="withHeader"></param>
         public static void WriteToCSV(this DataTable table, string filePath, bool withHeader = true)
         {
-            StringBuilder sb = new StringBuilder();
+            StringPlus sb = new StringPlus();
 
             DataColumn colum;
 
