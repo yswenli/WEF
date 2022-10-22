@@ -12,29 +12,6 @@ namespace WEF.Standard.Test
     {
         static void Main(string[] args)
         {
-            //var cnnStr = "";
-
-            //var version = DipBuilder.GetVersion();
-            //DbProvider provider = ProviderFactory.CreateDbProvider($"WEF.Standard.MSSQL, Version={version}, Culture=neutral, PublicKeyToken=null",
-            //    "WEF.Provider.SqlServer9Provider",
-            //    "",
-            //    null);
-
-
-
-            //var name = typeof(WEF.Provider.SqlServer9Provider).Assembly.FullName;
-            //var provider2 = DipBuilder.Create<WEF.Provider.SqlServer9Provider>(name, "WEF.Provider.SqlServer9Provider", new object[] { cnnStr });
-
-            //var batcher = (IBatcher<DBTicketOrder>)DipBuilder.CreateWithGeneric<DBTicketOrder>("WEF.Standard.MSSQL, Version=" + version + ", Culture=neutral, PublicKeyToken=null",
-            //    "WEF.Batcher.MsSqlBatcher",
-            //    new object[] { new Database(provider2) });
-
-
-
-            //var json2 = SerializeHelper.Serialize(new MvcPager.PagedList<DBTicketOrder>(1, 10, 22));
-
-            //var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "dbtype.xml");
-
             //MySqlBitTypeTest.Test1();
             //MySqlBitTypeTest.Test3();
 
@@ -51,10 +28,13 @@ namespace WEF.Standard.Test
 
             var dic1111 = new Dictionary<string, dynamic>();
 
-            var articlePagedList= dbarticleRepository.FromSql("select * from Article", 1, 10, "ID", true, dic1111)
+            var articlePagedList = dbarticleRepository.FromSql("select * from Article", 1, 10, "ID", true, dic1111)
                 .ToPagedList<DBArticle>();
 
             var articlePagedList2 = dbarticleRepository.Search().ToPagedList(1, 10, "ID", true);
+
+            var articlePagedList3 = dbarticleRepository.Search().Join<DBComment>((x, y) => y.PageID == x.ID && x.ID == "12321", JoinType.LeftJoin).ToList();
+
 
             new BytesTest().Test2();
 
