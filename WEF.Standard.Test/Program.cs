@@ -18,7 +18,7 @@ namespace WEF.Standard.Test
             List<DBArticle> articleList;
             List<DBComment> commentList;
 
-            var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, "");
+            var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, "Data Source=47.103.135.84;Initial Catalog=tejingcaiV2;User Id=testuser;Password=testuser");
 
             var tuple = dbarticleRepository.FromSql("select top 10 * from Article;select top 10 * from Comment")
                 .ToMultipleList<DBArticle, DBComment>();
@@ -33,7 +33,10 @@ namespace WEF.Standard.Test
 
             var articlePagedList2 = dbarticleRepository.Search().ToPagedList(1, 10, "ID", true);
 
-            var articlePagedList3 = dbarticleRepository.Search().Join<DBComment>((x, y) => y.PageID == x.ID && x.ID == "12321", JoinType.LeftJoin).ToList();
+            int praiseCount = 12321;
+            var yid = "abc";
+
+            var articlePagedList3 = dbarticleRepository.Search().Join<DBComment>((x, y) => y.PageID == x.ID && y.PraiseCount == praiseCount && y.ID == yid, JoinType.LeftJoin).ToList();
 
 
             new BytesTest().Test2();
