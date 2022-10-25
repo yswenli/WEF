@@ -427,17 +427,21 @@ namespace WEF.Expressions
                 }
                 if (expRight.NodeType == ExpressionType.MemberAccess)
                 {
-                    var right = (MemberExpression)expRight;
-                    if (right.Expression != null && (wtype == WhereType.JoinWhere || right.Expression == leftMe.Expression))
+                    if (!expRight.ToString().StartsWith("value"))
                     {
-                        var rigthTableName = GetTableNameByType("", ((MemberExpression)be.Right).Expression.Type);
+                        var right = (MemberExpression)expRight;
 
-                        var keyRight = GetMemberName(expRight, out ColumnFunction functionRight, out right);
+                        if (right.Expression != null && (wtype == WhereType.JoinWhere || right.Expression == leftMe.Expression))
+                        {
+                            var rigthTableName = GetTableNameByType("", ((MemberExpression)be.Right).Expression.Type);
 
-                        return new WhereOperation(
-                            CreateField(tableName, key, leftMe.Expression.Type),
-                            CreateField(rigthTableName, keyRight, right.Expression.Type)
-                            , co);
+                            var keyRight = GetMemberName(expRight, out ColumnFunction functionRight, out right);
+
+                            return new WhereOperation(
+                                CreateField(tableName, key, leftMe.Expression.Type),
+                                CreateField(rigthTableName, keyRight, right.Expression.Type)
+                                , co);
+                        }
                     }
                 }
                 object value = GetValue(expRight);
