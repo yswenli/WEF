@@ -17,6 +17,7 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
+
 using WEF.Common;
 
 namespace WEF.Expressions
@@ -123,6 +124,7 @@ namespace WEF.Expressions
         }
 
 
+
         /// <summary>
         /// 判断条件是否一样
         /// </summary>
@@ -161,6 +163,8 @@ namespace WEF.Expressions
                 return true;
             return false;
         }
+
+        
 
 
         public override string ToString()

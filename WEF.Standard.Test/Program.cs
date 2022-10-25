@@ -329,6 +329,11 @@ namespace WEF.Standard.Test
                 .Where(where1)
                 .ToPagedList<User>(1, 10, "Name", true);
 
+            //where条件拼接二：
+            var where11=new Where<DBTask>();
+            where11.And(where1);
+
+
             //多表条件拼接
 
             //var where2 = new Where<table>();

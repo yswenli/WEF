@@ -566,7 +566,7 @@ namespace WEF
         public bool Exists<TEntity>(string tableName, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Exists<TEntity>(ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
+            return Exists<TEntity>(ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 判断是否存在记录
@@ -614,7 +614,7 @@ namespace WEF
         public int Count<TEntity>(string tableName, Field field, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Search<TEntity>().Select(field.Count()).Where(ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere)).ToScalar<int>();
+            return Search<TEntity>().Select(field.Count()).Where(ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere)).ToScalar<int>();
         }
         /// <summary>
         /// Count
@@ -648,7 +648,7 @@ namespace WEF
         public int Count<TEntity>(string tableName, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Search<TEntity>().Select(Field.All.Count()).Where(ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere)).ToScalar<int>();
+            return Search<TEntity>().Select(Field.All.Count()).Where(ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere)).ToScalar<int>();
         }
         #endregion
 
@@ -929,7 +929,7 @@ namespace WEF
         public int Update<TEntity>(TEntity entity, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(entity, ExpressionToOperation<TEntity>.ToWhereOperation(entity.GetTableName(), lambdaWhere));
+            return Update<TEntity>(entity, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
 
         /// <summary>
@@ -1024,7 +1024,7 @@ namespace WEF
         public int Update<TEntity>(DbTransaction tran, TEntity entity, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, entity, ExpressionToOperation<TEntity>.ToWhereOperation(entity.GetTableName(), lambdaWhere));
+            return Update<TEntity>(tran, entity, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 
@@ -1063,7 +1063,7 @@ namespace WEF
         public int Update<TEntity>(string tableName, Field field, object value, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tableName, field, value, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
+            return Update<TEntity>(tableName, field, value, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 更新单个值
@@ -1110,7 +1110,7 @@ namespace WEF
         public int Update<TEntity>(DbTransaction tran, string tableName, Field field, object value, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, tableName, field, value, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
+            return Update<TEntity>(tran, tableName, field, value, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 更新单个值
@@ -1159,7 +1159,7 @@ namespace WEF
         public int Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tableName, fieldValue, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
+            return Update<TEntity>(tableName, fieldValue, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 
@@ -1205,7 +1205,7 @@ namespace WEF
         public int Update<TEntity>(DbTransaction tran, string tableName, Dictionary<Field, object> fieldValue, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, tableName, fieldValue, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
+            return Update<TEntity>(tran, tableName, fieldValue, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 
@@ -1229,7 +1229,7 @@ namespace WEF
         public int Update<TEntity>(string tableName, Field[] fields, object[] values, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tableName, fields, values, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
+            return Update<TEntity>(tableName, fields, values, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
 
 
@@ -1251,7 +1251,7 @@ namespace WEF
         public int Update<TEntity>(DbTransaction tran, string tableName, Field[] fields, object[] values, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, tableName, fields, values, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
+            return Update<TEntity>(tran, tableName, fields, values, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
 
 
@@ -1542,7 +1542,7 @@ namespace WEF
         public int Delete<TEntity>(string tableName, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Delete<TEntity>(tableName, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
+            return Delete<TEntity>(tableName, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 删除
@@ -1555,7 +1555,7 @@ namespace WEF
         public int Delete<TEntity>(DbTransaction tran, string tableName, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Delete<TEntity>(tran, tableName, ExpressionToOperation<TEntity>.ToWhereOperation(tableName, lambdaWhere));
+            return Delete<TEntity>(tran, tableName, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         ///  删除

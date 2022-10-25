@@ -48,41 +48,37 @@ namespace WEF.Expressions
         {
             return ToWhereOperationChild(e.Body, WhereType.JoinWhere);
         }
-        /// <summary>
-        /// ToWhereOperation
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        public static WhereOperation ToWhereOperation(string tableName, Expression<Func<T, bool>> e)
+
+        public static WhereOperation ToWhereOperation(Expression<Func<T, bool>> e)
         {
             return ToWhereOperationChild(e.Body);
         }
 
-        public static WhereOperation ToWhereOperation<T2>(string tableName, Expression<Func<T, T2, bool>> e)
+        public static WhereOperation ToWhereOperation<T2>(Expression<Func<T, T2, bool>> e)
         {
             return ToWhereOperationChild(e.Body);
         }
 
-        public static WhereOperation ToWhereOperation<T2, T3>(string tableName, Expression<Func<T, T2, T3, bool>> e)
+        public static WhereOperation ToWhereOperation<T2, T3>(Expression<Func<T, T2, T3, bool>> e)
         {
             return ToWhereOperationChild(e.Body);
         }
 
-        public static WhereOperation ToWhereOperation<T2, T3, T4>(string tableName, Expression<Func<T, T2, T3, T4, bool>> e)
+        public static WhereOperation ToWhereOperation<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> e)
         {
             return ToWhereOperationChild(e.Body);
         }
 
-        public static WhereOperation ToWhereOperation<T2, T3, T4, T5>(string tableName, Expression<Func<T, T2, T3, T4, T5, bool>> e)
+        public static WhereOperation ToWhereOperation<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> e)
         {
             return ToWhereOperationChild(e.Body);
         }
 
-        public static WhereOperation ToWhereOperation<T2, T3, T4, T5, T6>(string tableName, Expression<Func<T, T2, T3, T4, T5, T6, bool>> e)
+        public static WhereOperation ToWhereOperation<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> e)
         {
             return ToWhereOperationChild(e.Body);
         }
+
 
         private static WhereOperation ToWhereOperationChild(System.Linq.Expressions.Expression e, WhereType wt = WhereType.Where)
         {
@@ -168,7 +164,6 @@ namespace WEF.Expressions
                     throw new Exception("暂时不支持的Where条件(" + be.NodeType + ")Lambda表达式写法！请使用经典写法！");
             }
         }
-
 
         private static WhereOperation ConvertMethodCall(MethodCallExpression mce)
         {

@@ -340,7 +340,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Having(Expression<Func<T, bool>> lambdaHaving)
         {
-            return (Search<T>)base.Having(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaHaving));
+            return (Search<T>)base.Having(ExpressionToOperation<T>.ToWhereOperation(lambdaHaving));
         }
         /// <summary>
         /// whereclip
@@ -385,10 +385,10 @@ namespace WEF
 
                 if (whereBuilder == null)
                 {
-                    whereBuilder = new WhereBuilder(_tableName, ExpressionToOperation<T>.ToWhereOperation(_tableName, item));
+                    whereBuilder = new WhereBuilder(_tableName, ExpressionToOperation<T>.ToWhereOperation(item));
                 }
                 else
-                    whereBuilder.And(ExpressionToOperation<T>.ToWhereOperation(_tableName, item));
+                    whereBuilder.And(ExpressionToOperation<T>.ToWhereOperation(item));
             }
 
             return Where(whereBuilder.ToWhereClip());
@@ -402,7 +402,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Where<T2>(Expression<Func<T, T2, bool>> lambdaWhere)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
+            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 
@@ -413,7 +413,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Where<T2, T3>(Expression<Func<T, T2, T3, bool>> lambdaWhere)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
+            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 
@@ -425,14 +425,14 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Where<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> lambdaWhere)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
+            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 
         /// </summary>
         public Search<T> Where<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> lambdaWhere)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
+            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// 
@@ -446,7 +446,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Where<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> lambdaWhere)
         {
-            return Where(ExpressionToOperation<T>.ToWhereOperation(_tableName, lambdaWhere));
+            return Where(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
 
         /// <summary>

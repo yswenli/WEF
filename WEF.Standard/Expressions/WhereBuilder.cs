@@ -31,22 +31,20 @@ namespace WEF.Expressions
     public class WhereBuilder<T> : WhereBuilder
         where T : Entity
     {
-        
+
         /// <summary>
         /// AND
         /// </summary>
         public void And(Expression<Func<T, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(base._tablename, lambdaWhere);
-            And(tempWhere);
+            And(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// Or
         /// </summary>
         public void Or(Expression<Func<T, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(base._tablename, lambdaWhere);
-            Or(tempWhere);
+            Or(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
     }
 
@@ -58,12 +56,12 @@ namespace WEF.Expressions
         /// <summary>
         /// 条件字符串
         /// </summary>
-        private StringPlus expressionStringPlus = new StringPlus();
+        protected StringPlus _expressionStringPlus;
 
         /// <summary>
         /// 条件参数
         /// </summary>
-        private List<Parameter> parameters = new List<Parameter>();
+        protected List<Parameter> _parameters;
 
 
         protected string _tablename;
@@ -72,7 +70,10 @@ namespace WEF.Expressions
         /// 构造函数
         /// </summary>
         public WhereBuilder()
-        { }
+        {
+            _expressionStringPlus = new StringPlus();
+            _parameters = new List<Parameter>();
+        }
 
         /// <summary>
         /// WhereBuilder
@@ -83,9 +84,9 @@ namespace WEF.Expressions
         {
             _tablename = tableName;
 
-            expressionStringPlus.Append(where.ToString());
+            _expressionStringPlus.Append(where.ToString());
 
-            parameters.AddRange(where.Parameters);
+            _parameters.AddRange(where.Parameters);
 
         }
         /// <summary>
@@ -98,19 +99,19 @@ namespace WEF.Expressions
                 return;
 
 
-            if (expressionStringPlus.Length > 0)
+            if (_expressionStringPlus.Length > 0)
             {
-                expressionStringPlus.Append(" AND ");
-                expressionStringPlus.Append(where.ToString());
-                expressionStringPlus.Append(")");
-                expressionStringPlus.Insert(0, "(");
+                _expressionStringPlus.Append(" AND ");
+                _expressionStringPlus.Append(where.ToString());
+                _expressionStringPlus.Append(")");
+                _expressionStringPlus.Insert(0, "(");
             }
             else
             {
-                expressionStringPlus.Append(where.ToString());
+                _expressionStringPlus.Append(where.ToString());
             }
 
-            parameters.AddRange(where.Parameters);
+            _parameters.AddRange(where.Parameters);
         }
 
         /// <summary>
@@ -123,22 +124,38 @@ namespace WEF.Expressions
                 return;
 
 
-            if (expressionStringPlus.Length > 0)
+            if (_expressionStringPlus.Length > 0)
             {
-                expressionStringPlus.Append(" OR ");
-                expressionStringPlus.Append(where.ToString());
-                expressionStringPlus.Append(")");
-                expressionStringPlus.Insert(0, "(");
+                _expressionStringPlus.Append(" OR ");
+                _expressionStringPlus.Append(where.ToString());
+                _expressionStringPlus.Append(")");
+                _expressionStringPlus.Insert(0, "(");
             }
             else
             {
-                expressionStringPlus.Append(where.ToString());
+                _expressionStringPlus.Append(where.ToString());
             }
 
-
-            parameters.AddRange(where.Parameters);
+            _parameters.AddRange(where.Parameters);
         }
 
+        /// <summary>
+        /// and
+        /// </summary>
+        /// <param name="builder"></param>
+        public void And(WhereBuilder builder)
+        {
+            And(builder.ToWhereClip());
+        }
+
+        /// <summary>
+        /// or
+        /// </summary>
+        /// <param name="builder"></param>
+        public void Or(WhereBuilder builder)
+        {
+            Or(builder.ToWhereClip());
+        }
 
         /// <summary>
         /// 转换成WhereClip
@@ -146,7 +163,7 @@ namespace WEF.Expressions
         /// <returns></returns>
         public WhereOperation ToWhereClip()
         {
-            return new WhereOperation(expressionStringPlus.ToString(), parameters.ToArray());
+            return new WhereOperation(_expressionStringPlus.ToString(), _parameters.ToArray());
         }
     }
 }
