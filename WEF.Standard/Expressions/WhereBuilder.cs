@@ -31,6 +31,23 @@ namespace WEF.Expressions
     public class WhereBuilder<T> : WhereBuilder
         where T : Entity
     {
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public WhereBuilder() : base()
+        {
+
+        }
+
+        /// <summary>
+        /// WhereBuilder
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="where"></param>
+        public WhereBuilder(string tableName, WhereOperation where) : base(tableName, where)
+        {
+
+        }
 
         /// <summary>
         /// AND
@@ -45,6 +62,15 @@ namespace WEF.Expressions
         public void Or(Expression<Func<T, bool>> lambdaWhere)
         {
             Or(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
+        }
+
+        /// <summary>
+        /// Where条件拼接，同Where类
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        public static implicit operator WhereBuilder<T>(Expression<Func<T, bool>> lambdaWhere)
+        {
+            return ExpressionToOperation<T>.ToWhereOperation(lambdaWhere) as WhereBuilder<T>;
         }
     }
 
@@ -63,7 +89,9 @@ namespace WEF.Expressions
         /// </summary>
         protected List<Parameter> _parameters;
 
-
+        /// <summary>
+        /// 表名
+        /// </summary>
         protected string _tablename;
 
         /// <summary>
@@ -72,6 +100,7 @@ namespace WEF.Expressions
         public WhereBuilder()
         {
             _expressionStringPlus = new StringPlus();
+
             _parameters = new List<Parameter>();
         }
 
@@ -80,14 +109,16 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="where"></param>
-        public WhereBuilder(string tableName, WhereOperation where)
+        public WhereBuilder(string tableName, WhereOperation where) : this()
         {
             _tablename = tableName;
 
-            _expressionStringPlus.Append(where.ToString());
+            if (where != null)
+            {
+                _expressionStringPlus.Append(where.ToString());
 
-            _parameters.AddRange(where.Parameters);
-
+                _parameters.AddRange(where.Parameters);
+            }
         }
         /// <summary>
         /// AND
@@ -97,7 +128,6 @@ namespace WEF.Expressions
         {
             if (WhereOperation.IsNullOrEmpty(where))
                 return;
-
 
             if (_expressionStringPlus.Length > 0)
             {
@@ -122,7 +152,6 @@ namespace WEF.Expressions
         {
             if (WhereOperation.IsNullOrEmpty(where))
                 return;
-
 
             if (_expressionStringPlus.Length > 0)
             {

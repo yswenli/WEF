@@ -17,6 +17,7 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
+using System.Linq.Expressions;
 
 using WEF.Common;
 
@@ -122,8 +123,6 @@ namespace WEF.Expressions
         {
             return new WhereOperation(whereString);
         }
-
-
 
         /// <summary>
         /// 判断条件是否一样

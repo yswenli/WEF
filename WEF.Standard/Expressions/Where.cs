@@ -31,7 +31,7 @@ namespace WEF.Expressions
         /// Where条件拼接
         /// </summary>
         /// <param name="tableName"></param>
-        public Where(string tableName)
+        public Where(string tableName) : base(tableName, null)
         {
             _tableName = tableName;
         }
@@ -40,9 +40,18 @@ namespace WEF.Expressions
         /// Where条件拼接
         /// </summary>
         /// <param name="lambdaWhere"></param>
-        public Where(Expression<Func<T, bool>> lambdaWhere)
+        public Where(Expression<Func<T, bool>> lambdaWhere) : base(null, ExpressionToOperation<T>.ToWhereOperation(lambdaWhere))
         {
             And(lambdaWhere);
+        }
+
+        /// <summary>
+        /// Where条件拼接
+        /// </summary>
+        /// <param name="where"></param>
+        public Where(WhereOperation where) : base(null, where)
+        {
+
         }
 
         /// <summary>
@@ -50,68 +59,57 @@ namespace WEF.Expressions
         /// </summary>
         public void And(Expression<Func<T, bool>> lambdaWhere)
         {
-            And(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
+            base.And(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// AND
         /// </summary>
         public void And<T2>(Expression<Func<T, T2, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
-            And(tempWhere);
+            base.And(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         public void And<T2, T3>(Expression<Func<T, T2, T3, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
-            And(tempWhere);
+            base.And(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         public void And<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
-            And(tempWhere);
+            base.And(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         public void And<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
-            And(tempWhere);
+            base.And(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         public void And<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
-            And(tempWhere);
+            base.And(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         /// <summary>
         /// Or
         /// </summary>
         public void Or(Expression<Func<T, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
-            Or(tempWhere);
+            base.Or(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         public void Or<T2>(Expression<Func<T, T2, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
-            Or(tempWhere);
+            base.Or(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         public void Or<T2, T3>(Expression<Func<T, T2, T3, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
-            Or(tempWhere);
+            base.Or(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         public void Or<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
-            Or(tempWhere);
+            base.Or(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         public void Or<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
-            Or(tempWhere);
+            base.Or(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
         public void Or<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> lambdaWhere)
         {
-            var tempWhere = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
-            Or(tempWhere);
+            base.Or(ExpressionToOperation<T>.ToWhereOperation(lambdaWhere));
         }
     }
 }
