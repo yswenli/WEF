@@ -673,14 +673,12 @@ namespace WEF.Expressions
                 var i = 0;
                 foreach (var item in exNew.Arguments)
                 {
-                    var propertyType = ((MemberExpression)item).Expression.Type;
-
-                    tableName = TableAttribute.GetTableName(propertyType);
-
-                    var aliasName = exNew.Members[i].Name;
-
                     if (item is MemberExpression)
                     {
+                        var propertyType = ((MemberExpression)item).Expression.Type;
+                        tableName = TableAttribute.GetTableName(propertyType);
+                        var aliasName = exNew.Members[i].Name;
+
                         var member = (MemberExpression)item;
                         var filedProp = GetFieldName(member.Member);
                         if (aliasName == "All")
@@ -698,8 +696,11 @@ namespace WEF.Expressions
                     }
                     else if (item is MethodCallExpression)
                     {
-                        var member = (MethodCallExpression)item;
-                        f[i] = ConvertFun(tableName, member, aliasName)[0];
+                        var method = ((MethodCallExpression)item);
+                        var propertyType = ((MemberExpression)method.Arguments[0]).Expression.Type;
+                        tableName = TableAttribute.GetTableName(propertyType);
+                        var aliasName = exNew.Members[i].Name;
+                        f[i] = ConvertFun(tableName, method, aliasName)[0];
                     }
                     i++;
                 }

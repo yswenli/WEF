@@ -74,26 +74,6 @@ namespace WEF.Db
 
             if (_conn.State != ConnectionState.Open)
                 _conn.Open();
-
-            //超时退出
-            if (timeout > 0)
-            {
-                Task.Run(() =>
-                {
-                    int i = 0;
-                    while (_conn.State == ConnectionState.Open)
-                    {
-                        Thread.Sleep(1000);
-                        i++;
-                        if (i > timeout)
-                        {
-                            Close();
-                            throw new TimeoutException("事务执行超时");
-                        }
-                    }
-                });
-
-            }
         }
 
         /// <summary>

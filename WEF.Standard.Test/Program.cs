@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Drawing.Printing;
+using System.Linq.Expressions;
 
 using WEF.Common;
 using WEF.Expressions;
@@ -245,6 +246,26 @@ namespace WEF.Standard.Test
 
             var glist3 = giftopt.Search().Where(b => b.Giftid.In(gids)).ToList();
 
+            //多表join并多表取值分页如下：
+            //Repository.Search().Join<DBNotificationSetting>((x, y) => x.SettingID == y.ID, WEF.Common.JoinType.LeftJoin)
+            //        .Where<DBNotificationSetting>((x, y) => x.ReceiverID == userId && x.IsDeleted != true && y.BusinessType == businessType && y.IsDeleted != true)
+            //        .Select<DBNotificationSetting>((x, y) => new
+            //        {
+            //            ID = x.ID,
+            //            Content = x.Content,
+            //            Created = x.Created,
+            //            UnRead = x.UnRead,
+            //            Key = y.Key,
+            //            BusinessType = y.BusinessType,
+            //            Type = y.Type,
+            //            Name = y.Name,
+            //            Icon = y.Icon,
+            //            BtnUrl = y.BtnUrl,
+            //            BtnText = y.BtnText,
+            //            Sender = x.Sender,
+            //            SenderName = x.SenderName,
+            //            SenderGender = x.SenderGender
+            //        }).ToPagedList<NotificationListItem>(pageIndex, pageSize, orderBy, asc);
 
             #region where
 
@@ -336,6 +357,8 @@ namespace WEF.Standard.Test
 
             #endregion
 
+
+            
 
             var plist = tb_UserpointRepository.GetList(1, 100);
 

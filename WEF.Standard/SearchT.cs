@@ -85,7 +85,7 @@ namespace WEF
             return Join(EntityCache.GetTableName<T>(), EntityCache.GetUserName<T>(), _where, JoinType.InnerJoin);
         }
         /// <summary>
-        /// Inner Join。Lambda写法：.InnerJoin&lt;Model2>((a, b) => a.ID == b.ID)
+        /// Inner Join，条件中只能写表关联条件。Lambda写法：.InnerJoin&lt;Model2>((a, b) => a.ID == b.ID)
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
@@ -98,7 +98,7 @@ namespace WEF
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, JoinType.InnerJoin);
         }
         /// <summary>
-        /// Inner Join。Lambda写法：.InnerJoin&lt;Model2>((a, b) => a.ID == b.ID)
+        /// Inner Join，条件中只能写表关联条件。Lambda写法：.InnerJoin&lt;Model2>((a, b) => a.ID == b.ID)
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="lambdaWhere"></param>
@@ -157,7 +157,7 @@ namespace WEF
         }
 
         /// <summary>
-        /// Right Join
+        /// Right Join，条件中只能写表关联条件
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
@@ -169,7 +169,7 @@ namespace WEF
         }
 
         /// <summary>
-        /// Left Join。经典写法：Model1._.ID == Model2._.ID
+        /// Left Join，条件中只能写表关联条件。经典写法：Model1._.ID == Model2._.ID
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
@@ -181,7 +181,7 @@ namespace WEF
         }
 
         /// <summary>
-        /// Left Join。Lambda写法：.LeftJoin&lt;Model2>((d1,d2) => d1.ID == d2.ID)
+        /// Left Join，条件中只能写表关联条件。Lambda写法：.LeftJoin&lt;Model2>((d1,d2) => d1.ID == d2.ID)
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="lambdaJoin"></param>
@@ -198,7 +198,7 @@ namespace WEF
         #region 多表左链
 
         /// <summary>
-        /// Left Join。Lambda写法：.LeftJoin&lt;Model2>((d1,d2) => d1.ID == d2.ID)
+        /// Left Join，条件中只能写表关联条件。Lambda写法：.LeftJoin&lt;Model2>((d1,d2) => d1.ID == d2.ID)
         /// </summary>
         /// <typeparam name="T2"></typeparam>
         /// <param name="lambdaJoin"></param>
@@ -216,7 +216,7 @@ namespace WEF
 
 
         /// <summary>
-        /// Full Join
+        /// Full Join，条件中只能写表关联条件
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
@@ -228,39 +228,39 @@ namespace WEF
         }
 
         /// <summary>
-        /// Join多表，
+        /// Join多表，条件中只能写表关联条件
         /// 需要注意泛型参数顺序，
         /// join的目标表名取第一个泛型参数TEntity1
         /// </summary>
         /// <typeparam name="TEntity1"></typeparam>
         /// <typeparam name="TEntity2"></typeparam>
-        /// <param name="lambdaJoin"></param>
+        /// <param name="joinWhere"></param>
         /// <param name="joinType"></param>
         /// <returns></returns>
-        public Search<T> Join<TEntity1, TEntity2>(Expression<Func<TEntity1, TEntity2, bool>> lambdaJoin, JoinType joinType)
+        public Search<T> Join<TEntity1, TEntity2>(Expression<Func<TEntity1, TEntity2, bool>> joinWhere, JoinType joinType)
             where TEntity1 : Entity
             where TEntity2 : Entity
         {
-            var where = ExpressionToOperation<TEntity1>.ToJoinWhere(lambdaJoin);
+            var where = ExpressionToOperation<TEntity1>.ToJoinWhere(joinWhere);
 
             return (Search<T>)base.Join(EntityCache.GetTableName<TEntity1>(), EntityCache.GetUserName<TEntity1>(), where, joinType);
         }
 
         /// <summary>
-        /// 连接
+        /// 连接，条件中只能写表关联条件
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="lambdaJoin"></param>
+        /// <param name="joinWhere"></param>
         /// <param name="joinType"></param>
         /// <returns></returns>
-        public Search<T> Join<TEntity>(Expression<Func<T, TEntity, bool>> lambdaJoin, JoinType joinType) where TEntity : Entity
+        public Search<T> Join<TEntity>(Expression<Func<T, TEntity, bool>> joinWhere, JoinType joinType) where TEntity : Entity
         {
-            return Join<TEntity>(ExpressionToOperation<T>.ToJoinWhere(lambdaJoin),
+            return Join<TEntity>(ExpressionToOperation<T>.ToJoinWhere(joinWhere),
                 joinType);
         }
 
         /// <summary>
-        /// 连接
+        /// 连接，条件中只能写表关联条件
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
@@ -273,7 +273,7 @@ namespace WEF
 
 
         /// <summary>
-        /// 连接
+        /// 连接，条件中只能写表关联条件
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="userName"></param>
