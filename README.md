@@ -127,9 +127,39 @@ var select3 = giftopt.Search()
     .Join<DBTask>((m, n) => m.Name == n.Name, JoinType.InnerJoin)
     .Join<DBTask, DBUserPoint>((m, n) => m.Name == n.Uid, JoinType.LeftJoin)
     .Select<DBTask>((a, b) => new { a.Activename, b.Daylimit });
-            
 ```
-
+//多表join并多表取值分页示例
+```CSharp
+Repository.Search().Join<DBNotificationSetting>((x, y) => x.SettingID == y.ID, WEF.Common.JoinType.LeftJoin)
+        .Where<DBNotificationSetting>((x, y) => x.ReceiverID == userId && x.IsDeleted != true && y.BusinessType == businessType && y.IsDeleted != true)
+        .Select<DBNotificationSetting>((x, y) => new
+        {
+            ID = x.ID,
+            Content = x.Content,
+            Created = x.Created,
+            UnRead = x.UnRead,
+            Key = y.Key,
+            BusinessType = y.BusinessType,
+            Type = y.Type,
+            Name = y.Name,
+            Icon = y.Icon,
+            BtnUrl = y.BtnUrl,
+            BtnText = y.BtnText,
+            Sender = x.Sender,
+            SenderName = x.SenderName,
+            SenderGender = x.SenderGender
+        }).ToPagedList<NotificationListItem>(pageIndex, pageSize, orderBy, asc);
+```
+//多表聚合分组示例
+```CSharp
+Repository
+    .Search()
+    .LeftJoin<DBNotificationSetting>((x, y) => x.SettingID == y.ID)
+    .Where(q => q.ReceiverID == userId && q.IsDeleted != true && q.UnRead == true)
+    .GroupBy<DBNotificationSetting>((x, y) => y.BusinessType)
+    .Select<DBNotificationSetting>((x, y) => new { BusinessType = y.BusinessType, Count = x.ID.Count() })
+    .ToList<UnReadCountResult>();
+```
 ## 事务
 
 ```CSharp
