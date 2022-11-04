@@ -246,7 +246,7 @@ namespace WEF.Standard.Test
 
             var glist3 = giftopt.Search().Where(b => b.Giftid.In(gids)).ToList();
 
-            //多表join并多表取值分页如下：
+            //多表join并多表取值分页示例：
             //Repository.Search().Join<DBNotificationSetting>((x, y) => x.SettingID == y.ID, WEF.Common.JoinType.LeftJoin)
             //        .Where<DBNotificationSetting>((x, y) => x.ReceiverID == userId && x.IsDeleted != true && y.BusinessType == businessType && y.IsDeleted != true)
             //        .Select<DBNotificationSetting>((x, y) => new
@@ -266,6 +266,16 @@ namespace WEF.Standard.Test
             //            SenderName = x.SenderName,
             //            SenderGender = x.SenderGender
             //        }).ToPagedList<NotificationListItem>(pageIndex, pageSize, orderBy, asc);
+
+            //多表聚合取值示例：
+
+            //Repository
+            //    .Search()
+            //    .LeftJoin<DBNotificationSetting>((x, y) => x.SettingID == y.ID)
+            //    .Where(q => q.ReceiverID == userId && q.IsDeleted != true && q.UnRead == true)
+            //    .GroupBy<DBNotificationSetting>((x, y) => y.BusinessType)
+            //    .Select<DBNotificationSetting>((x, y) => new { BusinessType = y.BusinessType, Count = x.ID.Count() })
+            //    .ToList<UnReadCountResult>();
 
             #region where
 
