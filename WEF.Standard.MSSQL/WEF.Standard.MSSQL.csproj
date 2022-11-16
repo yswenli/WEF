@@ -36,7 +36,7 @@ WEF 是基于C#的数据实体框架，支持MSQSqlServer、MySql、Orcalce等�
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
 
   <ItemGroup>
