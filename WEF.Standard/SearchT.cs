@@ -658,21 +658,78 @@ namespace WEF
             return (Search<T>)base.OrderBy(orderBy);
         }
         /// <summary>
-        /// orderby
+        /// OrderBy
         /// </summary>
-        public Search<T> OrderBy(Expression<Func<T, object>> lambdaOrderBy)
+        /// <param name="lambdaOrderBys"></param>
+        /// <returns></returns>
+        public Search<T> OrderBy(params Expression<Func<T, object>>[] lambdaOrderBys)
         {
-            return (Search<T>)base.OrderBy(ExpressionToOperation<T>.ToOrderByClip(lambdaOrderBy));
+            var orderByOperations = new List<OrderByOperation>();
+            if (lambdaOrderBys != null && lambdaOrderBys.Any())
+            {
+                foreach (var item in lambdaOrderBys)
+                {
+                    orderByOperations.Add(ExpressionToOperation<T>.ToOrderByClip(item));
+                }
+            }
+            return (Search<T>)base.OrderBy(orderByOperations.ToArray());
         }
         /// <summary>
-        /// 
+        /// OrderBy
         /// </summary>
-        /// <param name="lambdaOrderBy"></param>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="lambdaOrderBys"></param>
         /// <returns></returns>
-        public Search<T> OrderByDescending(Expression<Func<T, object>> lambdaOrderBy)
+        public Search<T> OrderBy<T2>(params Expression<Func<T2, object>>[] lambdaOrderBys)
         {
-            return (Search<T>)base.OrderBy(ExpressionToOperation<T>.ToOrderByDescendingClip(_tableName, lambdaOrderBy));
+            var orderByOperations = new List<OrderByOperation>();
+            if (lambdaOrderBys != null && lambdaOrderBys.Any())
+            {
+                foreach (var item in lambdaOrderBys)
+                {
+                    orderByOperations.Add(ExpressionToOperation<T2>.ToOrderByClip(item));
+                }
+            }
+            return (Search<T>)base.OrderBy(orderByOperations.ToArray());
         }
+
+        /// <summary>
+        /// OrderByDescending
+        /// </summary>
+        /// <param name="lambdaOrderBys"></param>
+        /// <returns></returns>
+        public Search<T> OrderByDescending(params Expression<Func<T, object>>[] lambdaOrderBys)
+        {
+            var orderByOperations = new List<OrderByOperation>();
+            if (lambdaOrderBys != null && lambdaOrderBys.Any())
+            {
+                foreach (var item in lambdaOrderBys)
+                {
+                    orderByOperations.Add(ExpressionToOperation<T>.ToOrderByDescendingClip(_tableName, item));
+                }
+            }
+            return (Search<T>)base.OrderBy(orderByOperations.ToArray());
+        }
+
+        /// <summary>
+        /// OrderByDescending
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="lambdaOrderBys"></param>
+        /// <returns></returns>
+        public Search<T> OrderByDescending<T2>(params Expression<Func<T2, object>>[] lambdaOrderBys)
+        {
+            var orderByOperations = new List<OrderByOperation>();
+            if (lambdaOrderBys != null && lambdaOrderBys.Any())
+            {
+                foreach (var item in lambdaOrderBys)
+                {
+                    orderByOperations.Add(ExpressionToOperation<T2>.ToOrderByDescendingClip(_tableName, item));
+                }
+            }
+            return (Search<T>)base.OrderBy(orderByOperations.ToArray());
+        }
+
         /// <summary>
         /// 
         /// </summary>
