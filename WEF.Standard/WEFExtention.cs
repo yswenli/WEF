@@ -34,7 +34,7 @@ namespace WEF
     {
         #region 限制对其他非WEF lambda表达式的使用方法
 
-        private const string Tips = "该方法({0})只能用于WEF lambda表达式！";
+        private const string Tips = "该方法({0})只能用于WEF where lambda表达式！";
 
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace WEF
         {
             throw new Exception(string.Format(Tips, "Len"));
         }
-
+        
         #endregion
 
         #region Convert

@@ -577,7 +577,17 @@ namespace WEF
             this._where = where;
             return this;
         }
-
+        /// <summary>
+        /// where
+        /// </summary>
+        /// <param name="whereSql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public Search Where(string whereSql, params Parameter[] parameters)
+        {
+            this._where = new WhereOperation(whereSql, parameters);
+            return this;
+        }
         /// <summary>
         /// groupby
         /// </summary>

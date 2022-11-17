@@ -19,7 +19,8 @@ namespace WEF.Standard.Test
             List<DBArticle> articleList;
             List<DBComment> commentList;
 
-            var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, "Data Source=47.103.135.84;Initial Catalog=tejingcaiV2;User Id=testuser;Password=testuser");
+            var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, "");
+
 
             var tuple = dbarticleRepository.FromSql("select top 10 * from Article;select top 10 * from Comment")
                 .ToMultipleList<DBArticle, DBComment>();
@@ -344,7 +345,7 @@ namespace WEF.Standard.Test
                 .ToPagedList<User>(1, 10, "Name", true);
 
             //where条件拼接二：
-            var where11=new Where<DBTask>();
+            var where11 = new Where<DBTask>();
             where11.And(where1);
 
 
@@ -368,7 +369,7 @@ namespace WEF.Standard.Test
             #endregion
 
 
-            
+
 
             var plist = tb_UserpointRepository.GetList(1, 100);
 

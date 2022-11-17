@@ -41,7 +41,7 @@ namespace WEF.Expressions
         public WhereOperation() { }
 
         /// <summary>
-        /// 
+        /// WhereOperation
         /// </summary>
         /// <param name="where"></param>
         public WhereOperation(string where)

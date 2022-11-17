@@ -189,8 +189,6 @@ namespace WEF.Expressions
                     return ConvertNull(tableName, mce, true);
                 case "IsNotNull":
                     return ConvertNull(tableName, mce);
-                    //case "Sum":
-                    //    return ConvertAs(e);
             }
             throw new Exception("暂时不支持的Lambda表达式方法: " + mce.Method.Name + "！请使用经典写法！");
         }
@@ -808,6 +806,8 @@ namespace WEF.Expressions
             var tbl = CustomAttributeExtensions.GetCustomAttribute<FieldAttribute>(type, false);
             return new string[] { tbl != null ? tbl.Field : type.Name, type.Name };
         }
+        
+
         /// <summary>
         /// CreateField
         /// </summary>

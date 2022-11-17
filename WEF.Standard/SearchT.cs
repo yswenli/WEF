@@ -342,6 +342,18 @@ namespace WEF
         {
             return (Search<T>)base.Having(ExpressionToOperation<T>.ToWhereOperation(lambdaHaving));
         }
+
+        /// <summary>
+        /// where
+        /// </summary>
+        /// <param name="whereSql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public new Search<T> Where(string whereSql, params Parameter[] parameters)
+        {
+            return (Search<T>)base.Where(whereSql, parameters);
+        }
+
         /// <summary>
         /// whereclip
         /// </summary>

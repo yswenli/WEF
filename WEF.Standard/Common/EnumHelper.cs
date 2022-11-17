@@ -26,7 +26,7 @@ namespace WEF.Common
     {
         None,
         ToLower,
-        ToUpper,
+        ToUpper
     }
     /// <summary>
     /// 连接类型
