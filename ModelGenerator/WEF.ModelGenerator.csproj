@@ -221,7 +221,7 @@
       <HintPath>..\packages\MySql.Data.8.0.30\lib\net452\Ubiety.Dns.Core.dll</HintPath>
     </Reference>
     <Reference Include="WEF, Version=1.0.3.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.1.0.3.5\lib\netstandard2.0\WEF.dll</HintPath>
+      <HintPath>..\packages\WEF.Standard.1.0.3.7\lib\netstandard2.0\WEF.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WEF.MSSQL, Version=1.0.3.7, Culture=neutral, processorArchitecture=MSIL">
@@ -243,27 +243,27 @@
       <HintPath>..\packages\WEF.Standard.SQLite.1.0.3.7\lib\netstandard2.0\WEF.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="WEF.Standard.MSSQL, Version=1.0.3.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.MSSQL.1.0.3.5\lib\netstandard2.0\WEF.Standard.MSSQL.dll</HintPath>
+      <HintPath>..\packages\WEF.Standard.MSSQL.1.0.3.7\lib\netstandard2.0\WEF.Standard.MSSQL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WEF.Standard.MySQL, Version=1.0.3.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.MySQL.1.0.3.5\lib\netstandard2.0\WEF.Standard.MySQL.dll</HintPath>
+      <HintPath>..\packages\WEF.Standard.MySQL.1.0.3.7\lib\netstandard2.0\WEF.Standard.MySQL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WEF.Standard.OLEDB, Version=1.0.3.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.OLEDB.1.0.3.5\lib\netstandard2.0\WEF.Standard.OLEDB.dll</HintPath>
+      <HintPath>..\packages\WEF.Standard.OLEDB.1.0.3.7\lib\netstandard2.0\WEF.Standard.OLEDB.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WEF.Standard.Oracle, Version=1.0.3.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.Oracle.1.0.3.5\lib\netstandard2.0\WEF.Standard.Oracle.dll</HintPath>
+      <HintPath>..\packages\WEF.Standard.Oracle.1.0.3.7\lib\netstandard2.0\WEF.Standard.Oracle.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WEF.Standard.Postgre, Version=1.0.3.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.Postgre.1.0.3.5\lib\netstandard2.0\WEF.Standard.Postgre.dll</HintPath>
+      <HintPath>..\packages\WEF.Standard.Postgre.1.0.3.7\lib\netstandard2.0\WEF.Standard.Postgre.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WEF.Standard.SQLite, Version=1.0.3.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.SQLite.1.0.3.5\lib\netstandard2.0\WEF.Standard.SQLite.dll</HintPath>
+      <HintPath>..\packages\WEF.Standard.SQLite.1.0.3.7\lib\netstandard2.0\WEF.Standard.SQLite.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
@@ -285,6 +285,7 @@
     <Compile Include="Common\DockContentHelper.cs" />
     <Compile Include="Common\ExcelHelper.cs" />
     <Compile Include="Common\FileHelper.cs" />
+    <Compile Include="Common\ImageHelper.cs" />
     <Compile Include="Common\InvokeHelper.cs" />
     <Compile Include="Common\ListBoxExtends.cs" />
     <Compile Include="Common\MessageQueue.cs" />

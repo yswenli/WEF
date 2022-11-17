@@ -41,7 +41,7 @@ using Sdcb.PaddleOCR;
 using Sdcb.PaddleOCR.Models;
 using Sdcb.PaddleOCR.Models.Online;
 
-using static System.Net.Mime.MediaTypeNames;
+using WEF.ModelGenerator.Common;
 
 using Image = System.Drawing.Image;
 
@@ -93,8 +93,12 @@ namespace WEF.ModelGenerator.Forms
                 try
                 {
                     pictureBox1.Image?.Dispose();
-                    pictureBox1.Image = Image.FromFile(imageFile);
-                    pictureBox1.Tag = imageFile;
+                    var image = Image.FromFile(imageFile);
+                    image = ImageHelper.OrientationImage(image);
+                    var fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), $"{Guid.NewGuid():N}{Path.GetExtension(imageFile)}");
+                    image.Save(fileName);
+                    pictureBox1.Image = image;
+                    pictureBox1.Tag = fileName; 
                 }
                 catch (Exception ex)
                 {
@@ -170,6 +174,15 @@ namespace WEF.ModelGenerator.Forms
                         button2.Enabled = true;
                         label1.Text = $"操作完成，用时:{sw.ElapsedMilliseconds}ms";
                     }));
+                }
+                finally
+                {
+                    try
+                    {
+                        File.Delete(fileName);
+                    }
+                    catch { }
+
                 }
             });
         }
