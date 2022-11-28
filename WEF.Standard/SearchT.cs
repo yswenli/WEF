@@ -92,7 +92,7 @@ namespace WEF
         /// <param name="asName"></param>
         /// <param name="asName2"></param>
         /// <returns></returns>
-        public Search<T> InnerJoin<TEntity>(WhereOperation where, string asName = "", string asName2 = "")
+        public Search<T> InnerJoin<TEntity>(WhereExpression where, string asName = "", string asName2 = "")
              where TEntity : Entity
         {
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, JoinType.InnerJoin);
@@ -115,7 +115,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search<T> CrossJoin<TEntity>(WhereOperation where)
+        public Search<T> CrossJoin<TEntity>(WhereExpression where)
             where TEntity : Entity
         {
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, JoinType.CrossJoin);
@@ -162,7 +162,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search<T> RightJoin<TEntity>(WhereOperation where)
+        public Search<T> RightJoin<TEntity>(WhereExpression where)
             where TEntity : Entity
         {
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, JoinType.RightJoin);
@@ -174,7 +174,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search<T> LeftJoin<TEntity>(WhereOperation where)
+        public Search<T> LeftJoin<TEntity>(WhereExpression where)
              where TEntity : Entity
         {
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, JoinType.LeftJoin);
@@ -221,7 +221,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search<T> FullJoin<TEntity>(WhereOperation where)
+        public Search<T> FullJoin<TEntity>(WhereExpression where)
             where TEntity : Entity
         {
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, JoinType.FullJoin);
@@ -243,7 +243,7 @@ namespace WEF
         {
             var where = ExpressionToOperation<TEntity1>.ToJoinWhere(joinWhere);
 
-            return (Search<T>)base.Join(EntityCache.GetTableName<TEntity1>(), EntityCache.GetUserName<TEntity1>(), where, joinType);
+            return (Search<T>)base.Join(EntityCache.GetTableName<TEntity2>(), EntityCache.GetUserName<TEntity1>(), where, joinType);
         }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace WEF
         /// <param name="where"></param>
         /// <param name="joinType"></param>
         /// <returns></returns>
-        private Search<T> Join<TEntity>(WhereOperation where, JoinType joinType) where TEntity : Entity
+        private Search<T> Join<TEntity>(WhereExpression where, JoinType joinType) where TEntity : Entity
         {
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, joinType);
         }
@@ -280,7 +280,7 @@ namespace WEF
         /// <param name="where"></param>
         /// <param name="joinType"></param>
         /// <returns></returns>
-        private Search<T> Join(string tableName, string userName, WhereOperation where, JoinType joinType)
+        private Search<T> Join(string tableName, string userName, WhereExpression where, JoinType joinType)
         {
             return (Search<T>)base.Join(tableName, userName, where, joinType);
         }
@@ -320,7 +320,7 @@ namespace WEF
         /// <summary>
         /// Having 
         /// </summary>
-        public new Search<T> Having(WhereOperation havingWhere)
+        public new Search<T> Having(WhereExpression havingWhere)
         {
             return (Search<T>)base.Having(havingWhere);
         }
@@ -357,7 +357,7 @@ namespace WEF
         /// <summary>
         /// whereclip
         /// </summary>
-        public new Search<T> Where(WhereOperation where)
+        public new Search<T> Where(WhereExpression where)
         {
             return (Search<T>)base.Where(where);
         }

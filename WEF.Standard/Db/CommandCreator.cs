@@ -46,10 +46,23 @@ namespace WEF.Db
         /// <param name="entity"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public DbCommand CreateUpdateCommand<TEntity>(TEntity entity, WhereOperation where)
+        public DbCommand CreateUpdateCommand<TEntity>(TEntity entity, WhereExpression where)
             where TEntity : Entity
         {
-            return CreateUpdateCommand<TEntity>(entity.GetTableName(), entity, where);
+            return CreateUpdateCommand(entity.GetTableName(), entity, where);
+        }
+        /// <summary>
+        /// 创建更新DbCommand
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public DbCommand CreateUpdateCommand<TEntity>(TEntity entity, JoinOn joinOn, WhereExpression where)
+            where TEntity : Entity
+        {
+            return CreateUpdateCommand(entity.GetTableName(), entity, joinOn, where);
         }
         /// <summary>
         /// 创建更新DbCommand
@@ -59,7 +72,22 @@ namespace WEF.Db
         /// <param name="entity"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public DbCommand CreateUpdateCommand<TEntity>(string talbeName, TEntity entity, WhereOperation where)
+        public DbCommand CreateUpdateCommand<TEntity>(string talbeName, TEntity entity, WhereExpression where)
+            where TEntity : Entity
+        {
+            return CreateUpdateCommand<TEntity>(talbeName, entity, null, where);
+        }
+
+        /// <summary>
+        /// 创建更新DbCommand
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="talbeName"></param>
+        /// <param name="entity"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public DbCommand CreateUpdateCommand<TEntity>(string talbeName, TEntity entity, JoinOn joinOn, WhereExpression where)
             where TEntity : Entity
         {
             var mfields = entity.GetModifyFields();
@@ -74,7 +102,7 @@ namespace WEF.Db
                 values[i] = mf.NewValue;
                 i++;
             }
-            return CreateUpdateCommand<TEntity>(talbeName, fields, values, where);
+            return CreateUpdateCommand<TEntity>(talbeName, fields, values, joinOn, where);
         }
 
         /// <summary>
@@ -83,13 +111,14 @@ namespace WEF.Db
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="fields"></param>
         /// <param name="values"></param>
+        /// <param name="joinOn"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public DbCommand CreateUpdateCommand<TEntity>(Field[] fields, object[] values, WhereOperation where)
+        public DbCommand CreateUpdateCommand<TEntity>(Field[] fields, object[] values, JoinOn joinOn, WhereExpression where)
             where TEntity : Entity
         {
             var tableName = _db.DbProvider.BuildTableName(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>());
-            return CreateUpdateCommand<TEntity>(tableName, fields, values, where);
+            return CreateUpdateCommand<TEntity>(tableName, fields, values, joinOn, where);
         }
         /// <summary>
         /// 创建更新DbCommand
@@ -100,7 +129,11 @@ namespace WEF.Db
         /// <param name="values"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public DbCommand CreateUpdateCommand<TEntity>(string tableName, Field[] fields, object[] values, WhereOperation where)
+        public DbCommand CreateUpdateCommand<TEntity>(string tableName,
+            Field[] fields,
+            object[] values,
+            JoinOn joinOn,
+            WhereExpression where)
             where TEntity : Entity
         {
             Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));
@@ -111,9 +144,6 @@ namespace WEF.Db
             Check.Require(fields.Length == values.Length, "fields.Length must be equal values.Length");
 
             var length = fields.Length;
-
-            if (WhereOperation.IsNullOrEmpty(where))
-                where = WhereOperation.All;
 
             var sql = new StringPlus();
             sql.Append("UPDATE ");
@@ -158,11 +188,24 @@ namespace WEF.Db
                 }
             }
             sql.Append(colums.ToString().Substring(1));
+
+            //join
+            if (joinOn != null && joinOn._joins != null && joinOn._joins.Count > 0)
+            {
+                sql.Append($" FROM {tableName}");
+                sql.Append($" {joinOn.ToUpdateString(tableName, _db.DbProvider.GetType().Name)}");
+                if (joinOn.Parameters != null && joinOn.Parameters.Count > 0)
+                    list.AddRange(joinOn.Parameters);
+            }
+
+            //where
+            if (WhereExpression.IsNullOrEmpty(where))
+                where = WhereExpression.All;
             sql.Append(where.WhereString);
-            list.AddRange(where.Parameters);
+            if (where.Parameters != null && where.Parameters.Count > 0)
+                list.AddRange(where.Parameters);
 
             var cmd = _db.GetSqlStringCommand(sql.ToString());
-
             _db.AddCommandParameter(cmd, list.ToArray());
             return cmd;
         }
@@ -178,9 +221,9 @@ namespace WEF.Db
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public DbCommand CreateDeleteCommand(string tableName, string userName, WhereOperation where)
+        public DbCommand CreateDeleteCommand(string tableName, string userName, WhereExpression where)
         {
-            if (WhereOperation.IsNullOrEmpty(where))
+            if (WhereExpression.IsNullOrEmpty(where))
                 throw new Exception("请传入删除条件，删除整表数据请使用.DeleteAll<T>()方法。");
 
             StringPlus sql = new StringPlus();
@@ -198,7 +241,7 @@ namespace WEF.Db
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public DbCommand CreateDeleteCommand<TEntity>(WhereOperation where)
+        public DbCommand CreateDeleteCommand<TEntity>(WhereExpression where)
              where TEntity : Entity
         {
             return CreateDeleteCommand(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where);

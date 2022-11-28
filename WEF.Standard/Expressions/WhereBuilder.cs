@@ -44,7 +44,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="where"></param>
-        public WhereBuilder(string tableName, WhereOperation where) : base(tableName, where)
+        public WhereBuilder(string tableName, WhereExpression where) : base(tableName, where)
         {
 
         }
@@ -109,7 +109,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="where"></param>
-        public WhereBuilder(string tableName, WhereOperation where) : this()
+        public WhereBuilder(string tableName, WhereExpression where) : this()
         {
             _tablename = tableName;
 
@@ -124,9 +124,9 @@ namespace WEF.Expressions
         /// AND
         /// </summary>
         /// <param name="where"></param>
-        public void And(WhereOperation where)
+        public void And(WhereExpression where)
         {
-            if (WhereOperation.IsNullOrEmpty(where))
+            if (WhereExpression.IsNullOrEmpty(where))
                 return;
 
             if (_expressionStringPlus.Length > 0)
@@ -148,9 +148,9 @@ namespace WEF.Expressions
         /// Or
         /// </summary>
         /// <param name="where"></param>
-        public void Or(WhereOperation where)
+        public void Or(WhereExpression where)
         {
-            if (WhereOperation.IsNullOrEmpty(where))
+            if (WhereExpression.IsNullOrEmpty(where))
                 return;
 
             if (_expressionStringPlus.Length > 0)
@@ -190,9 +190,9 @@ namespace WEF.Expressions
         /// 转换成WhereClip
         /// </summary>
         /// <returns></returns>
-        public WhereOperation ToWhereClip()
+        public WhereExpression ToWhereClip()
         {
-            return new WhereOperation(_expressionStringPlus.ToString(), _parameters.ToArray());
+            return new WhereExpression(_expressionStringPlus.ToString(), _parameters.ToArray());
         }
     }
 }

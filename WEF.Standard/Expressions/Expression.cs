@@ -238,13 +238,13 @@ namespace WEF.Expressions
         /// <summary>
         /// 
         /// </summary>
-        public string expressionString = string.Empty;
+        public string _expressionString = string.Empty;
 
 
         /// <summary>
         /// 参数
         /// </summary>
-        protected List<Parameter> parameters = new List<Parameter>();
+        protected List<Parameter> _parameters = new List<Parameter>();
 
         /// <summary>
         /// 构造函数
@@ -259,7 +259,7 @@ namespace WEF.Expressions
         /// <param name="expressionString"></param>
         public Expression(string expressionString)
         {
-            this.expressionString = expressionString;
+            this._expressionString = expressionString;
         }
 
         /// <summary>
@@ -271,10 +271,10 @@ namespace WEF.Expressions
         {
             if (!string.IsNullOrEmpty(expressionString))
             {
-                this.expressionString = expressionString;
+                this._expressionString = expressionString;
 
                 if (null != parameters && parameters.Length > 0)
-                    this.parameters.AddRange(parameters);
+                    this._parameters.AddRange(parameters);
             }
         }
 
@@ -307,7 +307,7 @@ namespace WEF.Expressions
                 {
                     Expression expression = (Expression)value;
                     valuestring = expression.ToString();
-                    parameters.AddRange(expression.Parameters);
+                    _parameters.AddRange(expression.Parameters);
                 }
                 else if (value is Field)
                 {
@@ -318,16 +318,16 @@ namespace WEF.Expressions
                 {
                     valuestring = DataUtils.MakeUniqueKey(field);
                     var p = new Parameter(valuestring, value, field.ParameterDbType, field.ParameterSize);
-                    parameters.Add(p);
+                    _parameters.Add(p);
                 }
 
                 if (isFieldBefore)
                 {
-                    this.expressionString = string.Concat(field.TableFieldName, DataUtils.ToString(oper), valuestring);
+                    this._expressionString = string.Concat(field.TableFieldName, DataUtils.ToString(oper), valuestring);
                 }
                 else
                 {
-                    this.expressionString = string.Concat(valuestring, DataUtils.ToString(oper), field.TableFieldName);
+                    this._expressionString = string.Concat(valuestring, DataUtils.ToString(oper), field.TableFieldName);
                 }
             }
         }
@@ -339,7 +339,7 @@ namespace WEF.Expressions
         {
             get
             {
-                return parameters;
+                return _parameters;
             }
         }
 
@@ -350,7 +350,7 @@ namespace WEF.Expressions
         /// <returns></returns>
         public override string ToString()
         {
-            return expressionString;
+            return _expressionString;
         }
 
     }

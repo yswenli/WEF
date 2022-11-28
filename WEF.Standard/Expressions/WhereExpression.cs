@@ -17,7 +17,6 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
-using System.Linq.Expressions;
 
 using WEF.Common;
 
@@ -27,24 +26,24 @@ namespace WEF.Expressions
     /// 条件
     /// </summary>
     [Serializable]
-    public class WhereOperation : Expression
+    public class WhereExpression : Expression
     {
         /// <summary>
         /// All
         /// </summary>
-        public readonly static WhereOperation All = new WhereOperation();
+        public readonly static WhereExpression All = new WhereExpression();
 
         #region 构造函数
         /// <summary>
         /// 
         /// </summary>
-        public WhereOperation() { }
+        public WhereExpression() { }
 
         /// <summary>
         /// WhereOperation
         /// </summary>
         /// <param name="where"></param>
-        public WhereOperation(string where)
+        public WhereExpression(string where)
             : base(where)
         {
 
@@ -55,7 +54,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="customWhereString"></param>
         /// <param name="parameters"></param>
-        public WhereOperation(string customWhereString, params Parameter[] parameters)
+        public WhereExpression(string customWhereString, params Parameter[] parameters)
             : base(customWhereString, parameters)
         {
 
@@ -67,7 +66,7 @@ namespace WEF.Expressions
         /// <param name="field"></param>
         /// <param name="value"></param>
         /// <param name="oper"></param>
-        public WhereOperation(Field field, object value, QueryOperator oper)
+        public WhereExpression(Field field, object value, QueryOperator oper)
             : base(field, value, oper)
         {
 
@@ -102,10 +101,10 @@ namespace WEF.Expressions
         {
             get
             {
-                if (string.IsNullOrEmpty(this.expressionString))
+                if (string.IsNullOrEmpty(this._expressionString))
                     return string.Empty;
 
-                return string.Concat(" WHERE ", this.expressionString);
+                return string.Concat(" WHERE ", this._expressionString);
             }
         }
 
@@ -119,9 +118,9 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="whereString"></param>
         /// <returns></returns>
-        public static implicit operator WhereOperation(string whereString)
+        public static implicit operator WhereExpression(string whereString)
         {
-            return new WhereOperation(whereString);
+            return new WhereExpression(whereString);
         }
 
         /// <summary>
@@ -130,17 +129,17 @@ namespace WEF.Expressions
         /// <param name="leftWhere"></param>
         /// <param name="rightWhere"></param>
         /// <returns></returns>
-        public static bool Equals(WhereOperation leftWhere, WhereOperation rightWhere)
+        public static bool Equals(WhereExpression leftWhere, WhereExpression rightWhere)
         {
             string leftWhereString = leftWhere.ToString();
             string rightWhereString = rightWhere.ToString();
 
-            foreach (Parameter p in leftWhere.parameters)
+            foreach (Parameter p in leftWhere._parameters)
             {
                 leftWhereString.Replace(p.ParameterName, (p.ParameterValue == null) ? string.Empty : p.ParameterValue.ToString());
             }
 
-            foreach (Parameter p in rightWhere.parameters)
+            foreach (Parameter p in rightWhere._parameters)
             {
                 rightWhereString.Replace(p.ParameterName, (p.ParameterValue == null) ? string.Empty : p.ParameterValue.ToString());
             }
@@ -156,30 +155,44 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="whereClip"></param>
         /// <returns></returns>
-        public static bool IsNullOrEmpty(WhereOperation whereClip)
+        public static bool IsNullOrEmpty(WhereExpression whereClip)
         {
-            if ((null == whereClip) || string.IsNullOrEmpty(whereClip.expressionString))
+            if ((null == whereClip) || string.IsNullOrEmpty(whereClip._expressionString))
                 return true;
             return false;
         }
 
-        
-
-
+        /// <summary>
+        /// ToString
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
-            if (string.IsNullOrEmpty(expressionString))
+            if (string.IsNullOrEmpty(_expressionString))
                 return string.Empty;
 
-            return string.Concat("(", expressionString, ")");
+            return string.Concat("(", _expressionString, ")");
         }
 
+        /// <summary>
+        /// ToWhereString
+        /// </summary>
+        /// <returns></returns>
+        public string ToWhereString()
+        {
+            return WhereString;
+        }
 
+        /// <summary>
+        /// Equals
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (null == obj)
                 return false;
-            else if (obj is WhereOperation)
+            else if (obj is WhereExpression)
             {
                 return obj.ToString().Equals(this.ToString());
             }
@@ -187,6 +200,10 @@ namespace WEF.Expressions
             return false;
         }
 
+        /// <summary>
+        /// GetHashCode
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return base.GetHashCode();
@@ -197,22 +214,19 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public WhereOperation And(WhereOperation where)
+        public WhereExpression And(WhereExpression where)
         {
-            if (WhereOperation.IsNullOrEmpty(this) && WhereOperation.IsNullOrEmpty(where))
+            if (WhereExpression.IsNullOrEmpty(this) && WhereExpression.IsNullOrEmpty(where))
                 return All;
 
-            if (WhereOperation.IsNullOrEmpty(where))
+            if (WhereExpression.IsNullOrEmpty(where))
                 return this;
-            if (WhereOperation.IsNullOrEmpty(this))
+            if (WhereExpression.IsNullOrEmpty(this))
                 return where;
 
-
-
-            WhereOperation andwhere = new WhereOperation(string.Concat(this.Where, " AND ", where.Where));
-            andwhere.parameters.AddRange(this.Parameters);
-            andwhere.parameters.AddRange(where.Parameters);
-
+            WhereExpression andwhere = new WhereExpression(string.Concat(this.Where, " AND ", where.Where));
+            andwhere._parameters.AddRange(this.Parameters);
+            andwhere._parameters.AddRange(where.Parameters);
 
             return andwhere;
         }
@@ -222,19 +236,19 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public WhereOperation Or(WhereOperation where)
+        public WhereExpression Or(WhereExpression where)
         {
-            if (WhereOperation.IsNullOrEmpty(this) && WhereOperation.IsNullOrEmpty(where))
+            if (WhereExpression.IsNullOrEmpty(this) && WhereExpression.IsNullOrEmpty(where))
                 return All;
 
-            if (WhereOperation.IsNullOrEmpty(where))
+            if (WhereExpression.IsNullOrEmpty(where))
                 return this;
-            if (WhereOperation.IsNullOrEmpty(this))
+            if (WhereExpression.IsNullOrEmpty(this))
                 return where;
 
-            WhereOperation orwhere = new WhereOperation(string.Concat(this.Where, " OR ", where.Where));
-            orwhere.parameters.AddRange(this.Parameters);
-            orwhere.parameters.AddRange(where.Parameters);
+            WhereExpression orwhere = new WhereExpression(string.Concat(this.Where, " OR ", where.Where));
+            orwhere._parameters.AddRange(this.Parameters);
+            orwhere._parameters.AddRange(where.Parameters);
 
 
             return orwhere;
@@ -249,7 +263,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static bool operator true(WhereOperation right)
+        public static bool operator true(WhereExpression right)
         {
             return false;
         }
@@ -259,7 +273,7 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static bool operator false(WhereOperation right)
+        public static bool operator false(WhereExpression right)
         {
             return false;
         }
@@ -272,9 +286,9 @@ namespace WEF.Expressions
         /// <param name="leftWhere"></param>
         /// <param name="rightWhere"></param>
         /// <returns></returns>
-        public static WhereOperation operator &(WhereOperation leftWhere, WhereOperation rightWhere)
+        public static WhereExpression operator &(WhereExpression leftWhere, WhereExpression rightWhere)
         {
-            if (WhereOperation.IsNullOrEmpty(leftWhere))
+            if (WhereExpression.IsNullOrEmpty(leftWhere))
                 return rightWhere;
 
             return leftWhere.And(rightWhere);
@@ -286,9 +300,9 @@ namespace WEF.Expressions
         /// <param name="leftWhere"></param>
         /// <param name="rightWhere"></param>
         /// <returns></returns>
-        public static WhereOperation operator |(WhereOperation leftWhere, WhereOperation rightWhere)
+        public static WhereExpression operator |(WhereExpression leftWhere, WhereExpression rightWhere)
         {
-            if (WhereOperation.IsNullOrEmpty(leftWhere))
+            if (WhereExpression.IsNullOrEmpty(leftWhere))
                 return rightWhere;
 
             return leftWhere.Or(rightWhere);
@@ -299,13 +313,13 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public static WhereOperation operator !(WhereOperation where)
+        public static WhereExpression operator !(WhereExpression where)
         {
             if (IsNullOrEmpty(where))
             {
                 return All;
             }
-            return new WhereOperation(string.Concat(" NOT ", where.expressionString), where.parameters.ToArray());
+            return new WhereExpression(string.Concat(" NOT ", where._expressionString), where._parameters.ToArray());
         }
 
 
@@ -314,9 +328,9 @@ namespace WEF.Expressions
         /// </summary>
         /// <param name="fromSection"></param>
         /// <returns></returns>
-        public static WhereOperation Exists(Search fromSection)
+        public static WhereExpression Exists(Search fromSection)
         {
-            return new WhereOperation(string.Concat(" EXISTS (", fromSection.SqlString, ") "), fromSection.Parameters.ToArray());
+            return new WhereExpression(string.Concat(" EXISTS (", fromSection.SqlString, ") "), fromSection.Parameters.ToArray());
         }
 
         #endregion

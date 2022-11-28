@@ -71,14 +71,14 @@ namespace WEF.Provider
             fromSection.PrefixString = string.Empty;
             fromSection.GroupBy(GroupByOperation.None);
             fromSection.Parameters = fromSection.Parameters;
-            fromSection.Where(new WhereOperation("rownum <=" + endIndex.ToString()));
+            fromSection.Where(new WhereExpression("rownum <=" + endIndex.ToString()));
 
 
             if (startIndex > 1)
             {
                 fromSection.TableName = string.Concat("(", fromSection.SqlString, ")");
                 fromSection.Select(Field.All);
-                fromSection.Where(new WhereOperation(string.Concat("rn>=", startIndex.ToString())));
+                fromSection.Where(new WhereExpression(string.Concat("rn>=", startIndex.ToString())));
             }
 
 

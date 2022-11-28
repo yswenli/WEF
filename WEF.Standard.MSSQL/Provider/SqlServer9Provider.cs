@@ -75,7 +75,7 @@ namespace WEF.Provider
             fromSection.GroupBy(GroupByOperation.None);
             fromSection.Select(Field.All);
             //fromSection.OrderBy(tempOrderBy);
-            fromSection.Where(new WhereOperation(string.Concat("tmp_rowid BETWEEN ", startIndex.ToString(), " AND ", endIndex.ToString())));
+            fromSection.Where(new WhereExpression(string.Concat("tmp_rowid BETWEEN ", startIndex.ToString(), " AND ", endIndex.ToString())));
 
             return fromSection;
         }

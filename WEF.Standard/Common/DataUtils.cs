@@ -383,9 +383,9 @@ namespace WEF.Common
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        internal static WhereOperation GetPrimaryKeyWhere(Entity entity)
+        internal static WhereExpression GetPrimaryKeyWhere(Entity entity)
         {
-            WhereOperation where = new WhereOperation();
+            WhereExpression where = new WhereExpression();
             var keyfields = entity.GetPrimaryKeyFields();
             var allfields = entity.GetFields();
             var allValues = entity.GetValues();
@@ -397,7 +397,7 @@ namespace WEF.Common
                 {
                     if (string.Compare(allfields[i].PropertyName, pkField.PropertyName, StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        where = where.And(new WhereOperation(pkField, allValues[i], QueryOperator.Equal));
+                        where = where.And(new WhereExpression(pkField, allValues[i], QueryOperator.Equal));
                         break;
                     }
                 }
@@ -411,9 +411,9 @@ namespace WEF.Common
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        internal static WhereOperation GetPrimaryKeyWhere<TEntity>() where TEntity: Entity
+        internal static WhereExpression GetPrimaryKeyWhere<TEntity>() where TEntity: Entity
         {
-            WhereOperation where = new WhereOperation();
+            WhereExpression where = new WhereExpression();
             var keyfields = EntityCache.GetPrimaryKeyFields<TEntity>();
             var allfields = EntityCache.GetFields<TEntity>();
             var allValues = EntityCache.GetValues<TEntity>();
@@ -425,7 +425,7 @@ namespace WEF.Common
                 {
                     if (string.Compare(allfields[i].PropertyName, pkField.PropertyName, StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        where = where.And(new WhereOperation(pkField, allValues[i], QueryOperator.Equal));
+                        where = where.And(new WhereExpression(pkField, allValues[i], QueryOperator.Equal));
                         break;
                     }
                 }
@@ -439,10 +439,10 @@ namespace WEF.Common
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="pkValues"></param>
         /// <returns></returns>
-        internal static WhereOperation GetPrimaryKeyWhere<TEntity>(Array pkValues)//params object[] pkValues  
+        internal static WhereExpression GetPrimaryKeyWhere<TEntity>(Array pkValues)//params object[] pkValues  
             where TEntity : Entity
         {
-            WhereOperation where = new WhereOperation();
+            WhereExpression where = new WhereExpression();
             Field[] keyfields = EntityCache.GetPrimaryKeyFields<TEntity>();
 
             if (keyfields == null)
@@ -453,7 +453,7 @@ namespace WEF.Common
             int index = keyfields.Length;
             for (int i = 0; i < index; i++)
             {
-                where = where.And(new WhereOperation(keyfields[i], pkValues.GetValue(i), QueryOperator.Equal));
+                where = where.And(new WhereExpression(keyfields[i], pkValues.GetValue(i), QueryOperator.Equal));
             }
             return where;
         }

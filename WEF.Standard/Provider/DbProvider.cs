@@ -348,7 +348,7 @@ namespace WEF.Provider
 
                     fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByOperation);
 
-                    fromSection.Where(WhereOperation.All);
+                    fromSection.Where(WhereExpression.All);
 
                 }
                 else
@@ -371,7 +371,7 @@ namespace WEF.Provider
 
                         fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByOperation);
 
-                        fromSection.Where(WhereOperation.All);
+                        fromSection.Where(WhereExpression.All);
 
                         //
 
@@ -399,7 +399,7 @@ namespace WEF.Provider
 
                         fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByOperation);
 
-                        fromSection.Where(WhereOperation.All);
+                        fromSection.Where(WhereExpression.All);
                     }
 
                 }

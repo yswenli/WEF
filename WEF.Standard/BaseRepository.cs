@@ -29,6 +29,7 @@ using System.Linq.Expressions;
 
 using WEF.Common;
 using WEF.Db;
+using WEF.Expressions;
 using WEF.MvcPager;
 using WEF.Section;
 
@@ -366,6 +367,85 @@ namespace WEF
         public int Update(T entity, Expression<Func<T, bool>> lambdaWhere)
         {
             return _dbContext.Update<T>(entity, lambdaWhere);
+        }
+
+        /// <summary>
+        /// 更新实体
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="whereSql"></param>
+        /// <returns></returns>
+        public int Update(T entity, string whereSql)
+        {
+            return _dbContext.Update<T>(entity, whereSql);
+        }
+
+        /// <summary>
+        /// 多表关联更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public int Update<TEntity>(T entity,
+            JoinOn<T, TEntity> joinOn,
+            Expression<Func<T, TEntity, bool>> lambdaWhere)
+        {
+            var where = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
+            return _dbContext.Update(entity, joinOn, where);
+        }
+
+        /// <summary>
+        /// 多表关联更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public int Update<TEntity>(T entity,
+           JoinOn<T, TEntity> joinOn,
+           Where where)
+        {
+            return _dbContext.Update(entity, joinOn, where.ToWhereClip());
+        }
+
+        /// <summary>
+        /// 多表关联更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="joinType"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public int Update<TEntity>(T entity,
+            Expression<Func<T, TEntity, bool>> joinOn,
+            JoinType joinType,
+            Expression<Func<T, TEntity, bool>> lambdaWhere)
+        {
+            var jo = new JoinOn<T, TEntity>(joinOn, joinType);
+            var where = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
+            return _dbContext.Update(entity, jo, where);
+        }
+
+        /// <summary>
+        /// 多表关联更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="joinType"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public int Update<TEntity>(T entity,
+           Expression<Func<T, TEntity, bool>> joinOn,
+           JoinType joinType,
+           Where where)
+        {
+            var jo = new JoinOn<T, TEntity>(joinOn, joinType);
+            return _dbContext.Update(entity, jo, where.ToWhereClip());
         }
 
         /// <summary>

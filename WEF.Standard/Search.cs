@@ -35,11 +35,11 @@ namespace WEF
         /// <summary>
         /// 
         /// </summary>
-        protected WhereOperation _where = WhereOperation.All;
+        protected WhereExpression _where = WhereExpression.All;
         /// <summary>
         /// 
         /// </summary>
-        protected WhereOperation _havingWhere = WhereOperation.All;
+        protected WhereExpression _havingWhere = WhereExpression.All;
         /// <summary>
         /// 
         /// </summary>
@@ -70,7 +70,7 @@ namespace WEF
         /// <summary>
         /// 
         /// </summary>
-        protected Dictionary<string, KeyValuePair<string, WhereOperation>> _joins = new Dictionary<string, KeyValuePair<string, WhereOperation>>();
+        protected JoinOn JoinOn = new JoinOn();
         /// <summary>
         /// 
         /// </summary>
@@ -191,8 +191,8 @@ namespace WEF
                 if (GroupByOperation.IsNullOrEmpty(_groupBy) && string.IsNullOrEmpty(_distinctString))
                 {
                     sql.Append(" SELECT count(1) as r_cnt FROM ");
-                    sql.Append(FromString);
-                    if (!WhereOperation.IsNullOrEmpty(_where))
+                    sql.Append(JoinOn.ToString(_tableName, _database.DbProvider.GetType().Name));
+                    if (!WhereExpression.IsNullOrEmpty(_where))
                     {
                         sql.Append(_where.WhereString);
                     }
@@ -227,17 +227,17 @@ namespace WEF
                 sql.Append(" ");
                 sql.Append(ColumnsString);
                 sql.Append(" FROM ");
-                sql.Append(FromString);
+                sql.Append(JoinOn.ToString(_tableName, _database.DbProvider.GetType().Name));
                 sql.Append(" ");
 
-                if (!WhereOperation.IsNullOrEmpty(_where))
+                if (!WhereExpression.IsNullOrEmpty(_where))
                 {
                     sql.Append(_where.WhereString);
                 }
                 if (!GroupByOperation.IsNullOrEmpty(_groupBy))
                 {
                     sql.Append(GroupByString);
-                    if (!WhereOperation.IsNullOrEmpty(_havingWhere))
+                    if (!WhereExpression.IsNullOrEmpty(_havingWhere))
                     {
                         sql.Append(" HAVING ");
                         sql.Append(_havingWhere.ToString());
@@ -247,64 +247,6 @@ namespace WEF
             }
         }
 
-        /// <summary>
-        /// FromString
-        /// </summary>
-        internal string FromString
-        {
-            get
-            {
-                StringPlus fromstring = new StringPlus();
-
-                //处理ACCESS 的多表联合查询
-                if (_database.DbProvider.GetType().Name == "MsAccessProvider")
-                {
-                    fromstring.Append('(', _joins.Count);
-                    fromstring.Append(_tableName);
-                    foreach (KeyValuePair<string, KeyValuePair<string, WhereOperation>> kv in _joins)
-                    {
-                        fromstring.Append(" ");
-                        fromstring.Append(kv.Value.Key);
-                        fromstring.Append(" ");
-                        fromstring.Append(kv.Key);
-                        fromstring.Append(" ON ");
-                        fromstring.Append(kv.Value.Value.ToString());
-                        fromstring.Append(")");
-                    }
-                }
-                else
-                {
-                    fromstring.Append(_tableName);
-                    foreach (KeyValuePair<string, KeyValuePair<string, WhereOperation>> kv in _joins)
-                    {
-                        fromstring.Append(" ");
-                        fromstring.Append(kv.Value.Key);
-                        fromstring.Append(" ");
-                        fromstring.Append(kv.Key);
-                        fromstring.Append(" ON ");
-                        fromstring.Append(kv.Value.Value.ToString());
-                    }
-                }
-
-                return fromstring.ToString();
-            }
-
-        }
-
-        /// <summary>
-        /// 连接信息
-        /// </summary>
-        internal Dictionary<string, KeyValuePair<string, WhereOperation>> Joins
-        {
-            get
-            {
-                return _joins;
-            }
-            set
-            {
-                _joins = value;
-            }
-        }
 
         /// <summary>
         /// 获取 sql语句
@@ -322,17 +264,17 @@ namespace WEF
                 sql.Append(" ");
                 sql.Append(ColumnsString);
                 sql.Append(" FROM ");
-                sql.Append(FromString);
+                sql.Append(JoinOn.ToString(_tableName, _database.DbProvider.GetType().Name));
                 sql.Append(" ");
 
-                if (!WhereOperation.IsNullOrEmpty(_where))
+                if (!WhereExpression.IsNullOrEmpty(_where))
                 {
                     sql.Append(_where.WhereString);
                 }
                 if (!GroupByOperation.IsNullOrEmpty(_groupBy))
                 {
                     sql.Append(GroupByString);
-                    if (!WhereOperation.IsNullOrEmpty(_havingWhere))
+                    if (!WhereExpression.IsNullOrEmpty(_havingWhere))
                     {
                         sql.Append(" HAVING ");
                         sql.Append(_havingWhere.ToString());
@@ -358,8 +300,6 @@ namespace WEF
             set
             {
                 _tableName = value;
-
-                this._joins = new Dictionary<string, KeyValuePair<string, WhereOperation>>();
             }
         }
 
@@ -390,7 +330,7 @@ namespace WEF
                     return string.Empty;
 
                 if ((_tableName.IndexOf('(') >= 0 || _tableName.IndexOf(')') >= 0 || _tableName.IndexOf(" FROM ", StringComparison.OrdinalIgnoreCase) >= 0 || _tableName.IndexOf(" AS ", StringComparison.OrdinalIgnoreCase) >= 0)
-                    && !FromString.Contains(" LEFT OUTER JOIN ") //2018-04-09 新增一个&&条件
+                    && !JoinOn.ToString(_tableName, _database.DbProvider.GetType().Name).Contains(" LEFT OUTER JOIN ") //2018-04-09 新增一个&&条件
                     )
                     return _orderBy.RemovePrefixTableName().OrderByString;
                 return _orderBy.OrderByString;
@@ -430,7 +370,7 @@ namespace WEF
         /// <summary>
         /// 返回 条件
         /// </summary>
-        public WhereOperation GetWhereClip()
+        public WhereExpression GetWhereClip()
         {
             return _where;
         }
@@ -444,11 +384,11 @@ namespace WEF
             {
                 List<Parameter> ps = new List<Parameter>();
 
-                if (!WhereOperation.IsNullOrEmpty(_where))
+                if (!WhereExpression.IsNullOrEmpty(_where))
                     ps.AddRange(_where.Parameters);
 
                 //处理groupby的having
-                if (!GroupByOperation.IsNullOrEmpty(_groupBy) && !WhereOperation.IsNullOrEmpty(_havingWhere))
+                if (!GroupByOperation.IsNullOrEmpty(_groupBy) && !WhereExpression.IsNullOrEmpty(_havingWhere))
                     ps.AddRange(_havingWhere.Parameters);
 
                 ps.AddRange(_parameters);
@@ -572,7 +512,7 @@ namespace WEF
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search Where(WhereOperation where)
+        public Search Where(WhereExpression where)
         {
             this._where = where;
             return this;
@@ -585,7 +525,7 @@ namespace WEF
         /// <returns></returns>
         public Search Where(string whereSql, params Parameter[] parameters)
         {
-            this._where = new WhereOperation(whereSql, parameters);
+            this._where = new WhereExpression(whereSql, parameters);
             return this;
         }
         /// <summary>
@@ -605,7 +545,7 @@ namespace WEF
         /// </summary>
         /// <param name="havingWhere"></param>
         /// <returns></returns>
-        public Search Having(WhereOperation havingWhere)
+        public Search Having(WhereExpression havingWhere)
         {
             this._havingWhere = havingWhere;
             return this;
@@ -963,50 +903,18 @@ namespace WEF
         /// <param name="where"></param>
         /// <param name="joinType"></param>
         /// <returns></returns>
-        protected Search Join(string tableName, string userName, WhereOperation where, JoinType joinType)
+        protected Search Join(string tableName, string userName, WhereExpression where, JoinType joinType)
         {
-            if (string.IsNullOrEmpty(tableName) || WhereOperation.IsNullOrEmpty(where))
+            if (string.IsNullOrEmpty(tableName) || WhereExpression.IsNullOrEmpty(where))
                 return this;
 
             tableName = _dbProvider.BuildTableName(tableName, userName);
 
-            {
-                string joinString = string.Empty;
-                switch (joinType)
-                {
-                    case JoinType.InnerJoin:
-                        joinString = "INNER JOIN";
-                        break;
-                    case JoinType.LeftJoin:
-                        joinString = "LEFT OUTER JOIN";
-                        break;
-                    case JoinType.RightJoin:
-                        joinString = "RIGHT OUTER JOIN";
-                        break;
-                    case JoinType.CrossJoin:
-                        joinString = "CROSS JOIN";
-                        break;
-                    case JoinType.FullJoin:
-                        joinString = "FULL OUTER JOIN";
-                        break;
-                    default:
-                        joinString = "INNER JOIN";
-                        break;
-                }
+            JoinOn.Add(tableName, where, joinType);
 
-                if (_joins.ContainsKey(tableName))
-                {
-                    var index = (_joins.Keys.Count(d => d.StartsWith(tableName)) + 1).ToString();
-                    var realTableName = tableName.Substring(1, tableName.Length - 2);
-                    tableName += " as " + tableName.Insert(tableName.Length - 1, index);
-                    where.expressionString = where.expressionString.Replace(realTableName, realTableName + index);
-                }
+            if (where.Parameters.Count > 0)
+                _parameters.AddRange(where.Parameters);
 
-                _joins.Add(tableName, new KeyValuePair<string, WhereOperation>(joinString, where));
-
-                if (where.Parameters.Count > 0)
-                    _parameters.AddRange(where.Parameters);
-            }
 
             return this;
         }
@@ -1019,7 +927,7 @@ namespace WEF
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search InnerJoin(string tableName, WhereOperation where, string userName = null)
+        public Search InnerJoin(string tableName, WhereExpression where, string userName = null)
         {
             return Join(tableName, userName, where, JoinType.InnerJoin);
         }
@@ -1033,7 +941,7 @@ namespace WEF
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search LeftJoin(string tableName, WhereOperation where, string userName = null)
+        public Search LeftJoin(string tableName, WhereExpression where, string userName = null)
         {
             return Join(tableName, userName, where, JoinType.LeftJoin);
         }
@@ -1047,7 +955,7 @@ namespace WEF
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search RightJoin(string tableName, WhereOperation where, string userName = null)
+        public Search RightJoin(string tableName, WhereExpression where, string userName = null)
         {
             return Join(tableName, userName, where, JoinType.RightJoin);
         }
@@ -1060,7 +968,7 @@ namespace WEF
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search CrossJoin(string tableName, WhereOperation where, string userName = null)
+        public Search CrossJoin(string tableName, WhereExpression where, string userName = null)
         {
             return Join(tableName, userName, where, JoinType.CrossJoin);
         }
@@ -1074,7 +982,7 @@ namespace WEF
         /// <param name="userName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search FullJoin(string tableName, WhereOperation where, string userName = null)
+        public Search FullJoin(string tableName, WhereExpression where, string userName = null)
         {
             return Join(tableName, userName, where, JoinType.FullJoin);
         }

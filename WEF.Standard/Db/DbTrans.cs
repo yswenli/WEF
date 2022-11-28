@@ -313,7 +313,7 @@ namespace WEF.Db
         /// <param name="entity"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int UpdateAll<TEntity>(TEntity entity, WhereOperation where)
+        public int UpdateAll<TEntity>(TEntity entity, WhereExpression where)
             where TEntity : Entity
         {
             return DBContext.UpdateAll<TEntity>(_trans, entity, where);
@@ -380,7 +380,7 @@ namespace WEF.Db
         /// <param name="entity"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(TEntity entity, WhereOperation where)
+        public int Update<TEntity>(TEntity entity, WhereExpression where)
             where TEntity : Entity
         {
             return DBContext.Update<TEntity>(_trans, entity, where);
@@ -418,7 +418,7 @@ namespace WEF.Db
         /// <param name="value"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(string tableName, Field field, object value, WhereOperation where)
+        public int Update<TEntity>(string tableName, Field field, object value, WhereExpression where)
             where TEntity : Entity
         {
             return DBContext.Update<TEntity>(_trans, tableName, field, value, where);
@@ -459,7 +459,7 @@ namespace WEF.Db
         /// <param name="fieldValue"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, WhereOperation where)
+        public int Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, WhereExpression where)
               where TEntity : Entity
         {
             return DBContext.Update<TEntity>(_trans, tableName, fieldValue, where);
@@ -499,7 +499,7 @@ namespace WEF.Db
         /// <param name="values"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(string tableName, Field[] fields, object[] values, WhereOperation where)
+        public int Update<TEntity>(string tableName, Field[] fields, object[] values, WhereExpression where)
             where TEntity : Entity
         {
             return DBContext.Update<TEntity>(_trans, tableName, fields, values, where);
@@ -602,7 +602,7 @@ namespace WEF.Db
         /// <param name="tableName"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Delete<TEntity>(string tableName, WhereOperation where)
+        public int Delete<TEntity>(string tableName, WhereExpression where)
             where TEntity : Entity
         {
             return DBContext.Delete<TEntity>(_trans, tableName, where);

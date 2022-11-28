@@ -49,7 +49,7 @@ namespace WEF.Expressions
         /// Where条件拼接
         /// </summary>
         /// <param name="where"></param>
-        public Where(WhereOperation where) : base(null, where)
+        public Where(WhereExpression where) : base(null, where)
         {
 
         }

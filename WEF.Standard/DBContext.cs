@@ -240,7 +240,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public object Sum<TEntity>(Field field, WhereOperation where)
+        public object Sum<TEntity>(Field field, WhereExpression where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Sum()).Where(where).ToScalar();
@@ -276,7 +276,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public object Max<TEntity>(Field field, WhereOperation where)
+        public object Max<TEntity>(Field field, WhereExpression where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Max()).Where(where).ToScalar();
@@ -312,7 +312,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public object Min<TEntity>(Field field, WhereOperation where)
+        public object Min<TEntity>(Field field, WhereExpression where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Min()).Where(where).ToScalar();
@@ -348,7 +348,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public object Avg<TEntity>(Field field, WhereOperation where)
+        public object Avg<TEntity>(Field field, WhereExpression where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Avg()).Where(where).ToScalar();
@@ -385,7 +385,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public TResult Sum<TEntity, TResult>(Field field, WhereOperation where)
+        public TResult Sum<TEntity, TResult>(Field field, WhereExpression where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Sum()).Where(where).ToScalar<TResult>();
@@ -424,7 +424,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public TResult Max<TEntity, TResult>(Field field, WhereOperation where)
+        public TResult Max<TEntity, TResult>(Field field, WhereExpression where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Max()).Where(where).ToScalar<TResult>();
@@ -463,7 +463,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public TResult Min<TEntity, TResult>(Field field, WhereOperation where)
+        public TResult Min<TEntity, TResult>(Field field, WhereExpression where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Min()).Where(where).ToScalar<TResult>();
@@ -502,7 +502,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public TResult Avg<TEntity, TResult>(Field field, WhereOperation where)
+        public TResult Avg<TEntity, TResult>(Field field, WhereExpression where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Avg()).Where(where).ToScalar<TResult>();
@@ -539,7 +539,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        public bool Exists<TEntity>(WhereOperation where)
+        public bool Exists<TEntity>(WhereExpression where)
             where TEntity : Entity
         {
             using (IDataReader dataReader = Search<TEntity>().Where(where).Top(1).Select(EntityCache.GetFirstField<TEntity>()).ToDataReader())
@@ -586,7 +586,7 @@ namespace WEF
         /// <param name="field"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Count<TEntity>(Field field, WhereOperation where)
+        public int Count<TEntity>(Field field, WhereExpression where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(field.Count()).Where(where).ToScalar<int>();
@@ -622,7 +622,7 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Count<TEntity>(WhereOperation where)
+        public int Count<TEntity>(WhereExpression where)
             where TEntity : Entity
         {
             return Search<TEntity>().Select(Field.All.Count()).Where(where).ToScalar<int>();
@@ -738,9 +738,9 @@ namespace WEF
         public int UpdateAll<TEntity>(TEntity entity)
             where TEntity : Entity
         {
-            WhereOperation where = DataUtils.GetPrimaryKeyWhere(entity);
+            WhereExpression where = DataUtils.GetPrimaryKeyWhere(entity);
 
-            Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
+            Check.Require(!WhereExpression.IsNullOrEmpty(where), "entity must have the primarykey!");
 
             return UpdateAll<TEntity>(entity, where);
         }
@@ -793,13 +793,13 @@ namespace WEF
         /// <param name="entity"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int UpdateAll<TEntity>(TEntity entity, WhereOperation where)
+        public int UpdateAll<TEntity>(TEntity entity, WhereExpression where)
             where TEntity : Entity
         {
             if (entity == null)
                 return 0;
 
-            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(entity.GetTableName(), entity.GetFields(), entity.GetValues(), where));
+            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(entity.GetTableName(), entity.GetFields(), entity.GetValues(), null, where));
         }
 
         /// <summary>
@@ -814,9 +814,9 @@ namespace WEF
             if (entity == null)
                 return 0;
 
-            WhereOperation where = DataUtils.GetPrimaryKeyWhere(entity);
+            WhereExpression where = DataUtils.GetPrimaryKeyWhere(entity);
 
-            Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
+            Check.Require(!WhereExpression.IsNullOrEmpty(where), "entity must have the primarykey!");
 
             return UpdateAll<TEntity>(tran, entity, where);
         }
@@ -828,13 +828,13 @@ namespace WEF
         /// <param name="tran"></param>
         /// <param name="where"></param>
         /// <param name="entity"></param>
-        public int UpdateAll<TEntity>(DbTransaction tran, TEntity entity, WhereOperation where)
+        public int UpdateAll<TEntity>(DbTransaction tran, TEntity entity, WhereExpression where)
             where TEntity : Entity
         {
             if (entity == null)
                 return 0;
 
-            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(entity.GetTableName(), entity.GetFields(), entity.GetValues(), where), tran);
+            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(entity.GetTableName(), entity.GetFields(), entity.GetValues(), null, where), tran);
         }
         /// <summary>
         /// 
@@ -850,6 +850,7 @@ namespace WEF
             return UpdateAll(tran, entity, where.ToWhereClip());
         }
 
+
         /// <summary>
         /// 更新  
         /// </summary>
@@ -861,11 +862,11 @@ namespace WEF
             if (!entity.IsModify())
                 return 0;
 
-            WhereOperation where = DataUtils.GetPrimaryKeyWhere(entity);
+            WhereExpression where = DataUtils.GetPrimaryKeyWhere(entity);
 
-            Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
+            Check.Require(!WhereExpression.IsNullOrEmpty(where), "entity must have the primarykey!");
 
-            return Update<TEntity>(entity, where);
+            return Update(entity, where);
         }
         /// <summary>
         /// 更新
@@ -911,12 +912,44 @@ namespace WEF
         /// <param name="entity"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(TEntity entity, WhereOperation where)
+        public int Update<TEntity>(TEntity entity, WhereExpression where)
             where TEntity : Entity
         {
             return !entity.IsModify()
                 ? 0
                 : ExecuteNonQuery(_cmdCreator.CreateUpdateCommand(entity, @where));
+        }
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public int Update<TEntity>(TEntity entity, JoinOn joinOn, WhereExpression where)
+           where TEntity : Entity
+        {
+            return !entity.IsModify()
+                ? 0
+                : ExecuteNonQuery(_cmdCreator.CreateUpdateCommand(entity, joinOn, @where));
+        }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="TEntity1"></typeparam>
+        /// <typeparam name="TEntity2"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public int Update<TEntity1, TEntity2>(TEntity1 entity, JoinOn<TEntity1, TEntity2> joinOn, WhereExpression where)
+           where TEntity1 : Entity
+        {
+            return !entity.IsModify()
+                ? 0
+                : ExecuteNonQuery(_cmdCreator.CreateUpdateCommand(entity, joinOn, @where));
         }
 
         /// <summary>
@@ -942,7 +975,7 @@ namespace WEF
         public int Update<TEntity>(TEntity entity, Where where)
             where TEntity : Entity
         {
-            return Update<TEntity>(entity, where.ToWhereClip());
+            return Update(entity, where.ToWhereClip());
         }
 
         /// <summary>
@@ -957,9 +990,9 @@ namespace WEF
             if (!entity.IsModify())
                 return 0;
 
-            WhereOperation where = DataUtils.GetPrimaryKeyWhere(entity);
+            WhereExpression where = DataUtils.GetPrimaryKeyWhere(entity);
 
-            Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
+            Check.Require(!WhereExpression.IsNullOrEmpty(where), "entity must have the primarykey!");
 
             return Update<TEntity>(tran, entity, where);
         }
@@ -1011,7 +1044,7 @@ namespace WEF
         /// <summary>
         /// 更新
         /// </summary>
-        public int Update<TEntity>(DbTransaction tran, TEntity entity, WhereOperation where)
+        public int Update<TEntity>(DbTransaction tran, TEntity entity, WhereExpression where)
             where TEntity : Entity
         {
             if (!entity.IsModify())
@@ -1043,13 +1076,13 @@ namespace WEF
         /// <param name="value"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(string tableName, Field field, object value, WhereOperation where)
+        public int Update<TEntity>(string tableName, Field field, object value, WhereExpression where)
             where TEntity : Entity
         {
             if (Field.IsNullOrEmpty(field))
                 return 0;
 
-            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(tableName, new Field[] { field }, new object[] { value }, where));
+            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(tableName, new Field[] { field }, new object[] { value }, null, where));
         }
         /// <summary>
         /// 更新单个值
@@ -1089,13 +1122,13 @@ namespace WEF
         /// <param name="value"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(DbTransaction tran, string tableName, Field field, object value, WhereOperation where)
+        public int Update<TEntity>(DbTransaction tran, string tableName, Field field, object value, WhereExpression where)
             where TEntity : Entity
         {
             if (Field.IsNullOrEmpty(field))
                 return 0;
 
-            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(tableName, new Field[] { field }, new object[] { value }, where), tran);
+            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(tableName, new Field[] { field }, new object[] { value }, null, where), tran);
         }
         /// <summary>
         /// 更新单个值
@@ -1136,7 +1169,7 @@ namespace WEF
         /// <param name="fieldValue"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, WhereOperation where)
+        public int Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, WhereExpression where)
               where TEntity : Entity
         {
             if (null == fieldValue || fieldValue.Count == 0)
@@ -1151,7 +1184,7 @@ namespace WEF
 
                 i++;
             }
-            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, where));
+            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, null, where));
         }
         /// <summary>
         /// 
@@ -1178,7 +1211,7 @@ namespace WEF
         /// <param name="fieldValue"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public int Update<TEntity>(DbTransaction tran, string tableName, Dictionary<Field, object> fieldValue, WhereOperation where)
+        public int Update<TEntity>(DbTransaction tran, string tableName, Dictionary<Field, object> fieldValue, WhereExpression where)
               where TEntity : Entity
         {
             if (null == fieldValue || fieldValue.Count == 0)
@@ -1197,7 +1230,7 @@ namespace WEF
                 i++;
             }
 
-            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, where), tran);
+            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, null, where), tran);
         }
         /// <summary>
         /// 
@@ -1216,13 +1249,13 @@ namespace WEF
             return Update<TEntity>(tran, tableName, fieldValue, where.ToWhereClip());
         }
 
-        public int Update<TEntity>(string tableName, Field[] fields, object[] values, WhereOperation where)
+        public int Update<TEntity>(string tableName, Field[] fields, object[] values, WhereExpression where)
             where TEntity : Entity
         {
 
             if (null == fields || fields.Length == 0)
                 return 0;
-            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, where));
+            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, null, where));
         }
 
 
@@ -1238,13 +1271,13 @@ namespace WEF
         {
             return Update<TEntity>(tableName, fields, values, where.ToWhereClip());
         }
-        public int Update<TEntity>(DbTransaction tran, string tableName, Field[] fields, object[] values, WhereOperation where)
+        public int Update<TEntity>(DbTransaction tran, string tableName, Field[] fields, object[] values, WhereExpression where)
             where TEntity : Entity
         {
             if (null == fields || fields.Length == 0)
                 return 0;
 
-            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, where), tran);
+            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, null, where), tran);
         }
 
 
@@ -1278,9 +1311,9 @@ namespace WEF
 
             Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", tableName, ") is readonly!"));
 
-            WhereOperation where = DataUtils.GetPrimaryKeyWhere(entity);
+            WhereExpression where = DataUtils.GetPrimaryKeyWhere(entity);
 
-            Check.Require(!WhereOperation.IsNullOrEmpty(where), "entity must have the primarykey!");
+            Check.Require(!WhereExpression.IsNullOrEmpty(where), "entity must have the primarykey!");
 
             return Delete<TEntity>(tableName, where);
         }
@@ -1514,7 +1547,7 @@ namespace WEF
         /// <summary>
         ///  删除
         /// </summary>
-        public int Delete<TEntity>(DbTransaction tran, string tableName, WhereOperation where)
+        public int Delete<TEntity>(DbTransaction tran, string tableName, WhereExpression where)
             where TEntity : Entity
         {
             if (string.IsNullOrEmpty(tableName))
@@ -1560,7 +1593,7 @@ namespace WEF
         /// <summary>
         ///  删除
         /// </summary>
-        public int Delete<TEntity>(string tableName, WhereOperation where)
+        public int Delete<TEntity>(string tableName, WhereExpression where)
             where TEntity : Entity
         {
             Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", EntityCache.GetTableName<TEntity>(), ") is readonly!"));

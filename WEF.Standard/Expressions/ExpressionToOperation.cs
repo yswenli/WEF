@@ -39,48 +39,63 @@ namespace WEF.Expressions
 
 
         /// <summary>
-        /// 
+        /// ToJoinWhere
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="e"></param>
         /// <returns></returns>
-        public static WhereOperation ToJoinWhere<TEntity>(Expression<Func<T, TEntity, bool>> e)
+        public static WhereExpression ToJoinWhere<TEntity>(Expression<Func<T, TEntity, bool>> e)
         {
             return ToWhereOperationChild(e.Body, WhereType.JoinWhere);
         }
-
-        public static WhereOperation ToWhereOperation(Expression<Func<T, bool>> e)
+        /// <summary>
+        /// ToJoinWhere
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static WhereExpression ToWhereOperation(Expression<Func<T, bool>> e)
+        {
+            return ToWhereOperationChild(e.Body);
+        }
+        /// <summary>
+        /// ToJoinWhere
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public static WhereExpression ToWhereOperation<T2>(Expression<Func<T, T2, bool>> e)
         {
             return ToWhereOperationChild(e.Body);
         }
 
-        public static WhereOperation ToWhereOperation<T2>(Expression<Func<T, T2, bool>> e)
+        public static WhereExpression ToWhereOperation<T2, T3>(Expression<Func<T, T2, T3, bool>> e)
         {
             return ToWhereOperationChild(e.Body);
         }
 
-        public static WhereOperation ToWhereOperation<T2, T3>(Expression<Func<T, T2, T3, bool>> e)
+        public static WhereExpression ToWhereOperation<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> e)
         {
             return ToWhereOperationChild(e.Body);
         }
 
-        public static WhereOperation ToWhereOperation<T2, T3, T4>(Expression<Func<T, T2, T3, T4, bool>> e)
+        public static WhereExpression ToWhereOperation<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> e)
         {
             return ToWhereOperationChild(e.Body);
         }
 
-        public static WhereOperation ToWhereOperation<T2, T3, T4, T5>(Expression<Func<T, T2, T3, T4, T5, bool>> e)
+        public static WhereExpression ToWhereOperation<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> e)
         {
             return ToWhereOperationChild(e.Body);
         }
 
-        public static WhereOperation ToWhereOperation<T2, T3, T4, T5, T6>(Expression<Func<T, T2, T3, T4, T5, T6, bool>> e)
-        {
-            return ToWhereOperationChild(e.Body);
-        }
-
-
-        private static WhereOperation ToWhereOperationChild(System.Linq.Expressions.Expression e, WhereType wt = WhereType.Where)
+        /// <summary>
+        /// ToWhereOperationChild
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="wt"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        private static WhereExpression ToWhereOperationChild(System.Linq.Expressions.Expression e, WhereType wt = WhereType.Where)
         {
             if (e is BinaryExpression)
             {
@@ -98,16 +113,16 @@ namespace WEF.Expressions
             {
                 var d = (MemberExpression)e;
 
-                return new WhereOperation(new Field(d.Member.Name), true, QueryOperator.Equal);
+                return new WhereExpression(new Field(d.Member.Name), true, QueryOperator.Equal);
             }
             if (e is ConstantExpression)
             {
                 var key = ((ConstantExpression)e).Value;
                 if (DataUtils.ConvertValue<bool>(key))
                 {
-                    return new WhereOperation(" 1=1 ");
+                    return new WhereExpression(" 1=1 ");
                 }
-                return new WhereOperation(" 1=2 ");
+                return new WhereExpression(" 1=2 ");
             }
             throw new Exception("暂时不支持的Where条件Lambda表达式写法！请使用经典写法！");
         }
@@ -130,7 +145,7 @@ namespace WEF.Expressions
         /// <param name="ue"></param>
         /// <param name="wtype"></param>
         /// <returns></returns>
-        private static WhereOperation ConvertUnary(UnaryExpression ue, WhereType wtype = WhereType.Where)
+        private static WhereExpression ConvertUnary(UnaryExpression ue, WhereType wtype = WhereType.Where)
         {
             switch (ue.NodeType)
             {
@@ -140,7 +155,7 @@ namespace WEF.Expressions
             throw new Exception("暂时不支持的NodeType(" + ue.NodeType + ") lambda写法！请使用经典写法！");
         }
 
-        private static WhereOperation ConvertBinary(BinaryExpression be, WhereType wt = WhereType.Where)
+        private static WhereExpression ConvertBinary(BinaryExpression be, WhereType wt = WhereType.Where)
         {
             switch (be.NodeType)
             {
@@ -165,7 +180,7 @@ namespace WEF.Expressions
             }
         }
 
-        private static WhereOperation ConvertMethodCall(MethodCallExpression mce)
+        private static WhereExpression ConvertMethodCall(MethodCallExpression mce)
         {
             var tableName = GetTableNameByExpression(mce);
 
@@ -194,7 +209,7 @@ namespace WEF.Expressions
         }
 
 
-        private static WhereOperation ConvertNull(string tableName, MethodCallExpression mce, bool isNull = false)
+        private static WhereExpression ConvertNull(string tableName, MethodCallExpression mce, bool isNull = false)
         {
             ColumnFunction function;
             MemberExpression member;
@@ -204,7 +219,7 @@ namespace WEF.Expressions
         }
 
 
-        private static WhereOperation ConvertEqualsCall(string tableName, MethodCallExpression mce, bool isLike = false)
+        private static WhereExpression ConvertEqualsCall(string tableName, MethodCallExpression mce, bool isLike = false)
         {
             ColumnFunction function;
             MemberExpression member;
@@ -212,14 +227,14 @@ namespace WEF.Expressions
             var value = GetValue(mce.Arguments[0]);
             if (value != null)
             {
-                return new WhereOperation(CreateField(tableName, key, member.Expression.Type),
+                return new WhereExpression(CreateField(tableName, key, member.Expression.Type),
                     string.Concat(value), QueryOperator.Equal);
             }
             throw new Exception("'Like'仅支持一个参数，参数应为字符串且不允许为空");
         }
 
 
-        private static WhereOperation ConvertInCall(string tableName, MethodCallExpression mce, bool notIn = false)
+        private static WhereExpression ConvertInCall(string tableName, MethodCallExpression mce, bool notIn = false)
         {
             ColumnFunction function;
             MemberExpression member;
@@ -239,7 +254,7 @@ namespace WEF.Expressions
         }
 
 
-        private static WhereOperation ConvertLikeCall(string tableName, MethodCallExpression mce, string left, string right, bool isLike = false)
+        private static WhereExpression ConvertLikeCall(string tableName, MethodCallExpression mce, string left, string right, bool isLike = false)
         {
             ColumnFunction function;
             MemberExpression member;
@@ -249,7 +264,7 @@ namespace WEF.Expressions
                 var value = GetValue(isLike ? mce.Arguments[1] : mce.Arguments[0]);
                 if (value != null && value is string)
                 {
-                    return new WhereOperation(CreateField(tableName, key, member.Expression.Type),
+                    return new WhereExpression(CreateField(tableName, key, member.Expression.Type),
                         string.Concat(left, value, right), QueryOperator.Like);
                 }
             }
@@ -313,14 +328,14 @@ namespace WEF.Expressions
                 if (methodObj == null)
                 {
                     var args = ((MethodCallExpression)expLeft).Arguments[0];
-                    if(args is UnaryExpression ue)
+                    if (args is UnaryExpression ue)
                     {
                         tableName = GetTableNameByType("", (ue.Operand as MemberExpression).Expression.Type);
                     }
-                    if(args is MemberExpression me)
+                    if (args is MemberExpression me)
                     {
                         tableName = GetTableNameByType("", ((MemberExpression)args).Expression.Type);
-                    }                
+                    }
                 }
                 else
                 {
@@ -334,7 +349,7 @@ namespace WEF.Expressions
             return tableName;
         }
 
-        private static WhereOperation LeftAndRight(BinaryExpression be, QueryOperator co, WhereType wtype = WhereType.Where)
+        private static WhereExpression LeftAndRight(BinaryExpression be, QueryOperator co, WhereType wtype = WhereType.Where)
         {
             ColumnFunction leftFunction;
             ColumnFunction rightFunction;
@@ -362,8 +377,8 @@ namespace WEF.Expressions
                     (expRight.NodeType == ExpressionType.MemberAccess && ((MemberExpression)expRight).Expression == null))
                 {
                     return DataUtils.ConvertValue<bool>(fastEvaluator.Eval(be))
-                        ? new WhereOperation(" 1=2 ")
-                        : new WhereOperation(" 1=1 ");
+                        ? new WhereExpression(" 1=2 ")
+                        : new WhereExpression(" 1=1 ");
                 }
                 else
                 {
@@ -378,11 +393,11 @@ namespace WEF.Expressions
                             var keyLeft = GetMemberName(expLeft, out functionLeft, out left);
                             if (keyRightName[0].Contains("$"))
                             {
-                                return new WhereOperation(CreateField(tableName, keyLeft, left.Expression.Type), GetValue(expRight), co);
+                                return new WhereExpression(CreateField(tableName, keyLeft, left.Expression.Type), GetValue(expRight), co);
                             }
                             else
                             {
-                                return new WhereOperation(CreateField(GetTableNameByType("", ((MemberExpression)be.Right).Expression.Type), keyRightName, rightMe.Expression.Type), CreateField(tableName, keyLeft, left.Expression.Type), co);
+                                return new WhereExpression(CreateField(GetTableNameByType("", ((MemberExpression)be.Right).Expression.Type), keyRightName, rightMe.Expression.Type), CreateField(tableName, keyLeft, left.Expression.Type), co);
                             }
                         }
                     }
@@ -391,16 +406,16 @@ namespace WEF.Expressions
                     {
                         if (DataUtils.ConvertValue<bool>(fastEvaluator.Eval(be)))
                         {
-                            return new WhereOperation(" 1=2 ");
+                            return new WhereExpression(" 1=2 ");
                         }
-                        return new WhereOperation(" 1=1 ");
+                        return new WhereExpression(" 1=1 ");
                     }
 
                     var rigthTableName = GetTableNameByType("", ((MemberExpression)be.Right).Expression.Type);
 
                     if (value != null)
                     {
-                        return new WhereOperation(CreateField(rigthTableName, keyRightName, rightMe.Expression.Type), value, co);
+                        return new WhereExpression(CreateField(rigthTableName, keyRightName, rightMe.Expression.Type), value, co);
                     }
 
                     switch (co)
@@ -442,7 +457,7 @@ namespace WEF.Expressions
 
                             var keyRight = GetMemberName(expRight, out ColumnFunction functionRight, out right);
 
-                            return new WhereOperation(
+                            return new WhereExpression(
                                 CreateField(tableName, key, leftMe.Expression.Type),
                                 CreateField(rigthTableName, keyRight, right.Expression.Type)
                                 , co);
@@ -462,7 +477,7 @@ namespace WEF.Expressions
                     }
                     throw new Exception("null值只支持等于或不等于！");
                 }
-                return new WhereOperation(CreateField(tableName, key, leftMe.Expression.Type), value, co);
+                return new WhereExpression(CreateField(tableName, key, leftMe.Expression.Type), value, co);
             }
         }
         /// <summary>
@@ -813,7 +828,7 @@ namespace WEF.Expressions
             var tbl = CustomAttributeExtensions.GetCustomAttribute<FieldAttribute>(type, false);
             return new string[] { tbl != null ? tbl.Field : type.Name, type.Name };
         }
-        
+
 
         /// <summary>
         /// CreateField
