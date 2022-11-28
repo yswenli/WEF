@@ -42,7 +42,7 @@ namespace WEF.Expressions
         /// <param name="lambdaWhere"></param>
         public Where(Expression<Func<T, bool>> lambdaWhere) : base(null, ExpressionToOperation<T>.ToWhereOperation(lambdaWhere))
         {
-            And(lambdaWhere);
+
         }
 
         /// <summary>

@@ -313,7 +313,14 @@ namespace WEF.Expressions
                 if (methodObj == null)
                 {
                     var args = ((MethodCallExpression)expLeft).Arguments[0];
-                    tableName = GetTableNameByType("", ((MemberExpression)args).Expression.Type);
+                    if(args is UnaryExpression ue)
+                    {
+                        tableName = GetTableNameByType("", (ue.Operand as MemberExpression).Expression.Type);
+                    }
+                    if(args is MemberExpression me)
+                    {
+                        tableName = GetTableNameByType("", ((MemberExpression)args).Expression.Type);
+                    }                
                 }
                 else
                 {

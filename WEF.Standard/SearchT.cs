@@ -389,21 +389,19 @@ namespace WEF
         {
             if (lambdaWheres == null || !lambdaWheres.Any()) throw new Exception("where条件不能为空");
 
-            WhereBuilder whereBuilder = null;
-
             foreach (var item in lambdaWheres)
             {
                 if (item == null) continue;
 
-                if (whereBuilder == null)
+                if (this._where == null)
                 {
-                    whereBuilder = new WhereBuilder(_tableName, ExpressionToOperation<T>.ToWhereOperation(item));
+                    this._where = new WhereBuilder(_tableName, ExpressionToOperation<T>.ToWhereOperation(item)).ToWhereClip();
                 }
                 else
-                    whereBuilder.And(ExpressionToOperation<T>.ToWhereOperation(item));
+                    this._where= this._where.And(ExpressionToOperation<T>.ToWhereOperation(item));
             }
 
-            return Where(whereBuilder.ToWhereClip());
+            return this;
         }
 
         /// <summary>

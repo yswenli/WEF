@@ -19,7 +19,7 @@ namespace WEF.Standard.Test
             List<DBArticle> articleList;
             List<DBComment> commentList;
 
-            var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, "");
+            var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, "Data Source=47.103.135.84;Initial Catalog=tejingcaiV2;User Id=testuser;Password=testuser");
 
 
             var tuple = dbarticleRepository.FromSql("select top 10 * from Article;select top 10 * from Comment")
@@ -38,7 +38,16 @@ namespace WEF.Standard.Test
             int praiseCount = 12321;
             var yid = "abc";
 
-            var articlePagedList3 = dbarticleRepository.Search().Join<DBComment>((x, y) => y.PageID == x.ID && y.PraiseCount == praiseCount && y.ID == yid, JoinType.LeftJoin).ToList();
+            var aWhere = new Where<DBArticle>(x =>x.Status==1 && (x.IsDeleted.IsNull() || x.IsDeleted == false));
+            aWhere.And<DBComment>((x, y) => y.PraiseCount == praiseCount && y.ID == yid);
+
+            var aSection = dbarticleRepository.Search()
+                .Join<DBComment>((x, y) => y.PageID == x.ID, JoinType.LeftJoin)
+                .Where(aWhere);
+
+            aSection = aSection.Where(q => q.PublishDate > DateTime.Now);
+
+            var articlePagedList3 = aSection.ToList();
 
 
             new BytesTest().Test2();
