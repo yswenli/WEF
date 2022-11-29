@@ -14,9 +14,11 @@ namespace WEF.Standard.Test
         static void Main(string[] args)
         {
             //MySqlBitTypeTest.Test1();
-            //MySqlBitTypeTest.Test3();
-
-            NotifyTest.GetList("76cf552c2b6f4dc6810994c4c015e2c8", "pro", 2);
+            ////MySqlBitTypeTest.Test3();
+            //var nt1 = NotifyTest.GetList("76cf552c2b6f4dc6810994c4c015e2c8", "pro", 2, 1, 10);
+            //var nt2 = NotifyTest.GetList("76cf552c2b6f4dc6810994c4c015e2c8", "pro", 2, 2, 10);
+            //var nt3 = NotifyTest.GetList("76cf552c2b6f4dc6810994c4c015e2c8", "pro", 2, 3, 10);
+            //var nt4 = NotifyTest.GetList("76cf552c2b6f4dc6810994c4c015e2c8", "pro", 2, 4, 10);
 
             List<DBArticle> articleList;
             List<DBComment> commentList;

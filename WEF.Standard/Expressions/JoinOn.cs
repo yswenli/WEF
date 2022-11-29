@@ -39,12 +39,12 @@ namespace WEF.Expressions
         /// <summary>
         /// _joins
         /// </summary>
-        internal Dictionary<string, KeyValuePair<string, WhereExpression>> _joins = new Dictionary<string, KeyValuePair<string, WhereExpression>>();
+        internal Dictionary<string, KeyValuePair<string, WhereExpression>> _joins;
 
         /// <summary>
         /// Parameters
         /// </summary>
-        internal List<Parameter> Parameters { get; private set; } = new List<Parameter>();
+        internal List<Parameter> Parameters { get; private set; }
 
         internal string _tableName;
 
@@ -57,7 +57,8 @@ namespace WEF.Expressions
         /// </summary>
         internal JoinOn()
         {
-
+            _joins = new Dictionary<string, KeyValuePair<string, WhereExpression>>();
+            Parameters = new List<Parameter>();
         }
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace WEF.Expressions
         /// <param name="where"></param>
         /// <param name="joinType"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public JoinOn(string tableName, WhereExpression where, JoinType joinType)
+        public JoinOn(string tableName, WhereExpression where, JoinType joinType) : this()
         {
             Add(tableName, where, joinType);
         }
@@ -147,6 +148,8 @@ namespace WEF.Expressions
         /// <returns></returns>
         public string ToString(string tableName, string dbName)
         {
+            if (_joins == null || _joins.Count < 1) return tableName;
+
             StringPlus fromstring = new StringPlus();
 
             //处理ACCESS 的多表联合查询
@@ -246,6 +249,17 @@ namespace WEF.Expressions
         public static JoinOn<TEntity1, TEntity2> Add<TEntity1, TEntity2>(Expression<Func<TEntity1, TEntity2, bool>> joinOn, JoinType joinType)
         {
             return new JoinOn<TEntity1, TEntity2>(joinOn, joinType);
+        }
+        /// <summary>
+        /// Empty
+        /// </summary>
+        /// <returns></returns>
+        public static JoinOn None
+        {
+            get
+            {
+                return new JoinOn();
+            }
         }
     }
 

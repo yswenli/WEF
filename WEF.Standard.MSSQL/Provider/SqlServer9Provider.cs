@@ -65,18 +65,16 @@ namespace WEF.Provider
                 fromSection.Select(Field.All);
             }
 
-            fromSection.AddSelect(new Field(string.Concat("row_number() over(", fromSection.OrderByString, ") AS tmp_rowid")));
-            //OrderByClip tempOrderBy = fromSection.OrderByClip;
-            fromSection.OrderBy(OrderByOperation.None);
-            fromSection.TableName = string.Concat("(", fromSection.SqlString, ") AS tmp_table");
+            fromSection.AddSelect(new Field(string.Concat("row_number() over(", fromSection.OrderByString, ") AS tmp_rowid")));        
+            fromSection.OrderBy(OrderByOperation.None);            
+            fromSection.TableName = string.Concat("(", fromSection.SqlString, ") AS tmp_table");            
             fromSection.Parameters = fromSection.Parameters;
             fromSection.DistinctString = string.Empty;
             fromSection.PrefixString = string.Empty;
             fromSection.GroupBy(GroupByOperation.None);
             fromSection.Select(Field.All);
-            //fromSection.OrderBy(tempOrderBy);
             fromSection.Where(new WhereExpression(string.Concat("tmp_rowid BETWEEN ", startIndex.ToString(), " AND ", endIndex.ToString())));
-
+            fromSection.Join(JoinOn.None);
             return fromSection;
         }
     }

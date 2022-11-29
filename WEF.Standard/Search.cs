@@ -70,7 +70,7 @@ namespace WEF
         /// <summary>
         /// 
         /// </summary>
-        protected JoinOn JoinOn = new JoinOn();
+        protected JoinOn _joinOn = new JoinOn();
         /// <summary>
         /// 
         /// </summary>
@@ -191,7 +191,7 @@ namespace WEF
                 if (GroupByOperation.IsNullOrEmpty(_groupBy) && string.IsNullOrEmpty(_distinctString))
                 {
                     sql.Append(" SELECT count(1) as r_cnt FROM ");
-                    sql.Append(JoinOn.ToString(_tableName, _database.DbProvider.GetType().Name));
+                    sql.Append(_joinOn.ToString(_tableName, _database.DbProvider.GetType().Name));
                     if (!WhereExpression.IsNullOrEmpty(_where))
                     {
                         sql.Append(_where.WhereString);
@@ -227,7 +227,7 @@ namespace WEF
                 sql.Append(" ");
                 sql.Append(ColumnsString);
                 sql.Append(" FROM ");
-                sql.Append(JoinOn.ToString(_tableName, _database.DbProvider.GetType().Name));
+                sql.Append(_joinOn.ToString(_tableName, _database.DbProvider.GetType().Name));
                 sql.Append(" ");
 
                 if (!WhereExpression.IsNullOrEmpty(_where))
@@ -264,7 +264,7 @@ namespace WEF
                 sql.Append(" ");
                 sql.Append(ColumnsString);
                 sql.Append(" FROM ");
-                sql.Append(JoinOn.ToString(_tableName, _database.DbProvider.GetType().Name));
+                sql.Append(_joinOn.ToString(_tableName, _database.DbProvider.GetType().Name));
                 sql.Append(" ");
 
                 if (!WhereExpression.IsNullOrEmpty(_where))
@@ -330,7 +330,7 @@ namespace WEF
                     return string.Empty;
 
                 if ((_tableName.IndexOf('(') >= 0 || _tableName.IndexOf(')') >= 0 || _tableName.IndexOf(" FROM ", StringComparison.OrdinalIgnoreCase) >= 0 || _tableName.IndexOf(" AS ", StringComparison.OrdinalIgnoreCase) >= 0)
-                    && !JoinOn.ToString(_tableName, _database.DbProvider.GetType().Name).Contains(" LEFT OUTER JOIN ") //2018-04-09 新增一个&&条件
+                    && !_joinOn.ToString(_tableName, _database.DbProvider.GetType().Name).Contains(" LEFT OUTER JOIN ") //2018-04-09 新增一个&&条件
                     )
                     return _orderBy.RemovePrefixTableName().OrderByString;
                 return _orderBy.OrderByString;
@@ -894,6 +894,23 @@ namespace WEF
 
         #region 连接 join
 
+        /// <summary>
+        /// 连接,加载空会清空
+        /// </summary>
+        /// <param name="joinOn"></param>
+        /// <returns></returns>
+        public Search Join(JoinOn joinOn)
+        {
+            if (string.IsNullOrEmpty(joinOn._tableName))
+            {
+                _joinOn = new JoinOn();
+            }
+            else
+            {
+                _joinOn.Add(joinOn);
+            }            
+            return this;
+        }
 
         /// <summary>
         /// 连接
@@ -903,14 +920,14 @@ namespace WEF
         /// <param name="where"></param>
         /// <param name="joinType"></param>
         /// <returns></returns>
-        protected Search Join(string tableName, string userName, WhereExpression where, JoinType joinType)
+        public Search Join(string tableName, string userName, WhereExpression where, JoinType joinType)
         {
             if (string.IsNullOrEmpty(tableName) || WhereExpression.IsNullOrEmpty(where))
                 return this;
 
             tableName = _dbProvider.BuildTableName(tableName, userName);
 
-            JoinOn.Add(tableName, where, joinType);
+            _joinOn.Add(tableName, where, joinType);
 
             if (where.Parameters.Count > 0)
                 _parameters.AddRange(where.Parameters);
