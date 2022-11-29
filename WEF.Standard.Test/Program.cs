@@ -16,10 +16,14 @@ namespace WEF.Standard.Test
             //MySqlBitTypeTest.Test1();
             //MySqlBitTypeTest.Test3();
 
+            NotifyTest.GetList("76cf552c2b6f4dc6810994c4c015e2c8", "pro", 2);
+
             List<DBArticle> articleList;
             List<DBComment> commentList;
 
-            var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, "");
+            var cnnstr = "";
+
+            var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, cnnstr);
 
 
             var tuple = dbarticleRepository.FromSql("select top 10 * from Article;select top 10 * from Comment")
@@ -38,15 +42,19 @@ namespace WEF.Standard.Test
             int praiseCount = 12321;
             var yid = "abc";
 
-            var aWhere = new Where<DBArticle>(x =>x.Status==1 && (x.IsDeleted.IsNull() || x.IsDeleted == false));
+            var aWhere = new Where<DBArticle>(x => x.Status == 1 && (x.IsDeleted.IsNull() || x.IsDeleted == false));
             aWhere.And<DBComment>((x, y) => y.PraiseCount == praiseCount && y.ID == yid);
 
             var aSection = dbarticleRepository.Search()
                 .Join<DBComment>((x, y) => y.PageID == x.ID, JoinType.LeftJoin)
-                .Join<DBComment>((x, y) => y.PageID == x.ID, JoinType.LeftJoin)
-                .Where(aWhere);
+                .Join<DBComment>((x, y) => y.PageID == x.ID, JoinType.LeftJoin);
+
+            aSection = aSection.Where(aWhere);
 
             aSection = aSection.Where(q => q.PublishDate > DateTime.Now);
+
+            aSection = aSection.Select<DBComment>((x, y) => new { x.All, y.ID });
+            var asList = aSection.ToPagedList<DBArticle>(1, 20, "Article.ID", true);
 
             var uja = dbarticleRepository.Update(new DBArticle() { ID = "1" },
                 JoinOn.Add<DBArticle, DBComment>((x, y) => x.ID == y.PageID, JoinType.LeftJoin),
