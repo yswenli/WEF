@@ -893,6 +893,10 @@ namespace WEF
 
         private readonly string[] _notClass = new string[] { "String" };
 
+        /// <summary>
+        /// ToFirstDefault
+        /// </summary>
+        /// <returns></returns>
         public T ToFirstDefault()
         {
             T t = this.ToFirst();
@@ -970,10 +974,12 @@ namespace WEF
         public Model ToFirst<Model>() where Model : class
         {
             var typet = typeof(Model);
+
             if (typet == typeof(T))
             {
                 return ToFirst() as Model;
             }
+
             Search from = this.Top(1).GetPagedFromSection();
 
             Model t = null;
