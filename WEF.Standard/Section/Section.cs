@@ -15,6 +15,7 @@ using System.Data.Common;
 using System.Linq;
 
 using WEF.Common;
+using WEF.Expressions;
 using WEF.MvcPager;
 
 namespace WEF.Section
@@ -327,6 +328,20 @@ namespace WEF.Section
             var total = Count();
 
             return new PagedList<TModel>(ToList<TModel>(), _pageIndex, _pageSize, total);
+        }
+
+        /// <summary>
+        /// 获取分页结果
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public PagedList<TModel> ToPagedList<TModel>(int pageIndex, int pageSize)
+        {
+            var total = Count();            
+
+            return new PagedList<TModel>(ToList<TModel>(), pageIndex, pageSize, total);
         }
 
         #endregion
