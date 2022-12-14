@@ -1379,7 +1379,7 @@ namespace WEF
                 var result = new Dictionary<dynamic, T>();
                 foreach (var item in list)
                 {
-                    var key = DataUtils.GetPropertyValue(item, keyFiled.FieldName);
+                    var key = DataUtils.GetPropertyValue(item, keyFiled.Name);
                     if (key != null)
                         result.Add(key, item);
                 }
@@ -1402,7 +1402,7 @@ namespace WEF
                 var result = new Dictionary<dynamic, Model>();
                 foreach (var item in list)
                 {
-                    var key = DataUtils.GetPropertyValue(item, keyFiled.FieldName);
+                    var key = DataUtils.GetPropertyValue(item, keyFiled.Name);
                     if (key != null)
                         result.Add(key, item);
                 }
@@ -1427,10 +1427,10 @@ namespace WEF
                 var result = new Dictionary<dynamic, dynamic>();
                 foreach (var item in list)
                 {
-                    var key = DataUtils.GetPropertyValue(item, keyFiled.FieldName);
+                    var key = DataUtils.GetPropertyValue(item, keyFiled.Name);
                     if (key != null)
                     {
-                        var val = DataUtils.GetPropertyValue(item, valFiled.FieldName);
+                        var val = DataUtils.GetPropertyValue(item, valFiled.Name);
                         result.Add(key, val);
                     }
                 }

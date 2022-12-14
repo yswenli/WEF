@@ -27,6 +27,12 @@ namespace WEF.Standard.Test
 
             var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, cnnstr);
 
+            //转换字典
+            var adic1 = dbarticleRepository.Search().ToDictionary(q => q.ID);
+            var adic2 = dbarticleRepository.Search().ToDictionary(q => q.ID, q => q.Title);
+            var adic3 = dbarticleRepository.Search().ToDictionary<string, string>(q => q.ID, q => q.Title);
+
+
 
             var tuple = dbarticleRepository.FromSql("select top 10 * from Article;select top 10 * from Comment")
                 .ToMultipleList<DBArticle, DBComment>();

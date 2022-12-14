@@ -334,8 +334,6 @@ namespace WEF.Common
             }
 
             return null;
-
-
         }
 
         private static System.Text.RegularExpressions.Regex keyReg = new System.Text.RegularExpressions.Regex("[^a-zA-Z]", System.Text.RegularExpressions.RegexOptions.Compiled);
