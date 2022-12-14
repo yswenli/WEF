@@ -318,11 +318,11 @@ namespace WEF.Common
         /// <summary>
         /// 获取属性值
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TModel"></typeparam>
         /// <param name="entity"></param>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public static object GetPropertyValue<TEntity>(TEntity entity, string propertyName)
+        public static object GetPropertyValue<TModel>(TModel entity, string propertyName)
         {
             var properties = entity.GetType().GetProperties();
 

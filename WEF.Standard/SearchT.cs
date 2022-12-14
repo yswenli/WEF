@@ -19,6 +19,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 using WEF.Common;
 using WEF.Db;
@@ -398,7 +399,7 @@ namespace WEF
                     this._where = new WhereBuilder(_tableName, ExpressionToOperation<T>.ToWhereOperation(item)).ToWhereClip();
                 }
                 else
-                    this._where= this._where.And(ExpressionToOperation<T>.ToWhereOperation(item));
+                    this._where = this._where.And(ExpressionToOperation<T>.ToWhereOperation(item));
             }
 
             return this;
@@ -767,15 +768,6 @@ namespace WEF
             return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelects));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="lambdaSelect"></param>
-        /// <returns></returns>
-        public Search<T> Select(Expression<Func<T, bool>> lambdaSelect)
-        {
-            return (Search<T>)base.Select(ExpressionToOperation<T>.ToSelect(_tableName, lambdaSelect));
-        }
         /// <summary>
         /// Distinct
         /// </summary>
@@ -1369,6 +1361,103 @@ namespace WEF
             return tmpfromSection;
         }
 
+        #endregion
+
+        #region 字典
+
+        /// <summary>
+        /// 转换成字典
+        /// </summary>
+        /// <param name="keyExpress"></param>
+        /// <returns></returns>
+        public Dictionary<dynamic, T> ToDictionary(Expression<Func<T, dynamic>> keyExpress)
+        {
+            var keyFiled = ExpressionToOperation<T>.ToSelect(_tableName, keyExpress).First();
+            var list = ToList();
+            if (list != null && list.Count > 0)
+            {
+                var result = new Dictionary<dynamic, T>();
+                foreach (var item in list)
+                {
+                    var key = DataUtils.GetPropertyValue(item, keyFiled.FieldName);
+                    if (key != null)
+                        result.Add(key, item);
+                }
+                return result;
+            }
+            return null;
+        }
+        /// <summary>
+        /// 转换成字典
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="keyExpress"></param>
+        /// <returns></returns>
+        public Dictionary<dynamic, Model> ToDictionary<Model>(Expression<Func<T, dynamic>> keyExpress)
+        {
+            var keyFiled = ExpressionToOperation<T>.ToSelect(_tableName, keyExpress).First();
+            var list = ToList<Model>();
+            if (list != null && list.Count > 0)
+            {
+                var result = new Dictionary<dynamic, Model>();
+                foreach (var item in list)
+                {
+                    var key = DataUtils.GetPropertyValue(item, keyFiled.FieldName);
+                    if (key != null)
+                        result.Add(key, item);
+                }
+                return result;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 转换成字典
+        /// </summary>
+        /// <param name="keyExpress"></param>
+        /// <param name="valExpress"></param>
+        /// <returns></returns>
+        public Dictionary<dynamic, dynamic> ToDictionary(Expression<Func<T, dynamic>> keyExpress, Expression<Func<T, dynamic>> valExpress)
+        {
+            var keyFiled = ExpressionToOperation<T>.ToSelect(_tableName, keyExpress).First();
+            var valFiled = ExpressionToOperation<T>.ToSelect(_tableName, valExpress).First();
+            var list = ToList();
+            if (list != null && list.Count > 0)
+            {
+                var result = new Dictionary<dynamic, dynamic>();
+                foreach (var item in list)
+                {
+                    var key = DataUtils.GetPropertyValue(item, keyFiled.FieldName);
+                    if (key != null)
+                    {
+                        var val = DataUtils.GetPropertyValue(item, valFiled.FieldName);
+                        result.Add(key, val);
+                    }
+                }
+                return result;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 转换成字典
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TVal"></typeparam>
+        /// <param name="keyExpress"></param>
+        /// <param name="valExpress"></param>
+        /// <returns></returns>
+        public Dictionary<TKey, TVal> ToDictionary<TKey, TVal>(Expression<Func<T, dynamic>> keyExpress, Expression<Func<T, dynamic>> valExpress)
+        {
+            var data = ToDictionary(keyExpress, valExpress);
+            if (data == null || data.Count < 1) return null;
+            var result = new Dictionary<TKey, TVal>();
+            foreach (var item in data)
+            {
+                result.Add(item.Key, item.Value);
+            }
+            return result;
+        }
         #endregion
 
 
