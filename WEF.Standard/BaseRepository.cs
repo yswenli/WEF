@@ -23,6 +23,7 @@
 *****************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
@@ -140,7 +141,9 @@ namespace WEF
         /// <returns></returns>
         public T Get(string id)
         {
-            return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name}='{id}'").First<T>();
+            return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name}=@{_entity.GetIdentityField().Name}")
+                .AddInParameter($"@{_entity.GetIdentityField().Name}", id)
+                .First<T>();
         }
 
         /// <summary>
@@ -150,7 +153,9 @@ namespace WEF
         /// <returns></returns>
         public T Get(int id)
         {
-            return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name}={id}").First<T>();
+            return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name}=@{_entity.GetIdentityField().Name}")
+                .AddInParameter($"@{_entity.GetIdentityField().Name}", id)
+                .First<T>();
         }
 
         /// <summary>
@@ -564,6 +569,9 @@ namespace WEF
         {
             return _dbContext.Save(tran, entities);
         }
+
+        #region sql
+
         /// <summary>
         /// 执行sql语句
         /// <param name="sql"></param>
@@ -617,6 +625,68 @@ namespace WEF
         }
 
         /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="inputParamas"></param>
+        /// <returns></returns>
+        public DataTable GetDataTable(string tableName, Dictionary<string, dynamic> inputParamas)
+        {
+            var sp = new StringPlus();
+            sp.Append($"SELECT * FROM [{tableName}] WHERE 1=1");
+            foreach (var item in inputParamas)
+            {
+                sp.Append($" AND [{item.Key}]=@{item.Key}");
+            }
+            var sqlSection = FromSql(sp.ToString());
+            foreach (var item in inputParamas)
+            {
+                sqlSection = sqlSection.AddInParameter($"@{item.Key}", item.Value);
+            }
+            return sqlSection.ToDataTable();
+        }
+
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="inputParamas"></param>
+        /// <returns></returns>
+        public bool Update(string tableName, Dictionary<string, dynamic> inputParamas)
+        {
+            var sp = new StringPlus();
+            sp.Append($"UPDATE [{tableName}] SET");
+            foreach (var item in inputParamas)
+            {
+                if (!item.Key.Equals("ID"))
+                {
+                    sp.Append($" [{item.Key}]=@{item.Key},");
+                }
+            }
+            sp.Remove(sp.Length - 1, 1);
+            sp.Append(" WHERE [ID]=@ID");
+
+            var sqlSection = FromSql(sp.ToString());
+
+            foreach (var item in inputParamas)
+            {
+                if (item.Key.Equals("ID"))
+                {
+                    sqlSection = sqlSection.AddInParameter($"@{item.Key}", DbType.String, item.Value.ToString());
+                }
+                else
+                {
+                    sqlSection = sqlSection.AddInParameter($"@{item.Key}", item.Value);
+                }
+            }
+            return sqlSection.ExecuteNonQuery() > 0;
+        }
+
+
+
+
+        /// <summary>
         /// 执行存储过程
         /// <param name="procName"></param>
         /// </summary>
@@ -646,6 +716,9 @@ namespace WEF
         {
             return _dbContext.FromProc(procName, inputParamas);
         }
+
+        #endregion
+
 
         /// <summary>
         /// 创建事务，使用事务curd时推荐方式 using(var tran=CreateTransaction()) 方式

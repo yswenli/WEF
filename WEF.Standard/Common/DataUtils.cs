@@ -348,7 +348,10 @@ namespace WEF.Common
             return appRandom.Value.Next();
         }
 
-        public static long paramCount = 0;
+        /// <summary>
+        /// paramCount
+        /// </summary>
+        public static long ParamCount = 0;
 
         /// <summary>
         /// 生成下一个参数
@@ -356,14 +359,14 @@ namespace WEF.Common
         /// <returns></returns>
         public static long GetNewParamCount()
         {
-            if (paramCount >= long.MaxValue)
+            if (ParamCount >= long.MaxValue)
             {
-                Interlocked.Exchange(ref paramCount, 0);
+                Interlocked.Exchange(ref ParamCount, 0);
             }
 
-            Interlocked.Increment(ref paramCount);
+            Interlocked.Increment(ref ParamCount);
 
-            return paramCount;
+            return ParamCount;
         }
 
         /// <summary>
@@ -529,7 +532,12 @@ namespace WEF.Common
             throw new NotSupportedException("Unknown QueryOperator: " + op.ToString() + "!");
         }
 
-
+        /// <summary>
+        /// GetEndIndexOfMethod
+        /// </summary>
+        /// <param name="cmdText"></param>
+        /// <param name="startIndexOfCharIndex"></param>
+        /// <returns></returns>
         public static int GetEndIndexOfMethod(string cmdText, int startIndexOfCharIndex)
         {
             int foundEnd = -1;
@@ -553,7 +561,11 @@ namespace WEF.Common
             }
             return endIndexOfCharIndex;
         }
-
+        /// <summary>
+        /// SplitTwoParamsOfMethodBody
+        /// </summary>
+        /// <param name="bodyText"></param>
+        /// <returns></returns>
         public static string[] SplitTwoParamsOfMethodBody(string bodyText)
         {
             int colonIndex = 0;
@@ -632,7 +644,12 @@ namespace WEF.Common
                 throw new DataException(string.Format("Error parsing column {0} ({1}={2})", index, name, value), ex);
             }
         }
-
+        /// <summary>
+        /// ReplaceSqlKey
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="maxlength"></param>
+        /// <returns></returns>
         public static string ReplaceSqlKey(string text, int maxlength)
         {
             text = text.ToLower().Trim();

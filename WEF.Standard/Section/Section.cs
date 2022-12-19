@@ -138,7 +138,12 @@ namespace WEF.Section
         {
             using (IDataReader reader = ToDataReader())
             {
-                return reader.ReaderToEnumerable<TModel>().FirstOrDefault();
+                var list = reader.ReaderToEnumerable<TModel>();
+                if (list != null)
+                {
+                    return list.FirstOrDefault();
+                }
+                return default;
             }
         }
 
@@ -163,10 +168,11 @@ namespace WEF.Section
         /// <returns></returns>
         public List<TModel> ToList<TModel>()
         {
-            using (IDataReader reader = ToDataReader())
-            {
-                return reader.ReaderToEnumerable<TModel>().ToList();
-            }
+            var list = ToEnumerable<TModel>();
+            if (list != null)
+                return list.ToList();
+            else
+                return null;
         }
         /// <summary>
         /// 返回懒加载数据
@@ -176,7 +182,11 @@ namespace WEF.Section
         {
             using (IDataReader reader = ToDataReader())
             {
-                return reader.ReaderToEnumerable<TModel>();
+                var list = reader.ReaderToEnumerable<TModel>();
+                if (list != null)
+                    return list;
+                else
+                    return null;
             }
         }
 
@@ -339,7 +349,7 @@ namespace WEF.Section
         /// <returns></returns>
         public PagedList<TModel> ToPagedList<TModel>(int pageIndex, int pageSize)
         {
-            var total = Count();            
+            var total = Count();
 
             return new PagedList<TModel>(ToList<TModel>(), pageIndex, pageSize, total);
         }

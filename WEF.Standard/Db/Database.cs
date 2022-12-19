@@ -1186,12 +1186,10 @@ namespace WEF.Db
                 {
                     connection.Close();
                 }
-                catch
+                finally
                 {
-
+                    throw new Exception($"ExecuteReader 异常，ConnectionString:{ConnectionString}，CommandText:{command.CommandText}", ex);
                 }
-
-                throw new Exception($"ExecuteReader 异常，ConnectionString:{ConnectionString}，CommandText:{command.CommandText}", ex);
             }
         }
 

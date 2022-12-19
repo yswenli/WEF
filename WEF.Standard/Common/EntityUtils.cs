@@ -514,15 +514,21 @@ namespace WEF.Common
         private const string LinqBinary = "System.Data.Linq.Binary";
 
 
-
+        /// <summary>
+        /// GetDeserializer
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="reader"></param>
+        /// <param name="startBound"></param>
+        /// <param name="length"></param>
+        /// <param name="returnNullIfFirstMissing"></param>
+        /// <returns></returns>
         public static Func<IDataReader, object> GetDeserializer(Type type, IDataReader reader, int startBound, int length, bool returnNullIfFirstMissing)
         {
-            if (type == typeof(object)
-                || type == typeof(FastExpando))
+            if (type == typeof(object) || type == typeof(FastExpando))
             {
                 return GetDynamicDeserializer(reader, startBound, length, returnNullIfFirstMissing);
             }
-
             if (!(typeMap.ContainsKey(type) || type.FullName == LinqBinary))
             {
                 return GetTypeDeserializer(type, reader, startBound, length, returnNullIfFirstMissing);
@@ -531,7 +537,7 @@ namespace WEF.Common
         }
 
         /// <summary>
-        /// 
+        /// GetStructDeserializer
         /// </summary>
         /// <param name="type"></param>
         /// <param name="index"></param>
@@ -676,7 +682,16 @@ namespace WEF.Common
                     .Where(p => p.GetIndexParameters().Any() && p.GetIndexParameters()[0].ParameterType == typeof(int))
                     .Select(p => p.GetGetMethod()).First();
 
-
+        /// <summary>
+        /// GetTypeDeserializer
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="reader"></param>
+        /// <param name="startBound"></param>
+        /// <param name="length"></param>
+        /// <param name="returnNullIfFirstMissing"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public static Func<IDataReader, object> GetTypeDeserializer(Type type, IDataReader reader, int startBound = 0, int length = -1, bool returnNullIfFirstMissing = false)
         {
             var dm = new DynamicMethod(string.Format("Deserialize{0}", Guid.NewGuid()), typeof(object), new[] { typeof(IDataReader) }, true);
@@ -1131,6 +1146,15 @@ namespace WEF.Common
             }
         }
 
+        /// <summary>
+        /// GetDynamicDeserializer
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="startBound"></param>
+        /// <param name="length"></param>
+        /// <param name="returnNullIfFirstMissing"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         private static Func<IDataReader, object> GetDynamicDeserializer(IDataRecord reader, int startBound, int length, bool returnNullIfFirstMissing)
         {
             var fieldCount = reader.FieldCount;

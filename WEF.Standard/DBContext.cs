@@ -2012,9 +2012,6 @@ namespace WEF
         /// <returns></returns>
         public int ExecuteNonQuery(DbCommand cmd)
         {
-            if (null == cmd)
-                return 0;
-
             return _db.ExecuteNonQuery(cmd);
         }
 
@@ -2026,8 +2023,6 @@ namespace WEF
         /// <returns></returns>
         public int ExecuteNonQuery(DbCommand cmd, DbTransaction tran)
         {
-            if (null == cmd)
-                return 0;
             return _db.ExecuteNonQuery(cmd, tran);
         }
 
@@ -2039,9 +2034,6 @@ namespace WEF
         /// <returns></returns>
         public object ExecuteScalar(DbCommand cmd, DbTransaction tran)
         {
-            if (null == cmd)
-                return null;
-
             return _db.ExecuteScalar(cmd, tran);
         }
 
@@ -2052,9 +2044,6 @@ namespace WEF
         /// <returns></returns>
         public object ExecuteScalar(DbCommand cmd)
         {
-            if (null == cmd)
-                return null;
-
             return _db.ExecuteScalar(cmd);
         }
 
@@ -2065,8 +2054,6 @@ namespace WEF
         /// <returns></returns>
         public IDataReader ExecuteReader(DbCommand cmd)
         {
-            if (null == cmd)
-                return null;
             return _db.ExecuteReader(cmd);
         }
 
@@ -2078,8 +2065,6 @@ namespace WEF
         /// <returns></returns>
         public IDataReader ExecuteReader(DbCommand cmd, DbTransaction tran)
         {
-            if (null == cmd)
-                return null;
             return _db.ExecuteReader(cmd, tran);
         }
 
@@ -2090,8 +2075,6 @@ namespace WEF
         /// <returns></returns>
         public DataSet ExecuteDataSet(DbCommand cmd)
         {
-            if (null == cmd)
-                return null;
             return _db.ExecuteDataSet(cmd);
         }
 
@@ -2103,8 +2086,6 @@ namespace WEF
         /// <returns></returns>
         public DataSet ExecuteDataSet(DbCommand cmd, DbTransaction tran)
         {
-            if (null == cmd)
-                return null;
             return _db.ExecuteDataSet(cmd, tran);
         }
 

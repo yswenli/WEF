@@ -20,13 +20,10 @@ namespace WEF.Common
     /// </summary>
     public class TableAttribute : Attribute
     {
-        /// <summary>
-        /// 
-        /// </summary>
         private string _tableName;
         private string _userName;
         /// <summary>
-        /// 
+        /// TableAttribute
         /// </summary>
         /// <param name="tableName"></param>
         public TableAttribute(string tableName)
@@ -34,7 +31,7 @@ namespace WEF.Common
             this._tableName = tableName;
         }
         /// <summary>
-        /// 
+        /// TableAttribute
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="username"></param>
@@ -44,7 +41,7 @@ namespace WEF.Common
             this._userName = username;
         }
         /// <summary>
-        /// 
+        /// GetTableName
         /// </summary>
         /// <returns></returns>
         public string GetTableName()
@@ -52,7 +49,7 @@ namespace WEF.Common
             return _tableName;
         }
         /// <summary>
-        /// 
+        /// GetUserName
         /// </summary>
         /// <returns></returns>
         public string GetUserName()
@@ -82,7 +79,7 @@ namespace WEF.Common
         /// <returns></returns>
         public static string GetTableName(Type type)
         {
-            return _dic.GetOrAdd(type, (k) => ((TableAttribute)type.GetCustomAttributes(true).Where(b => b.GetType().Name == "TableAttribute").First()).GetTableName());
+            return _dic.GetOrAdd(type, (k) => ((TableAttribute)type.GetCustomAttributes(true).Where(b => b.GetType().Name.Equals("TableAttribute", StringComparison.InvariantCultureIgnoreCase)).First()).GetTableName());
         }
     }
 }

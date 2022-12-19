@@ -171,6 +171,21 @@ namespace WEF.Common
             _sb.Remove(start, num);
         }
 
+        /// <summary>
+        /// RemoveFirst
+        /// </summary>
+        public void RemoveFirst()
+        {
+            _sb.Remove(0, 1);
+        }
+        /// <summary>
+        /// RemoveLast
+        /// </summary>
+        public void RemoveLast()
+        {
+            _sb.Remove(_sb.Length - 1, 1);
+        }    
+
 
         /// <summary>
         /// 插入

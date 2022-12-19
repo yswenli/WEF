@@ -144,7 +144,7 @@ namespace WEF
         {
             throw new Exception(string.Format(Tips, "Len"));
         }
-        
+
         #endregion
 
         #region Convert
@@ -1666,6 +1666,7 @@ namespace WEF
             switch (typeName)
             {
                 case "String":
+                case "StringValue":
                     return DbType.String;
                 case "Byte":
                     return DbType.Byte;
@@ -1690,7 +1691,7 @@ namespace WEF
                 case "Boolean":
                     return DbType.Boolean;
                 default:
-                    throw new NotSupportedException("不支持的类型");
+                    throw new NotSupportedException("不支持的类型:" + typeName);
             }
         }
 
