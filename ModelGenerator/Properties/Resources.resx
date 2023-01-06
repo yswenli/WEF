@@ -395,4 +395,9 @@ select name from example where id in（4,3,2,1）order by instr('4,3,2,1',id);
 sqlserver写法
 Select * From example Where id in (4,3,2,1)  Order By charindex(','+ id +',', ',4,3,2,1,');</value>
   </data>
+  <data name="查看所有表和列" xml:space="preserve">
+    <value>SELECT b.TableName, NAME as ColumnName FROM SYSCOLUMNS c
+right join (SELECT NAME as TableName FROM SYSOBJECTS WHERE XTYPE='U') b on c.id=OBJECT_ID(b.TableName)
+where TableName like 'PTS%'</value>
+  </data>
 </root>

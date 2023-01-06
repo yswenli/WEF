@@ -443,6 +443,17 @@ namespace WEF.ModelGenerator.Properties {
         }
         
         /// <summary>
+        ///   查找类似 SELECT b.TableName, NAME as ColumnName FROM SYSCOLUMNS c
+        ///right join (SELECT NAME as TableName FROM SYSOBJECTS WHERE XTYPE=&apos;U&apos;) b on c.id=OBJECT_ID(b.TableName)
+        ///where TableName like &apos;PTS%&apos; 的本地化字符串。
+        /// </summary>
+        internal static string 查看所有表和列 {
+            get {
+                return ResourceManager.GetString("查看所有表和列", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 A：create table tab_new like tab_old (使用旧表创建新表)
         ///B：create table tab_new as select col1,col2… from tab_old definition only 的本地化字符串。
         /// </summary>

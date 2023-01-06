@@ -58,6 +58,7 @@ namespace WEF.ModelGenerator.Forms
             _dic.Add("游标", Resources.游标);
             _dic.Add("重建索引", Resources.重建索引);
             _dic.Add("查看存储过程", Resources.查看存储过程);
+            _dic.Add("查看表和列", Resources.查看所有表和列);
             _dic.Add("分页", Resources.分页);
             _dic.Add("分割字段并分组统计", Resources.分割字段并分组统计);
             _dic.Add("MSSQL启用ServiceBroker", Resources.MSSQL启用ServiceBroker);
