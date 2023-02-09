@@ -204,6 +204,12 @@ namespace WEF.Expressions
                     return ConvertNull(tableName, mce, true);
                 case "IsNotNull":
                     return ConvertNull(tableName, mce);
+                case "SubQuery":
+                    return ConvertSubQuery(tableName, mce);
+                case "SubQueryIn":
+                    return ConvertSubQueryIn(tableName, mce);
+                case "SubQueryNotIn":
+                    return ConvertSubQueryNotIn(tableName, mce);
             }
             throw new Exception("暂时不支持的Lambda表达式方法: " + mce.Method.Name + "！请使用经典写法！");
         }
@@ -217,7 +223,6 @@ namespace WEF.Expressions
             return isNull ? CreateField(tableName, key, member.Expression.Type).IsNull()
                 : CreateField(tableName, key, member.Expression.Type).IsNotNull();
         }
-
 
         private static WhereExpression ConvertEqualsCall(string tableName, MethodCallExpression mce, bool isLike = false)
         {
@@ -781,6 +786,60 @@ namespace WEF.Expressions
                 }
             }
             throw new Exception("'As'仅支持一个参数，参数应为字符串且不允许为空");
+        }
+
+
+        /// <summary>
+        /// 转换子查询
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="exprBody"></param>
+        /// <returns></returns>
+        public static WhereExpression ConvertSubQuery(string tableName, System.Linq.Expressions.Expression exprBody)
+        {
+            var e = (MethodCallExpression)exprBody;
+            ColumnFunction function;
+            MemberExpression member;
+            var key = GetMemberName(e.Arguments[0], out function, out member);
+            Field f = CreateField(tableName, key, member.Expression.Type);
+            var search = (Search)GetValue(e.Arguments[1]);
+            var queryOperator = (QueryOperator)GetValue(e.Arguments[2]);
+            return f.SubQuery(search, queryOperator);
+        }
+
+        /// <summary>
+        /// 转换子查询
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="exprBody"></param>
+        /// <returns></returns>
+        public static WhereExpression ConvertSubQueryIn(string tableName, System.Linq.Expressions.Expression exprBody)
+        {
+            var e = (MethodCallExpression)exprBody;
+            ColumnFunction function;
+            MemberExpression member;
+            var key = GetMemberName(e.Arguments[0], out function, out member);
+            Field f = CreateField(tableName, key, member.Expression.Type);
+            var search = (Search)GetValue(e.Arguments[1]);
+            var queryOperator = (QueryOperator)GetValue(e.Arguments[2]);
+            return f.SubQueryIn(search);
+        }
+        /// <summary>
+        /// 转换子查询
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="exprBody"></param>
+        /// <returns></returns>
+        public static WhereExpression ConvertSubQueryNotIn(string tableName, System.Linq.Expressions.Expression exprBody)
+        {
+            var e = (MethodCallExpression)exprBody;
+            ColumnFunction function;
+            MemberExpression member;
+            var key = GetMemberName(e.Arguments[0], out function, out member);
+            Field f = CreateField(tableName, key, member.Expression.Type);
+            var search = (Search)GetValue(e.Arguments[1]);
+            var queryOperator = (QueryOperator)GetValue(e.Arguments[2]);
+            return f.SubQueryNotIn(search);
         }
 
         /// <summary>

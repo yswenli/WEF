@@ -27,6 +27,13 @@ namespace WEF.Standard.Test
 
             var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, cnnstr);
 
+            //子查询
+            var qs = dbarticleRepository.Search().Select(q => q.ID).Top();
+            var sq = dbarticleRepository.Search().SubQuery(q => q.ID.SubQuery(qs, QueryOperator.Equal));
+            var sqr = sq.ToList();
+
+           
+
             //转换字典
             var adic1 = dbarticleRepository.Search().ToDictionary(q => q.ID);
             var adic2 = dbarticleRepository.Search().ToDictionary(q => q.ID, q => q.Title);
@@ -65,7 +72,7 @@ namespace WEF.Standard.Test
             var asList = aSection.ToPagedList<DBArticle>(1, 20, "Article.ID", true);
 
             var uja = dbarticleRepository.Update(new DBArticle() { ID = "1" },
-                JoinOn.Add<DBArticle, DBComment>((x, y) => x.ID == y.PageID, JoinType.LeftJoin),
+                LeftJoinOn.Add<DBArticle, DBComment>((x, y) => x.ID == y.PageID),
                 (x, y) => x.IsDeleted != true && y.IsDeleted != true && x.ID.IsNull());
 
             var articlePagedList3 = aSection.ToList();
@@ -395,6 +402,13 @@ namespace WEF.Standard.Test
             //上面的where还可以这样写：
             //var where3 = new Where<table>();
             //where3.And<table2, table3>((a, b, c) => a.id == 1 && b.id == 2 && c.id == 3);
+
+            #endregion
+
+            #region 子查询
+
+            var subSearch = new DBGiftRepository().Search().Where(q => q.Name == "name").Select(q => q.Name).Top();
+            var tr = dbTaskRepository.Search().Where(DBTask._.Name.SubQueryEqual(subSearch)).First();
 
             #endregion
 

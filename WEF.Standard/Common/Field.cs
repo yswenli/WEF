@@ -798,7 +798,6 @@ namespace WEF.Common
         }
 
 
-
         /// <summary>
         /// SelectIn  
         /// </summary>
@@ -958,9 +957,20 @@ namespace WEF.Common
         /// <param name="from"></param>
         /// <param name="oper"></param>
         /// <returns></returns>
-        private WhereExpression subQuery(Field field, Search from, QueryOperator oper)
+        public WhereExpression SubQuery(Field field, Search from, QueryOperator oper)
         {
             return subQuery(field, from, DataUtils.ToString(oper));
+        }
+
+        /// <summary>
+        /// 组合 子查询
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="oper"></param>
+        /// <returns></returns>
+        public WhereExpression SubQuery(Search from, QueryOperator oper)
+        {
+            return subQuery(this, from, DataUtils.ToString(oper));
         }
 
         /// <summary>
@@ -988,7 +998,7 @@ namespace WEF.Common
         /// <returns></returns>
         public WhereExpression SubQueryEqual(Search from)
         {
-            return subQuery(this, from, QueryOperator.Equal);
+            return SubQuery(this, from, QueryOperator.Equal);
         }
 
         /// <summary>
@@ -998,7 +1008,7 @@ namespace WEF.Common
         /// <returns></returns>
         public WhereExpression SubQueryNotEqual(Search from)
         {
-            return subQuery(this, from, QueryOperator.NotEqual);
+            return SubQuery(this, from, QueryOperator.NotEqual);
         }
 
         /// <summary>
@@ -1008,7 +1018,7 @@ namespace WEF.Common
         /// <returns></returns>
         public WhereExpression SubQueryLess(Search from)
         {
-            return subQuery(this, from, QueryOperator.Less);
+            return SubQuery(this, from, QueryOperator.Less);
         }
 
         /// <summary>
@@ -1018,7 +1028,7 @@ namespace WEF.Common
         /// <returns></returns>
         public WhereExpression SubQueryLessOrEqual(Search from)
         {
-            return subQuery(this, from, QueryOperator.LessOrEqual);
+            return SubQuery(this, from, QueryOperator.LessOrEqual);
         }
 
         /// <summary>
@@ -1028,7 +1038,7 @@ namespace WEF.Common
         /// <returns></returns>
         public WhereExpression SubQueryGreater(Search from)
         {
-            return subQuery(this, from, QueryOperator.Greater);
+            return SubQuery(this, from, QueryOperator.Greater);
         }
 
         /// <summary>
@@ -1038,7 +1048,7 @@ namespace WEF.Common
         /// <returns></returns>
         public WhereExpression SubQueryGreaterOrEqual(Search from)
         {
-            return subQuery(this, from, QueryOperator.GreaterOrEqual);
+            return SubQuery(this, from, QueryOperator.GreaterOrEqual);
         }
 
 
@@ -1437,7 +1447,7 @@ namespace WEF.Common
         #endregion
     }
     /// <summary>
-    /// 
+    /// FieldAttribute
     /// </summary>
     public class FieldAttribute : Attribute
     {
@@ -1450,7 +1460,7 @@ namespace WEF.Common
         }
 
         /// <summary>
-        /// 
+        /// FieldAttribute
         /// </summary>
         /// <param name="fieldName"></param>
         public FieldAttribute(string fieldName)

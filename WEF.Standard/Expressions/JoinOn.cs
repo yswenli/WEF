@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Net.Mime;
 
 using WEF.Common;
 
@@ -277,6 +276,18 @@ namespace WEF.Expressions
         {
 
         }
+
+        /// <summary>
+        /// 快捷方法
+        /// </summary>
+        /// <typeparam name="TEntity1"></typeparam>
+        /// <typeparam name="TEntity2"></typeparam>
+        /// <param name="joinOn"></param>
+        /// <returns></returns>
+        public static JoinOn<TEntity1, TEntity2> Add<TEntity1, TEntity2>(Expression<Func<TEntity1, TEntity2, bool>> joinOn)
+        {
+            return Add(joinOn, JoinType.LeftJoin);
+        }
     }
     /// <summary>
     /// RightJoin
@@ -291,6 +302,17 @@ namespace WEF.Expressions
         public RightJoinOn(string tableName, WhereExpression where) : base(tableName, where, JoinType.RightJoin)
         {
 
+        }
+        /// <summary>
+        /// 快捷方法
+        /// </summary>
+        /// <typeparam name="TEntity1"></typeparam>
+        /// <typeparam name="TEntity2"></typeparam>
+        /// <param name="joinOn"></param>
+        /// <returns></returns>
+        public static JoinOn<TEntity1, TEntity2> Add<TEntity1, TEntity2>(Expression<Func<TEntity1, TEntity2, bool>> joinOn)
+        {
+            return Add(joinOn, JoinType.RightJoin);
         }
     }
     /// <summary>
@@ -307,6 +329,18 @@ namespace WEF.Expressions
         {
 
         }
+
+        /// <summary>
+        /// 快捷方法
+        /// </summary>
+        /// <typeparam name="TEntity1"></typeparam>
+        /// <typeparam name="TEntity2"></typeparam>
+        /// <param name="joinOn"></param>
+        /// <returns></returns>
+        public static JoinOn<TEntity1, TEntity2> Add<TEntity1, TEntity2>(Expression<Func<TEntity1, TEntity2, bool>> joinOn)
+        {
+            return Add(joinOn, JoinType.InnerJoin);
+        }
     }
     /// <summary>
     /// FullJoin
@@ -321,6 +355,18 @@ namespace WEF.Expressions
         public FullJoinOn(string tableName, WhereExpression where) : base(tableName, where, JoinType.FullJoin)
         {
 
+        }
+
+        /// <summary>
+        /// 快捷方法
+        /// </summary>
+        /// <typeparam name="TEntity1"></typeparam>
+        /// <typeparam name="TEntity2"></typeparam>
+        /// <param name="joinOn"></param>
+        /// <returns></returns>
+        public static JoinOn<TEntity1, TEntity2> Add<TEntity1, TEntity2>(Expression<Func<TEntity1, TEntity2, bool>> joinOn)
+        {
+            return Add(joinOn, JoinType.FullJoin);
         }
     }
 

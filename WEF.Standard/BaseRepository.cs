@@ -150,6 +150,16 @@ namespace WEF
         }
 
         /// <summary>
+        /// 获取实体
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public T Get(Expression<Func<T, bool>> lambdaWhere)
+        {
+            return Search().First(lambdaWhere);
+        }
+
+        /// <summary>
         /// 返回全部
         /// </summary>
         /// <returns></returns>
@@ -174,7 +184,7 @@ namespace WEF
         /// <returns></returns>
         public List<T> GetList(IEnumerable<string> ids)
         {
-            var idsStr = $"'{string.Join("','", System.Linq.Enumerable.ToArray(ids))}'";
+            var idsStr = $"'{string.Join("','", ids.ToArray())}'";
             return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name} in({idsStr})").ToList<T>();
         }
 
@@ -185,10 +195,18 @@ namespace WEF
         /// <returns></returns>
         public List<T> GetList(IEnumerable<int> ids)
         {
-            var idsStr = $"'{string.Join("','", System.Linq.Enumerable.ToArray(ids))}'";
+            var idsStr = $"'{string.Join("','", ids.ToArray())}'";
             return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name} in({idsStr})").ToList<T>();
         }
-
+        /// <summary>
+        /// 获取列表
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public List<T> GetList(Expression<Func<T, bool>> lambdaWhere)
+        {
+            return Search().ToList(lambdaWhere);
+        }
         /// <summary>
         /// 获取列表
         /// <param name="pageIndex">分页第几页</param>
@@ -526,40 +544,6 @@ namespace WEF
             return _dbContext.Delete<T>(lambdaWhere);
         }
 
-        /// <summary>
-        /// 持久化实体
-        /// <param name="entity">传进的实体</param>
-        /// </summary>
-        public int Save(T entity)
-        {
-            return _dbContext.Save(entity);
-        }
-        /// <summary>
-        /// 批量持久化实体
-        /// <param name="entities">传进的实体列表</param>
-        /// </summary>
-        public int Save(List<T> entities)
-        {
-            return _dbContext.Save(entities);
-        }
-        /// <summary>
-        /// 持久化实体
-        /// <param name="tran">事务</param>
-        /// <param name="entity">传进的实体</param>
-        /// </summary>
-        public int Save(DbTransaction tran, T entity)
-        {
-            return _dbContext.Save(tran, entity);
-        }
-        /// <summary>
-        /// 批量持久化实体
-        /// <param name="tran">事务</param>
-        /// <param name="entities">传进的实体列表</param>
-        /// </summary>
-        public int Save(DbTransaction tran, List<T> entities)
-        {
-            return _dbContext.Save(tran, entities);
-        }
 
         #region sql
 

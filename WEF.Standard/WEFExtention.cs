@@ -24,6 +24,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 
 using WEF.Common;
+using WEF.Expressions;
 
 namespace WEF
 {
@@ -144,7 +145,46 @@ namespace WEF
         {
             throw new Exception(string.Format(Tips, "Len"));
         }
-
+        /// <summary>
+        /// 子查询
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="search"></param>
+        /// <param name="queryOperator"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static WhereExpression SubQuery<T>(this object key, Search<T> search, QueryOperator queryOperator)
+            where T : Entity
+        {
+            throw new Exception(string.Format(Tips, "SubQuery"));
+        }
+        /// <summary>
+        /// 子查询
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static WhereExpression SubQueryIn<T>(this object key, Search<T> search)
+           where T : Entity
+        {
+            throw new Exception(string.Format(Tips, "SubQuery"));
+        }
+        /// <summary>
+        /// 子查询
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static WhereExpression SubQueryNotIn<T>(this object key, Search<T> search)
+           where T : Entity
+        {
+            throw new Exception(string.Format(Tips, "SubQuery"));
+        }
         #endregion
 
         #region Convert

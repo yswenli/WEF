@@ -229,9 +229,10 @@ namespace WEF
         }
 
         /// <summary>
-        /// Join多表，条件中只能写表关联条件
-        /// 需要注意泛型参数顺序，
-        /// join的目标表名取第一个泛型参数TEntity1
+        /// Join其他的多表，
+        /// 其中一表必须是已经join过的表，
+        /// 条件中只能写表关联条件，
+        /// 需要注意泛型参数顺序
         /// </summary>
         /// <typeparam name="TEntity1"></typeparam>
         /// <typeparam name="TEntity2"></typeparam>
@@ -242,9 +243,9 @@ namespace WEF
             where TEntity1 : Entity
             where TEntity2 : Entity
         {
-            var where = ExpressionToOperation<TEntity1>.ToJoinWhere(joinWhere);
+            var joinOn = JoinOn.Add(joinWhere, joinType);
 
-            return (Search<T>)base.Join(EntityCache.GetTableName<TEntity2>(), EntityCache.GetUserName<TEntity1>(), where, joinType);
+            return (Search<T>)Join(joinOn);
         }
 
         /// <summary>
@@ -401,6 +402,67 @@ namespace WEF
                 else
                     this._where = this._where.And(ExpressionToOperation<T>.ToWhereOperation(item));
             }
+
+            return this;
+        }
+
+        /// <summary>
+        /// 子查询
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public Search<T> SubQuery(Expression<Func<T, WhereExpression>> lambdaWhere)
+        {
+            if (lambdaWhere == null) return this;
+
+            var we = ExpressionToOperation<T>.ConvertSubQuery(_tableName, lambdaWhere.Body);
+
+            if (this._where == null)
+            {
+                this._where = new WhereBuilder(_tableName, we).ToWhereClip();
+            }
+            else
+                this._where = this._where.And(we);
+
+            return this;
+        }
+        /// <summary>
+        /// 子查询
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public Search<T> SubQueryIn(Expression<Func<T, WhereExpression>> lambdaWhere)
+        {
+            if (lambdaWhere == null) return this;
+
+            var we = ExpressionToOperation<T>.ConvertSubQueryIn(_tableName, lambdaWhere.Body);
+
+            if (this._where == null)
+            {
+                this._where = new WhereBuilder(_tableName, we).ToWhereClip();
+            }
+            else
+                this._where = this._where.And(we);
+
+            return this;
+        }
+        /// <summary>
+        /// 子查询
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public Search<T> SubQueryNotIn(Expression<Func<T, WhereExpression>> lambdaWhere)
+        {
+            if (lambdaWhere == null) return this;
+
+            var we = ExpressionToOperation<T>.ConvertSubQueryNotIn(_tableName, lambdaWhere.Body);
+
+            if (this._where == null)
+            {
+                this._where = new WhereBuilder(_tableName, we).ToWhereClip();
+            }
+            else
+                this._where = this._where.And(we);
 
             return this;
         }
@@ -782,7 +844,7 @@ namespace WEF
         /// </summary>
         /// <param name="topCount"></param>
         /// <returns></returns>
-        public new Search<T> Top(int topCount)
+        public new Search<T> Top(int topCount = 1)
         {
             return From(1, topCount);
         }

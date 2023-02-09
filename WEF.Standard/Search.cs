@@ -932,7 +932,6 @@ namespace WEF
             if (where.Parameters.Count > 0)
                 _parameters.AddRange(where.Parameters);
 
-
             return this;
         }
 
