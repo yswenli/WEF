@@ -34,6 +34,7 @@ namespace WEF.ModelGenerator.Forms
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // skinWaterTextBox1
@@ -48,7 +49,7 @@ namespace WEF.ModelGenerator.Forms
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(746, 178);
+            this.button1.Location = new System.Drawing.Point(746, 177);
             this.button1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(48, 40);
@@ -73,11 +74,21 @@ namespace WEF.ModelGenerator.Forms
             this.openFileDialog1.Filter = "Excel97|*.xls|平面文件|*.csv|sql文件|*.sql";
             this.openFileDialog1.Title = "导入数据";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(77, 136);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(370, 24);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "可导入Excel、平面文件或SQL语句";
+            // 
             // SQLImportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(888, 448);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.skinWaterTextBox1);
@@ -98,5 +109,6 @@ namespace WEF.ModelGenerator.Forms
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Label label1;
     }
 }

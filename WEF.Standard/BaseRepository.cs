@@ -124,15 +124,6 @@ namespace WEF
             return _dbContext.Search<T>(tableName);
         }
 
-        /// <summary>
-        /// 当前实体查询上下文
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public Search<T> Search(T entity)
-        {
-            return _dbContext.Search<T>(entity);
-        }
 
         /// <summary>
         /// 获取实体
@@ -682,9 +673,6 @@ namespace WEF
             }
             return sqlSection.ExecuteNonQuery() > 0;
         }
-
-
-
 
         /// <summary>
         /// 执行存储过程

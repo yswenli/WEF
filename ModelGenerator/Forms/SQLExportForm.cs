@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Data;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using WEF.Common;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Model;
 
@@ -27,9 +29,6 @@ namespace WEF.ModelGenerator.Forms
             progressBar1.MarqueeAnimationSpeed = 5;
             //progressBar1.Visible = true;
         }
-
-
-
 
         private void ExcelHelper_OnStop()
         {
@@ -136,6 +135,41 @@ namespace WEF.ModelGenerator.Forms
                     button2.Enabled = true;
                 }
             }
+        }
+
+        /// <summary>
+        /// 导出到JSON
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Task.Run(() =>
+            {
+                LoadForm.ShowLoading(this);
+                try
+                {
+                    if (DataTable == null)
+                    {
+                        var dbObj = DBObjectHelper.GetDBObject(Connection);
+
+                        DataTable = dbObj.GetTabData(TableName, TableName, 1000);
+                    }
+
+                    var json = SerializeHelper.Serialize(DataTable);
+
+                    LoadForm.HideLoading(this);
+
+                    InvokeHelper.Invoke(this, () => new TextForm("WEF数据库工具", json, true).ShowDialog(this));
+                }
+                catch (Exception ex)
+                {
+                    LoadForm.HideLoading(this);
+                    MessageBox.Show("生成Json时发生异常：" + ex.Message);
+                }
+            });
+
+
         }
     }
 }
