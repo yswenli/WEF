@@ -21,12 +21,6 @@
 *描述：
 *
 *****************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using WEF.Models;
 using WEF.Test.Models;
 
@@ -99,7 +93,7 @@ namespace WEF.Test
             var repository = new DBWarehouseInboundDataRepository(DatabaseType.MySql, cnnStr);
 
             using (var tran = repository.CreateTransaction())
-            {
+            {                
                 tran.Insert(data);
                 tran.Commit();
             }

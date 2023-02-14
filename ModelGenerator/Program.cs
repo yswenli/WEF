@@ -26,7 +26,14 @@ namespace WEF.ModelGenerator
             //MainForm
             SingleProcessHelper.ProcessRun<MainForm>((f) =>
             {
-                Application.Run(f);
+                try
+                {
+                    Application.Run(f);
+                }
+                catch(Exception ex)
+                {
+                    Logger.Error(ex);
+                }                
             });
         }
 
@@ -44,30 +51,8 @@ namespace WEF.ModelGenerator
 
             MessageBox.Show(e.Exception.Message + "\r\n 详情请查看日志!", "出错啦!", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            if (!Directory.Exists(errorpath))
-            {
-                Directory.CreateDirectory(errorpath);
-            }
-
-            string errorDayPath = Path.Combine(errorpath, DateTime.Now.ToString("yyyyMM") + ".txt");
-
-            StringBuilder error = new StringBuilder();
-
-            error.Append("DateTime:");
-            error.Append(DateTime.Now.ToString());
-            error.Append("\r\n");
-            error.Append("Message:");
-            error.Append(e.Exception.Message);
-            error.Append("\r\n");
-            error.Append("Source:");
-            error.Append(e.Exception.Source);
-            error.Append("\r\n");
-            error.Append("StackTrace:");
-            error.Append(e.Exception.StackTrace);
-            error.Append("\r\n--------------------------------------------------------------\r\n");
-            File.AppendAllText(errorDayPath, error.ToString());
+            Logger.Error(e.Exception);
         }
 
-        public static string errorpath = Path.Combine(Application.StartupPath, "log");
     }
 }

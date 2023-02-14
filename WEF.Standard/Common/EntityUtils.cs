@@ -2,7 +2,7 @@
  * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * 所属域：WENLI-PC
- * 登录用户：yswenli
+*创建人： yswenli
  * CLR版本：4.0.30319.17929
  * 唯一标识：fc2b3c60-82bd-4265-bf8c-051e512a1035
  * 机器名称：WENLI-PC
@@ -1221,19 +1221,20 @@ namespace WEF.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static IEnumerable<T> ReaderToEnumerable<T>(this IDataReader reader)
+        public static List<T> ReaderToList<T>(this IDataReader reader)
         {
+            List<T> result = new List<T>();
             var info = new CacheInfo
             {
                 Deserializer = GetDeserializer(typeof(T), reader, 0, -1, false)
             };
-
             while (reader.Read())
             {
                 dynamic next = info.Deserializer(reader);
 
-                yield return (T)next;
+                result.Add((T)next);
             }
+            return result;
         }
         /// <summary>
         /// ReaderToEnumerable
@@ -1241,19 +1242,20 @@ namespace WEF.Common
         /// <param name="reader"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static IEnumerable<dynamic> ReaderToEnumerable(this IDataReader reader, Type type)
+        public static List<dynamic> ReaderToList(this IDataReader reader, Type type)
         {
+            List<dynamic> result = new List<dynamic>();
             var info = new CacheInfo
             {
                 Deserializer = GetDeserializer(type, reader, 0, -1, false)
             };
-
             while (reader.Read())
             {
                 dynamic next = info.Deserializer(reader);
 
-                yield return next;
+                result.Add(next);
             }
+            return result;
         }
     }
 }

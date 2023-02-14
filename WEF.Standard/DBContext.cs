@@ -687,21 +687,23 @@ namespace WEF
         /// <summary>
         /// Begins the transaction.
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="timeout"></param>
         /// <returns></returns>
-        public DbTrans BeginTransaction(int timeout = 120)
+        public DbTrans<T> BeginTransaction<T>(int timeout = 120) where T : Entity
         {
-            return new DbTrans(_db.BeginTransaction(), this, timeout);
+            return new DbTrans<T>(_db.BeginTransaction(), this, timeout);
         }
 
         /// <summary>
         /// Begins the transaction.
         /// </summary>
-        /// <param name="type">The il.</param>
-        /// <returns>The begined transaction.</returns>
-        public DbTrans BeginTransaction(DbTransType type, int timeout = 120)
+        /// <param name="type"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
+        public DbTrans<T> BeginTransaction<T>(DbTransType type, int timeout = 120) where T : Entity
         {
-            return new DbTrans(_db.BeginTransaction(type), this, timeout);
+            return new DbTrans<T>(_db.BeginTransaction(type), this, timeout);
         }
 
         /// <summary>
@@ -756,9 +758,9 @@ namespace WEF
             if (null == entities || entities.Length == 0)
                 return;
 
-            using (DbTrans trans = BeginTransaction())
+            using (DbTrans trans = BeginTransaction<TEntity>())
             {
-                UpdateAll<TEntity>(trans, entities);
+                UpdateAll(trans, entities);
             }
         }
 
@@ -879,9 +881,9 @@ namespace WEF
             if (null == entities || entities.Length == 0)
                 return null;
             var result = new List<int>();
-            using (DbTrans trans = BeginTransaction())
+            using (DbTrans trans = BeginTransaction<TEntity>())
             {
-                result.Add(Update<TEntity>(trans, entities));
+                result.Add(Update(trans, entities));
             }
             return result;
         }
@@ -1632,7 +1634,7 @@ namespace WEF
             if (null == entities || entities.Length == 0)
                 return null;
             var result = new List<int>();
-            using (var trans = this.BeginTransaction())
+            using (var trans = BeginTransaction<TEntity>())
             {
                 result.Add(Insert(trans, entities));
             }
@@ -1910,7 +1912,7 @@ namespace WEF
             where TEntity : Entity
         {
             int count = 0;
-            using (DbTrans trans = this.BeginTransaction())
+            using (DbTrans trans = this.BeginTransaction<TEntity>())
             {
                 foreach (var entity in entities)
                 {
@@ -1918,13 +1920,13 @@ namespace WEF
                     switch (es)
                     {
                         case EntityState.Added:
-                            count += Insert<TEntity>(trans, entity);
+                            count += Insert(trans, entity);
                             break;
                         case EntityState.Deleted:
-                            count += Delete<TEntity>(trans, entity);
+                            count += Delete(trans, entity);
                             break;
                         case EntityState.Modified:
-                            count += Update<TEntity>(trans, entity);
+                            count += Update(trans, entity);
                             break;
                     }
                 }
@@ -2199,7 +2201,7 @@ namespace WEF
         /// <returns></returns>
         public List<T> ToList<T>(string sql, params DbParameter[] dbParameters)
         {
-            return ExecuteReader(sql, dbParameters).ReaderToEnumerable<T>().ToList();
+            return ExecuteReader(sql, dbParameters).ReaderToList<T>();
         }
 
         /// <summary>

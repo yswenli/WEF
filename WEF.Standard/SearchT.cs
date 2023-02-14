@@ -19,7 +19,6 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 using WEF.Common;
 using WEF.Db;
@@ -122,14 +121,6 @@ namespace WEF
             return Join(EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where, JoinType.CrossJoin);
         }
 
-        /// <summary>
-        /// count
-        /// </summary>
-        /// <returns></returns>
-        public int Count()
-        {
-            return Count(GetPagedFromSection());
-        }
 
         /// <summary>
         /// Count
@@ -139,6 +130,16 @@ namespace WEF
         public int Count(Expression<Func<T, object>> lambdaSelect)
         {
             return Count(GetPagedFromSection(lambdaSelect));
+        }
+
+        /// <summary>
+        /// LongCount
+        /// </summary>
+        /// <param name="lambdaSelect"></param>
+        /// <returns></returns>
+        public long LongCount(Expression<Func<T, object>> lambdaSelect)
+        {
+            return LongCount(GetPagedFromSection(lambdaSelect));
         }
 
         /// <summary>
@@ -243,9 +244,8 @@ namespace WEF
             where TEntity1 : Entity
             where TEntity2 : Entity
         {
-            var joinOn = JoinOn.Add(joinWhere, joinType);
-
-            return (Search<T>)Join(joinOn);
+            var where = ExpressionToOperation<TEntity1>.ToJoinWhere(joinWhere);
+            return (Search<T>)base.Join(EntityCache.GetTableName<TEntity2>(), EntityCache.GetUserName<TEntity1>(), where, joinType);
         }
 
         /// <summary>
@@ -257,8 +257,7 @@ namespace WEF
         /// <returns></returns>
         public Search<T> Join<TEntity>(Expression<Func<T, TEntity, bool>> joinWhere, JoinType joinType) where TEntity : Entity
         {
-            return Join<TEntity>(ExpressionToOperation<T>.ToJoinWhere(joinWhere),
-                joinType);
+            return Join<TEntity>(ExpressionToOperation<T>.ToJoinWhere(joinWhere), joinType);
         }
 
         /// <summary>
@@ -1004,7 +1003,7 @@ namespace WEF
 
             using (IDataReader reader = ToDataReader(search))
             {
-                var result = EntityUtils.ReaderToEnumerable<T>(reader).ToArray();
+                var result = EntityUtils.ReaderToList<T>(reader);
 
                 if (result.Any())
                 {
@@ -1040,7 +1039,7 @@ namespace WEF
 
             using (IDataReader reader = ToDataReader(from))
             {
-                var result = EntityUtils.ReaderToEnumerable<Model>(reader).ToArray();
+                var result = EntityUtils.ReaderToList<Model>(reader);
 
                 if (result.Any())
                 {
@@ -1073,7 +1072,7 @@ namespace WEF
 
             using (IDataReader reader = ToDataReader(search))
             {
-                var result = EntityUtils.ReaderToEnumerable<T>(reader).ToArray();
+                var result = EntityUtils.ReaderToList<T>(reader);
 
                 if (result.Any())
                 {
@@ -1112,11 +1111,11 @@ namespace WEF
 
             using (IDataReader reader = ToDataReader(search))
             {
-                var result = EntityUtils.ReaderToEnumerable<T>(reader).ToArray();
+                var result = EntityUtils.ReaderToList<T>(reader);
 
                 if (result.Any())
                 {
-                    if (result.Length > 1) throw new Exception("There are multiple records for the acquired data");
+                    if (result.Count > 1) throw new Exception("There are multiple records for the acquired data");
 
                     t = result.First();
                 }
@@ -1145,11 +1144,11 @@ namespace WEF
 
             using (IDataReader reader = ToDataReader(search))
             {
-                var result = EntityUtils.ReaderToEnumerable<T>(reader).ToArray();
+                var result = EntityUtils.ReaderToList<T>(reader);
 
                 if (result.Any())
                 {
-                    if (result.Length > 1) throw new Exception("There are multiple records for the acquired data");
+                    if (result.Count > 1) throw new Exception("There are multiple records for the acquired data");
 
                     t = result.First();
                 }
@@ -1193,11 +1192,11 @@ namespace WEF
 
             using (IDataReader reader = ToDataReader(search))
             {
-                var result = EntityUtils.ReaderToEnumerable<Model>(reader).ToArray();
+                var result = EntityUtils.ReaderToList<Model>(reader);
 
                 if (result.Any())
                 {
-                    if (result.Length > 1) throw new Exception("There are multiple records for the acquired data");
+                    if (result.Count > 1) throw new Exception("There are multiple records for the acquired data");
 
                     m = result.First();
 
@@ -1240,7 +1239,7 @@ namespace WEF
                 List<Model> result = null;
                 using (var reader = ToDataReader(from))
                 {
-                    result = EntityUtils.ReaderToEnumerable<Model>(reader).ToList();
+                    result = EntityUtils.ReaderToList<Model>(reader);
                     reader.Close();
                 }
                 return result;
@@ -1289,7 +1288,7 @@ namespace WEF
             List<T> list;
             using (var reader = ToDataReader(from))
             {
-                list = EntityUtils.ReaderToEnumerable<T>(reader).ToList();
+                list = EntityUtils.ReaderToList<T>(reader);
             }
 
             foreach (var m in list)
@@ -1315,7 +1314,7 @@ namespace WEF
             List<T> list;
             using (var reader = ToDataReader(from))
             {
-                list = EntityUtils.ReaderToEnumerable<T>(reader).ToList();
+                list = EntityUtils.ReaderToList<T>(reader).ToList();
             }
 
             foreach (var m in list)

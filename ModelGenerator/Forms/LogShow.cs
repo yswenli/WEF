@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.IO;
+
+using WEF.ModelGenerator.Common;
 
 namespace WEF.ModelGenerator
 {
-    public partial class LogShow :  CCWin.Skin_Mac
+    public partial class LogShow : CCWin.Skin_Mac
     {
         public LogShow()
         {
@@ -25,9 +22,9 @@ namespace WEF.ModelGenerator
         /// <param name="e"></param>
         private void LogShow_Load(object sender, EventArgs e)
         {
-            if (Directory.Exists(Program.errorpath))
+            if (Directory.Exists(Logger.ErrorPath))
             {
-                string[] files = Directory.GetFiles(Program.errorpath, "*.txt", SearchOption.TopDirectoryOnly);
+                string[] files = Directory.GetFiles(Logger.ErrorPath, "*.txt", SearchOption.TopDirectoryOnly);
                 List<Filepath> list = new List<Filepath>();
                 foreach (string file in files)
                 {
@@ -69,7 +66,7 @@ namespace WEF.ModelGenerator
             }
             else
             {
-                txtLog.Text = File.ReadAllText(Path.Combine(Program.errorpath, ((Filepath)cbmerrorlist.SelectedItem).FilePath));
+                txtLog.Text = File.ReadAllText(Path.Combine(Logger.ErrorPath, ((Filepath)cbmerrorlist.SelectedItem).FilePath));
             }
         }
 

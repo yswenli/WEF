@@ -2,7 +2,7 @@
  * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * 所属域：WENLI-PC
- * 登录用户：yswenli
+*创建人： yswenli
  * CLR版本：4.0.30319.17929
  * 唯一标识：fc2b3c60-82bd-4265-bf8c-051e512a1035
  * 机器名称：WENLI-PC
@@ -138,7 +138,7 @@ namespace WEF.Section
         {
             using (IDataReader reader = ToDataReader())
             {
-                var list = reader.ReaderToEnumerable<TModel>();
+                var list = reader.ReaderToList<TModel>();
                 if (list != null)
                 {
                     return list.FirstOrDefault();
@@ -168,21 +168,9 @@ namespace WEF.Section
         /// <returns></returns>
         public List<TModel> ToList<TModel>()
         {
-            var list = ToEnumerable<TModel>();
-            if (list != null)
-                return list.ToList();
-            else
-                return null;
-        }
-        /// <summary>
-        /// 返回懒加载数据
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<TModel> ToEnumerable<TModel>()
-        {
             using (IDataReader reader = ToDataReader())
             {
-                var list = reader.ReaderToEnumerable<TModel>();
+                var list = reader.ReaderToList<TModel>();
                 if (list != null)
                     return list;
                 else
@@ -200,9 +188,9 @@ namespace WEF.Section
         {
             using (IDataReader reader = ToDataReader())
             {
-                var list1 = reader.ReaderToEnumerable<T1>().ToList();
+                var list1 = reader.ReaderToList<T1>();
                 reader.NextResult();
-                var list2 = reader.ReaderToEnumerable<T2>().ToList();
+                var list2 = reader.ReaderToList<T2>();
                 return new Tuple<List<T1>, List<T2>>(list1, list2);
             }
         }
@@ -217,11 +205,11 @@ namespace WEF.Section
         {
             using (IDataReader reader = ToDataReader())
             {
-                var list1 = reader.ReaderToEnumerable<T1>().ToList();
+                var list1 = reader.ReaderToList<T1>();
                 reader.NextResult();
-                var list2 = reader.ReaderToEnumerable<T2>().ToList();
+                var list2 = reader.ReaderToList<T2>();
                 reader.NextResult();
-                var list3 = reader.ReaderToEnumerable<T3>().ToList();
+                var list3 = reader.ReaderToList<T3>();
                 return new Tuple<List<T1>, List<T2>, List<T3>>(list1, list2, list3);
             }
         }
@@ -237,13 +225,13 @@ namespace WEF.Section
         {
             using (IDataReader reader = ToDataReader())
             {
-                var list1 = reader.ReaderToEnumerable<T1>().ToList();
+                var list1 = reader.ReaderToList<T1>();
                 reader.NextResult();
-                var list2 = reader.ReaderToEnumerable<T2>().ToList();
+                var list2 = reader.ReaderToList<T2>();
                 reader.NextResult();
-                var list3 = reader.ReaderToEnumerable<T3>().ToList();
+                var list3 = reader.ReaderToList<T3>();
                 reader.NextResult();
-                var list4 = reader.ReaderToEnumerable<T4>().ToList();
+                var list4 = reader.ReaderToList<T4>();
                 return new Tuple<List<T1>, List<T2>, List<T3>, List<T4>>(list1, list2, list3, list4);
             }
         }
@@ -260,15 +248,15 @@ namespace WEF.Section
         {
             using (IDataReader reader = ToDataReader())
             {
-                var list1 = reader.ReaderToEnumerable<T1>().ToList();
+                var list1 = reader.ReaderToList<T1>();
                 reader.NextResult();
-                var list2 = reader.ReaderToEnumerable<T2>().ToList();
+                var list2 = reader.ReaderToList<T2>();
                 reader.NextResult();
-                var list3 = reader.ReaderToEnumerable<T3>().ToList();
+                var list3 = reader.ReaderToList<T3>();
                 reader.NextResult();
-                var list4 = reader.ReaderToEnumerable<T4>().ToList();
+                var list4 = reader.ReaderToList<T4>();
                 reader.NextResult();
-                var list5 = reader.ReaderToEnumerable<T5>().ToList();
+                var list5 = reader.ReaderToList<T5>();
                 return new Tuple<List<T1>, List<T2>, List<T3>, List<T4>, List<T5>>(list1, list2, list3, list4, list5);
             }
         }
@@ -286,17 +274,17 @@ namespace WEF.Section
         {
             using (IDataReader reader = ToDataReader())
             {
-                var list1 = reader.ReaderToEnumerable<T1>().ToList();
+                var list1 = reader.ReaderToList<T1>();
                 reader.NextResult();
-                var list2 = reader.ReaderToEnumerable<T2>().ToList();
+                var list2 = reader.ReaderToList<T2>();
                 reader.NextResult();
-                var list3 = reader.ReaderToEnumerable<T3>().ToList();
+                var list3 = reader.ReaderToList<T3>();
                 reader.NextResult();
-                var list4 = reader.ReaderToEnumerable<T4>().ToList();
+                var list4 = reader.ReaderToList<T4>();
                 reader.NextResult();
-                var list5 = reader.ReaderToEnumerable<T5>().ToList();
+                var list5 = reader.ReaderToList<T5>();
                 reader.NextResult();
-                var list6 = reader.ReaderToEnumerable<T6>().ToList();
+                var list6 = reader.ReaderToList<T6>();
                 return new Tuple<List<T1>, List<T2>, List<T3>, List<T4>, List<T5>, List<T6>>(list1, list2, list3, list4, list5, list6);
             }
         }
@@ -314,8 +302,7 @@ namespace WEF.Section
             {
                 foreach (var type in types)
                 {
-                    var list = reader.ReaderToEnumerable(type).ToList();
-                    keyValuePairs[type.FullName] = list;
+                    keyValuePairs[type.FullName] = reader.ReaderToList(type);
                     reader.NextResult();
                 }
             }

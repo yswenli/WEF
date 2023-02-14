@@ -24,9 +24,9 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 using WEF.Common;
 using WEF.Db;
@@ -142,11 +142,30 @@ namespace WEF
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        public async Task<T> GetAsync(string id)
+        {
+            return await Task.Run(() => Get(id));
+        }
+
+        /// <summary>
+        /// 获取实体
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public T Get(int id)
         {
             return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name}=@{_entity.GetIdentityField().Name}")
                 .AddInParameter($"@{_entity.GetIdentityField().Name}", id)
                 .First<T>();
+        }
+        /// <summary>
+        /// 获取实体
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<T> GetAsync(int id)
+        {
+            return await Task.Run(() => Get(id));
         }
 
         /// <summary>
@@ -160,6 +179,35 @@ namespace WEF
         }
 
         /// <summary>
+        /// 获取实体
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<T> GetAsync(Expression<Func<T, bool>> lambdaWhere)
+        {
+            return await Task.Run(() => Get(lambdaWhere));
+        }
+
+        /// <summary>
+        /// 获取单个
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public T Single(Expression<Func<T, bool>> lambdaWhere)
+        {
+            return Search().Single(lambdaWhere);
+        }
+        /// <summary>
+        /// 获取单个
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<T> SingleAsync(Expression<Func<T, bool>> lambdaWhere)
+        {
+            return await Task.Run(() => Single(lambdaWhere));
+        }
+
+        /// <summary>
         /// 返回全部
         /// </summary>
         /// <returns></returns>
@@ -169,12 +217,82 @@ namespace WEF
         }
 
         /// <summary>
+        /// 返回全部
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<T>> GetAllAsync()
+        {
+            return await Task.Run(GetAll);
+        }
+
+        /// <summary>
         /// 返回总数
         /// </summary>
         /// <returns></returns>
         public int Count()
         {
             return Search().Count();
+        }
+        /// <summary>
+        /// 返回总数
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public int Count(Expression<Func<T, bool>> lambdaWhere)
+        {
+            return Search().Where(lambdaWhere).Count();
+        }
+        /// <summary>
+        /// 返回总数
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int> CountAsync()
+        {
+            return await Task.Run(Count);
+        }
+        /// <summary>
+        /// 返回总数
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<int> CountAsync(Expression<Func<T, bool>> lambdaWhere)
+        {
+            return await Task.Run(() => Count(lambdaWhere));
+        }
+
+        /// <summary>
+        /// 返回总数
+        /// </summary>
+        /// <returns></returns>
+        public long LongCount()
+        {
+            return Search().LongCount();
+        }
+        /// <summary>
+        /// 返回总数
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public long LongCount(Expression<Func<T, bool>> lambdaWhere)
+        {
+            return Search().Where(lambdaWhere).LongCount();
+        }
+        /// <summary>
+        /// 返回总数
+        /// </summary>
+        /// <returns></returns>
+        public async Task<long> LongCountAsync()
+        {
+            return await Task.Run(LongCount);
+        }
+        /// <summary>
+        /// 返回总数
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<long> LongCountAsync(Expression<Func<T, bool>> lambdaWhere)
+        {
+            return await Task.Run(() => LongCount(lambdaWhere));
         }
 
         /// <summary>
@@ -193,11 +311,31 @@ namespace WEF
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
+        public async Task<List<T>> GetListAsync(IEnumerable<string> ids)
+        {
+            return await Task.Run(() => GetList(ids));
+        }
+
+        /// <summary>
+        /// 获取列表
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public List<T> GetList(IEnumerable<int> ids)
         {
             var idsStr = $"'{string.Join("','", ids.ToArray())}'";
             return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name} in({idsStr})").ToList<T>();
         }
+        /// <summary>
+        /// 获取列表
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public async Task<List<T>> GetListAsync(IEnumerable<int> ids)
+        {
+            return await Task.Run(() => GetList(ids));
+        }
+
         /// <summary>
         /// 获取列表
         /// </summary>
@@ -207,6 +345,17 @@ namespace WEF
         {
             return Search().ToList(lambdaWhere);
         }
+
+        /// <summary>
+        /// 获取列表
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<List<T>> GetListAsync(Expression<Func<T, bool>> lambdaWhere)
+        {
+            return await Task.Run(() => GetList(lambdaWhere));
+        }
+
         /// <summary>
         /// 获取列表
         /// <param name="pageIndex">分页第几页</param>
@@ -216,6 +365,16 @@ namespace WEF
         public List<T> GetList(int pageIndex, int pageSize)
         {
             return Search().Page(pageIndex, pageSize).ToList();
+        }
+        /// <summary>
+        /// 获取列表
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<List<T>> GetListAsync(int pageIndex, int pageSize)
+        {
+            return await Task.Run(() => GetList(pageIndex, pageSize));
         }
 
         /// <summary>
@@ -228,6 +387,17 @@ namespace WEF
         public List<T> GetList(string tableName, int pageIndex = 1, int pageSize = 12)
         {
             return Search(tableName).Page(pageIndex, pageSize).ToList();
+        }
+        /// <summary>
+        /// 获取列表
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public async Task<List<T>> GetListAsync(string tableName, int pageIndex = 1, int pageSize = 12)
+        {
+            return await Task.Run(() => GetList(tableName, pageIndex, pageSize));
         }
 
         /// <summary>
@@ -245,6 +415,19 @@ namespace WEF
         /// <summary>
         /// 分页查询
         /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public async Task<PagedList<T>> GetPagedListAsync(int pageIndex, int pageSize, string orderBy = "ID", bool asc = true)
+        {
+            return await Task.Run(() => GetPagedList(pageIndex, pageSize, orderBy, asc));
+        }
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
         /// <param name="lambdaWhere"></param>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
@@ -254,6 +437,19 @@ namespace WEF
         public PagedList<T> GetPagedList(Expression<Func<T, bool>> lambdaWhere, int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
         {
             return Search().ToPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
+        }
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public async Task<PagedList<T>> GetPagedListAsync(Expression<Func<T, bool>> lambdaWhere, int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
+        {
+            return await Task.Run(() => GetPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc));
         }
 
         /// <summary>
@@ -270,6 +466,20 @@ namespace WEF
         {
             return Search(tableName).ToPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc);
         }
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public async Task<PagedList<T>> GetPagedListAsync(Expression<Func<T, bool>> lambdaWhere, string tableName = "", int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
+        {
+            return await Task.Run(() => GetPagedList(lambdaWhere, tableName, pageIndex, pageSize, orderBy, asc));
+        }
 
         /// <summary>
         /// 分页查询
@@ -283,6 +493,19 @@ namespace WEF
         public PagedList<Model> GetPagedList<Model>(int pageIndex, int pageSize, string orderBy = "ID", bool asc = true)
         {
             return Search().ToPagedList<Model>(pageIndex, pageSize, orderBy, asc);
+        }
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public async Task<PagedList<Model>> GetPagedListAsync<Model>(int pageIndex, int pageSize, string orderBy = "ID", bool asc = true)
+        {
+            return await Task.Run(() => GetPagedList<Model>(pageIndex, pageSize, orderBy, asc));
         }
 
         /// <summary>
@@ -298,6 +521,20 @@ namespace WEF
         public PagedList<Model> GetPagedList<Model>(Expression<Func<T, bool>> lambdaWhere, int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
         {
             return Search().ToPagedList<Model>(lambdaWhere, pageIndex, pageSize, orderBy, asc);
+        }
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="lambdaWhere"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public async Task<PagedList<Model>> GetPagedListAsync<Model>(Expression<Func<T, bool>> lambdaWhere, int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
+        {
+            return await Task.Run(() => GetPagedList<Model>(lambdaWhere, pageIndex, pageSize, orderBy, asc));
         }
 
         /// <summary>
@@ -316,6 +553,21 @@ namespace WEF
             return Search(tableName).ToPagedList<Model>(lambdaWhere, pageIndex, pageSize, orderBy, asc);
         }
 
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="lambdaWhere"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public async Task<PagedList<Model>> GetPagedListAsync<Model>(Expression<Func<T, bool>> lambdaWhere, string tableName = "", int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
+        {
+            return await Task.Run(() => GetPagedList<Model>(lambdaWhere, tableName, pageIndex, pageSize, orderBy, asc));
+        }
 
         /// <summary>
         /// 是否存在
@@ -326,6 +578,15 @@ namespace WEF
         {
             return Search().Top(1).Where(lambdaWhere).First() != null;
         }
+        /// <summary>
+        /// 是否存在
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<bool> ExistsAsync(Expression<Func<T, bool>> lambdaWhere)
+        {
+            return await Task.Run(() => Exists(lambdaWhere));
+        }
 
         /// <summary>
         /// 添加实体
@@ -335,6 +596,16 @@ namespace WEF
         {
             return _dbContext.Insert(entity);
         }
+        /// <summary>
+        /// 添加实体
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<int> InsertAsync(T entity)
+        {
+            return await Task.Run(() => Insert(entity));
+        }
+
 
         /// <summary>
         /// 添加实体
@@ -344,6 +615,16 @@ namespace WEF
         public List<int> Insert(IEnumerable<T> entities)
         {
             return _dbContext.Insert(entities);
+        }
+
+        /// <summary>
+        /// 添加实体
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task<List<int>> InsertAsync(IEnumerable<T> entities)
+        {
+            return await Task.Run(() => Insert(entities));
         }
 
         /// <summary>
@@ -362,6 +643,15 @@ namespace WEF
         {
             return _dbContext.Update(entity);
         }
+        /// <summary>
+        /// 更新实体
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync(T entity)
+        {
+            return await Task.Run(() => Update(entity));
+        }
 
         /// <summary>
         /// 更新实体
@@ -370,6 +660,15 @@ namespace WEF
         public List<int> Update(IEnumerable<T> entities)
         {
             return _dbContext.Update(entities);
+        }
+        /// <summary>
+        /// 更新实体
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task<List<int>> UpdateAsync(IEnumerable<T> entities)
+        {
+            return await Task.Run(() => Update(entities));
         }
 
         /// <summary>
@@ -387,11 +686,32 @@ namespace WEF
         /// 更新实体
         /// </summary>
         /// <param name="entity"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync(T entity, Expression<Func<T, bool>> lambdaWhere)
+        {
+            return await Task.Run(() => Update(entity, lambdaWhere));
+        }
+
+        /// <summary>
+        /// 更新实体
+        /// </summary>
+        /// <param name="entity"></param>
         /// <param name="whereSql"></param>
         /// <returns></returns>
         public int Update(T entity, string whereSql)
         {
             return _dbContext.Update<T>(entity, whereSql);
+        }
+        /// <summary>
+        /// 更新实体
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="whereSql"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync(T entity, string whereSql)
+        {
+            return await Task.Run(() => Update(entity, whereSql));
         }
 
         /// <summary>
@@ -409,6 +729,20 @@ namespace WEF
             var where = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
             return _dbContext.Update(entity, joinOn, where);
         }
+        /// <summary>
+        /// 多表关联更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync<TEntity>(T entity,
+            JoinOn<T, TEntity> joinOn,
+            Expression<Func<T, TEntity, bool>> lambdaWhere)
+        {
+            return await Task.Run(() => Update(entity, joinOn, lambdaWhere));
+        }
 
         /// <summary>
         /// 多表关联更新
@@ -423,6 +757,20 @@ namespace WEF
            Where where)
         {
             return _dbContext.Update(entity, joinOn, where.ToWhereClip());
+        }
+        /// <summary>
+        /// 多表关联更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync<TEntity>(T entity,
+          JoinOn<T, TEntity> joinOn,
+          Where where)
+        {
+            return await Task.Run(() => Update(entity, joinOn, where));
         }
 
         /// <summary>
@@ -443,6 +791,22 @@ namespace WEF
             var where = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
             return _dbContext.Update(entity, jo, where);
         }
+        /// <summary>
+        /// 多表关联更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="joinType"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync<TEntity>(T entity,
+            Expression<Func<T, TEntity, bool>> joinOn,
+            JoinType joinType,
+            Expression<Func<T, TEntity, bool>> lambdaWhere)
+        {
+            return await Task.Run(() => Update(entity, joinOn, joinType, lambdaWhere));
+        }
 
         /// <summary>
         /// 多表关联更新
@@ -461,6 +825,22 @@ namespace WEF
             var jo = new JoinOn<T, TEntity>(joinOn, joinType);
             return _dbContext.Update(entity, jo, where.ToWhereClip());
         }
+        /// <summary>
+        /// 多表关联更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="joinType"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync<TEntity>(T entity,
+           Expression<Func<T, TEntity, bool>> joinOn,
+           JoinType joinType,
+           Where where)
+        {
+            return await Task.Run(() => Update(entity, joinOn, joinType, where));
+        }
 
         /// <summary>
         /// 删除实体
@@ -470,6 +850,16 @@ namespace WEF
         {
             return _dbContext.Delete(entity);
         }
+        /// <summary>
+        /// 删除实体
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteAsync(T entity)
+        {
+            return await Task.Run(() => Delete(entity));
+        }
+
 
         /// <summary>
         /// 删除
@@ -484,6 +874,15 @@ namespace WEF
                 return Delete(entity);
             }
             return -1;
+        }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteAsync(string id)
+        {
+            return await Task.Run(() => Delete(id));
         }
 
         /// <summary>
@@ -500,6 +899,15 @@ namespace WEF
             }
             return -1;
         }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteAsync(int id)
+        {
+            return await Task.Run(() => Delete(id));
+        }
 
         /// <summary>
         /// 批量删除实体
@@ -510,6 +918,15 @@ namespace WEF
         {
             var list = System.Linq.Enumerable.ToList(entities);
             return _dbContext.Delete(list);
+        }
+        /// <summary>
+        /// 批量删除实体
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task<int> DeletesAsync(IEnumerable<T> entities)
+        {
+            return await Task.Run(() => Deletes(entities));
         }
 
         /// <summary>
@@ -528,10 +945,29 @@ namespace WEF
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
+        public async Task<int> DeleteAsync(IEnumerable<string> ids)
+        {
+            return await Task.Run(() => Delete(ids));
+        }
+
+        /// <summary>
+        /// 批量删除实体
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public int Delete(IEnumerable<int> ids)
         {
             var list = GetList(ids);
             return Deletes(list);
+        }
+        /// <summary>
+        /// 批量删除实体
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteAsync(IEnumerable<int> ids)
+        {
+            return await Task.Run(() => Delete(ids));
         }
 
         /// <summary>
@@ -542,6 +978,15 @@ namespace WEF
         public int Delete(Expression<Func<T, bool>> lambdaWhere)
         {
             return _dbContext.Delete<T>(lambdaWhere);
+        }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteAsync(Expression<Func<T, bool>> lambdaWhere)
+        {
+            return await Task.Run(() => Delete(lambdaWhere));
         }
 
 
@@ -697,9 +1142,19 @@ namespace WEF
         /// </summary>
         /// <param name="timeout"></param>
         /// <returns></returns>
-        public DbTrans CreateTransaction(int timeout = 30)
+        public DbTrans<T> CreateTransaction(int timeout = 30)
         {
-            return _dbContext.BeginTransaction(timeout);
+            return _dbContext.BeginTransaction<T>(timeout);
+        }
+        /// <summary>
+        /// 创建事务，使用事务curd时推荐方式 using(var tran=CreateTransaction()) 方式
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
+        public DbTrans<T> CreateTransaction(DbTransType type, int timeout = 30)
+        {
+            return _dbContext.BeginTransaction<T>(type, timeout);
         }
 
         /// <summary>

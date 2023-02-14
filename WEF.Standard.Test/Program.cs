@@ -1,5 +1,4 @@
-﻿using System.Drawing.Printing;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 using WEF.Common;
 using WEF.Expressions;
@@ -26,6 +25,8 @@ namespace WEF.Standard.Test
             var cnnstr = "";
 
             var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, cnnstr);
+
+            dbarticleRepository.CreateTransaction();
 
             //子查询
             var qs = dbarticleRepository.Search().Select(q => q.ID).Top();
@@ -517,7 +518,7 @@ namespace WEF.Standard.Test
 
             #region tran
 
-            var tran1 = ur.DBContext.BeginTransaction();
+            var tran1 = ur.DBContext.BeginTransaction<User>();
 
             try
             {
@@ -525,7 +526,7 @@ namespace WEF.Standard.Test
 
                 var tb1 = new DBTaskRepository().GetList(1, 10);
 
-                tran1.Update(tb1);
+                tran1.Update<DBTask>(tb1);
             }
             catch
             {
@@ -537,7 +538,7 @@ namespace WEF.Standard.Test
             }
 
             //or
-            using (var tran2 = ur.DBContext.BeginTransaction())
+            using (var tran2 = ur.DBContext.BeginTransaction<User>())
             {
                 tran2.Insert(ut);
 
@@ -547,7 +548,7 @@ namespace WEF.Standard.Test
             }
 
             //or
-            ur.DBContext.BeginTransaction().TryCommit((tran3) =>
+            ur.DBContext.BeginTransaction<User>().TryCommit((tran3) =>
             {
 
                 tran3.Insert(ut);
@@ -555,7 +556,7 @@ namespace WEF.Standard.Test
                 tran3.Delete(new DBTask() { Taskid = "123" });
 
                 tran3.Delete(ut);
-            });
+            });            
 
             #endregion
 

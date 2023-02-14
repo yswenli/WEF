@@ -64,6 +64,8 @@ namespace WEF.ModelGenerator.Forms
             _dic.Add("MSSQL启用ServiceBroker", Resources.MSSQL启用ServiceBroker);
             _dic.Add("SQL执行情况查询", Resources.SQL执行情况查询);
             _dic.Add("In排序", Resources.In排序);
+            _dic.Add("查看资源锁定", Resources.查看资源锁定);
+            _dic.Add("慢查询", Resources.慢查询);
 
             comboBox1.Items.AddRange(_dic.Keys.ToArray());
 

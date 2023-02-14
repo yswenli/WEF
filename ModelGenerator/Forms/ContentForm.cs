@@ -101,12 +101,18 @@ namespace WEF.ModelGenerator
                         ConnectionModel.DbType = "SqlServer";
                     }
 
-                    dbObject = DBObjectHelper.GetDBObject(ConnectionModel);
+                    try
+                    {
+                        dbObject = DBObjectHelper.GetDBObject(ConnectionModel);
 
-                    primarykeydt = dbObject.GetKeyName(DatabaseName, TableName);
+                        primarykeydt = dbObject.GetKeyName(DatabaseName, TableName);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex);
+                        return;
+                    }
                 }
-
-
 
                 if (primarykeydt.Rows.Count == 0)
                 {

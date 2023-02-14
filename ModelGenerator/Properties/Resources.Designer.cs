@@ -397,6 +397,35 @@ namespace WEF.ModelGenerator.Properties {
         }
         
         /// <summary>
+        ///   查找类似 SELECT TOP 20
+        ///
+        ///total_worker_time/1000 AS [总消耗CPU 时间(ms)],execution_count [运行次数],
+        ///
+        /// qs.total_worker_time/qs.execution_count/1000 AS [平均消耗CPU 时间(ms)],
+        ///
+        /// last_execution_time AS [最后一次执行时间],max_worker_time /1000 AS [最大执行时间(ms)],
+        ///
+        /// SUBSTRING(qt.text,qs.statement_start_offset/2+1,
+        ///
+        /// (CASE WHEN qs.statement_end_offset = -1
+        ///
+        /// THEN DATALENGTH(qt.text)
+        ///
+        /// ELSE qs.statement_end_offset END -qs.statement_start_offset)/2 + 1)
+        ///
+        ///AS [使用CPU的语法], qt.text [完整语法],
+        ///
+        ///dbname=db_name(qt.dbid),
+        ///
+        ///object_name(qt.obje [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        /// </summary>
+        internal static string 慢查询 {
+            get {
+                return ResourceManager.GetString("慢查询", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Select * From TableName Order By CustomerName Collate Chinese_PRC_Stroke_ci_as //从少到多 的本地化字符串。
         /// </summary>
         internal static string 按姓氏笔画排序 {
@@ -450,6 +479,28 @@ namespace WEF.ModelGenerator.Properties {
         internal static string 查看所有表和列 {
             get {
                 return ResourceManager.GetString("查看所有表和列", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 SELECT  
+        ///der.[session_id],der.[blocking_session_id],  
+        ///sp.lastwaittype,sp.hostname,sp.program_name,sp.loginame,  
+        ///der.[start_time] AS &apos;开始时间&apos;,  
+        ///der.[status] AS &apos;状态&apos;,  
+        ///dest.[text] AS &apos;sql语句&apos;,  
+        ///DB_NAME(der.[database_id]) AS &apos;数据库名&apos;,  
+        ///der.[wait_type] AS &apos;等待资源类型&apos;,  
+        ///der.[wait_time] AS &apos;等待时间&apos;,  
+        ///der.[wait_resource] AS &apos;等待的资源&apos;,  
+        ///der.[logical_reads] AS &apos;逻辑读次数&apos;  
+        ///FROM sys.[dm_exec_requests] AS der  
+        ///INNER JOIN master.dbo.sysprocesses AS sp ON der.session_id=sp.spid  
+        ///CROSS APPLY  sys.[dm_exec_sql_te [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        /// </summary>
+        internal static string 查看资源锁定 {
+            get {
+                return ResourceManager.GetString("查看资源锁定", resourceCulture);
             }
         }
         

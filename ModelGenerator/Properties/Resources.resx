@@ -400,4 +400,64 @@ Select * From example Where id in (4,3,2,1)  Order By charindex(','+ id +',', ',
 right join (SELECT NAME as TableName FROM SYSOBJECTS WHERE XTYPE='U') b on c.id=OBJECT_ID(b.TableName)
 where TableName like 'PTS%'</value>
   </data>
+  <data name="慢查询" xml:space="preserve">
+    <value>SELECT TOP 20
+
+total_worker_time/1000 AS [总消耗CPU 时间(ms)],execution_count [运行次数],
+
+ qs.total_worker_time/qs.execution_count/1000 AS [平均消耗CPU 时间(ms)],
+
+ last_execution_time AS [最后一次执行时间],max_worker_time /1000 AS [最大执行时间(ms)],
+
+ SUBSTRING(qt.text,qs.statement_start_offset/2+1,
+
+ (CASE WHEN qs.statement_end_offset = -1
+
+ THEN DATALENGTH(qt.text)
+
+ ELSE qs.statement_end_offset END -qs.statement_start_offset)/2 + 1)
+
+AS [使用CPU的语法], qt.text [完整语法],
+
+dbname=db_name(qt.dbid),
+
+object_name(qt.objectid,qt.dbid) ObjectName
+
+FROM sys.dm_exec_query_stats qs WITH(nolock)
+
+CROSS apply sys.dm_exec_sql_text(qs.sql_handle) AS qt
+
+WHERE execution_count&gt;1
+
+ORDER BY total_worker_time DESC</value>
+  </data>
+  <data name="查看资源锁定" xml:space="preserve">
+    <value>SELECT  
+der.[session_id],der.[blocking_session_id],  
+sp.lastwaittype,sp.hostname,sp.program_name,sp.loginame,  
+der.[start_time] AS '开始时间',  
+der.[status] AS '状态',  
+dest.[text] AS 'sql语句',  
+DB_NAME(der.[database_id]) AS '数据库名',  
+der.[wait_type] AS '等待资源类型',  
+der.[wait_time] AS '等待时间',  
+der.[wait_resource] AS '等待的资源',  
+der.[logical_reads] AS '逻辑读次数'  
+FROM sys.[dm_exec_requests] AS der  
+INNER JOIN master.dbo.sysprocesses AS sp ON der.session_id=sp.spid  
+CROSS APPLY  sys.[dm_exec_sql_text](der.[sql_handle]) AS dest  
+where DB_NAME(der.[database_id])='hkxdjy_bidw'
+ORDER BY der.[session_id]
+
+
+select * from sys.dm_tran_session_transactions 
+
+select * from sys.dm_tran_active_transactions
+
+select * from  sys.dm_tran_locks
+
+--查询表是否锁死
+select request_session_id  AS '锁表id',OBJECT_NAME(resource_associated_entity_id) AS '表名' 
+from sys.dm_tran_locks where resource_type='OBJECT'</value>
+  </data>
 </root>

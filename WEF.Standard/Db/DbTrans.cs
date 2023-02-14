@@ -2,23 +2,21 @@
  * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
  *****************************************************************************************************
  * 所属域：WENLI-PC
- * 登录用户：yswenli
+ * 创建人： yswenli
  * CLR版本：4.0.30319.17929
  * 唯一标识：fc2b3c60-82bd-4265-bf8c-051e512a1035
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
-using WEF.Common;
-using WEF.Expressions;
-using WEF.Section;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 using System.Threading;
+
+using WEF.Common;
+using WEF.Section;
 
 namespace WEF.Db
 {
@@ -32,17 +30,17 @@ namespace WEF.Db
         /// <summary>
         /// 事务
         /// </summary>
-        private DbTransaction _trans;
+        protected DbTransaction _trans;
 
         /// <summary>
         /// 连接
         /// </summary>
-        private DbConnection _conn;
+        protected DbConnection _conn;
 
         /// <summary>
         /// DBContext
         /// </summary>
-        DBContext DBContext { get; set; }
+        protected DBContext DBContext { get; set; }
 
         /// <summary>
         /// 判断是否有提交或回滚
@@ -111,6 +109,7 @@ namespace WEF.Db
             catch (Exception ex)
             {
                 Rollback();
+                throw ex;
             }
         }
 
@@ -138,6 +137,37 @@ namespace WEF.Db
             return dbTrans._trans;
         }
 
+        /// <summary>
+        /// Search
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public Search<T> Search<T>() where T : Entity
+        {
+            return new Search<T>(DBContext.Db, _trans);
+        }
+
+        /// <summary>
+        /// 添加
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public int Insert<T>(T entity) where T : Entity
+        {
+            return DBContext.Insert(_trans, entity);
+        }
+
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public int Delete<T>(T entity) where T : Entity
+        {
+            return DBContext.Delete(_trans, entity);
+        }
 
         /// <summary>
         /// 关闭
@@ -194,6 +224,8 @@ namespace WEF.Db
             return DBContext.FromSqlWithdAutomatic(sql, inputParams.ToArray()).SetDbTransaction(_trans);
         }
 
+
+
         /// <summary>
         /// FromSql
         /// </summary>
@@ -203,7 +235,7 @@ namespace WEF.Db
         /// <returns></returns>
         public SqlSection FromSql<T>(string sql, T inputParams) where T : class, new()
         {
-            return DBContext.FromSqlWithdModel<T>(sql, inputParams).SetDbTransaction(_trans);
+            return DBContext.FromSqlWithdModel(sql, inputParams).SetDbTransaction(_trans);
         }
 
         /// <summary>
@@ -225,40 +257,21 @@ namespace WEF.Db
         {
             return DBContext.FromProc(proName, inputParams).SetDbTransaction(_trans);
         }
+
         /// <summary>
         /// FromPro
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="proName"></param>
         /// <param name="inputParams"></param>
         /// <returns></returns>
         public ProcSection FromPro<T>(string proName, T inputParams) where T : class, new()
         {
-            return DBContext.FromProc<T>(proName, inputParams).SetDbTransaction(_trans);
+            return DBContext.FromProc(proName, inputParams).SetDbTransaction(_trans);
         }
+
 
         #region 查询
 
-        /// <summary>
-        /// 查询
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <returns></returns>
-        public Search<TEntity> Search<TEntity>()
-            where TEntity : Entity
-        {
-            return new Search<TEntity>(DBContext.Db, _trans);
-        }
-        /// <summary>
-        /// 查询
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <returns></returns>
-        public Search<TEntity> Search<TEntity>(string asName)
-            where TEntity : Entity
-        {
-            return new Search<TEntity>(DBContext.Db, _trans, asName);
-        }
 
         /// <summary>
         /// 查询
@@ -269,430 +282,30 @@ namespace WEF.Db
         {
             return new Search(DBContext.Db, tableName, "", _trans);
         }
-        #endregion
-
-
-        #region 更新
-
-        /// <summary>
-        /// 更新全部字段  
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities"></param>
-        public int UpdateAll<TEntity>(params TEntity[] entities)
-            where TEntity : Entity
-        {
-            return DBContext.UpdateAll<TEntity>(_trans, entities);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities"></param>
-        public int UpdateAll<TEntity>(IEnumerable<TEntity> entities)
-            where TEntity : Entity
-        {
-            return DBContext.UpdateAll<TEntity>(_trans, entities.ToArray());
-        }
-        /// <summary>
-        /// 更新全部字段  
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entity"></param>
-        public int UpdateAll<TEntity>(TEntity entity)
-            where TEntity : Entity
-        {
-            return DBContext.UpdateAll<TEntity>(_trans, entity);
-        }
-
-
-        /// <summary>
-        /// 更新全部字段
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entity"></param>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public int UpdateAll<TEntity>(TEntity entity, WhereExpression where)
-            where TEntity : Entity
-        {
-            return DBContext.UpdateAll<TEntity>(_trans, entity, where);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entity"></param>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public int UpdateAll<TEntity>(TEntity entity, Where where)
-            where TEntity : Entity
-        {
-            return DBContext.UpdateAll<TEntity>(_trans, entity, where);
-        }
-
-
-        /// <summary>
-        /// 更新  
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities"></param>
-        public int Update<TEntity>(params TEntity[] entities)
-            where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, entities);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities"></param>
-        public int Update<TEntity>(IEnumerable<TEntity> entities)
-            where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, entities.ToArray());
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities"></param>
-        public int Update<TEntity>(List<TEntity> entities)
-            where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, entities.ToArray());
-        }
-        /// <summary>
-        /// 更新  
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entity"></param>
-        public int Update<TEntity>(TEntity entity)
-            where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, entity);
-        }
-
-        /// <summary>
-        /// 更新
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entity"></param>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public int Update<TEntity>(TEntity entity, WhereExpression where)
-            where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, entity, where);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entity"></param>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public int Update<TEntity>(TEntity entity, Where where)
-            where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, entity, where);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entity"></param>
-        /// <param name="lambdaWhere"></param>
-        /// <returns></returns>
-        public int Update<TEntity>(TEntity entity, Expression<Func<TEntity, bool>> lambdaWhere)
-            where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, entity, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
-        }
-        /// <summary>
-        /// 更新单个值
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="field"></param>
-        /// <param name="value"></param>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public int Update<TEntity>(string tableName, Field field, object value, WhereExpression where)
-            where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, tableName, field, value, where);
-        }
-        /// <summary>
-        /// 更新单个值
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="field"></param>
-        /// <param name="value"></param>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public int Update<TEntity>(string tableName, Field field, object value, Where where)
-            where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, tableName, field, value, where);
-        }
-        /// <summary>
-        /// 更新单个值
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="field"></param>
-        /// <param name="value"></param>
-        /// <param name="lambdaWhere"></param>
-        /// <returns></returns>
-        public int Update<TEntity>(string tableName, Field field, object value, Expression<Func<TEntity, bool>> lambdaWhere)
-            where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, tableName, field, value, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
-        }
-        /// <summary>
-        /// 更新多个值
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="fieldValue"></param>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public int Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, WhereExpression where)
-              where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, tableName, fieldValue, where);
-        }
-        /// <summary>
-        /// 更新多个值
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="fieldValue"></param>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public int Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, Where where)
-              where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, tableName, fieldValue, where);
-        }
-        /// <summary>
-        /// 更新
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="fieldValue"></param>
-        /// <param name="lambdaWhere"></param>
-        /// <returns></returns>
-        public int Update<TEntity>(string tableName, Dictionary<Field, object> fieldValue, Expression<Func<TEntity, bool>> lambdaWhere)
-              where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, tableName, fieldValue, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
-        }
-        /// <summary>
-        /// 更新
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="fields"></param>
-        /// <param name="values"></param>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public int Update<TEntity>(string tableName, Field[] fields, object[] values, WhereExpression where)
-            where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, tableName, fields, values, where);
-        }
-        /// <summary>
-        /// 更新
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="fields"></param>
-        /// <param name="values"></param>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public int Update<TEntity>(string tableName, Field[] fields, object[] values, Where where)
-            where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, tableName, fields, values, where);
-        }
-        /// <summary>
-        /// 更新
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="fields"></param>
-        /// <param name="values"></param>
-        /// <param name="lambdaWhere"></param>
-        /// <returns></returns>
-        public int Update<TEntity>(string tableName, Field[] fields, object[] values, Expression<Func<TEntity, bool>> lambdaWhere)
-            where TEntity : Entity
-        {
-            return DBContext.Update<TEntity>(_trans, tableName, fields, values, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
-        }
 
         #endregion
-
-
-        #region 删除
-
         /// <summary>
-        ///  删除
+        /// 更新
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public int Delete<TEntity>(TEntity entity)
-            where TEntity : Entity
-        {
-            return DBContext.Delete<TEntity>(_trans, entity);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities"></param>
-        public int Delete<TEntity>(IEnumerable<TEntity> entities)
-            where TEntity : Entity
-        {
-            return DBContext.Delete<TEntity>(_trans, entities);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities"></param>
-        public int Delete<TEntity>(List<TEntity> entities)
-            where TEntity : Entity
-        {
-            return DBContext.Delete<TEntity>(_trans, entities);
-        }
-        /// <summary>
-        ///  删除
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="pkValues"></param>
-        /// <returns></returns>
-        public int Delete<TEntity>(params string[] pkValues)
-            where TEntity : Entity
-        {
-            return DBContext.DeleteByPrimaryKey<TEntity>(_trans, pkValues);
-        }
-        public int Delete<TEntity>(params Guid[] pkValues)
-            where TEntity : Entity
-        {
-            return DBContext.DeleteByPrimaryKey<TEntity>(_trans, pkValues);
-        }
-        public int Delete<TEntity>(params long[] pkValues)
-            where TEntity : Entity
-        {
-            return DBContext.DeleteByPrimaryKey<TEntity>(_trans, pkValues);
-        }
-        public int Delete<TEntity>(params int[] pkValues)
-            where TEntity : Entity
-        {
-            return DBContext.DeleteByPrimaryKey<TEntity>(_trans, pkValues);
-        }
-        /// <summary>
-        /// 删除
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public int Delete<TEntity>(string tableName, WhereExpression where)
-            where TEntity : Entity
-        {
-            return DBContext.Delete<TEntity>(_trans, tableName, where);
-        }
-        /// <summary>
-        /// 删除
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public int Delete<TEntity>(string tableName, Where where)
-            where TEntity : Entity
-        {
-            return DBContext.Delete<TEntity>(_trans, tableName, where.ToWhereClip());
-        }
-        /// <summary>
-        /// 删除
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="lambdaWhere"></param>
-        /// <returns></returns>
-        public int Delete<TEntity>(string tableName, Expression<Func<TEntity, bool>> lambdaWhere)
-            where TEntity : Entity
-        {
-            return DBContext.Delete<TEntity>(_trans, tableName, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
-        }
-        #endregion
-
-
-        #region 添加
-
-        /// <summary>
-        /// 添加
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public int Insert<TEntity>(params TEntity[] entities)
-            where TEntity : Entity
+        public int Update<T>(params T[] entities) where T : Entity
         {
-            return DBContext.Insert(_trans, entities);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities"></param>
-        public int Insert<TEntity>(IEnumerable<TEntity> entities)
-            where TEntity : Entity
-        {
-            return DBContext.Insert<TEntity>(_trans, entities);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities"></param>
-        public int Insert<TEntity>(List<TEntity> entities)
-            where TEntity : Entity
-        {
-            return DBContext.Insert<TEntity>(_trans, entities);
-        }
-        /// <summary>
-        /// 添加
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public int Insert<TEntity>(TEntity entity)
-            where TEntity : Entity
-        {
-            return DBContext.Insert<TEntity>(_trans, entity);
+            return DBContext.Update(_trans, entities);
         }
 
         /// <summary>
-        /// 添加
+        /// 更新
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="fields"></param>
-        /// <param name="values"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entities"></param>
         /// <returns></returns>
-        public int Insert<TEntity>(string tableName, Field[] fields, object[] values)
-            where TEntity : Entity
+        public int Update<T>(List<T> entities) where T : Entity
         {
-            return DBContext.Insert<TEntity>(_trans, tableName, fields, values);
+            return DBContext.Update(_trans, entities);
         }
-        #endregion
+
 
         #region try
 

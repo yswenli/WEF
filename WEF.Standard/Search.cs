@@ -784,6 +784,35 @@ namespace WEF
         }
 
         /// <summary>
+        /// 获取记录数
+        /// </summary>
+        /// <returns></returns>
+        public long LongCount()
+        {
+            return LongCount(GetPagedFromSection());
+        }
+
+        /// <summary>
+        /// 获取记录数
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        internal long LongCount(Search search)
+        {
+            DbCommand dbCommand = _database.GetSqlStringCommand(search.CountSqlString);
+
+            _database.AddCommandParameter(dbCommand, search.Parameters.ToArray());
+
+            long returnValue;
+            if (trans == null)
+                returnValue = DataUtils.ConvertValue<long>(_database.ExecuteScalar(dbCommand));
+            else
+                returnValue = DataUtils.ConvertValue<long>(_database.ExecuteScalar(dbCommand, trans));
+
+            return returnValue;
+        }
+
+        /// <summary>
         /// To DataSet
         /// </summary>
         /// <returns></returns>
