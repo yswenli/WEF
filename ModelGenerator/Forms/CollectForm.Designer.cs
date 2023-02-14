@@ -46,7 +46,7 @@ namespace WEF.ModelGenerator.Forms
             // 
             // listView1
             // 
-            this.listView1.Alignment = System.Windows.Forms.ListViewAlignment.Left;
+            this.listView1.AllowColumnReorder = true;
             this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -57,11 +57,13 @@ namespace WEF.ModelGenerator.Forms
             this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem1});
             this.listView1.LabelWrap = false;
-            this.listView1.Location = new System.Drawing.Point(0, 28);
+            this.listView1.Location = new System.Drawing.Point(0, 45);
+            this.listView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
             this.listView1.ShowItemToolTips = true;
-            this.listView1.Size = new System.Drawing.Size(437, 422);
+            this.listView1.Size = new System.Drawing.Size(654, 676);
+            this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.List;
@@ -78,36 +80,36 @@ namespace WEF.ModelGenerator.Forms
             this.toolStripMenuItem3,
             this.removeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(139, 88);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(183, 130);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(138, 24);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(182, 38);
             this.toolStripMenuItem1.Text = "Add";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.addToolStripMenuItem1_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(135, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(179, 6);
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(182, 38);
             this.editToolStripMenuItem.Text = "Edit";
             this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(135, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(179, 6);
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(182, 38);
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
@@ -116,10 +118,11 @@ namespace WEF.ModelGenerator.Forms
             this.skinWaterTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.skinWaterTextBox1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.skinWaterTextBox1.Location = new System.Drawing.Point(0, 2);
+            this.skinWaterTextBox1.Location = new System.Drawing.Point(0, 3);
+            this.skinWaterTextBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.skinWaterTextBox1.MaxLength = 100;
             this.skinWaterTextBox1.Name = "skinWaterTextBox1";
-            this.skinWaterTextBox1.Size = new System.Drawing.Size(437, 27);
+            this.skinWaterTextBox1.Size = new System.Drawing.Size(654, 39);
             this.skinWaterTextBox1.TabIndex = 1;
             this.skinWaterTextBox1.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
             this.skinWaterTextBox1.WaterText = "查询";
@@ -127,13 +130,14 @@ namespace WEF.ModelGenerator.Forms
             // 
             // CollectForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(437, 450);
+            this.ClientSize = new System.Drawing.Size(656, 720);
             this.Controls.Add(this.skinWaterTextBox1);
             this.Controls.Add(this.listView1);
             this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "CollectForm";
             this.Text = "收藏";
             this.contextMenuStrip1.ResumeLayout(false);
