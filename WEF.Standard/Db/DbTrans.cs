@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 
 using WEF.Common;
@@ -148,6 +149,16 @@ namespace WEF.Db
         }
 
         /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public Search Search(string tableName)
+        {
+            return new Search(DBContext.Db, tableName, "", _trans);
+        }
+
+        /// <summary>
         /// 添加
         /// </summary>
         /// <param name="entity"></param>
@@ -157,6 +168,49 @@ namespace WEF.Db
             return DBContext.Insert(_trans, entity);
         }
 
+        /// <summary>
+        /// 添加多条
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public int Insert<T>(List<T> entities) where T : Entity
+        {
+            return DBContext.Insert(_trans, entities);
+        }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public int Update<T>(params T[] entities) where T : Entity
+        {
+            return DBContext.Update(_trans, entities);
+        }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public int Update<T>(List<T> entities) where T : Entity
+        {
+            return DBContext.Update(_trans, entities);
+        }
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public int Update<T>(T entity, Expression<Func<T, bool>> lambdaWhere) where T : Entity
+        {
+            return DBContext.Update(_trans, entity, lambdaWhere);
+        }
 
         /// <summary>
         /// 删除
@@ -168,40 +222,27 @@ namespace WEF.Db
         {
             return DBContext.Delete(_trans, entity);
         }
-
         /// <summary>
-        /// 关闭
+        /// 删除
         /// </summary>
-        public void Close()
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public int Delete<T>(List<T> entities) where T : Entity
         {
-            if (_isClose)
-                return;
-
-            if (_conn.State != ConnectionState.Closed)
-            {
-                _conn.Close();
-            }
-
-            _trans?.Dispose();
-
-            _isClose = true;
-
-            Monitor.Exit(_locker);
+            return DBContext.Delete(_trans, entities);
+        }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public int Delete<T>(Expression<Func<T, bool>> lambdaWhere) where T : Entity
+        {
+            return DBContext.Delete(_trans, lambdaWhere);
         }
 
-
-        #region IDisposable 成员
-
-        /// <summary>
-        /// 关闭连接并释放资源
-        /// </summary>
-        public void Dispose()
-        {
-            Commit();
-            Close();
-        }
-
-        #endregion
 
 
         /// <summary>
@@ -270,43 +311,6 @@ namespace WEF.Db
         }
 
 
-        #region 查询
-
-
-        /// <summary>
-        /// 查询
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
-        public Search Search(string tableName)
-        {
-            return new Search(DBContext.Db, tableName, "", _trans);
-        }
-
-        #endregion
-        /// <summary>
-        /// 更新
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public int Update<T>(params T[] entities) where T : Entity
-        {
-            return DBContext.Update(_trans, entities);
-        }
-
-        /// <summary>
-        /// 更新
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public int Update<T>(List<T> entities) where T : Entity
-        {
-            return DBContext.Update(_trans, entities);
-        }
-
-
         #region try
 
         /// <summary>
@@ -356,5 +360,41 @@ namespace WEF.Db
         }
 
         #endregion
+
+        /// <summary>
+        /// 关闭
+        /// </summary>
+        public void Close()
+        {
+            if (_isClose)
+                return;
+
+            if (_conn.State != ConnectionState.Closed)
+            {
+                _conn.Close();
+            }
+
+            _trans?.Dispose();
+
+            _isClose = true;
+
+            Monitor.Exit(_locker);
+        }
+
+
+        #region IDisposable 成员
+
+        /// <summary>
+        /// 关闭连接并释放资源
+        /// </summary>
+        public void Dispose()
+        {
+            Commit();
+            Close();
+        }
+
+        #endregion
+
+
     }
 }

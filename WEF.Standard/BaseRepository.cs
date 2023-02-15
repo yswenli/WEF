@@ -679,7 +679,7 @@ namespace WEF
         /// <returns></returns>
         public int Update(T entity, Expression<Func<T, bool>> lambdaWhere)
         {
-            return _dbContext.Update<T>(entity, lambdaWhere);
+            return _dbContext.Update(entity, lambdaWhere);
         }
 
         /// <summary>

@@ -11,14 +11,14 @@
 *创建人： yswenli
 *电子邮箱：walle.wen@tjingcai.com
 *创建时间：2023/2/14 13:22:04
-*描述：
+*描述：事务
 *
 *=================================================
 *修改标记
 *修改时间：2023/2/14 13:22:04
 *修改人： yswenli
 *版本号： V1.0.0.0
-*描述：
+*描述：事务
 *
 *****************************************************************************/
 using System;
@@ -69,15 +69,55 @@ namespace WEF.Db
             return new Search<TEntity>(DBContext.Db, _trans);
         }
 
+        #region 添加
+
         /// <summary>
-        /// 查询
+        /// 添加
         /// </summary>
-        /// <param name="asName"></param>
+        /// <param name="entities"></param>
         /// <returns></returns>
-        public new Search<TEntity> Search(string asName)
+        public int Insert(params TEntity[] entities)
         {
-            return new Search<TEntity>(DBContext.Db, _trans, asName);
+            return DBContext.Insert(_trans, entities);
         }
+        /// <summary>
+        /// 添加
+        /// </summary>
+        /// <param name="entities"></param>
+        public int Insert(IEnumerable<TEntity> entities)
+        {
+            return DBContext.Insert(_trans, entities);
+        }
+        /// <summary>
+        /// 添加
+        /// </summary>
+        /// <param name="entities"></param>
+        public int Insert(List<TEntity> entities)
+        {
+            return DBContext.Insert(_trans, entities);
+        }
+        /// <summary>
+        /// 添加
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public int Insert(TEntity entity)
+        {
+            return DBContext.Insert(_trans, entity);
+        }
+
+        /// <summary>
+        /// 添加
+        /// </summary>
+        /// <param name="fields"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public int Insert(Field[] fields, object[] values)
+        {
+            return DBContext.Insert<TEntity>(_trans, EntityCache.GetTableName<TEntity>(), fields, values);
+        }
+        #endregion
+
 
         #region 更新
 
@@ -178,7 +218,7 @@ namespace WEF.Db
         /// <returns></returns>
         public int Update(TEntity entity, Expression<Func<TEntity, bool>> lambdaWhere)
         {
-            return DBContext.Update(_trans, entity, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return DBContext.Update(_trans, entity, lambdaWhere);
         }
         /// <summary>
         /// 更新单个值
@@ -368,61 +408,10 @@ namespace WEF.Db
         /// <returns></returns>
         public int Delete(Expression<Func<TEntity, bool>> lambdaWhere)
         {
-            return DBContext.Delete<TEntity>(_trans, EntityCache.GetTableName<TEntity>(), ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return DBContext.Delete(_trans, lambdaWhere);
         }
 
-        #endregion
-
-
-        #region 添加
-
-        /// <summary>
-        /// 添加
-        /// </summary>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public int Insert(params TEntity[] entities)
-        {
-            return DBContext.Insert(_trans, entities);
-        }
-        /// <summary>
-        /// 添加
-        /// </summary>
-        /// <param name="entities"></param>
-        public int Insert(IEnumerable<TEntity> entities)
-        {
-            return DBContext.Insert(_trans, entities);
-        }
-        /// <summary>
-        /// 添加
-        /// </summary>
-        /// <param name="entities"></param>
-        public int Insert(List<TEntity> entities)
-        {
-            return DBContext.Insert(_trans, entities);
-        }
-        /// <summary>
-        /// 添加
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public int Insert(TEntity entity)
-        {
-            return DBContext.Insert(_trans, entity);
-        }
-
-        /// <summary>
-        /// 添加
-        /// </summary>
-        /// <param name="fields"></param>
-        /// <param name="values"></param>
-        /// <returns></returns>
-        public int Insert(Field[] fields, object[] values)
-        {
-            return DBContext.Insert<TEntity>(_trans, EntityCache.GetTableName<TEntity>(), fields, values);
-        }
-        #endregion
-
+        #endregion    
 
 
         #region try

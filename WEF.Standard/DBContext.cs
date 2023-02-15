@@ -1051,16 +1051,18 @@ namespace WEF
         {
             if (!entity.IsModify())
                 return 0;
-            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(entity, where), tran);
+            return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand(entity, where), tran);
         }
+
         /// <summary>
-        /// 
+        /// 更新
         /// </summary>
         public int Update<TEntity>(DbTransaction tran, TEntity entity, Expression<Func<TEntity, bool>> lambdaWhere)
             where TEntity : Entity
         {
-            return Update<TEntity>(tran, entity, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+            return Update(tran, entity, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -1378,6 +1380,8 @@ namespace WEF
                     return Delete<TEntity>(tran, where);
             }
         }
+
+
         /// <summary>
         /// 更新
         /// </summary>
@@ -1579,6 +1583,19 @@ namespace WEF
         {
             return Delete<TEntity>(tableName, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tran"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public int Delete<TEntity>(DbTransaction tran, Expression<Func<TEntity, bool>> lambdaWhere)
+            where TEntity : Entity
+        {
+            return Delete<TEntity>(tran, EntityCache.GetTableName<TEntity>(), lambdaWhere);
+        }
+
         /// <summary>
         /// 删除
         /// </summary>
@@ -1944,13 +1961,13 @@ namespace WEF
             switch (es)
             {
                 case EntityState.Added:
-                    count = Insert<TEntity>(entity);
+                    count = Insert(entity);
                     break;
                 case EntityState.Deleted:
-                    count = Delete<TEntity>(entity);
+                    count = Delete(entity);
                     break;
                 case EntityState.Modified:
-                    count = Update<TEntity>(entity);
+                    count = Update(entity);
                     break;
             }
             return count;
@@ -1968,13 +1985,13 @@ namespace WEF
                 switch (es)
                 {
                     case EntityState.Added:
-                        count += Insert<TEntity>(tran, entity);
+                        count += Insert(tran, entity);
                         break;
                     case EntityState.Deleted:
-                        count += Delete<TEntity>(tran, entity);
+                        count += Delete(tran, entity);
                         break;
                     case EntityState.Modified:
-                        count += Update<TEntity>(tran, entity);
+                        count += Update(tran, entity);
                         break;
                 }
             }
@@ -1991,13 +2008,13 @@ namespace WEF
             switch (es)
             {
                 case EntityState.Added:
-                    count = Insert<TEntity>(tran, entity);
+                    count = Insert(tran, entity);
                     break;
                 case EntityState.Deleted:
-                    count = Delete<TEntity>(tran, entity);
+                    count = Delete(tran, entity);
                     break;
                 case EntityState.Modified:
-                    count = Update<TEntity>(tran, entity);
+                    count = Update(tran, entity);
                     break;
             }
             return count;

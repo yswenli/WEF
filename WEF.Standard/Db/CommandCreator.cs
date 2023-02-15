@@ -51,6 +51,7 @@ namespace WEF.Db
         {
             return CreateUpdateCommand(entity.GetTableName(), entity, where);
         }
+ 
         /// <summary>
         /// 创建更新DbCommand
         /// </summary>
@@ -127,6 +128,7 @@ namespace WEF.Db
         /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="values"></param>
+        /// <param name="joinOn"></param>
         /// <param name="where"></param>
         /// <returns></returns>
         public DbCommand CreateUpdateCommand<TEntity>(string tableName,
