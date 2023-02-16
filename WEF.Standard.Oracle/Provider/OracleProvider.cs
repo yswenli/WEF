@@ -15,6 +15,7 @@ using System.Data.Common;
 using Oracle.ManagedDataAccess.Client;
 
 using WEF.Common;
+using WEF.Db;
 using WEF.Expressions;
 
 namespace WEF.Provider

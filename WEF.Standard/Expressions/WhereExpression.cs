@@ -17,8 +17,7 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
-
-using WEF.Common;
+using WEF.Db;
 
 namespace WEF.Expressions
 {

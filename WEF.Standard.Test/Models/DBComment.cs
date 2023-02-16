@@ -26,7 +26,7 @@ using System.Data;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using WEF;
-using WEF.Common;
+using WEF.Db;
 
 namespace WEF.Test.Models
 {

@@ -11,15 +11,15 @@ using System;
 using System.Runtime.Serialization;
 
 using WEF;
-using WEF.Common;
+using WEF.Db;
 
 namespace WEF.Models
 {
 
-	/// <summary>
-	/// 实体类DBOcWarehouseArea
-	/// </summary>
-	[Serializable, DataContract, Table("oc_warehouse_area")]
+    /// <summary>
+    /// 实体类DBOcWarehouseArea
+    /// </summary>
+    [Serializable, DataContract, Table("oc_warehouse_area")]
 	public partial class DBOcWarehouseArea : Entity
 	{
 		private static string m_tableName;

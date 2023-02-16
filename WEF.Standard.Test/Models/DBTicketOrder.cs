@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Runtime.Serialization;
 using WEF.Common;
+using WEF.Db;
 using WEF.Section;
 
 namespace WEF.Models

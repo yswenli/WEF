@@ -16,6 +16,7 @@ using WEF;
 using WEF.Common;
 using WEF.Section;
 using WEF.MvcPager;
+using WEF.Db;
 
 namespace WEF.Test.Models
 {

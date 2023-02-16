@@ -74,6 +74,18 @@ namespace WEF
 
         }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="database"></param>
+        /// <param name="tableName"></param>
+        /// <param name="trans"></param>
+        public Search(Database database, string tableName, DbTransaction trans)
+            : base(database, database.DbProvider.BuildTableName((string.IsNullOrEmpty(tableName) ? EntityCache.GetTableName<T>() : tableName), EntityCache.GetUserName<T>()), null, trans)
+        {
+
+        }
+
         #region 连接  Join
         /// <summary>
         /// InnerJoin

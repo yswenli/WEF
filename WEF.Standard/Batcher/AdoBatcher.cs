@@ -63,7 +63,7 @@ namespace WEF.Batcher
         /// </summary>
         /// <param name="size"></param>
         /// <returns></returns>
-        public DataTable Fill(int size = 100)
+        public DataTable Read(int size = 100)
         {
             using (DbConnection connection = _database.CreateConnection())
             {
@@ -99,7 +99,7 @@ namespace WEF.Batcher
         /// </summary>
         /// <param name="updateData"></param>
         /// <returns></returns>
-        public int Update(DataTable updateData)
+        public int Write(DataTable updateData)
         {
             lock (_locker)
             {

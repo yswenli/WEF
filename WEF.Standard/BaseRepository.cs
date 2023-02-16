@@ -681,6 +681,16 @@ namespace WEF
         {
             return _dbContext.Update(entity, lambdaWhere);
         }
+        /// <summary>
+        /// 更新实体
+        /// </summary>
+        /// <param name="lambadaSelect"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public int Update(Expression<Func<T, object>> lambadaSelect, Expression<Func<T, bool>> lambdaWhere)
+        {
+            return _dbContext.Update(lambadaSelect, lambdaWhere);
+        }
 
         /// <summary>
         /// 更新实体

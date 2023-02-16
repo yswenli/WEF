@@ -1,4 +1,4 @@
-﻿namespace WEF.Common
+﻿namespace WEF.Db
 {
     /// <summary>
     /// 列描述信息

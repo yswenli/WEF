@@ -20,6 +20,7 @@ using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 using WEF.Common;
+using WEF.Db;
 
 namespace WEF
 {

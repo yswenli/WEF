@@ -13,7 +13,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 
-namespace WEF.Common
+namespace WEF.Db
 {
     /// <summary>
     /// 标记实体类表名
@@ -28,7 +28,7 @@ namespace WEF.Common
         /// <param name="tableName"></param>
         public TableAttribute(string tableName)
         {
-            this._tableName = tableName;
+            _tableName = tableName;
         }
         /// <summary>
         /// TableAttribute
@@ -37,8 +37,8 @@ namespace WEF.Common
         /// <param name="username"></param>
         public TableAttribute(string tableName, string username)
         {
-            this._tableName = tableName;
-            this._userName = username;
+            _tableName = tableName;
+            _userName = username;
         }
         /// <summary>
         /// GetTableName

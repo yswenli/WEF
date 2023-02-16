@@ -20,7 +20,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
-
+using WEF.Db;
 using WEF.Expressions;
 
 namespace WEF.Common
@@ -662,6 +662,30 @@ namespace WEF.Common
             text = Regex.Replace(text, "\r\n", "");
             text = Regex.Replace(text, ";", "");
             return text;
+        }
+
+
+        /// <summary>
+        /// 获取对象的字段和值集合
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static Dictionary<string, object> ToDictionary(this object obj)
+        {
+            var map = new Dictionary<string, object>();
+            if (obj == null)
+            {
+                return map;
+            }
+            Type t = obj.GetType();
+            PropertyInfo[] PropertyList = t.GetProperties();
+            foreach (var item in PropertyList)
+            {
+                var name = item.Name;
+                var value = GetPropertyValue(obj, item);
+                map.Add(name, value);
+            }
+            return map;
         }
     }
 }

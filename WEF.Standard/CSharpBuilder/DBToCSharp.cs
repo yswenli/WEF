@@ -24,8 +24,9 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
+using WEF.Db;
 
-namespace WEF.Common
+namespace WEF.CSharpBuilder
 {
     /// <summary>
     /// 数据库类型转换C#数据类型

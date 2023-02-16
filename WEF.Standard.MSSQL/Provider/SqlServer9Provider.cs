@@ -9,6 +9,7 @@
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
 using WEF.Common;
+using WEF.Db;
 using WEF.Expressions;
 
 namespace WEF.Provider

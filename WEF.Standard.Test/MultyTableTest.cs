@@ -23,8 +23,7 @@
 *****************************************************************************/
 using System;
 using System.Runtime.Serialization;
-
-using WEF.Common;
+using WEF.Db;
 
 namespace WEF.Test
 {

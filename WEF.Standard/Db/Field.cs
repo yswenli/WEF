@@ -12,10 +12,11 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using WEF.Common;
 
 using WEF.Expressions;
 
-namespace WEF.Common
+namespace WEF.Db
 {
     /// <summary>
     /// 字段信息   
@@ -296,7 +297,7 @@ namespace WEF.Common
         {
             get
             {
-                return new Field(string.Concat("datepart(year,", this.TableFieldName, ")")).As(this);
+                return new Field(string.Concat("datepart(year,", TableFieldName, ")")).As(this);
             }
         }
 
@@ -307,7 +308,7 @@ namespace WEF.Common
         {
             get
             {
-                return new Field(string.Concat("datepart(month,", this.TableFieldName, ")")).As(this);
+                return new Field(string.Concat("datepart(month,", TableFieldName, ")")).As(this);
             }
         }
 
@@ -318,7 +319,7 @@ namespace WEF.Common
         {
             get
             {
-                return new Field(string.Concat("datepart(day,", this.TableFieldName, ")")).As(this);
+                return new Field(string.Concat("datepart(day,", TableFieldName, ")")).As(this);
             }
         }
 
@@ -380,7 +381,7 @@ namespace WEF.Common
         {
             if (null == (object)field)
                 return false;
-            return this.FullName.Equals(field.FullName);
+            return FullName.Equals(field.FullName);
         }
 
         /// <summary>
@@ -403,7 +404,7 @@ namespace WEF.Common
         /// <returns></returns>
         public Field SetTableName(string tableName)
         {
-            return new Field(this.fieldName, tableName, this.parameterDbType, this.parameterSize, this.description, this.aliasName);
+            return new Field(fieldName, tableName, parameterDbType, parameterSize, description, aliasName);
         }
 
         /// <summary>
@@ -413,7 +414,7 @@ namespace WEF.Common
         /// <returns></returns>
         public Field As(string aliasName)
         {
-            return new Field(this.fieldName, this.tableName, this.parameterDbType, this.parameterSize, this.description, aliasName);
+            return new Field(fieldName, tableName, parameterDbType, parameterSize, description, aliasName);
         }
 
 
@@ -434,7 +435,7 @@ namespace WEF.Common
         /// <returns></returns>
         public Field IsNull(Field field)
         {
-            return new Field(string.Concat("isnull(", this.TableFieldName, ",", field.TableFieldName, ")")).As(this);
+            return new Field(string.Concat("isnull(", TableFieldName, ",", field.TableFieldName, ")")).As(this);
         }
 
         /// <summary>
@@ -444,7 +445,7 @@ namespace WEF.Common
         /// <returns></returns>
         public Field IsNull(object value)
         {
-            return new Field(string.Concat("isnull(", this.TableFieldName, ",", DataUtils.FormatValue(value), ")")).As(this);
+            return new Field(string.Concat("isnull(", TableFieldName, ",", DataUtils.FormatValue(value), ")")).As(this);
         }
 
         /// <summary>
@@ -453,9 +454,9 @@ namespace WEF.Common
         /// <returns></returns>
         public Field Count()
         {
-            if (this.PropertyName.Trim().Equals("*"))
+            if (PropertyName.Trim().Equals("*"))
                 return new Field("count(*)").As("cnt");
-            return new Field(string.Concat("count(", this.TableFieldName, ")")).As(this);
+            return new Field(string.Concat("count(", TableFieldName, ")")).As(this);
         }
 
         /// <summary>
@@ -464,9 +465,9 @@ namespace WEF.Common
         /// <returns></returns>
         public Field Distinct()
         {
-            if (this.PropertyName.Trim().Equals("*"))
+            if (PropertyName.Trim().Equals("*"))
                 return this;
-            return new Field(string.Concat("distinct ", this.TableFieldName)).As(this);
+            return new Field(string.Concat("distinct ", TableFieldName)).As(this);
         }
 
         /// <summary>
@@ -475,7 +476,7 @@ namespace WEF.Common
         /// <returns></returns>
         public Field Sum()
         {
-            return new Field(string.Concat("sum(", this.TableFieldName, ")")).As(this);
+            return new Field(string.Concat("sum(", TableFieldName, ")")).As(this);
         }
 
         /// <summary>
@@ -484,7 +485,7 @@ namespace WEF.Common
         /// <returns></returns>
         public Field Avg()
         {
-            return new Field(string.Concat("avg(", this.TableFieldName, ")")).As(this);
+            return new Field(string.Concat("avg(", TableFieldName, ")")).As(this);
         }
 
         /// <summary>
@@ -493,7 +494,7 @@ namespace WEF.Common
         /// <returns></returns>
         public Field Len()
         {
-            return new Field(string.Concat("len(", this.TableFieldName, ")")).As(this);
+            return new Field(string.Concat("len(", TableFieldName, ")")).As(this);
         }
 
 
@@ -503,7 +504,7 @@ namespace WEF.Common
         /// <returns></returns>
         public Field Trim()
         {
-            return new Field(string.Concat("ltrim(rtrim(", this.TableFieldName, "))")).As(this);
+            return new Field(string.Concat("ltrim(rtrim(", TableFieldName, "))")).As(this);
         }
 
         /// <summary>
@@ -512,7 +513,7 @@ namespace WEF.Common
         /// <returns></returns>
         public Field Max()
         {
-            return new Field(string.Concat("max(", this.TableFieldName, ")")).As(this);
+            return new Field(string.Concat("max(", TableFieldName, ")")).As(this);
         }
 
         /// <summary>
@@ -521,7 +522,7 @@ namespace WEF.Common
         /// <returns></returns>
         public Field Min()
         {
-            return new Field(string.Concat("min(", this.TableFieldName, ")")).As(this);
+            return new Field(string.Concat("min(", TableFieldName, ")")).As(this);
         }
 
         /// <summary>
@@ -531,7 +532,7 @@ namespace WEF.Common
         /// <returns></returns>
         public Field Left(int length)
         {
-            return new Field(string.Concat("left(", this.TableFieldName, ",", length.ToString(), ")")).As(this);
+            return new Field(string.Concat("left(", TableFieldName, ",", length.ToString(), ")")).As(this);
         }
 
 
@@ -542,7 +543,7 @@ namespace WEF.Common
         /// <returns></returns>
         public Field Right(int length)
         {
-            return new Field(string.Concat("right(", this.TableFieldName, ",", length.ToString(), ")")).As(this);
+            return new Field(string.Concat("right(", TableFieldName, ",", length.ToString(), ")")).As(this);
         }
 
 
@@ -554,7 +555,7 @@ namespace WEF.Common
         /// <returns></returns>
         public Field Substring(int startIndex, int endIndex)
         {
-            return new Field(string.Concat("substring(", this.TableFieldName, ",", startIndex.ToString(), ",", endIndex.ToString(), ")")).As(this);
+            return new Field(string.Concat("substring(", TableFieldName, ",", startIndex.ToString(), ",", endIndex.ToString(), ")")).As(this);
         }
 
 
@@ -565,7 +566,7 @@ namespace WEF.Common
         /// <returns></returns>
         public Field IndexOf(string subString)
         {
-            return new Field(string.Concat("charindex(", this.TableFieldName, ",", DataUtils.FormatValue(subString), ") - 1")).As(this);
+            return new Field(string.Concat("charindex(", TableFieldName, ",", DataUtils.FormatValue(subString), ") - 1")).As(this);
         }
 
         /// <summary>
@@ -576,7 +577,7 @@ namespace WEF.Common
         /// <returns></returns>
         public Field Replace(string oldValue, string newValue)
         {
-            return new Field(string.Concat("replace(", this.TableFieldName, ",", DataUtils.FormatValue(oldValue), ",", DataUtils.FormatValue(newValue), ")")).As(this);
+            return new Field(string.Concat("replace(", TableFieldName, ",", DataUtils.FormatValue(oldValue), ",", DataUtils.FormatValue(newValue), ")")).As(this);
         }
 
         /// <summary>
@@ -729,7 +730,7 @@ namespace WEF.Common
         /// <returns></returns>
         private WhereExpression selectInOrNotIn<T>(Field field, string join, params T[] values)
         {
-            return selectInOrNotIn<T>(field, join, true, values);
+            return selectInOrNotIn(field, join, true, values);
         }
 
 
@@ -753,9 +754,9 @@ namespace WEF.Common
                 //2015-09-22注释
                 //return WhereClip.All;
             }
-            Check.Require(!Field.IsNullOrEmpty(field),
+            Check.Require(!IsNullOrEmpty(field),
                 "filed could not be null or empty");
-            Check.Require((null != values && values.Length > 0),
+            Check.Require(null != values && values.Length > 0,
                 "values could not be null or empty");
 
             var whereString = new StringPlus(field.TableFieldName);
@@ -805,7 +806,7 @@ namespace WEF.Common
         /// <returns></returns>
         public WhereExpression SelectIn(params object[] values)
         {
-            return selectInOrNotIn<object>(this, selectInString, values);
+            return selectInOrNotIn(this, selectInString, values);
         }
         /// <summary>
         /// 同SelectIn。
@@ -829,10 +830,10 @@ namespace WEF.Common
         {
             if (typeof(T) == typeof(int))
             {
-                return selectInOrNotIn<T>(this, selectInString, false, values);
+                return selectInOrNotIn(this, selectInString, false, values);
             }
 
-            return selectInOrNotIn<T>(this, selectInString, values);
+            return selectInOrNotIn(this, selectInString, values);
         }
         /// <summary>
         /// where field in (value,value,value)。同SelectIn。传入Array或List&lt;T>。
@@ -872,7 +873,7 @@ namespace WEF.Common
         /// <returns></returns>
         public WhereExpression SelectNotIn(params object[] values)
         {
-            return selectInOrNotIn<object>(this, selectNotInString, values);
+            return selectInOrNotIn(this, selectNotInString, values);
         }
         /// <summary>
         /// 同SelectNotIn。
@@ -895,10 +896,10 @@ namespace WEF.Common
 
             if (typeof(T) == typeof(int))
             {
-                return selectInOrNotIn<T>(this, selectNotInString, false, values);
+                return selectInOrNotIn(this, selectNotInString, false, values);
             }
 
-            return selectInOrNotIn<T>(this, selectNotInString, values);
+            return selectInOrNotIn(this, selectNotInString, values);
         }
         /// <summary>
         /// 同SelectNotIn。传入Array或List&lt;T>。
@@ -982,7 +983,7 @@ namespace WEF.Common
         /// <returns></returns>
         private WhereExpression subQuery(Field field, Search from, string join)
         {
-            if (Field.IsNullOrEmpty(field))
+            if (IsNullOrEmpty(field))
                 return null;
             if (from.DbProvider.DatabaseType == DatabaseType.MySql)
             {
@@ -1058,7 +1059,7 @@ namespace WEF.Common
         /// <returns></returns>
         public WhereExpression IsNull()
         {
-            return new WhereExpression(string.Concat(this.TableFieldName, " is null "));
+            return new WhereExpression(string.Concat(TableFieldName, " is null "));
         }
         /// <summary>
         /// 字段 为null <example>field is not null</example>
@@ -1066,7 +1067,7 @@ namespace WEF.Common
         /// <returns></returns>
         public WhereExpression IsNotNull()
         {
-            return new WhereExpression(string.Concat(this.TableFieldName, " is not null "));
+            return new WhereExpression(string.Concat(TableFieldName, " is not null "));
         }
 
         /// <summary>
@@ -1465,7 +1466,7 @@ namespace WEF.Common
         /// <param name="fieldName"></param>
         public FieldAttribute(string fieldName)
         {
-            this.Field = fieldName;
+            Field = fieldName;
         }
     }
 }

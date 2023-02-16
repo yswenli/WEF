@@ -10,8 +10,7 @@
 using System;
 using System.Data;
 using System.Runtime.Serialization;
-
-using WEF.Common;
+using WEF.Db;
 
 namespace WEF.Models
 {

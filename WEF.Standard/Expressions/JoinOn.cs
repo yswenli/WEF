@@ -27,6 +27,7 @@ using System.Linq;
 using System.Linq.Expressions;
 
 using WEF.Common;
+using WEF.Db;
 
 namespace WEF.Expressions
 {

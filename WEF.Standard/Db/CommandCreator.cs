@@ -315,7 +315,6 @@ namespace WEF.Db
                     }
                 }
                 string panme = DataUtils.MakeUniqueKey(fields[i]);
-                //var panme = string.Concat("@", fields[i].Name, i);
                 insertFields.Add(fields[i].FieldName, panme);
                 var p = new Parameter(panme, values[i], fields[i].ParameterDbType, fields[i].ParameterSize);
                 parameters.Add(p);
@@ -338,7 +337,6 @@ namespace WEF.Db
             sql.Append(")");
 
             var cmd = _db.GetSqlStringCommand(sql.ToString());
-
             _db.AddCommandParameter(cmd, parameters.ToArray());
             return cmd;
         }

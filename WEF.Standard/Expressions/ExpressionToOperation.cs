@@ -24,6 +24,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 using WEF.Common;
+using WEF.Db;
 
 namespace WEF.Expressions
 {
@@ -701,7 +702,8 @@ namespace WEF.Expressions
                     if (item is MemberExpression)
                     {
                         var propertyType = ((MemberExpression)item).Expression.Type;
-                        tableName = TableAttribute.GetTableName(propertyType);
+                        if (string.IsNullOrEmpty(tableName))
+                            tableName = TableAttribute.GetTableName(propertyType);
                         var aliasName = exNew.Members[i].Name;
 
                         var member = (MemberExpression)item;
@@ -722,8 +724,9 @@ namespace WEF.Expressions
                     else if (item is MethodCallExpression)
                     {
                         var method = ((MethodCallExpression)item);
-                        var propertyType = ((MemberExpression)method.Arguments[0]).Expression.Type;
-                        tableName = TableAttribute.GetTableName(propertyType);
+                        var propertyType = ((MemberExpression)method.Arguments[0]).Expression.Type; 
+                        if (string.IsNullOrEmpty(tableName))
+                            tableName = TableAttribute.GetTableName(propertyType);
                         var aliasName = exNew.Members[i].Name;
                         f[i] = ConvertFun(tableName, method, aliasName)[0];
                     }

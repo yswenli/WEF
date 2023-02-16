@@ -12,15 +12,15 @@ using System.Data;
 using System.Runtime.Serialization;
 
 using WEF;
-using WEF.Common;
+using WEF.Db;
 
 namespace WEF.Test.Models
 {
 
-	/// <summary>
-	/// 实体类DBWarehouseInboundData
-	/// </summary>
-	[Serializable, DataContract, Table("oc_warehouse_inbound_data")]
+    /// <summary>
+    /// 实体类DBWarehouseInboundData
+    /// </summary>
+    [Serializable, DataContract, Table("oc_warehouse_inbound_data")]
 	public partial class DBWarehouseInboundData : Entity
 	{
 		private static string m_tableName;

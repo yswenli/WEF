@@ -459,6 +459,17 @@ namespace WEF
             : this(database, tableName, asName, (DbTransaction)null)
         {
         }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="database"></param>
+        /// <param name="tableName"></param>
+        /// <param name="trans"></param>
+        public Search(Database database, string tableName, DbTransaction trans)
+           : this(database, tableName, null, trans)
+        {
+        }
         /// <summary>
         /// 构造函数
         /// </summary>

@@ -167,6 +167,17 @@ namespace WEF.Db
         {
             return DBContext.Insert(_trans, entity);
         }
+        /// <summary>
+        /// 添加
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public int Insert<T>(string tableName, T entity) where T : Entity
+        {
+            return DBContext.Insert(_trans, tableName, entity);
+        }
 
         /// <summary>
         /// 添加多条
@@ -178,6 +189,17 @@ namespace WEF.Db
         {
             return DBContext.Insert(_trans, entities);
         }
+        /// <summary>
+        /// 添加多条
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public int Insert<T>(string tableName, List<T> entities) where T : Entity
+        {
+            return DBContext.Insert(_trans, tableName, entities);
+        }
 
         /// <summary>
         /// 更新
@@ -188,6 +210,17 @@ namespace WEF.Db
         public int Update<T>(params T[] entities) where T : Entity
         {
             return DBContext.Update(_trans, entities);
+        }
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public int Update<T>(string tableName, params T[] entities) where T : Entity
+        {
+            return DBContext.Update(_trans, tableName, entities);
         }
 
         /// <summary>
@@ -204,12 +237,35 @@ namespace WEF.Db
         /// 更新
         /// </summary>
         /// <typeparam name="T"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public int Update<T>(string tableName, List<T> entities) where T : Entity
+        {
+            return DBContext.Update(_trans, tableName, entities);
+        }
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <param name="lambdaWhere"></param>
         /// <returns></returns>
         public int Update<T>(T entity, Expression<Func<T, bool>> lambdaWhere) where T : Entity
         {
             return DBContext.Update(_trans, entity, lambdaWhere);
+        }
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="entity"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public int Update<T>(string tableName, T entity, Expression<Func<T, bool>> lambdaWhere) where T : Entity
+        {
+            return DBContext.Update(_trans, tableName, entity, lambdaWhere);
         }
 
         /// <summary>
@@ -220,7 +276,19 @@ namespace WEF.Db
         /// <returns></returns>
         public int Delete<T>(T entity) where T : Entity
         {
-            return DBContext.Delete(_trans, entity);
+            return Delete(entity.GetTableName(), entity);
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public int Delete<T>(string tableName, T entity) where T : Entity
+        {
+            return DBContext.Delete(_trans, tableName, entity);
         }
         /// <summary>
         /// 删除
@@ -236,14 +304,34 @@ namespace WEF.Db
         /// 删除
         /// </summary>
         /// <typeparam name="T"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public int Delete<T>(string tableName, List<T> entities) where T : Entity
+        {
+            return DBContext.Delete(_trans, tableName, entities);
+        }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="lambdaWhere"></param>
         /// <returns></returns>
         public int Delete<T>(Expression<Func<T, bool>> lambdaWhere) where T : Entity
         {
             return DBContext.Delete(_trans, lambdaWhere);
         }
-
-
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public int Delete<T>(string tableName, Expression<Func<T, bool>> lambdaWhere) where T : Entity
+        {
+            return DBContext.Delete(_trans, tableName, lambdaWhere);
+        }
 
         /// <summary>
         /// FromSql
@@ -264,8 +352,6 @@ namespace WEF.Db
         {
             return DBContext.FromSqlWithdAutomatic(sql, inputParams.ToArray()).SetDbTransaction(_trans);
         }
-
-
 
         /// <summary>
         /// FromSql

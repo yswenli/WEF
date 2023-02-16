@@ -15,6 +15,7 @@ using System.Data;
 using System.Data.Common;
 
 using WEF.Common;
+using WEF.Db;
 using WEF.Expressions;
 
 namespace WEF.Provider

@@ -10,6 +10,7 @@
  *****************************************************************************************************/
 
 using System.Collections.Generic;
+using WEF.Db;
 
 namespace WEF.Common
 {

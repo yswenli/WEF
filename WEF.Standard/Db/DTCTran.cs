@@ -24,7 +24,7 @@
 using System;
 using System.Transactions;
 
-namespace WEF.Common
+namespace WEF.Db
 {
     /// <summary>
     /// 分布式事务

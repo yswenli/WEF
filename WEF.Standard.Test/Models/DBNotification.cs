@@ -29,8 +29,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-
-using WEF.Common;
+using WEF.Db;
 
 namespace WEF.Standard.Test.Models
 {

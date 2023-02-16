@@ -12,15 +12,15 @@ using System.Data;
 using System.Runtime.Serialization;
 
 using WEF;
-using WEF.Common;
+using WEF.Db;
 
 namespace WEF.Test.Models
 {
 
-	/// <summary>
-	/// 实体类DBOcJoybuycarriercode
-	/// </summary>
-	[Serializable, DataContract, Table("OC_JoybuyCarrierCode")]
+    /// <summary>
+    /// 实体类DBOcJoybuycarriercode
+    /// </summary>
+    [Serializable, DataContract, Table("OC_JoybuyCarrierCode")]
 	public partial class DBOcJoybuycarriercode : Entity
 	{
 		private static string m_tableName;

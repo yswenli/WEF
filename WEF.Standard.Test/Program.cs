@@ -19,21 +19,21 @@ namespace WEF.Standard.Test
             //var nt3 = NotifyTest.GetList("76cf552c2b6f4dc6810994c4c015e2c8", "pro", 2, 3, 10);
             //var nt4 = NotifyTest.GetList("76cf552c2b6f4dc6810994c4c015e2c8", "pro", 2, 4, 10);
 
+
             List<DBArticle> articleList;
             List<DBComment> commentList;
 
-            var cnnstr = "";
+            var cnnstr = "Data Source=47.103.135.84;Initial Catalog=tejingcaiV2;User Id=testuser;Password=testuser";
 
             var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, cnnstr);
-
-            dbarticleRepository.CreateTransaction();
+            dbarticleRepository.Update((q) => new { ID = "111", Content = "222" }, (q) => q.IsDeleted == false);
 
             //子查询
             var qs = dbarticleRepository.Search().Select(q => q.ID).Top();
             var sq = dbarticleRepository.Search().SubQuery(q => q.ID.SubQuery(qs, QueryOperator.Equal));
             var sqr = sq.ToList();
 
-           
+
 
             //转换字典
             var adic1 = dbarticleRepository.Search().ToDictionary(q => q.ID);
@@ -556,7 +556,7 @@ namespace WEF.Standard.Test
                 tran3.Delete(new DBTask() { Taskid = "123" });
 
                 tran3.Delete(ut);
-            });            
+            });
 
             #endregion
 

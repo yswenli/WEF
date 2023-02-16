@@ -10,7 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using WEF.Common;
+using WEF.Db;
 using WEF.Section;
 
 namespace WEF.Models

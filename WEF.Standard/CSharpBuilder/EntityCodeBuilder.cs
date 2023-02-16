@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 
 using WEF.Common;
+using WEF.Db;
 
 namespace WEF.CSharpBuilder
 {
@@ -172,7 +173,7 @@ namespace WEF.CSharpBuilder
             plus.AppendLine("using System.Runtime.Serialization;");
             plus.AppendLine("using WEF;");
             plus.AppendLine("using WEF.Common;");
-
+            plus.AppendLine("using WEF.Db;");
             plus.AppendLine();
             plus.AppendLine("namespace " + NameSpace);
             plus.AppendLine("{");
