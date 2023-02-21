@@ -8,6 +8,7 @@ using System.Windows.Forms;
 
 using WEF.Common;
 using WEF.CSharpBuilder;
+using WEF.Db;
 using WEF.DbDAL;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Forms;

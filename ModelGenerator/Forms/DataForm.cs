@@ -63,7 +63,7 @@ namespace WEF.ModelGenerator.Forms
                 {
                     _dbContext = DBObjectHelper.GetDBContext(ConnectionModel);
 
-                    _dataTable = _dbContext.GetDataSource(ConnectionModel.TableName);
+                    _dataTable = _dbContext.ReadDataSource(ConnectionModel.TableName);
 
                     if (_dataTable != null)
                     {
@@ -106,7 +106,7 @@ namespace WEF.ModelGenerator.Forms
             {
                 try
                 {
-                    _dbContext.UpdateDataSource(_dataTable);
+                    _dbContext.WriteDataSource(_dataTable);
 
                     InvokeHelper.Invoke(this, () => MessageBox.Show(this, "保存成功"));
 
