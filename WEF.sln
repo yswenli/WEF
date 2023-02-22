@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Standard.SQLite", "WEF.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Standard.OLEDB", "WEF.Standard.OLEDB\WEF.Standard.OLEDB.csproj", "{5D9DB26D-BB45-4DEA-B270-F5E2E5E34ADE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.Test", "WEF.Standard.Test\WEF.Standard.Test.csproj", "{D2FA0AFF-742C-4503-87E7-A304AF3B271C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Standard.Test", "WEF.Standard.Test\WEF.Standard.Test.csproj", "{D2FA0AFF-742C-4503-87E7-A304AF3B271C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.Mongo", "WEF.Standard.Mongo\WEF.Standard.Mongo.csproj", "{57D02BFE-0537-401C-BB2C-CCED29E673DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{D2FA0AFF-742C-4503-87E7-A304AF3B271C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2FA0AFF-742C-4503-87E7-A304AF3B271C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2FA0AFF-742C-4503-87E7-A304AF3B271C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57D02BFE-0537-401C-BB2C-CCED29E673DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57D02BFE-0537-401C-BB2C-CCED29E673DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57D02BFE-0537-401C-BB2C-CCED29E673DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57D02BFE-0537-401C-BB2C-CCED29E673DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

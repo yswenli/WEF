@@ -669,7 +669,14 @@ namespace WEF.Expressions
             return ToSelectChild(tableName, expr.Body);
         }
 
-
+        /// <summary>
+        /// 返回指定的的字段，
+        /// 此处以表达式中的获取的为基础
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="exprBody"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         private static Field[] ToSelectChild(string tableName, System.Linq.Expressions.Expression exprBody)
         {
             if (exprBody is MemberExpression)
@@ -702,8 +709,7 @@ namespace WEF.Expressions
                     if (item is MemberExpression)
                     {
                         var propertyType = ((MemberExpression)item).Expression.Type;
-                        if (string.IsNullOrEmpty(tableName))
-                            tableName = TableAttribute.GetTableName(propertyType);
+                        tableName = TableAttribute.GetTableName(propertyType);
                         var aliasName = exNew.Members[i].Name;
 
                         var member = (MemberExpression)item;
@@ -724,9 +730,8 @@ namespace WEF.Expressions
                     else if (item is MethodCallExpression)
                     {
                         var method = ((MethodCallExpression)item);
-                        var propertyType = ((MemberExpression)method.Arguments[0]).Expression.Type; 
-                        if (string.IsNullOrEmpty(tableName))
-                            tableName = TableAttribute.GetTableName(propertyType);
+                        var propertyType = ((MemberExpression)method.Arguments[0]).Expression.Type;
+                        tableName = TableAttribute.GetTableName(propertyType);
                         var aliasName = exNew.Members[i].Name;
                         f[i] = ConvertFun(tableName, method, aliasName)[0];
                     }
