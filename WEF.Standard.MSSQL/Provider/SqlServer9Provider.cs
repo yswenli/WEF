@@ -41,10 +41,10 @@ namespace WEF.Provider
             Check.Require(startIndex <= endIndex, "startIndex must be less than endIndex!");
             Check.Require(fromSection, "fromSection", Check.NotNullOrEmpty);
 
-            if (startIndex == 1)
-            {
-                return base.CreatePageFromSection(fromSection, startIndex, endIndex);
-            }
+            //if (startIndex == 1)
+            //{
+            //    return base.CreatePageFromSection(fromSection, startIndex, endIndex);
+            //}
 
 
             if (OrderByOperation.IsNullOrEmpty(fromSection.OrderByClip))

@@ -300,6 +300,7 @@ namespace WEF.Provider
             Check.Require(fromSection, "fromSection", Check.NotNullOrEmpty);
 
             int pageSize = endIndex - startIndex + 1;
+
             if (startIndex == 1)
             {
                 fromSection.PrefixString = string.Concat(" TOP ", pageSize.ToString());
@@ -350,7 +351,6 @@ namespace WEF.Provider
                     fromSection.OrderBy(fromSection.OrderByClip.ReverseOrderByOperation);
 
                     fromSection.Where(WhereExpression.All);
-
                 }
                 else
                 {
@@ -402,15 +402,10 @@ namespace WEF.Provider
 
                         fromSection.Where(WhereExpression.All);
                     }
-
                 }
-
                 fromSection.Parameters = list;
-
             }
-
             return fromSection;
-
         }
 
         /// <summary>
