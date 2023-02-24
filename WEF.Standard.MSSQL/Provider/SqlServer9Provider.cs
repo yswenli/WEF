@@ -23,7 +23,7 @@ namespace WEF.Provider
         public SqlServer9Provider(string connectionString)
             : base(connectionString)
         {
-            this.DatabaseType=DatabaseType.SqlServer9;
+            this.DatabaseType = DatabaseType.SqlServer9;
         }
 
 
@@ -41,11 +41,10 @@ namespace WEF.Provider
             Check.Require(startIndex <= endIndex, "startIndex must be less than endIndex!");
             Check.Require(fromSection, "fromSection", Check.NotNullOrEmpty);
 
-            //if (startIndex == 1)
-            //{
-            //    return base.CreatePageFromSection(fromSection, startIndex, endIndex);
-            //}
-
+            if (startIndex == 1 && endIndex == 1)
+            {
+                return base.CreatePageFromSection(fromSection, startIndex, endIndex);
+            }
 
             if (OrderByOperation.IsNullOrEmpty(fromSection.OrderByClip))
             {
@@ -66,9 +65,9 @@ namespace WEF.Provider
                 fromSection.Select(Field.All);
             }
 
-            fromSection.AddSelect(new Field(string.Concat("row_number() over(", fromSection.OrderByString, ") AS tmp_rowid")));        
-            fromSection.OrderBy(OrderByOperation.None);            
-            fromSection.TableName = string.Concat("(", fromSection.SqlString, ") AS tmp_table");            
+            fromSection.AddSelect(new Field(string.Concat("row_number() over(", fromSection.OrderByString, ") AS tmp_rowid")));
+            fromSection.OrderBy(OrderByOperation.None);
+            fromSection.TableName = string.Concat("(", fromSection.SqlString, ") AS tmp_table");
             fromSection.Parameters = fromSection.Parameters;
             fromSection.DistinctString = string.Empty;
             fromSection.PrefixString = string.Empty;

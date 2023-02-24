@@ -534,13 +534,21 @@ namespace WEF.Expressions
 
             throw new Exception("暂时不支持的Group by lambda写法！请使用经典写法！");
         }
-
+        /// <summary>
+        /// ToOrderByClip
+        /// </summary>
+        /// <param name="expr"></param>
+        /// <returns></returns>
         public static OrderByOperation ToOrderByClip(Expression<Func<T, object>> expr)
         {
             return ToOrderByClipChild(expr.Body, OrderByOperater.ASC);
         }
-
-        public static OrderByOperation ToOrderByDescendingClip(string tableName, Expression<Func<T, object>> expr)
+        /// <summary>
+        /// ToOrderByClip
+        /// </summary>
+        /// <param name="expr"></param>
+        /// <returns></returns>
+        public static OrderByOperation ToOrderByDescendingClip(Expression<Func<T, object>> expr)
         {
             return ToOrderByClipChild(expr.Body, OrderByOperater.DESC);
         }

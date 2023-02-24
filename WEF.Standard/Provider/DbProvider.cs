@@ -307,7 +307,6 @@ namespace WEF.Provider
             }
             else
             {
-
                 if (OrderByOperation.IsNullOrEmpty(fromSection.OrderByClip))
                 {
                     foreach (Field f in fromSection.Fields)

@@ -789,7 +789,7 @@ namespace WEF
             {
                 foreach (var item in lambdaOrderBys)
                 {
-                    orderByOperations.Add(ExpressionToOperation<T>.ToOrderByDescendingClip(_tableName, item));
+                    orderByOperations.Add(ExpressionToOperation<T>.ToOrderByDescendingClip(item));
                 }
             }
             return (Search<T>)base.OrderBy(orderByOperations.ToArray());
@@ -808,7 +808,7 @@ namespace WEF
             {
                 foreach (var item in lambdaOrderBys)
                 {
-                    orderByOperations.Add(ExpressionToOperation<T2>.ToOrderByDescendingClip(_tableName, item));
+                    orderByOperations.Add(ExpressionToOperation<T2>.ToOrderByDescendingClip(item));
                 }
             }
             return (Search<T>)base.OrderBy(orderByOperations.ToArray());
@@ -1548,6 +1548,36 @@ namespace WEF
             var total = this.Count();
 
             var list = this.OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
+
+            return new PagedList<T>(list, pageIndex, pageSize, total);
+        }
+
+        /// <summary>
+        /// 获取分页列表
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderLambada"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public PagedList<T> ToPagedList(int pageIndex, int pageSize, Expression<Func<T, object>> orderLambada, bool asc = true)
+        {
+            var total = Count();
+
+            OrderByOperation order;
+
+            if (asc)
+            {
+                order = ExpressionToOperation<T>.ToOrderByClip(orderLambada);
+            }
+            else
+            {
+                order = ExpressionToOperation<T>.ToOrderByDescendingClip(orderLambada);
+            }
+
+            var list = OrderBy(order)
+                .Page(pageIndex, pageSize)
+                .ToList<T>();
 
             return new PagedList<T>(list, pageIndex, pageSize, total);
         }

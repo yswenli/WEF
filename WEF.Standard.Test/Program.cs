@@ -23,9 +23,11 @@ namespace WEF.Standard.Test
             List<DBArticle> articleList;
             List<DBComment> commentList;
 
-            var cnnstr = "Data Source=47.103.135.84;Initial Catalog=tejingcaiV2;User Id=testuser;Password=testuser";
+            var cnnstr = "";
 
             var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, cnnstr);
+            var article = dbarticleRepository.Search().First();
+            var articles = dbarticleRepository.Search().ToPagedList(1, 2, q=>q.ID);
             dbarticleRepository.Update((q) => new { ID = "111", Content = "222" }, (q) => q.IsDeleted == false);
 
             //子查询
