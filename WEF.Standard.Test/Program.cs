@@ -1,8 +1,10 @@
 ﻿using System.Linq.Expressions;
 
 using WEF.Common;
+using WEF.Db;
 using WEF.Expressions;
 using WEF.Models;
+using WEF.Standard.Test.Models;
 using WEF.Test;
 using WEF.Test.Models;
 
@@ -25,9 +27,24 @@ namespace WEF.Standard.Test
 
             var cnnstr = "";
 
+            //行转列测试
+            var fdr = new DBFormdataRepository(WEF.DatabaseType.SqlServer9, cnnstr);
+            using (var fdTran = fdr.CreateTransaction())
+            {
+                var pivotInfo = new PivotInfo<DBFormdata>()
+                {
+                    OriginalColumns = q => q.BatchNo,
+                    ColumnNames = new List<string>() { "WorkNum", "TaskType", "FailReason" },
+                    TypeFieldName = "FieldName",
+                    ValueFieldName = "value",
+                    WhereLambada = q => q.BatchNo == "fcf3fb6c45d742b5bd7e453f29343782"
+                };
+                var list = fdTran.ToPivotList<dynamic>(pivotInfo);
+            }
+
             var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, cnnstr);
             var article = dbarticleRepository.Search().First();
-            var articles = dbarticleRepository.Search().ToPagedList(1, 2, q=>q.ID);
+            var articles = dbarticleRepository.Search().ToPagedList(1, 2, q => q.ID);
             dbarticleRepository.Update((q) => new { ID = "111", Content = "222" }, (q) => q.IsDeleted == false);
 
             //子查询
@@ -36,12 +53,10 @@ namespace WEF.Standard.Test
             var sqr = sq.ToList();
 
 
-
             //转换字典
             var adic1 = dbarticleRepository.Search().ToDictionary(q => q.ID);
             var adic2 = dbarticleRepository.Search().ToDictionary(q => q.ID, q => q.Title);
             var adic3 = dbarticleRepository.Search().ToDictionary<string, string>(q => q.ID, q => q.Title);
-
 
 
             var tuple = dbarticleRepository.FromSql("select top 10 * from Article;select top 10 * from Comment")

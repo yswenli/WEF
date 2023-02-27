@@ -8,6 +8,8 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
+using System;
+
 using WEF.Common;
 using WEF.Db;
 using WEF.Expressions;
@@ -16,7 +18,7 @@ namespace WEF.Provider
 {
 
     /// <summary>
-    /// Sql Server 2005
+    /// Sql Server 2005以上
     /// </summary>
     public class SqlServer9Provider : SqlServerProvider
     {
@@ -76,6 +78,6 @@ namespace WEF.Provider
             fromSection.Where(new WhereExpression(string.Concat("tmp_rowid BETWEEN ", startIndex.ToString(), " AND ", endIndex.ToString())));
             fromSection.Join(JoinOn.None);
             return fromSection;
-        }
+        }        
     }
 }

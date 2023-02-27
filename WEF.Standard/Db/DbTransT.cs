@@ -31,6 +31,7 @@ using System.Threading;
 using WEF.Common;
 using WEF.Expressions;
 using WEF.MvcPager;
+using WEF.Section;
 
 namespace WEF.Db
 {
@@ -479,6 +480,63 @@ namespace WEF.Db
             }
         }
 
+        #endregion
+
+        #region 行转列
+
+        /// <summary>
+        /// 行转列
+        /// </summary>
+        /// <param name="pivotInfo"></param>
+        /// <param name="customerWhereExpression"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderByOperation"></param>
+        /// <returns></returns>
+        public PagedList<Model> ToPivotList<Model>(PivotInfo<TEntity> pivotInfo,
+            WhereExpression customerWhereExpression,
+            int pageIndex,
+            int pageSize,
+            OrderByOperation orderByOperation)
+        {
+            var tableName = EntityCache.GetTableName<TEntity>();
+            var selectFields = ExpressionToOperation<TEntity>.ToSelect(tableName, pivotInfo.OriginalColumns).Select(q => q.FieldName);
+            var whereExpresstion = ExpressionToOperation<TEntity>.ToWhereOperation(pivotInfo.WhereLambada);
+            return ToPivotList<Model>(tableName,
+                selectFields,
+                pivotInfo.ColumnNames,
+                pivotInfo.TypeFieldName,
+                pivotInfo.ValueFieldName,
+                whereExpresstion,
+                customerWhereExpression,
+                pageIndex,
+                pageSize,
+                orderByOperation);
+        }
+        /// <summary>
+        /// 行转列
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="pivotInfo"></param>
+        /// <param name="customerWhereExpression"></param>
+        /// <returns></returns>
+        public List<Model> ToPivotList<Model>(PivotInfo<TEntity> pivotInfo, WhereExpression customerWhereExpression)
+        {
+            return ToPivotList<Model>(pivotInfo, customerWhereExpression, 1, 1000, null).Data;
+        }
+
+        /// <summary>
+        /// 行转列
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="pivotInfo"></param>
+        /// <param name="whereSQL"></param>
+        /// <returns></returns>
+        public List<Model> ToPivotList<Model>(PivotInfo<TEntity> pivotInfo, string whereSQL = null)
+        {
+            if (string.IsNullOrEmpty(whereSQL)) return ToPivotList<Model>(pivotInfo, WhereExpression.All);
+            return ToPivotList<Model>(pivotInfo, new WhereExpression(whereSQL));
+        }
         #endregion
     }
 }

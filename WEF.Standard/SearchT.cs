@@ -19,6 +19,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Xml.Schema;
 
 using WEF.Common;
 using WEF.Db;
@@ -704,43 +705,42 @@ namespace WEF
         /// <summary>
         /// OrderBy
         /// </summary>
-        /// <param name="asc"></param>
-        /// <param name="desc"></param>
-        /// <returns></returns>
-        public Search<T> OrderBy(IEnumerable<string> asc, IEnumerable<string> desc)
-        {
-            var orderBys = new List<OrderByOperation>();
-
-            foreach (var item in asc)
-            {
-                orderBys.Aggregate(OrderByOperation.None, (current, ob) => current && ob);
-
-                orderBys.Add(new OrderByOperation(item, OrderByOperater.ASC));
-            }
-
-            foreach (var item in desc)
-            {
-                orderBys.Add(new OrderByOperation(item, OrderByOperater.DESC));
-            }
-
-            if (null == orderBys || !orderBys.Any()) return this;
-
-            var temporderby = orderBys.Aggregate(OrderByOperation.None, (current, ob) => current && ob);
-
-            this._orderBy = temporderby;
-
-            return this;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="orderBy"></param>
         /// <returns></returns>
         public new Search<T> OrderBy(OrderByOperation orderBy)
         {
             return (Search<T>)base.OrderBy(orderBy);
         }
+
+        /// <summary>
+        /// OrderBy
+        /// </summary>
+        /// <param name="fieldName"></param>
+        /// <param name="orderBy"></param>
+        /// <returns></returns>
+        public Search<T> OrderBy(string fieldName, OrderByOperater orderBy)
+        {
+            return OrderBy(new OrderByOperation(fieldName, orderBy));
+        }
+
+        /// <summary>
+        /// OrderBy
+        /// </summary>
+        /// <param name="pairs"></param>
+        /// <returns></returns>
+        public Search<T> OrderBy(Dictionary<string, OrderByOperater> pairs)
+        {
+            var orderByOperations = new List<OrderByOperation>();
+            if (pairs != null && pairs.Any())
+            {
+                foreach (var item in pairs)
+                {
+                    orderByOperations.Add(new OrderByOperation(item.Key, item.Value));
+                }
+            }
+            return (Search<T>)base.OrderBy(orderByOperations.ToArray());
+        }
+
         /// <summary>
         /// OrderBy
         /// </summary>
@@ -1252,7 +1252,6 @@ namespace WEF
                 using (var reader = ToDataReader(from))
                 {
                     result = EntityUtils.ReaderToList<Model>(reader);
-                    reader.Close();
                 }
                 return result;
             }
@@ -1533,7 +1532,6 @@ namespace WEF
         }
         #endregion
 
-
         #region 分页列表
         /// <summary>
         /// 获取分页
@@ -1674,6 +1672,6 @@ namespace WEF
 
         #endregion
 
-
+       
     }
 }

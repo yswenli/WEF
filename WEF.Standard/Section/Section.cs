@@ -81,6 +81,27 @@ namespace WEF.Section
         }
 
         /// <summary>
+        /// 返回DataReader
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderByOperation"></param>
+        /// <returns></returns>
+        public virtual IDataReader ToDataReader(int pageIndex, int pageSize, OrderByOperation orderByOperation)
+        {
+            Dictionary<string, OrderByOperater> orderDic = orderByOperation;
+            var cmd = _dbContext.Db.GetSqlStringCommand(_dbCommand.CommandText, pageIndex, pageSize, orderDic);
+            if (_dbCommand.Parameters != null && _dbCommand.Parameters.Count > 0)
+            {
+                foreach (var p in _dbCommand.Parameters)
+                {
+                    cmd.Parameters.Add(p);
+                }
+            }
+            return (_dbTransaction == null ? this._dbContext.ExecuteReader(cmd) : this._dbContext.ExecuteReader(cmd, _dbTransaction));
+        }
+
+        /// <summary>
         /// 返回DataSet
         /// </summary>
         /// <returns></returns>

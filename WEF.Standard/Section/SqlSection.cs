@@ -242,6 +242,22 @@ namespace WEF.Section
             }
             return this;
         }
+        /// <summary>
+        /// 添加集合型参数
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public SqlSection AddInParameter(IEnumerable<Parameter> parameters)
+        {
+            if (parameters != null && parameters.Any())
+            {
+                foreach (var parameter in parameters)
+                {
+                    AddInParameter(parameter.ParameterName, parameter.ParameterDbType, parameter.ParameterSize, parameter.ParameterValue);
+                }
+            }
+            return this;
+        }
         #endregion
 
     }

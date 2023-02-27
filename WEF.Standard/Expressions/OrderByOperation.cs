@@ -18,6 +18,7 @@
  *****************************************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 
 using WEF.Common;
 using WEF.Db;
@@ -39,7 +40,7 @@ namespace WEF.Expressions
     [Serializable]
     public class OrderByOperation
     {
-        private Dictionary<string, OrderByOperater> orderByOperation = new Dictionary<string, OrderByOperater>();
+        private Dictionary<string, OrderByOperater> _orderByOperation = new Dictionary<string, OrderByOperater>();
 
         /// <summary>
         /// null
@@ -57,7 +58,7 @@ namespace WEF.Expressions
         /// <param name="orderBy"></param>
         public OrderByOperation(string fieldName, OrderByOperater orderBy)
         {
-            orderByOperation.Add(fieldName, orderBy);
+            _orderByOperation.Add(fieldName, orderBy);
         }
 
         /// <summary>
@@ -75,6 +76,16 @@ namespace WEF.Expressions
         {
 
         }
+        /// <summary>
+        /// Add
+        /// </summary>
+        /// <param name="fieldName"></param>
+        /// <param name="orderBy"></param>
+        public void Add(string fieldName, OrderByOperater orderBy)
+        {
+            _orderByOperation.Add(fieldName, orderBy);
+        }
+
         /// <summary>
         /// 判断 OrderByClip  是否为null
         /// </summary>
@@ -105,15 +116,15 @@ namespace WEF.Expressions
 
 
             OrderByOperation orderby = new OrderByOperation();
-            foreach (KeyValuePair<string, OrderByOperater> kv in leftOrderByOpt.orderByOperation)
+            foreach (KeyValuePair<string, OrderByOperater> kv in leftOrderByOpt._orderByOperation)
             {
-                orderby.orderByOperation.Add(kv.Key, kv.Value);
+                orderby._orderByOperation.Add(kv.Key, kv.Value);
             }
 
-            foreach (KeyValuePair<string, OrderByOperater> kv in rightOrderByOpt.orderByOperation)
+            foreach (KeyValuePair<string, OrderByOperater> kv in rightOrderByOpt._orderByOperation)
             {
-                if (!orderby.orderByOperation.ContainsKey(kv.Key))
-                    orderby.orderByOperation.Add(kv.Key, kv.Value);
+                if (!orderby._orderByOperation.ContainsKey(kv.Key))
+                    orderby._orderByOperation.Add(kv.Key, kv.Value);
             }
 
             return orderby;
@@ -138,13 +149,13 @@ namespace WEF.Expressions
         {
             OrderByOperation tempOrderByClip = new OrderByOperation();
 
-            foreach (KeyValuePair<string, OrderByOperater> kv in this.orderByOperation)
+            foreach (KeyValuePair<string, OrderByOperater> kv in this._orderByOperation)
             {
                 string keyName = kv.Key;
                 if (kv.Key.IndexOf('.') > 0)
                     keyName = keyName.Substring(keyName.IndexOf('.') + 1);
 
-                tempOrderByClip.orderByOperation.Add(keyName, kv.Value);
+                tempOrderByClip._orderByOperation.Add(keyName, kv.Value);
             }
 
             return tempOrderByClip;
@@ -157,7 +168,7 @@ namespace WEF.Expressions
         public override string ToString()
         {
             StringPlus orderBy = new StringPlus();
-            foreach (KeyValuePair<string, OrderByOperater> kv in this.orderByOperation)
+            foreach (KeyValuePair<string, OrderByOperater> kv in this._orderByOperation)
             {
                 orderBy.Append(",");
                 orderBy.Append(kv.Key);
@@ -178,9 +189,9 @@ namespace WEF.Expressions
             {
                 OrderByOperation tempOrderByOpt = new OrderByOperation();
 
-                foreach (KeyValuePair<string, OrderByOperater> kv in this.orderByOperation)
+                foreach (KeyValuePair<string, OrderByOperater> kv in this._orderByOperation)
                 {
-                    tempOrderByOpt.orderByOperation.Add(kv.Key, kv.Value == OrderByOperater.ASC ? OrderByOperater.DESC : OrderByOperater.ASC);
+                    tempOrderByOpt._orderByOperation.Add(kv.Key, kv.Value == OrderByOperater.ASC ? OrderByOperater.DESC : OrderByOperater.ASC);
                 }
 
                 return tempOrderByOpt;
@@ -221,12 +232,35 @@ namespace WEF.Expressions
         {
             get
             {
-                if (this.orderByOperation.Count == 0)
+                if (this._orderByOperation.Count == 0)
 
                     return string.Empty;
 
                 return string.Concat(" ORDER BY ", this.ToString());
             }
+        }
+
+        /// <summary>
+        /// 将排序对象转换成字典
+        /// </summary>
+        /// <param name="orderByOperation"></param>
+        public static implicit operator Dictionary<string, OrderByOperater>(OrderByOperation orderByOperation)
+        {
+            return orderByOperation._orderByOperation;
+        }
+
+        /// <summary>
+        /// 转换
+        /// </summary>
+        /// <param name="pairs"></param>
+        public static implicit operator OrderByOperation(Dictionary<string, OrderByOperater> pairs)
+        {
+            var obo = new OrderByOperation();
+            foreach (var item in pairs)
+            {
+                obo.Add(item.Key, item.Value);
+            }
+            return obo;
         }
 
     }

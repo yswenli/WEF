@@ -17,6 +17,8 @@ using System.Linq.Expressions;
 using System.Threading;
 
 using WEF.Common;
+using WEF.Expressions;
+using WEF.MvcPager;
 using WEF.Section;
 
 namespace WEF.Db
@@ -397,6 +399,118 @@ namespace WEF.Db
         }
 
 
+
+        #region 行转列
+
+        /// <summary>
+        /// 行转列SQL
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="originalColumns"></param>
+        /// <param name="columnNames"></param>
+        /// <param name="typeFieldName"></param>
+        /// <param name="valueFieldName"></param>
+        /// <param name="whereExpression"></param>
+        /// <returns></returns>
+        protected string GetPivotSQL(string tableName,
+            IEnumerable<string> originalColumns,
+             List<string> columnNames,
+             string typeFieldName,
+             string valueFieldName,
+            WhereExpression whereExpression)
+        {
+            StringPlus str = new StringPlus();
+            str.Append("SELECT ");
+            if (originalColumns != null && originalColumns.Any())
+                foreach (string column in originalColumns)
+                {
+                    str.Append(column + ", ");
+                }
+            foreach (var item in columnNames)
+            {
+                str.Append($"MAX(CASE {typeFieldName} WHEN '{item}' THEN {valueFieldName} ELSE '' END) as {item},");
+            }
+            str.RemoveLast();
+            str.Append($" FROM {tableName} ");
+            str.Append($" WHERE {whereExpression} ");
+            if (originalColumns != null && originalColumns.Any())
+            {
+                str.Append("GROUP by ");
+                foreach (string column in originalColumns)
+                {
+                    str.Append(column + ",");
+                }
+                str.RemoveLast();
+            }
+            return str.ToString();
+        }
+
+        /// <summary>
+        /// 将行转换成列
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="originalColumns"></param>
+        /// <param name="columnNames"></param>
+        /// <param name="typeFieldName"></param>
+        /// <param name="valueFieldName"></param>
+        /// <param name="whereExpression"></param>
+        /// <param name="customerWhereExpression"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderByOperation"></param>
+        /// <returns></returns>
+        public PagedList<Model> ToPivotList<Model>(string tableName,
+            IEnumerable<string> originalColumns,
+            List<string> columnNames,
+            string typeFieldName,
+            string valueFieldName,
+            WhereExpression whereExpression,
+            WhereExpression customerWhereExpression,
+            int pageIndex,
+            int pageSize,
+            OrderByOperation orderByOperation)
+        {
+            var pivotTableName = $"pivot_table_{DateTime.Now.Ticks}";
+
+            var pivotSQL = GetPivotSQL(tableName, originalColumns, columnNames, typeFieldName, valueFieldName, whereExpression);
+
+            var sql = $"SELECT * FROM ({pivotSQL}) {pivotTableName}";
+
+            var countSQL = $"SELECT COUNT(1) FROM ({pivotSQL}) {pivotTableName}";
+
+            if (customerWhereExpression != null && !string.IsNullOrEmpty(customerWhereExpression.ToString()))
+            {
+                sql += $" WHERE {customerWhereExpression}";
+
+                countSQL += $"  WHERE {customerWhereExpression}";
+            }
+
+            List<Model> list = new List<Model>();
+
+            if (orderByOperation == null)
+            {
+                using (var reader = FromSql(sql).AddInParameter(whereExpression.Parameters).ToDataReader())
+                {
+                    list = reader.ReaderToList<Model>();
+                }
+
+                return new PagedList<Model>(list, pageIndex, pageSize, list.Count);
+            }
+            else
+            {
+                var total = FromSql(countSQL).ToScalar<int>();
+
+                using (var reader = FromSql(sql).AddInParameter(whereExpression.Parameters).ToDataReader(pageIndex, pageSize, orderByOperation))
+                {
+                    list = reader.ReaderToList<Model>();
+                }
+
+                return new PagedList<Model>(list, pageIndex, pageSize, total);
+            }
+        }
+        #endregion
+
         #region try
 
         /// <summary>
@@ -480,7 +594,5 @@ namespace WEF.Db
         }
 
         #endregion
-
-
     }
 }

@@ -194,8 +194,17 @@ namespace WEF.Db
             command.CommandTimeout = timeOut;
             return command;
         }
-
-        private DbCommand CreateCommandByCommandType(CommandType commandType, string commandText, int pageIndex, int pageSize, string orderBy, bool asc = true)
+        /// <summary>
+        /// CreateCommandByCommandType
+        /// </summary>
+        /// <param name="commandType"></param>
+        /// <param name="commandText"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public DbCommand CreateCommandByCommandType(CommandType commandType, string commandText, int pageIndex, int pageSize, string orderBy, bool asc = true)
         {
             if (_dbProvider.DbProviderFactory.GetType().Name == "SqlClientFactory")
             {
@@ -1550,7 +1559,6 @@ namespace WEF.Db
         }
 
         #endregion
-
 
         #region Extiond
 
