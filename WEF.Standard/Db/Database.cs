@@ -343,6 +343,11 @@ namespace WEF.Db
 
         }
 
+        /// <summary>
+        /// 事务连接赋值
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="transaction"></param>
         private void PrepareCommand(DbCommand command, DbTransaction transaction)
         {
             Check.Require(command != null, "command could not be null.");
