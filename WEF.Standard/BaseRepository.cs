@@ -1167,6 +1167,29 @@ namespace WEF
             return _dbContext.BeginTransaction<T>(type, timeout);
         }
 
+        #region 行转列
+
+        /// <summary>
+        /// 自定义行转列
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="pivotInfo"></param>
+        /// <param name="whereLambada"></param>
+        /// <returns></returns>
+        public List<Model> ToPivotList<TEntity, Model>(PivotInfo<TEntity> pivotInfo,
+            Expression<Func<Model, bool>> whereLambada)
+            where TEntity : Entity
+            where Model : class, new()
+        {
+            using (var fdTran = this.CreateTransaction())
+            {
+                return fdTran.ToPivotList(pivotInfo, whereLambada);
+            }
+        }
+
+        #endregion
+
         /// <summary>
         /// 释放资源
         /// </summary>

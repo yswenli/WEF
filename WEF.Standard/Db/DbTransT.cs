@@ -487,21 +487,26 @@ namespace WEF.Db
         /// <summary>
         /// 行转列
         /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <typeparam name="TEntity2"></typeparam>
         /// <param name="pivotInfo"></param>
         /// <param name="customerWhereExpression"></param>
+        /// <param name="pivotTableName"></param>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <param name="orderByOperation"></param>
         /// <returns></returns>
-        public PagedList<Model> ToPivotList<Model>(PivotInfo<TEntity> pivotInfo,
+        public PagedList<Model> ToPivotList<Model, TEntity2>(PivotInfo<TEntity2> pivotInfo,
             WhereExpression customerWhereExpression,
+            string pivotTableName,
             int pageIndex,
             int pageSize,
             OrderByOperation orderByOperation)
+            where TEntity2 : Entity
         {
-            var tableName = EntityCache.GetTableName<TEntity>();
-            var selectFields = ExpressionToOperation<TEntity>.ToSelect(tableName, pivotInfo.OriginalColumns).Select(q => q.FieldName);
-            var whereExpresstion = ExpressionToOperation<TEntity>.ToWhereOperation(pivotInfo.WhereLambada);
+            var tableName = EntityCache.GetTableName<TEntity2>();
+            var selectFields = ExpressionToOperation<TEntity2>.ToSelect(tableName, pivotInfo.OriginalColumns).Select(q => q.FieldName);
+            var whereExpresstion = ExpressionToOperation<TEntity2>.ToWhereOperation(pivotInfo.WhereLambada);
             return ToPivotList<Model>(tableName,
                 selectFields,
                 pivotInfo.ColumnNames,
@@ -509,6 +514,7 @@ namespace WEF.Db
                 pivotInfo.ValueFieldName,
                 whereExpresstion,
                 customerWhereExpression,
+                pivotTableName,
                 pageIndex,
                 pageSize,
                 orderByOperation);
@@ -519,10 +525,29 @@ namespace WEF.Db
         /// <typeparam name="Model"></typeparam>
         /// <param name="pivotInfo"></param>
         /// <param name="customerWhereExpression"></param>
+        /// <param name="pivotTableName"></param>
         /// <returns></returns>
-        public List<Model> ToPivotList<Model>(PivotInfo<TEntity> pivotInfo, WhereExpression customerWhereExpression)
+        public List<Model> ToPivotList<Model>(PivotInfo<TEntity> pivotInfo,
+            WhereExpression customerWhereExpression,
+            string pivotTableName)
         {
-            return ToPivotList<Model>(pivotInfo, customerWhereExpression, 1, 1000, null).Data;
+            return ToPivotList<Model, TEntity>(pivotInfo, customerWhereExpression, pivotTableName, 1, 1000, null).Data;
+        }
+        /// <summary>
+        /// 行转列
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <typeparam name="TEntity2"></typeparam>
+        /// <param name="pivotInfo"></param>
+        /// <param name="customerWhereExpression"></param>
+        /// <param name="pivotTableName"></param>
+        /// <returns></returns>
+        public List<Model> ToPivotList<Model, TEntity2>(PivotInfo<TEntity2> pivotInfo,
+           WhereExpression customerWhereExpression,
+           string pivotTableName)
+            where TEntity2 : Entity
+        {
+            return ToPivotList<Model, TEntity2>(pivotInfo, customerWhereExpression, pivotTableName, 1, 1000, null).Data;
         }
 
         /// <summary>
@@ -531,12 +556,50 @@ namespace WEF.Db
         /// <typeparam name="Model"></typeparam>
         /// <param name="pivotInfo"></param>
         /// <param name="whereSQL"></param>
+        /// <param name="pivotTableName"></param>
         /// <returns></returns>
-        public List<Model> ToPivotList<Model>(PivotInfo<TEntity> pivotInfo, string whereSQL = null)
+        public List<Model> ToPivotList<Model>(PivotInfo<TEntity> pivotInfo,
+            string whereSQL = null,
+            string pivotTableName = null)
         {
-            if (string.IsNullOrEmpty(whereSQL)) return ToPivotList<Model>(pivotInfo, WhereExpression.All);
-            return ToPivotList<Model>(pivotInfo, new WhereExpression(whereSQL));
+            if (string.IsNullOrEmpty(whereSQL))
+                return ToPivotList<Model>(pivotInfo,
+                    WhereExpression.All,
+                    pivotTableName);
+            return ToPivotList<Model>(pivotInfo,
+                    new WhereExpression(whereSQL),
+                    pivotTableName);
         }
+
+        /// <summary>
+        /// 行转列
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="pivotInfo"></param>
+        /// <param name="whereLambada"></param>
+        /// <returns></returns>
+        public List<Model> ToPivotList<Model>(PivotInfo<TEntity> pivotInfo, Expression<Func<Model, bool>> whereLambada)
+            where Model : class, new()
+        {
+            var where = ExpressionToOperation<Model>.ToWhereOperation(whereLambada);
+            return ToPivotList<Model>(pivotInfo, where, typeof(Model).Name);
+        }
+        /// <summary>
+        /// 行转列
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <typeparam name="TEntity2"></typeparam>
+        /// <param name="pivotInfo"></param>
+        /// <param name="whereLambada"></param>
+        /// <returns></returns>
+        public List<Model> ToPivotList<Model, TEntity2>(PivotInfo<TEntity2> pivotInfo, Expression<Func<Model, bool>> whereLambada)
+            where Model : class, new()
+            where TEntity2 : Entity
+        {
+            var where = ExpressionToOperation<Model>.ToWhereOperation(whereLambada);
+            return ToPivotList<Model, TEntity2>(pivotInfo, where, typeof(Model).Name);
+        }
+
         #endregion
     }
 }

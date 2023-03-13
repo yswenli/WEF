@@ -456,6 +456,7 @@ namespace WEF.Db
         /// <param name="valueFieldName"></param>
         /// <param name="whereExpression"></param>
         /// <param name="customerWhereExpression"></param>
+        /// <param name="pivotTableName"></param>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <param name="orderByOperation"></param>
@@ -467,13 +468,17 @@ namespace WEF.Db
             string valueFieldName,
             WhereExpression whereExpression,
             WhereExpression customerWhereExpression,
+            string pivotTableName,
             int pageIndex,
             int pageSize,
             OrderByOperation orderByOperation)
         {
-            var pivotTableName = $"pivot_table_{DateTime.Now.Ticks}";
-
             var pivotSQL = GetPivotSQL(tableName, originalColumns, columnNames, typeFieldName, valueFieldName, whereExpression);
+
+            if (string.IsNullOrEmpty(pivotTableName))
+            {
+                pivotTableName = $"pivot_table_{DateTime.Now.Ticks}";
+            }
 
             var sql = $"SELECT * FROM ({pivotSQL}) {pivotTableName}";
 
@@ -490,9 +495,26 @@ namespace WEF.Db
 
             if (orderByOperation == null)
             {
-                using (var reader = FromSql(sql).AddInParameter(whereExpression.Parameters).ToDataReader())
+                if (customerWhereExpression != null
+                    && customerWhereExpression.Parameters != null
+                    && customerWhereExpression.Parameters.Count > 0)
                 {
-                    list = reader.ReaderToList<Model>();
+
+                    using (var reader = FromSql(sql)
+                        .AddInParameter(whereExpression.Parameters)
+                        .AddInParameter(customerWhereExpression.Parameters)
+                        .ToDataReader())
+                    {
+                        list = reader.ReaderToList<Model>();
+                    }
+                }
+                else
+                {
+
+                    using (var reader = FromSql(sql).AddInParameter(whereExpression.Parameters).ToDataReader())
+                    {
+                        list = reader.ReaderToList<Model>();
+                    }
                 }
 
                 return new PagedList<Model>(list, pageIndex, pageSize, list.Count);
@@ -501,9 +523,24 @@ namespace WEF.Db
             {
                 var total = FromSql(countSQL).ToScalar<int>();
 
-                using (var reader = FromSql(sql).AddInParameter(whereExpression.Parameters).ToDataReader(pageIndex, pageSize, orderByOperation))
+                if (customerWhereExpression != null
+                    && customerWhereExpression.Parameters != null
+                    && customerWhereExpression.Parameters.Count > 0)
                 {
-                    list = reader.ReaderToList<Model>();
+                    using (var reader = FromSql(sql)
+                        .AddInParameter(whereExpression.Parameters)
+                        .AddInParameter(customerWhereExpression.Parameters)
+                        .ToDataReader(pageIndex, pageSize, orderByOperation))
+                    {
+                        list = reader.ReaderToList<Model>();
+                    }
+                }
+                else
+                {
+                    using (var reader = FromSql(sql).AddInParameter(whereExpression.Parameters).ToDataReader(pageIndex, pageSize, orderByOperation))
+                    {
+                        list = reader.ReaderToList<Model>();
+                    }
                 }
 
                 return new PagedList<Model>(list, pageIndex, pageSize, total);

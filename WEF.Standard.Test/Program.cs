@@ -27,20 +27,20 @@ namespace WEF.Standard.Test
 
             var cnnstr = "";
 
+            #region 行转列测试
             //行转列测试
             var fdr = new DBFormdataRepository(WEF.DatabaseType.SqlServer9, cnnstr);
-            using (var fdTran = fdr.CreateTransaction())
+            var pivotInfo = new PivotInfo<DBFormdata>()
             {
-                var pivotInfo = new PivotInfo<DBFormdata>()
-                {
-                    OriginalColumns = q => q.BatchNo,
-                    ColumnNames = new List<string>() { "WorkNum", "TaskType", "FailReason" },
-                    TypeFieldName = "FieldName",
-                    ValueFieldName = "value",
-                    WhereLambada = q => q.BatchNo == "fcf3fb6c45d742b5bd7e453f29343782"
-                };
-                var list = fdTran.ToPivotList<dynamic>(pivotInfo);
-            }
+                OriginalColumns = q => q.BatchNo,
+                ColumnNames = new List<string>() { "WorkNum", "TaskType", "FailReason" },
+                TypeFieldName = "FieldName",
+                ValueFieldName = "Value",
+                WhereLambada = q => q.BatchNo == "f465450ae51e4f2fa83b2a678e6804ea"
+            };
+            var list = fdr.ToPivotList<DBFormdata, PivotObject>(pivotInfo, q => q.FailReason == "拒接");
+            #endregion
+
 
             var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, cnnstr);
             var article = dbarticleRepository.Search().First();
