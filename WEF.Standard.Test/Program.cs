@@ -25,20 +25,21 @@ namespace WEF.Standard.Test
             List<DBArticle> articleList;
             List<DBComment> commentList;
 
-            var cnnstr = "";
+            var cnnstr = "Data Source=47.103.135.84;Initial Catalog=DynamicFormDB;User Id=testuser;Password=testuser";
 
             #region 行转列测试
+
             //行转列测试
             var fdr = new DBFormdataRepository(WEF.DatabaseType.SqlServer9, cnnstr);
             var pivotInfo = new PivotInfo<DBFormdata>()
             {
-                OriginalColumns = q => q.BatchNo,
+                GroupBys = q => new { q.BatchNo, q.TemplateID },
                 ColumnNames = new List<string>() { "WorkNum", "TaskType", "FailReason" },
-                TypeFieldName = "FieldName",
-                ValueFieldName = "Value",
+                TypeFieldName = q => q.FieldName,
+                ValueFieldName = q => q.Value,
                 WhereLambada = q => q.BatchNo == "f465450ae51e4f2fa83b2a678e6804ea"
             };
-            var list = fdr.ToPivotList<DBFormdata, PivotObject>(pivotInfo, q => q.FailReason == "拒接");
+            var list = fdr.ToPivotList<DBFormdata, PivotObject>(pivotInfo, q => q.FailReason == "拒接", q => q.WorkNum);
             #endregion
 
 

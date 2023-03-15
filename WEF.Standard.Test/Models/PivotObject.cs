@@ -31,6 +31,8 @@ namespace WEF.Standard.Test.Models
 {
     public class PivotObject
     {
+        public string BatchNo { get; set; }
+
         public string WorkNum { get; set; }
 
         public string TaskType { get; set; }

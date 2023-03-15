@@ -35,9 +35,9 @@ namespace WEF.Db
     public class PivotInfo<TEntity> where TEntity : Entity
     {
         /// <summary>
-        /// 所需原表字段，用于分类汇总
+        /// 分组字段
         /// </summary>
-        public Expression<Func<TEntity, object>> OriginalColumns { get; set; }
+        public Expression<Func<TEntity, object>> GroupBys { get; set; }
         /// <summary>
         /// 目标列名，用于要获取的字段数据，可以不存在
         /// </summary>
@@ -45,11 +45,11 @@ namespace WEF.Db
         /// <summary>
         /// 被分类别的列名，作为列名的字段名
         /// </summary>
-        public string TypeFieldName { get; set; }
+        public Expression<Func<TEntity, object>> TypeFieldName { get; set; }
         /// <summary>
         /// 被取值的列名，作为值的字段名
         /// </summary>
-        public string ValueFieldName { get; set; }
+        public Expression<Func<TEntity, object>> ValueFieldName { get; set; }
         /// <summary>
         /// 原表字段的筛选条件
         /// </summary>

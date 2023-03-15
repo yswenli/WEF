@@ -95,7 +95,7 @@ namespace WEF.Section
             {
                 foreach (var p in _dbCommand.Parameters)
                 {
-                    cmd.Parameters.Add(p);
+                    cmd.Parameters.Add(p.Clone());
                 }
             }
             return (_dbTransaction == null ? this._dbContext.ExecuteReader(cmd) : this._dbContext.ExecuteReader(cmd, _dbTransaction));

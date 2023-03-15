@@ -73,8 +73,7 @@ namespace WEF.Common
             using (MemoryStream stream = new MemoryStream())
             {
                 json.WriteObject(stream, obj);
-                string szJson = Encoding.UTF8.GetString(stream.ToArray());
-                return szJson;
+                return Encoding.UTF8.GetString(stream.ToArray());
             }
         }
 
@@ -99,7 +98,7 @@ namespace WEF.Common
         /// <param name="type"></param>
         /// <param name="json"></param>
         /// <returns></returns>
-        public static dynamic Deserializ(Type type, string json)
+        public static dynamic Deserialize(Type type, string json)
         {
             using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(json)))
             {

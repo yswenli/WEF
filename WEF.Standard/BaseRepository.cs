@@ -1176,16 +1176,40 @@ namespace WEF
         /// <typeparam name="Model"></typeparam>
         /// <param name="pivotInfo"></param>
         /// <param name="whereLambada"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
         /// <returns></returns>
         public List<Model> ToPivotList<TEntity, Model>(PivotInfo<TEntity> pivotInfo,
-            Expression<Func<Model, bool>> whereLambada)
+            Expression<Func<Model, bool>> whereLambada,
+            string orderBy = null,
+            bool asc = true)
             where TEntity : Entity
             where Model : class, new()
         {
             using (var fdTran = this.CreateTransaction())
             {
-                return fdTran.ToPivotList(pivotInfo, whereLambada);
+                return fdTran.ToPivotList(pivotInfo, whereLambada, orderBy, asc);
             }
+        }
+        /// <summary>
+        /// 自定义行转列
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="pivotInfo"></param>
+        /// <param name="whereLambada"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public List<Model> ToPivotList<TEntity, Model>(PivotInfo<TEntity> pivotInfo,
+            Expression<Func<Model, bool>> whereLambada,
+            Expression<Func<Model, object>> orderBy,
+            bool asc = true)
+            where TEntity : Entity
+            where Model : class, new()
+        {
+            var order = ExpressionToOperation<Model>.ToSelect("", orderBy).First()?.FieldName ?? "";
+            return ToPivotList(pivotInfo, whereLambada, order, asc);
         }
 
         #endregion
