@@ -625,7 +625,9 @@ namespace WEF.Db
             where Model : class, new()
             where TEntity2 : Entity
         {
-            var where = ExpressionToOperation<Model>.ToWhereOperation(whereLambada);
+            var where = WhereExpression.All;
+            if (whereLambada != null)
+                where = ExpressionToOperation<Model>.ToWhereOperation(whereLambada);
             return ToPivotList<Model, TEntity2>(pivotInfo, where, typeof(Model).Name, orderBy, asc);
         }
 

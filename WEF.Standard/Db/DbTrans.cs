@@ -423,6 +423,21 @@ namespace WEF.Db
             StringPlus str = new StringPlus();
             str.Append("SELECT ");
             str.Append(groupColumnStr + ",");
+
+            if (columnNames == null || columnNames.Count < 1)
+            {
+                var columnsSql = new StringPlus();
+                columnsSql.Append($"SELECT {typeFieldName} FROM {tableName} WHERE {whereExpression}");
+                if (whereExpression != null && whereExpression.Parameters != null && whereExpression.Parameters.Count > 0)
+                {
+                    columnNames = DBContext.FromSql(columnsSql.ToString(), whereExpression.Parameters.ToArray()).ToList<string>();
+                }
+                else
+                {
+                    columnNames = DBContext.FromSql(columnsSql.ToString()).ToList<string>();
+                }
+            }
+
             foreach (var item in columnNames)
             {
                 str.Append($"MAX(CASE {typeFieldName} WHEN '{item}' THEN {valueFieldName} ELSE '' END) as {item},");

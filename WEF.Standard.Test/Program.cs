@@ -39,7 +39,19 @@ namespace WEF.Standard.Test
                 ValueFieldName = q => q.Value,
                 WhereLambada = q => q.BatchNo == "f465450ae51e4f2fa83b2a678e6804ea"
             };
-            var list = fdr.ToPivotList<DBFormdata, PivotObject>(pivotInfo, q => q.FailReason == "拒接", q => q.WorkNum);
+            var pivotList1 = fdr.ToPivotList<DBFormdata, PivotObject>(pivotInfo, q => q.FailReason == "拒接", q => q.WorkNum);
+
+
+            //不指定查询字段和返回值
+            var pivotInfo2 = new PivotInfo<DBFormdata>()
+            {
+                GroupBys = q => new { q.BatchNo, q.TemplateID },
+                TypeFieldName = q => q.FieldName,
+                ValueFieldName = q => q.Value,
+                WhereLambada = q => q.BatchNo == "f465450ae51e4f2fa83b2a678e6804ea"
+            };
+            var pivotList2 = fdr.ToPivotList(pivotInfo2);
+
             #endregion
 
 
