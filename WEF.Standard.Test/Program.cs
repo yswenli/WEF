@@ -27,6 +27,20 @@ namespace WEF.Standard.Test
 
             var cnnstr = "";
 
+            #region get and update
+
+            var dBCommentRepository = new DBCommentRepository(DatabaseType.SqlServer9, cnnstr);
+            var dbclist = dBCommentRepository.Search()
+                    .Where(q => q.IsDeleted != true)
+                    .OrderBy(q => q.Created)
+                    .Page(1, 10)
+                    .ToList();
+
+            var dbcommandResult = dBCommentRepository.Update(dbclist);
+
+            #endregion
+
+
             #region 行转列测试
 
             //行转列测试

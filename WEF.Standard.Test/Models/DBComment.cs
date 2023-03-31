@@ -21,19 +21,19 @@
 *描述：
 *
 *****************************************************************************/
-using System;
-using System.Data;
 using System.ComponentModel;
+using System.Data;
 using System.Runtime.Serialization;
-using WEF;
+
 using WEF.Db;
 
 namespace WEF.Test.Models
 {
+
     /// <summary>
-	/// 实体类DBComment
-	/// </summary>
-	[Serializable, DataContract, Table("Comment")]
+    /// 实体类DBComment
+    /// </summary>
+    [Serializable, DataContract, Table("Comment")]
     public partial class DBComment : Entity
     {
         private static string m_tableName;
@@ -54,19 +54,23 @@ namespace WEF.Test.Models
         private string _CreatedBy;
         private string _ModifiedBy;
         private bool _IsDeleted;
-        private string _PageType;
+        private string _Type;
         private string _PageID;
-        private string _RootID;
+        private string _CommentName;
         private string _Content;
         private int _PraiseCount;
         private string _CommentImg;
         private string _CommentVoice;
         private int? _CommentVoiceTime;
-        private string _UserName;
-        private int? _Status;
-        private DateTime? _StatusDate;
-        private string _StatusRemark;
-        private string _StatusUserID;
+        private int? _AuditStatus;
+        private DateTime? _AuditDate;
+        private string _AuditRemark;
+        private string _AuditUserID;
+        private string _BeCommentedID;
+        private string _BeCommentedName;
+        private string _CommentID;
+        private string _IP;
+        private string _WXHeadImg;
         /// <summary>
         /// ID 
         /// </summary>
@@ -146,16 +150,16 @@ namespace WEF.Test.Models
             }
         }
         /// <summary>
-        /// PageType 页面类型
+        /// Type 页面类型(文章Article, 评论Comment，一问一答Consulting)
         /// </summary>
-        [DataMember, Description("页面类型")]
-        public string PageType
+        [DataMember, Description("页面类型(文章Article, 评论Comment，一问一答Consulting)")]
+        public string Type
         {
-            get { return _PageType; }
+            get { return _Type; }
             set
             {
-                this.OnPropertyValueChange(_.PageType, _PageType, value);
-                this._PageType = value;
+                this.OnPropertyValueChange(_.Type, _Type, value);
+                this._Type = value;
             }
         }
         /// <summary>
@@ -172,16 +176,16 @@ namespace WEF.Test.Models
             }
         }
         /// <summary>
-        /// RootID 回复别人的回复，就不是null
+        /// CommentName 评论人名称
         /// </summary>
-        [DataMember, Description("回复别人的回复，就不是null")]
-        public string RootID
+        [DataMember, Description("评论人名称")]
+        public string CommentName
         {
-            get { return _RootID; }
+            get { return _CommentName; }
             set
             {
-                this.OnPropertyValueChange(_.RootID, _RootID, value);
-                this._RootID = value;
+                this.OnPropertyValueChange(_.CommentName, _CommentName, value);
+                this._CommentName = value;
             }
         }
         /// <summary>
@@ -250,68 +254,120 @@ namespace WEF.Test.Models
             }
         }
         /// <summary>
-        /// UserName 用户名字
+        /// AuditStatus 审核状态(1先发待审，2先审待发，3审核通过，4审核不通过)
         /// </summary>
-        [DataMember, Description("用户名字")]
-        public string UserName
+        [DataMember, Description("审核状态(1先发待审，2先审待发，3审核通过，4审核不通过)")]
+        public int? AuditStatus
         {
-            get { return _UserName; }
+            get { return _AuditStatus; }
             set
             {
-                this.OnPropertyValueChange(_.UserName, _UserName, value);
-                this._UserName = value;
+                this.OnPropertyValueChange(_.AuditStatus, _AuditStatus, value);
+                this._AuditStatus = value;
             }
         }
         /// <summary>
-        /// Status 状态1未审核 2审核通过 3审核不通过
+        /// AuditDate 审核时间
         /// </summary>
-        [DataMember, Description("状态1未审核 2审核通过 3审核不通过")]
-        public int? Status
+        [DataMember, Description("审核时间")]
+        public DateTime? AuditDate
         {
-            get { return _Status; }
+            get { return _AuditDate; }
             set
             {
-                this.OnPropertyValueChange(_.Status, _Status, value);
-                this._Status = value;
+                this.OnPropertyValueChange(_.AuditDate, _AuditDate, value);
+                this._AuditDate = value;
             }
         }
         /// <summary>
-        /// StatusDate 状态
-        /// </summary>
-        [DataMember, Description("状态")]
-        public DateTime? StatusDate
-        {
-            get { return _StatusDate; }
-            set
-            {
-                this.OnPropertyValueChange(_.StatusDate, _StatusDate, value);
-                this._StatusDate = value;
-            }
-        }
-        /// <summary>
-        /// StatusRemark 审核备注
+        /// AuditRemark 审核备注
         /// </summary>
         [DataMember, Description("审核备注")]
-        public string StatusRemark
+        public string AuditRemark
         {
-            get { return _StatusRemark; }
+            get { return _AuditRemark; }
             set
             {
-                this.OnPropertyValueChange(_.StatusRemark, _StatusRemark, value);
-                this._StatusRemark = value;
+                this.OnPropertyValueChange(_.AuditRemark, _AuditRemark, value);
+                this._AuditRemark = value;
             }
         }
         /// <summary>
-        /// StatusUserID 审核人
+        /// AuditUserID 审核人
         /// </summary>
         [DataMember, Description("审核人")]
-        public string StatusUserID
+        public string AuditUserID
         {
-            get { return _StatusUserID; }
+            get { return _AuditUserID; }
             set
             {
-                this.OnPropertyValueChange(_.StatusUserID, _StatusUserID, value);
-                this._StatusUserID = value;
+                this.OnPropertyValueChange(_.AuditUserID, _AuditUserID, value);
+                this._AuditUserID = value;
+            }
+        }
+        /// <summary>
+        /// BeCommentedID 被评论人的ID
+        /// </summary>
+        [DataMember, Description("被评论人的ID")]
+        public string BeCommentedID
+        {
+            get { return _BeCommentedID; }
+            set
+            {
+                this.OnPropertyValueChange(_.BeCommentedID, _BeCommentedID, value);
+                this._BeCommentedID = value;
+            }
+        }
+        /// <summary>
+        /// BeCommentedName 被评论人名称
+        /// </summary>
+        [DataMember, Description("被评论人名称")]
+        public string BeCommentedName
+        {
+            get { return _BeCommentedName; }
+            set
+            {
+                this.OnPropertyValueChange(_.BeCommentedName, _BeCommentedName, value);
+                this._BeCommentedName = value;
+            }
+        }
+        /// <summary>
+        /// CommentID 被评论id
+        /// </summary>
+        [DataMember, Description("被评论id")]
+        public string CommentID
+        {
+            get { return _CommentID; }
+            set
+            {
+                this.OnPropertyValueChange(_.CommentID, _CommentID, value);
+                this._CommentID = value;
+            }
+        }
+        /// <summary>
+        /// IP IP地址
+        /// </summary>
+        [DataMember, Description("IP地址")]
+        public string IP
+        {
+            get { return _IP; }
+            set
+            {
+                this.OnPropertyValueChange(_.IP, _IP, value);
+                this._IP = value;
+            }
+        }
+        /// <summary>
+        /// WXHeadImg 微信头像
+        /// </summary>
+        [DataMember, Description("微信头像")]
+        public string WXHeadImg
+        {
+            get { return _WXHeadImg; }
+            set
+            {
+                this.OnPropertyValueChange(_.WXHeadImg, _WXHeadImg, value);
+                this._WXHeadImg = value;
             }
         }
         #endregion
@@ -337,19 +393,23 @@ namespace WEF.Test.Models
                 _.CreatedBy,
                 _.ModifiedBy,
                 _.IsDeleted,
-                _.PageType,
+                _.Type,
                 _.PageID,
-                _.RootID,
+                _.CommentName,
                 _.Content,
                 _.PraiseCount,
                 _.CommentImg,
                 _.CommentVoice,
                 _.CommentVoiceTime,
-                _.UserName,
-                _.Status,
-                _.StatusDate,
-                _.StatusRemark,
-                _.StatusUserID};
+                _.AuditStatus,
+                _.AuditDate,
+                _.AuditRemark,
+                _.AuditUserID,
+                _.BeCommentedID,
+                _.BeCommentedName,
+                _.CommentID,
+                _.IP,
+                _.WXHeadImg};
         }
         /// <summary>
         /// 获取值信息
@@ -363,19 +423,23 @@ namespace WEF.Test.Models
                 this._CreatedBy,
                 this._ModifiedBy,
                 this._IsDeleted,
-                this._PageType,
+                this._Type,
                 this._PageID,
-                this._RootID,
+                this._CommentName,
                 this._Content,
                 this._PraiseCount,
                 this._CommentImg,
                 this._CommentVoice,
                 this._CommentVoiceTime,
-                this._UserName,
-                this._Status,
-                this._StatusDate,
-                this._StatusRemark,
-                this._StatusUserID};
+                this._AuditStatus,
+                this._AuditDate,
+                this._AuditRemark,
+                this._AuditUserID,
+                this._BeCommentedID,
+                this._BeCommentedName,
+                this._CommentID,
+                this._IP,
+                this._WXHeadImg};
         }
         #endregion
 
@@ -414,17 +478,17 @@ namespace WEF.Test.Models
             /// </summary>
             public readonly static Field IsDeleted = new Field("IsDeleted", m_tableName, DbType.Boolean, 1, "IsDeleted");
             /// <summary>
-            /// PageType 页面类型
+            /// Type 页面类型(文章Article, 评论Comment，一问一答Consulting)
             /// </summary>
-            public readonly static Field PageType = new Field("PageType", m_tableName, "页面类型");
+            public readonly static Field Type = new Field("Type", m_tableName, "页面类型(文章Article, 评论Comment，一问一答Consulting)");
             /// <summary>
             /// PageID 页面ID
             /// </summary>
             public readonly static Field PageID = new Field("PageID", m_tableName, "页面ID");
             /// <summary>
-            /// RootID 回复别人的回复，就不是null
+            /// CommentName 评论人名称
             /// </summary>
-            public readonly static Field RootID = new Field("RootID", m_tableName, "回复别人的回复，就不是null");
+            public readonly static Field CommentName = new Field("CommentName", m_tableName, "评论人名称");
             /// <summary>
             /// Content 回复内容
             /// </summary>
@@ -446,25 +510,41 @@ namespace WEF.Test.Models
             /// </summary>
             public readonly static Field CommentVoiceTime = new Field("CommentVoiceTime", m_tableName, DbType.Int32, 1, "音频时长");
             /// <summary>
-            /// UserName 用户名字
+            /// AuditStatus 审核状态(1先发待审，2先审待发，3审核通过，4审核不通过)
             /// </summary>
-            public readonly static Field UserName = new Field("UserName", m_tableName, "用户名字");
+            public readonly static Field AuditStatus = new Field("AuditStatus", m_tableName, DbType.Int32, 1, "审核状态(1先发待审，2先审待发，3审核通过，4审核不通过)");
             /// <summary>
-            /// Status 状态1未审核 2审核通过 3审核不通过
+            /// AuditDate 审核时间
             /// </summary>
-            public readonly static Field Status = new Field("Status", m_tableName, DbType.Int32, 1, "状态1未审核 2审核通过 3审核不通过");
+            public readonly static Field AuditDate = new Field("AuditDate", m_tableName, DbType.DateTime, 1, "审核时间");
             /// <summary>
-            /// StatusDate 状态
+            /// AuditRemark 审核备注
             /// </summary>
-            public readonly static Field StatusDate = new Field("StatusDate", m_tableName, DbType.DateTime, 1, "状态");
+            public readonly static Field AuditRemark = new Field("AuditRemark", m_tableName, "审核备注");
             /// <summary>
-            /// StatusRemark 审核备注
+            /// AuditUserID 审核人
             /// </summary>
-            public readonly static Field StatusRemark = new Field("StatusRemark", m_tableName, "审核备注");
+            public readonly static Field AuditUserID = new Field("AuditUserID", m_tableName, "审核人");
             /// <summary>
-            /// StatusUserID 审核人
+            /// BeCommentedID 被评论人的ID
             /// </summary>
-            public readonly static Field StatusUserID = new Field("StatusUserID", m_tableName, "审核人");
+            public readonly static Field BeCommentedID = new Field("BeCommentedID", m_tableName, "被评论人的ID");
+            /// <summary>
+            /// BeCommentedName 被评论人名称
+            /// </summary>
+            public readonly static Field BeCommentedName = new Field("BeCommentedName", m_tableName, "被评论人名称");
+            /// <summary>
+            /// CommentID 被评论id
+            /// </summary>
+            public readonly static Field CommentID = new Field("CommentID", m_tableName, "被评论id");
+            /// <summary>
+            /// IP IP地址
+            /// </summary>
+            public readonly static Field IP = new Field("IP", m_tableName, "IP地址");
+            /// <summary>
+            /// WXHeadImg 微信头像
+            /// </summary>
+            public readonly static Field WXHeadImg = new Field("WXHeadImg", m_tableName, "微信头像");
         }
         #endregion
 
@@ -507,6 +587,7 @@ namespace WEF.Test.Models
             _dbContext = new DBContext(dbType, connStr);
         }
     }
+
 
 
 }

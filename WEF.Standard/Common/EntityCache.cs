@@ -9,6 +9,7 @@
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
 
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using WEF.Db;
 
@@ -58,6 +59,29 @@ namespace WEF.Common
         {
             return getTEntity<TEntity>().GetTableName();
         }
+
+
+        static ConcurrentDictionary<string,string> _tableNames= new ConcurrentDictionary<string,string>();
+
+        /// <summary>
+        /// 从缓存中加载表名
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
+        public static string GetTableNameFromCache<TEntity>()
+            where TEntity : Entity
+        {
+
+            var type = typeof(TEntity);
+            var typeStr = typeof(TEntity).ToString();
+
+            return _tableNames.GetOrAdd(typeStr, (k) => {
+                var tba = type.GetCustomAttribute<TableAttribute>(false) as TableAttribute;
+                var tableName = tba != null ? tba.GetTableName() : type.Name;
+                return tableName;
+            });
+        }
+
         /// <summary>
         /// 返回用户名
         /// </summary>

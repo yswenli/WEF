@@ -92,9 +92,9 @@ namespace WEF
         /// </summary>
         public Entity()
         {
-            var tbl = GetType().GetCustomAttribute<TableAttribute>(false) as TableAttribute;
-            _tableName = tbl != null ? tbl.GetTableName() : GetType().Name;
-            _userName = tbl != null ? tbl.GetUserName() : "";
+            var tba = GetType().GetCustomAttribute<TableAttribute>(false);
+            _tableName = tba != null ? tba.GetTableName() : GetType().Name;
+            _userName = tba != null ? tba.GetUserName() : "";
             _isAttached = true;
         }
         /// <summary>

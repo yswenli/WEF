@@ -968,7 +968,7 @@ namespace WEF
             if (t == null)
             {
                 t = DataUtils.Create<T>();
-                t.SetTableName(_tableName);
+                //t.SetTableName(_tableName);
             }
             return t;
         }
@@ -1025,7 +1025,7 @@ namespace WEF
 
             if (t != null)
             {
-                t.SetTableName(_tableName);
+                //t.SetTableName(_tableName);
                 t.ClearModifyFields();
             }
 
@@ -1064,7 +1064,7 @@ namespace WEF
                         if (st != null)
                         {
                             st.ClearModifyFields();
-                            st.SetTableName(_tableName);
+                            //st.SetTableName(_tableName);
                         }
                     }
                 }
@@ -1094,7 +1094,7 @@ namespace WEF
 
             if (t != null)
             {
-                t.SetTableName(_tableName);
+                //t.SetTableName(_tableName);
                 t.ClearModifyFields();
             }
 
@@ -1135,7 +1135,7 @@ namespace WEF
 
             if (t != null)
             {
-                t.SetTableName(_tableName);
+                //t.SetTableName(_tableName);
                 t.ClearModifyFields();
             }
 
@@ -1168,7 +1168,7 @@ namespace WEF
 
             if (t != null)
             {
-                t.SetTableName(_tableName);
+                //t.SetTableName(_tableName);
                 t.ClearModifyFields();
             }
 
@@ -1219,7 +1219,7 @@ namespace WEF
                         if (st != null)
                         {
                             st.ClearModifyFields();
-                            st.SetTableName(_tableName);
+                            //st.SetTableName(_tableName);
                         }
                     }
                 }
@@ -1277,7 +1277,7 @@ namespace WEF
                     if (st != null)
                     {
                         st.ClearModifyFields();
-                        st.SetTableName(_tableName);
+                        //st.SetTableName(_tableName);
                     }
 
                     list.Add(t);
@@ -1307,7 +1307,7 @@ namespace WEF
                 if (m != null)
                 {
                     m.ClearModifyFields();
-                    m.SetTableName(_tableName);
+                    //m.SetTableName(_tableName);
                 }
             }
             return list;
@@ -1333,7 +1333,7 @@ namespace WEF
                 if (m != null)
                 {
                     m.ClearModifyFields();
-                    m.SetTableName(_tableName);
+                    //m.SetTableName(_tableName);
                 }
             }
             return list;
