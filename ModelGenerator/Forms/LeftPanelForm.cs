@@ -28,7 +28,7 @@ using WEF.DbDAL;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Forms;
 using WEF.ModelGenerator.Model;
-using WEF.NoSql;
+using WEF.Standard.Mongo;
 
 namespace WEF.ModelGenerator
 {

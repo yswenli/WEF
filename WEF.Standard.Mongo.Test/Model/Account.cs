@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using WEF.NoSql;
-using WEF.NoSql.Model;
 
-namespace WEF.NoSqlTest.Model
+using WEF.Standard.Mongo.Model;
+
+namespace WEF.Standard.Mongo.Test.Model
 {
     [CollectionName("Account")]
     public class Account : MongoEntity

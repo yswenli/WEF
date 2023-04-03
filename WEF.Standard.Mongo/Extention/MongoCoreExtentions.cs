@@ -8,7 +8,7 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************
- * 命名空间：WEF.NoSql.Extention
+ * 命名空间：WEF.Standard.Mongo.Extention
  * 类名称：MongoCoreExtentions
  * 文件名：MongoCoreExtentions
  * 创建年份：2015
@@ -24,10 +24,10 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using WEF.NoSql.Core;
-using WEF.NoSql.Model;
+using WEF.Standard.Mongo.Core;
+using WEF.Standard.Mongo.Model;
 
-namespace WEF.NoSql.Extention
+namespace WEF.Standard.Mongo.Extention
 {
     /// <summary>
     /// 封装核心扩展类

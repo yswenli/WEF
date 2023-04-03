@@ -921,12 +921,6 @@
     <None Include="Resources\0616152d52f214c689f01819eefb836d.gif" />
     <None Include="Resources\WEF.jpg" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WEF.NoSql\WEF.NoSql.csproj">
-      <Project>{2b45a9ed-d323-4dd7-95da-34066c226aff}</Project>
-      <Name>WEF.NoSql</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

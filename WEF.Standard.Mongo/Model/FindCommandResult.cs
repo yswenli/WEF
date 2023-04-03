@@ -1,8 +1,8 @@
 ﻿/****************************************************************************
-*项目名称：WEF.NoSql
+*项目名称：WEF.Standard.Mongo
 *CLR 版本：4.0.30319.42000
 *机器名称：WENLI-PC
-*命名空间：WEF.NoSql
+*命名空间：WEF.Standard.Mongo
 *类 名 称：FindCommandResult
 *版 本 号：V1.0.0.0
 *创建人： yswenli
@@ -18,7 +18,7 @@
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
-namespace WEF.NoSql.Model
+namespace WEF.Standard.Mongo.Model
 {
     [BsonIgnoreExtraElements]
     public class FindCommandResult<T> : IMongoCommand

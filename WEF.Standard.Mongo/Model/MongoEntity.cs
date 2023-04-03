@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Runtime.Serialization;
 
-namespace WEF.NoSql.Model
+namespace WEF.Standard.Mongo.Model
 {
     /// <summary>
     /// mongo实体

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace WEF.NoSql.Model
+namespace WEF.Standard.Mongo.Model
 {
     public interface IOperator<T, TKey> : IQueryable<T>
         where T : IMongoEntity<TKey>

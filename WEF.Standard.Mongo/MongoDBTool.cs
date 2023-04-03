@@ -1,8 +1,8 @@
 ﻿/****************************************************************************
-*项目名称：WEF.NoSql
+*项目名称：WEF.Standard.Mongo
 *CLR 版本：4.0.30319.42000
 *机器名称：WENLI-PC
-*命名空间：WEF.NoSql
+*命名空间：WEF.Standard.Mongo
 *类 名 称：MongoDBTool
 *版 本 号：V1.0.0.0
 *创建人： yswenli
@@ -18,9 +18,9 @@
 using MongoDB.Driver;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using WEF.NoSql.Model;
+using WEF.Standard.Mongo.Model;
 
-namespace WEF.NoSql
+namespace WEF.Standard.Mongo
 {
     public class MongoDBTool
     {

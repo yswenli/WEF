@@ -8,7 +8,7 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************
- * 命名空间：WEF.NoSql.Extention
+ * 命名空间：WEF.Standard.Mongo.Extention
  * 类名称：MongoEntityExtention
  * 文件名：MongoEntityExtention
  * 创建年份：2015
@@ -19,7 +19,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WEF.NoSql.Extention
+namespace WEF.Standard.Mongo.Extention
 {
     public static class MongoEntityExtention
     {

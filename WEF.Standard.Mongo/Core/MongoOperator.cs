@@ -8,7 +8,7 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************
- * 命名空间：WEF.NoSql.Core
+ * 命名空间：WEF.Standard.Mongo.Core
  * 类名称：MongoOperator<T>
  * 文件名：MongoOperator<T>
  * 创建年份：2015
@@ -17,9 +17,9 @@
  * 创建说明：
  *****************************************************************************************************/
 using MongoDB.Driver;
-using WEF.NoSql.Model;
+using WEF.Standard.Mongo.Model;
 
-namespace WEF.NoSql.Core
+namespace WEF.Standard.Mongo.Core
 {
     public class MongoOperator<T> : MongoDBOperatorBase<T, string>, IOperator<T>
         where T : IMongoEntity<string>

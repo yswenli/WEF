@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WEF.NoSql
+namespace WEF.Standard.Mongo
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = true)]
     public class CollectionNameAttribute : Attribute

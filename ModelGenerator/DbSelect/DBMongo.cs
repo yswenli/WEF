@@ -21,8 +21,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Model;
-using WEF.NoSql;
-using WEF.NoSql.Model;
+using WEF.Standard.Mongo;
+using WEF.Standard.Mongo.Model;
 
 namespace WEF.ModelGenerator.DbSelect
 {

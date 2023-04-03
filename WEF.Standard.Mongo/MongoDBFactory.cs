@@ -8,7 +8,7 @@
  * 机器名称：WENLI-PC
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************
- * 命名空间：WEF.NoSql
+ * 命名空间：WEF.Standard.Mongo
  * 类名称：MongoDBFactory
  * 文件名：MongoDBFactory
  * 创建年份：2015
@@ -22,11 +22,11 @@ using MongoDB.Bson.Serialization.Serializers;
 using System;
 using System.Collections.Concurrent;
 using System.Configuration;
-using WEF.NoSql.Core;
-using WEF.NoSql.Extention;
-using WEF.NoSql.Model;
+using WEF.Standard.Mongo.Core;
+using WEF.Standard.Mongo.Extention;
+using WEF.Standard.Mongo.Model;
 
-namespace WEF.NoSql
+namespace WEF.Standard.Mongo
 {
     /// <summary>
     /// mongodb工厂类

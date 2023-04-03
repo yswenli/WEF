@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 
-namespace WEF.NoSql.Model
+namespace WEF.Standard.Mongo.Model
 {
     public interface IMongoEntity<MongoEntityId>
     {

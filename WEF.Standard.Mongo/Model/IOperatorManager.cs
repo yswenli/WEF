@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
 using System.Collections.Generic;
 
-namespace WEF.NoSql.Model
+namespace WEF.Standard.Mongo.Model
 {
     /// <summary>
     /// 基于mongocsharpdriver 
