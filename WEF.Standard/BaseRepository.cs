@@ -1180,7 +1180,7 @@ namespace WEF
         /// <param name="asc"></param>
         /// <returns></returns>
         public List<Model> ToPivotList<TEntity, Model>(PivotInfo<TEntity> pivotInfo,
-            Expression<Func<Model, bool>> whereLambada = null,
+            Expression<Func<Model, bool>> whereLambada,
             string orderBy = null,
             bool asc = true)
             where TEntity : Entity
@@ -1201,7 +1201,7 @@ namespace WEF
         /// <param name="asc"></param>
         /// <returns></returns>
         public List<dynamic> ToPivotList<TEntity>(PivotInfo<TEntity> pivotInfo,
-            Expression<Func<dynamic, bool>> whereLambada = null,
+            Expression<Func<dynamic, bool>> whereLambada,
             string orderBy = null,
             bool asc = true)
             where TEntity : Entity
@@ -1211,6 +1211,49 @@ namespace WEF
                 return fdTran.ToPivotList(pivotInfo, whereLambada, orderBy, asc);
             }
         }
+        /// <summary>
+        /// 自定义行转列
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="pivotInfo"></param>
+        /// <param name="where"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public List<dynamic> ToPivotList<TEntity>(PivotInfo<TEntity> pivotInfo,
+            WhereExpression where,
+            string orderBy = null,
+            bool asc = true)
+            where TEntity : Entity
+        {
+            using (var fdTran = this.CreateTransaction())
+            {
+                return fdTran.ToPivotList<dynamic, TEntity>(pivotInfo, where, orderBy, asc);
+            }
+        }
+
+        /// <summary>
+        /// 自定义行转列
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="pivotInfo"></param>
+        /// <param name="where"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public List<dynamic> ToPivotList<TEntity>(PivotInfo<TEntity> pivotInfo,
+            string where = null,
+            string orderBy = null,
+            bool asc = true)
+            where TEntity : Entity
+        {
+            if (string.IsNullOrEmpty(where))
+            {
+                return ToPivotList(pivotInfo, WhereExpression.All, orderBy, asc);
+            }
+            return ToPivotList(pivotInfo, new WhereExpression(where), orderBy, asc);
+        }
+
         /// <summary>
         /// 自定义行转列
         /// </summary>

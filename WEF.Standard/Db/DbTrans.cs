@@ -564,6 +564,96 @@ namespace WEF.Db
                 return new PagedList<Model>(list, pageIndex, pageSize, total);
             }
         }
+
+        /// <summary>
+        /// 将行转换成列
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="groupColumn"></param>
+        /// <param name="columnNames"></param>
+        /// <param name="typeFieldName"></param>
+        /// <param name="valueFieldName"></param>
+        /// <param name="whereExpression"></param>
+        /// <param name="customerWhereExpression"></param>
+        /// <param name="pivotTableName"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public DataTable ToPivotList(string tableName,
+            IEnumerable<string> groupColumn,
+            List<string> columnNames,
+            string typeFieldName,
+            string valueFieldName,
+            WhereExpression whereExpression,
+            WhereExpression customerWhereExpression,
+            string pivotTableName,
+            int pageIndex,
+            int pageSize,
+            string orderBy = null,
+            bool asc = true)
+        {
+            var pivotSQL = GetPivotSQL(tableName, groupColumn, columnNames, typeFieldName, valueFieldName, whereExpression);
+
+            if (string.IsNullOrEmpty(pivotTableName))
+            {
+                pivotTableName = $"pivot_table_{DateTime.Now.Ticks}";
+            }
+
+            var sql = $"SELECT * FROM ({pivotSQL}) {pivotTableName}";
+
+            var countSQL = $"SELECT COUNT(1) FROM ({pivotSQL}) {pivotTableName}";
+
+            if (customerWhereExpression != null && !string.IsNullOrEmpty(customerWhereExpression.ToString()))
+            {
+                sql += $" WHERE {customerWhereExpression}";
+
+                countSQL += $"  WHERE {customerWhereExpression}";
+            }
+
+
+            if (string.IsNullOrEmpty(orderBy))
+            {
+                if (customerWhereExpression != null
+                    && customerWhereExpression.Parameters != null
+                    && customerWhereExpression.Parameters.Count > 0)
+                {
+
+                    return FromSql(sql)
+                        .AddInParameter(whereExpression.Parameters)
+                        .AddInParameter(customerWhereExpression.Parameters)
+                        .ToDataTable();
+                }
+                else
+                {
+
+                    return FromSql(sql)
+                        .AddInParameter(whereExpression.Parameters)
+                        .ToDataTable();
+                }
+            }
+            else
+            {
+                if (customerWhereExpression != null
+                    && customerWhereExpression.Parameters != null
+                    && customerWhereExpression.Parameters.Count > 0)
+                {
+                    FromSql(sql)
+                        .AddInParameter(whereExpression.Parameters)
+                        .AddInParameter(customerWhereExpression.Parameters)
+                        .ToDataTable(pageIndex, pageSize, new OrderByOperation(orderBy, asc ? OrderByOperater.ASC : OrderByOperater.DESC));
+                }
+                else
+                {
+                    return FromSql(sql)
+                        .AddInParameter(whereExpression.Parameters)
+                        .ToDataTable(pageIndex, pageSize, new OrderByOperation(orderBy, asc ? OrderByOperater.ASC : OrderByOperater.DESC));
+                    
+                }
+            }
+            return null;
+        }
         #endregion
 
         #region try

@@ -34,7 +34,7 @@ namespace WEF.Expressions
 
         #region 构造函数
         /// <summary>
-        /// 
+        /// WhereExpression
         /// </summary>
         public WhereExpression() { }
 
@@ -49,7 +49,7 @@ namespace WEF.Expressions
         }
 
         /// <summary>
-        /// 
+        /// WhereExpression
         /// </summary>
         /// <param name="customWhereString"></param>
         /// <param name="parameters"></param>
@@ -60,7 +60,7 @@ namespace WEF.Expressions
         }
 
         /// <summary>
-        /// 
+        /// WhereExpression
         /// </summary>
         /// <param name="field"></param>
         /// <param name="value"></param>

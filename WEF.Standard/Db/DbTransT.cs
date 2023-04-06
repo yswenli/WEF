@@ -23,6 +23,7 @@
 *****************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
@@ -525,6 +526,43 @@ namespace WEF.Db
         /// <summary>
         /// 行转列
         /// </summary>
+        /// <typeparam name="TEntity2"></typeparam>
+        /// <param name="pivotInfo"></param>
+        /// <param name="customerWhereExpression"></param>
+        /// <param name="pivotTableName"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public DataTable ToPivotList<TEntity2>(PivotInfo<TEntity2> pivotInfo,
+           WhereExpression customerWhereExpression,
+           string pivotTableName,
+           int pageIndex,
+           int pageSize,
+           string orderBy = null,
+           bool asc = true)
+           where TEntity2 : Entity
+        {
+            var tableName = EntityCache.GetTableName<TEntity2>();
+            var groupBys = ExpressionToOperation<TEntity2>.ToSelect(tableName, pivotInfo.GroupBys).Select(q => q.FieldName);
+            var whereExpresstion = ExpressionToOperation<TEntity2>.ToWhereOperation(pivotInfo.WhereLambada);
+            return ToPivotList(tableName,
+                groupBys,
+                pivotInfo.ColumnNames,
+                ExpressionToOperation<TEntity2>.ToSelect("", pivotInfo.TypeFieldName).First().FieldName,
+                ExpressionToOperation<TEntity2>.ToSelect("", pivotInfo.ValueFieldName).First().FieldName,
+                whereExpresstion,
+                customerWhereExpression,
+                pivotTableName,
+                pageIndex,
+                pageSize,
+                orderBy,
+                asc);
+        }
+        /// <summary>
+        /// 行转列
+        /// </summary>
         /// <typeparam name="Model"></typeparam>
         /// <param name="pivotInfo"></param>
         /// <param name="customerWhereExpression"></param>
@@ -630,7 +668,25 @@ namespace WEF.Db
                 where = ExpressionToOperation<Model>.ToWhereOperation(whereLambada);
             return ToPivotList<Model, TEntity2>(pivotInfo, where, typeof(Model).Name, orderBy, asc);
         }
-
+        /// <summary>
+        /// 行转列
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <typeparam name="TEntity2"></typeparam>
+        /// <param name="pivotInfo"></param>
+        /// <param name="whereLambada"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public List<Model> ToPivotList<Model, TEntity2>(PivotInfo<TEntity2> pivotInfo,
+            WhereExpression whereLambada,
+            string orderBy = null,
+            bool asc = true)
+            where Model : class, new()
+            where TEntity2 : Entity
+        {
+            return ToPivotList<Model, TEntity2>(pivotInfo, whereLambada, typeof(Model).Name, orderBy, asc);
+        }
         #endregion
     }
 }

@@ -110,6 +110,26 @@ namespace WEF.Section
             return (_dbTransaction == null ? this._dbContext.ExecuteDataSet(_dbCommand) : this._dbContext.ExecuteDataSet(_dbCommand, _dbTransaction));
         }
 
+        /// <summary>
+        /// 返回DataSet
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderByOperation"></param>
+        /// <returns></returns>
+        public virtual DataSet ToDataSet(int pageIndex, int pageSize, OrderByOperation orderByOperation)
+        {
+            Dictionary<string, OrderByOperater> orderDic = orderByOperation;
+            var cmd = _dbContext.Db.GetSqlStringCommand(_dbCommand.CommandText, pageIndex, pageSize, orderDic);
+            if (_dbCommand.Parameters != null && _dbCommand.Parameters.Count > 0)
+            {
+                foreach (var p in _dbCommand.Parameters)
+                {
+                    cmd.Parameters.Add(p.Clone());
+                }
+            }
+            return (_dbTransaction == null ? this._dbContext.ExecuteDataSet(cmd) : this._dbContext.ExecuteDataSet(cmd, _dbTransaction));
+        }
 
         /// <summary>
         /// 返回DataTable
@@ -118,6 +138,17 @@ namespace WEF.Section
         public DataTable ToDataTable()
         {
             return ToDataSet().Tables[0];
+        }
+        /// <summary>
+        /// 返回DataTable
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderByOperation"></param>
+        /// <returns></returns>
+        public DataTable ToDataTable(int pageIndex, int pageSize, OrderByOperation orderByOperation)
+        {
+            return ToDataSet(pageIndex, pageSize, orderByOperation).Tables[0];
         }
 
         /// <summary>
