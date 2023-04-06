@@ -30,7 +30,7 @@ using System.Threading.Tasks;
 namespace WEF.Standard.Test.Models
 {
     public class PivotObject
-    {
+    {        
         public string BatchNo { get; set; }
 
         public string WorkNum { get; set; }

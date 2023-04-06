@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Data;
+using System.Linq.Expressions;
 
 using WEF.Common;
 using WEF.Db;
@@ -45,26 +46,42 @@ namespace WEF.Standard.Test
 
             //行转列测试
             var fdr = new DBFormdataRepository(WEF.DatabaseType.SqlServer9, cnnstr);
+
+
             var pivotInfo = new PivotInfo<DBFormdata>()
             {
-                GroupBys = q => new { q.BatchNo, q.TemplateID },
+                GroupBys = q => new { q.BatchNo, q.TemplateID, q.IsDeleted },
                 ColumnNames = new List<string>() { "WorkNum", "TaskType", "FailReason" },
                 TypeFieldName = q => q.FieldName,
                 ValueFieldName = q => q.Value,
-                WhereLambada = q => q.BatchNo == "f465450ae51e4f2fa83b2a678e6804ea"
+                WhereLambada = q => q.IsDeleted != true && q.BatchNo == "f465450ae51e4f2fa83b2a678e6804ea"
             };
-            var pivotList1 = fdr.ToPivotList<DBFormdata, PivotObject>(pivotInfo, q => q.FailReason == "拒接", q => q.WorkNum);
+            var pivotList1 = fdr.ToPivotList<DBFormdata, PivotObject>(pivotInfo,
+                q => q.FailReason == "拒接",
+                q => q.WorkNum);
 
 
             //不指定查询字段和返回值
             var pivotInfo2 = new PivotInfo<DBFormdata>()
             {
-                GroupBys = q => new { q.BatchNo, q.TemplateID },
+                GroupBys = q => new { q.BatchNo, q.TemplateID, q.IsDeleted },
                 TypeFieldName = q => q.FieldName,
                 ValueFieldName = q => q.Value,
-                WhereLambada = q => q.BatchNo == "f465450ae51e4f2fa83b2a678e6804ea"
+                WhereLambada = q => q.IsDeleted != true && q.BatchNo == "f465450ae51e4f2fa83b2a678e6804ea"
             };
             var pivotList2 = fdr.ToPivotList(pivotInfo2);
+
+
+            //不指定查询字段和返回值，指定where
+            var pivotInfo3 = new PivotInfo<DBFormdata>()
+            {
+                GroupBys = q => new { q.BatchNo, q.TemplateID, q.IsDeleted },
+                TypeFieldName = q => q.FieldName,
+                ValueFieldName = q => q.Value,
+                WhereLambada = q => q.IsDeleted != true && q.BatchNo == "f465450ae51e4f2fa83b2a678e6804ea"
+            };
+            var pivotList3 = fdr.ToPivotList(pivotInfo2,
+                new WhereExpression("ID=@ID", new Parameter("@ID", "123456", DbType.String, 50)));
 
             #endregion
 
