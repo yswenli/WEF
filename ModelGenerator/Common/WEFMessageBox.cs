@@ -2,21 +2,21 @@
 *Copyright (c) 2022 Oceania All Rights Reserved.
 *CLR版本： 4.0.30319.42000
 *机器名称：LP20210416002
-*公司名称：Mason.Wen
+*公司名称：Walle.Wen
 *命名空间：WEF.ModelGenerator.Common
 *文件名： MessageBoxEx
 *版本号： V1.0.0.0
 *唯一标识：60f74840-1030-4da4-be7b-1025025b4ae6
-*当前的用户域：Mason.Wen
-*创建人： Mason.Wen
-*电子邮箱：Mason.Wen@oceania-inc.com
+*当前的用户域：Walle.Wen
+*创建人： Walle.Wen
+*电子邮箱：Walle.Wen@oceania-inc.com
 *创建时间：2022/1/12 13:27:15
 *描述：
 *
 *=====================================================================
 *修改标记
 *修改时间：2022/1/12 13:27:15
-*修改人： Mason.Wen
+*修改人： Walle.Wen
 *版本号： V1.0.0.0
 *描述：
 *

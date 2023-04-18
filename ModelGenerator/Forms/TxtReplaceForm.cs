@@ -75,6 +75,7 @@ namespace TxtReplaceTool
                     else
                     {
                         label5.Text = $"找不到任何内容,共用时{stopWatch.Elapsed.TotalSeconds}s";
+                        listBox1.Items.Clear();
                     }
                     toolStripProgressBar1.Visible = false;
                     button2.Enabled = true;

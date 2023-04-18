@@ -8,15 +8,15 @@
 *版本号： V1.0.0.0
 *唯一标识：4a0b637e-681f-4d9f-b902-4a8a57529b9d
 *当前的用户域：OCEANIA
-*创建人： Mason.Wen
-*电子邮箱：Mason.Wen@oceania-inc.com
+*创建人： Walle.Wen
+*电子邮箱：Walle.Wen@oceania-inc.com
 *创建时间：2021/11/8 11:56:31
 *描述：
 *
 *=====================================================================
 *修改标记
 *修改时间：2021/11/8 11:56:31
-*修改人： Mason.Wen
+*修改人： Walle.Wen
 *版本号： V1.0.0.0
 *描述：
 *
@@ -43,7 +43,7 @@ namespace WEF.ModelGenerator.Forms
 
         private void Base64Form_Load(object sender, EventArgs e)
         {
-            openFileDialog1.Filter = "png files (*.png)|*.png|txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            openFileDialog1.Filter = "All files (*.*)|*.*|png files (*.png)|*.png|txt files (*.txt)|*.txt";
             openFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         }
 
@@ -74,6 +74,7 @@ namespace WEF.ModelGenerator.Forms
 
         private void button2_Click(object sender, EventArgs e)
         {
+            openFileDialog1.FilterIndex = 2;
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 var filePath = openFileDialog1.FileName;
@@ -84,6 +85,7 @@ namespace WEF.ModelGenerator.Forms
 
         private void button3_Click(object sender, EventArgs e)
         {
+            openFileDialog1.FilterIndex = 3;
             if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 var filePath = openFileDialog1.FileName;

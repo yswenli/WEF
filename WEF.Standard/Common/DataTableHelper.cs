@@ -2,21 +2,21 @@
 *Copyright (c) 2022 Oceania All Rights Reserved.
 *CLR版本： 4.0.30319.42000
 *机器名称：LP20210416002
-*公司名称：Mason.Wen
+*公司名称：Walle.Wen
 *命名空间：WEF.Common
 *文件名： DataTableHelper
 *版本号： V1.0.0.0
 *唯一标识：7d76ce7e-c970-4d5f-8ad8-9b8906b7e591
-*当前的用户域：Mason.Wen
-*创建人： Mason.Wen
-*电子邮箱：Mason.Wen@outlook.com
+*当前的用户域：Walle.Wen
+*创建人： Walle.Wen
+*电子邮箱：Walle.Wen@outlook.com
 *创建时间：2022/3/7 10:28:58
 *描述：
 *
 *=====================================================================
 *修改标记
 *修改时间：2022/3/7 10:28:58
-*修改人： Mason.Wen
+*修改人： Walle.Wen
 *版本号： V1.0.0.0
 *描述：
 *

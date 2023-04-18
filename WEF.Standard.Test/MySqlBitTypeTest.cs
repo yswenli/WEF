@@ -8,15 +8,15 @@
 *版本号： V1.0.0.0
 *唯一标识：6738a661-57e8-4a3d-b837-f9cb29604bd9
 *当前的用户域：OCEANIA
-*创建人： Mason.Wen
-*电子邮箱：Mason.Wen@oceania-inc.com
+*创建人： Walle.Wen
+*电子邮箱：Walle.Wen@oceania-inc.com
 *创建时间：2021/12/6 14:55:52
 *描述：
 *
 *=====================================================================
 *修改标记
 *修改时间：2021/12/6 14:55:52
-*修改人： Mason.Wen
+*修改人： Walle.Wen
 *版本号： V1.0.0.0
 *描述：
 *
@@ -33,7 +33,7 @@ namespace WEF.Test
         /// </summary>
         public static void Test1()
         {
-            var cnnStr = "server=192.168.9.234;user id=root; password=12321; Port=3306;database=oceaniawms; pooling=true";
+            var cnnStr = "server=127.0.0.1;user id=root; password=12321; Port=3306;database=oceaniawms; pooling=true";
 
             DBOcWarehouseArea area = new DBOcWarehouseArea()
             {
@@ -49,7 +49,7 @@ namespace WEF.Test
                 Detectable = false,
                 IsTemporary = false,
                 Repairable = false,
-                CreateBy = "Mason",
+                CreateBy = "Walle",
                 CreateTime = DateTime.Now
             };
 
@@ -64,7 +64,7 @@ namespace WEF.Test
 
         public static void Test2()
         {
-            var cnnStr = "server=192.168.9.234;user id=root; password=12321; Port=3306;database=oceaniawms; pooling=true";
+            var cnnStr = "server=127.0.0.1;user id=root; password=12321; Port=3306;database=oceaniawms; pooling=true";
 
             DBWarehouseInboundData data = new DBWarehouseInboundData()
             {
@@ -103,7 +103,7 @@ namespace WEF.Test
 
         public static void Test3()
         {
-            var cnnStr = "server=192.168.9.234;user id=root; password=12321; Port=3306;database=oceaniawms; pooling=true";
+            var cnnStr = "server=127.0.0.1;user id=root; password=12321; Port=3306;database=oceaniawms; pooling=true";
 
             var repository = new DBWarehouseInboundDataRepository(DatabaseType.MySql, cnnStr);
 
