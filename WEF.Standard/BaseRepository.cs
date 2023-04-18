@@ -1176,19 +1176,23 @@ namespace WEF
         /// <typeparam name="Model"></typeparam>
         /// <param name="pivotInfo"></param>
         /// <param name="whereLambada"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
         /// <param name="orderBy"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public List<Model> ToPivotList<TEntity, Model>(PivotInfo<TEntity> pivotInfo,
+        public PagedList<Model> ToPivotList<TEntity, Model>(PivotInfo<TEntity> pivotInfo,
             Expression<Func<Model, bool>> whereLambada,
+            int pageIndex = 1,
+            int pageSize = 1000,
             string orderBy = null,
             bool asc = true)
             where TEntity : Entity
             where Model : class, new()
         {
-            using (var fdTran = this.CreateTransaction())
+            using (var fdTran = CreateTransaction())
             {
-                return fdTran.ToPivotList(pivotInfo, whereLambada, orderBy, asc);
+                return fdTran.ToPivotList(pivotInfo, whereLambada, pageIndex, pageSize, orderBy, asc);
             }
         }
         /// <summary>
@@ -1197,18 +1201,22 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="pivotInfo"></param>
         /// <param name="whereLambada"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
         /// <param name="orderBy"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public List<dynamic> ToPivotList<TEntity>(PivotInfo<TEntity> pivotInfo,
+        public PagedList<dynamic> ToPivotList<TEntity>(PivotInfo<TEntity> pivotInfo,
             Expression<Func<dynamic, bool>> whereLambada,
+            int pageIndex = 1,
+            int pageSize = 1000,
             string orderBy = null,
             bool asc = true)
             where TEntity : Entity
         {
-            using (var fdTran = this.CreateTransaction())
+            using (var fdTran = CreateTransaction())
             {
-                return fdTran.ToPivotList(pivotInfo, whereLambada, orderBy, asc);
+                return fdTran.ToPivotList(pivotInfo, whereLambada, pageIndex, pageSize, orderBy, asc);
             }
         }
         /// <summary>
@@ -1217,18 +1225,22 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="pivotInfo"></param>
         /// <param name="where"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
         /// <param name="orderBy"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public List<dynamic> ToPivotList<TEntity>(PivotInfo<TEntity> pivotInfo,
+        public PagedList<dynamic> ToPivotList<TEntity>(PivotInfo<TEntity> pivotInfo,
             WhereExpression where,
+            int pageIndex = 1,
+            int pageSize = 1000,
             string orderBy = null,
             bool asc = true)
             where TEntity : Entity
         {
             using (var fdTran = this.CreateTransaction())
             {
-                return fdTran.ToPivotList<dynamic, TEntity>(pivotInfo, where, orderBy, asc);
+                return fdTran.ToPivotList<dynamic, TEntity>(pivotInfo, where, pageIndex, pageSize, orderBy, asc);
             }
         }
 
@@ -1238,20 +1250,24 @@ namespace WEF
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="pivotInfo"></param>
         /// <param name="where"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
         /// <param name="orderBy"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public List<dynamic> ToPivotList<TEntity>(PivotInfo<TEntity> pivotInfo,
+        public PagedList<dynamic> ToPivotList<TEntity>(PivotInfo<TEntity> pivotInfo,
             string where = null,
+            int pageIndex = 1,
+            int pageSize = 1000,
             string orderBy = null,
             bool asc = true)
             where TEntity : Entity
         {
             if (string.IsNullOrEmpty(where))
             {
-                return ToPivotList(pivotInfo, WhereExpression.All, orderBy, asc);
+                return ToPivotList(pivotInfo, WhereExpression.All, pageIndex, pageSize, orderBy, asc);
             }
-            return ToPivotList(pivotInfo, new WhereExpression(where), orderBy, asc);
+            return ToPivotList(pivotInfo, new WhereExpression(where), pageIndex, pageSize, orderBy, asc);
         }
 
         /// <summary>
@@ -1261,12 +1277,16 @@ namespace WEF
         /// <typeparam name="Model"></typeparam>
         /// <param name="pivotInfo"></param>
         /// <param name="whereLambada"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
         /// <param name="orderBy"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public List<Model> ToPivotList<TEntity, Model>(PivotInfo<TEntity> pivotInfo,
+        public PagedList<Model> ToPivotList<TEntity, Model>(PivotInfo<TEntity> pivotInfo,
             Expression<Func<Model, bool>> whereLambada,
-            Expression<Func<Model, object>> orderBy,
+            int pageIndex = 1,
+            int pageSize = 1000,
+            Expression<Func<Model, object>> orderBy = null,
             bool asc = true)
             where TEntity : Entity
             where Model : class, new()
@@ -1274,7 +1294,7 @@ namespace WEF
             var order = "";
             if (orderBy != null)
                 order = ExpressionToOperation<Model>.ToSelect("", orderBy).First()?.FieldName ?? "";
-            return ToPivotList(pivotInfo, whereLambada, order, asc);
+            return ToPivotList(pivotInfo, whereLambada, pageIndex, pageSize, order, asc);
         }
 
         #endregion

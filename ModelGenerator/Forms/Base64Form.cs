@@ -22,10 +22,15 @@
 *
 *****************************************************************************/
 using System;
+using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 using WEF.ModelGenerator.Common;
+
+using static WEF.ModelGenerator.LogShow;
 
 namespace WEF.ModelGenerator.Forms
 {
@@ -151,7 +156,6 @@ namespace WEF.ModelGenerator.Forms
                         }
                     });
 
-
                 }
             }
         }
@@ -191,6 +195,35 @@ namespace WEF.ModelGenerator.Forms
             }
         }
 
+        /// <summary>
+        /// base64转换图片
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
+        private async void textBox1_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (string.IsNullOrEmpty(textBox1.Text))
+            {
+                WEFMessageBox.Show(this, "base64不能为空", "Base64转小图片");
+                pictureBox1.Image = null;
+                return;
+            }
+            await Task.Run(() =>
+            {
+                try
+                {
+                    var bytes = Convert.FromBase64String(textBox1.Text);
+                    using (var ms = new MemoryStream(bytes))
+                    {
+                        pictureBox1.Image = Bitmap.FromStream(ms);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    pictureBox1.Image = null;
+                }
+            });
+        }
     }
 }

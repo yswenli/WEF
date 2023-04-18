@@ -19,21 +19,25 @@ namespace WEF.ModelGenerator.Forms
             this.skinButton1 = new CCWin.SkinControl.SkinButton();
             this.skinWaterTextBox1 = new CCWin.SkinControl.SkinWaterTextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.skinGroupBox3 = new CCWin.SkinControl.SkinGroupBox();
+            this.skinGroupBox2 = new CCWin.SkinControl.SkinGroupBox();
             this.button3 = new System.Windows.Forms.Button();
             this.skinWaterTextBox5 = new CCWin.SkinControl.SkinWaterTextBox();
-            this.skinButton5 = new CCWin.SkinControl.SkinButton();
             this.skinButton6 = new CCWin.SkinControl.SkinButton();
+            this.skinButton5 = new CCWin.SkinControl.SkinButton();
             this.button2 = new System.Windows.Forms.Button();
             this.skinWaterTextBox6 = new CCWin.SkinControl.SkinWaterTextBox();
+            this.skinGroupBox3 = new CCWin.SkinControl.SkinGroupBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.skinGroupBox1.SuspendLayout();
+            this.skinGroupBox2.SuspendLayout();
             this.skinGroupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // skinGroupBox1
             // 
-            this.skinGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.skinGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.skinGroupBox1.BackColor = System.Drawing.Color.Transparent;
             this.skinGroupBox1.BorderColor = System.Drawing.SystemColors.ControlLight;
@@ -49,7 +53,7 @@ namespace WEF.ModelGenerator.Forms
             this.skinGroupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.skinGroupBox1.RectBackColor = System.Drawing.Color.White;
             this.skinGroupBox1.RoundStyle = CCWin.SkinClass.RoundStyle.All;
-            this.skinGroupBox1.Size = new System.Drawing.Size(1422, 592);
+            this.skinGroupBox1.Size = new System.Drawing.Size(1422, 377);
             this.skinGroupBox1.TabIndex = 0;
             this.skinGroupBox1.TabStop = false;
             this.skinGroupBox1.Text = "字符串Base64转换";
@@ -68,7 +72,7 @@ namespace WEF.ModelGenerator.Forms
             this.skinWaterTextBox2.Multiline = true;
             this.skinWaterTextBox2.Name = "skinWaterTextBox2";
             this.skinWaterTextBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.skinWaterTextBox2.Size = new System.Drawing.Size(642, 508);
+            this.skinWaterTextBox2.Size = new System.Drawing.Size(642, 293);
             this.skinWaterTextBox2.TabIndex = 3;
             this.skinWaterTextBox2.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
             this.skinWaterTextBox2.WaterText = "Base64字符串";
@@ -82,7 +86,7 @@ namespace WEF.ModelGenerator.Forms
             this.skinButton2.ControlState = CCWin.SkinClass.ControlState.Normal;
             this.skinButton2.DownBack = null;
             this.skinButton2.DownBaseColor = System.Drawing.SystemColors.ControlLightLight;
-            this.skinButton2.Location = new System.Drawing.Point(669, 352);
+            this.skinButton2.Location = new System.Drawing.Point(669, 245);
             this.skinButton2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.skinButton2.MouseBack = null;
             this.skinButton2.MouseBaseColor = System.Drawing.SystemColors.ControlLight;
@@ -105,7 +109,7 @@ namespace WEF.ModelGenerator.Forms
             this.skinButton1.ControlState = CCWin.SkinClass.ControlState.Normal;
             this.skinButton1.DownBack = null;
             this.skinButton1.DownBaseColor = System.Drawing.SystemColors.ControlDark;
-            this.skinButton1.Location = new System.Drawing.Point(669, 221);
+            this.skinButton1.Location = new System.Drawing.Point(669, 114);
             this.skinButton1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.skinButton1.MouseBack = null;
             this.skinButton1.MouseBaseColor = System.Drawing.SystemColors.ControlLight;
@@ -129,7 +133,7 @@ namespace WEF.ModelGenerator.Forms
             this.skinWaterTextBox1.Multiline = true;
             this.skinWaterTextBox1.Name = "skinWaterTextBox1";
             this.skinWaterTextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.skinWaterTextBox1.Size = new System.Drawing.Size(646, 508);
+            this.skinWaterTextBox1.Size = new System.Drawing.Size(646, 293);
             this.skinWaterTextBox1.TabIndex = 0;
             this.skinWaterTextBox1.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
             this.skinWaterTextBox1.WaterText = "请输入字符串";
@@ -140,33 +144,33 @@ namespace WEF.ModelGenerator.Forms
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Title = "Base64转换";
             // 
-            // skinGroupBox3
+            // skinGroupBox2
             // 
-            this.skinGroupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.skinGroupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.skinGroupBox3.BackColor = System.Drawing.Color.Transparent;
-            this.skinGroupBox3.BorderColor = System.Drawing.SystemColors.ControlLight;
-            this.skinGroupBox3.Controls.Add(this.button3);
-            this.skinGroupBox3.Controls.Add(this.skinWaterTextBox5);
-            this.skinGroupBox3.Controls.Add(this.skinButton6);
-            this.skinGroupBox3.Controls.Add(this.skinButton5);
-            this.skinGroupBox3.Controls.Add(this.button2);
-            this.skinGroupBox3.Controls.Add(this.skinWaterTextBox6);
-            this.skinGroupBox3.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.skinGroupBox3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.skinGroupBox3.Location = new System.Drawing.Point(39, 659);
-            this.skinGroupBox3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.skinGroupBox3.Name = "skinGroupBox3";
-            this.skinGroupBox3.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.skinGroupBox3.RectBackColor = System.Drawing.Color.White;
-            this.skinGroupBox3.RoundStyle = CCWin.SkinClass.RoundStyle.All;
-            this.skinGroupBox3.Size = new System.Drawing.Size(1422, 285);
-            this.skinGroupBox3.TabIndex = 2;
-            this.skinGroupBox3.TabStop = false;
-            this.skinGroupBox3.Text = "文件Base64转换";
-            this.skinGroupBox3.TitleBorderColor = System.Drawing.Color.White;
-            this.skinGroupBox3.TitleRectBackColor = System.Drawing.Color.White;
-            this.skinGroupBox3.TitleRoundStyle = CCWin.SkinClass.RoundStyle.All;
+            this.skinGroupBox2.BackColor = System.Drawing.Color.Transparent;
+            this.skinGroupBox2.BorderColor = System.Drawing.SystemColors.ControlLight;
+            this.skinGroupBox2.Controls.Add(this.button3);
+            this.skinGroupBox2.Controls.Add(this.skinWaterTextBox5);
+            this.skinGroupBox2.Controls.Add(this.skinButton6);
+            this.skinGroupBox2.Controls.Add(this.skinButton5);
+            this.skinGroupBox2.Controls.Add(this.button2);
+            this.skinGroupBox2.Controls.Add(this.skinWaterTextBox6);
+            this.skinGroupBox2.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.skinGroupBox2.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.skinGroupBox2.Location = new System.Drawing.Point(39, 449);
+            this.skinGroupBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.skinGroupBox2.Name = "skinGroupBox2";
+            this.skinGroupBox2.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.skinGroupBox2.RectBackColor = System.Drawing.Color.White;
+            this.skinGroupBox2.RoundStyle = CCWin.SkinClass.RoundStyle.All;
+            this.skinGroupBox2.Size = new System.Drawing.Size(1422, 285);
+            this.skinGroupBox2.TabIndex = 2;
+            this.skinGroupBox2.TabStop = false;
+            this.skinGroupBox2.Text = "文件Base64转换";
+            this.skinGroupBox2.TitleBorderColor = System.Drawing.Color.White;
+            this.skinGroupBox2.TitleRectBackColor = System.Drawing.Color.White;
+            this.skinGroupBox2.TitleRoundStyle = CCWin.SkinClass.RoundStyle.All;
             // 
             // button3
             // 
@@ -192,29 +196,6 @@ namespace WEF.ModelGenerator.Forms
             this.skinWaterTextBox5.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
             this.skinWaterTextBox5.WaterText = "Base64文本文件地址";
             // 
-            // skinButton5
-            // 
-            this.skinButton5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.skinButton5.BackColor = System.Drawing.Color.Transparent;
-            this.skinButton5.BaseColor = System.Drawing.SystemColors.Control;
-            this.skinButton5.BorderColor = System.Drawing.SystemColors.ControlDark;
-            this.skinButton5.ControlState = CCWin.SkinClass.ControlState.Normal;
-            this.skinButton5.DownBack = null;
-            this.skinButton5.DownBaseColor = System.Drawing.SystemColors.ControlDark;
-            this.skinButton5.Location = new System.Drawing.Point(484, 208);
-            this.skinButton5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.skinButton5.MouseBack = null;
-            this.skinButton5.MouseBaseColor = System.Drawing.SystemColors.ControlLight;
-            this.skinButton5.Name = "skinButton5";
-            this.skinButton5.NormlBack = null;
-            this.skinButton5.Radius = 15;
-            this.skinButton5.RoundStyle = CCWin.SkinClass.RoundStyle.All;
-            this.skinButton5.Size = new System.Drawing.Size(226, 67);
-            this.skinButton5.TabIndex = 4;
-            this.skinButton5.Text = "Base64转文件";
-            this.skinButton5.UseVisualStyleBackColor = false;
-            this.skinButton5.Click += new System.EventHandler(this.skinButton5_Click);
-            // 
             // skinButton6
             // 
             this.skinButton6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
@@ -237,6 +218,29 @@ namespace WEF.ModelGenerator.Forms
             this.skinButton6.Text = "文件转Base64";
             this.skinButton6.UseVisualStyleBackColor = false;
             this.skinButton6.Click += new System.EventHandler(this.skinButton6_Click);
+            // 
+            // skinButton5
+            // 
+            this.skinButton5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.skinButton5.BackColor = System.Drawing.Color.Transparent;
+            this.skinButton5.BaseColor = System.Drawing.SystemColors.Control;
+            this.skinButton5.BorderColor = System.Drawing.SystemColors.ControlDark;
+            this.skinButton5.ControlState = CCWin.SkinClass.ControlState.Normal;
+            this.skinButton5.DownBack = null;
+            this.skinButton5.DownBaseColor = System.Drawing.SystemColors.ControlDark;
+            this.skinButton5.Location = new System.Drawing.Point(484, 208);
+            this.skinButton5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.skinButton5.MouseBack = null;
+            this.skinButton5.MouseBaseColor = System.Drawing.SystemColors.ControlLight;
+            this.skinButton5.Name = "skinButton5";
+            this.skinButton5.NormlBack = null;
+            this.skinButton5.Radius = 15;
+            this.skinButton5.RoundStyle = CCWin.SkinClass.RoundStyle.All;
+            this.skinButton5.Size = new System.Drawing.Size(226, 67);
+            this.skinButton5.TabIndex = 4;
+            this.skinButton5.Text = "Base64转文件";
+            this.skinButton5.UseVisualStyleBackColor = false;
+            this.skinButton5.Click += new System.EventHandler(this.skinButton5_Click);
             // 
             // button2
             // 
@@ -262,11 +266,62 @@ namespace WEF.ModelGenerator.Forms
             this.skinWaterTextBox6.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
             this.skinWaterTextBox6.WaterText = "文件地址";
             // 
+            // skinGroupBox3
+            // 
+            this.skinGroupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.skinGroupBox3.BackColor = System.Drawing.Color.Transparent;
+            this.skinGroupBox3.BorderColor = System.Drawing.SystemColors.ControlLight;
+            this.skinGroupBox3.Controls.Add(this.pictureBox1);
+            this.skinGroupBox3.Controls.Add(this.textBox1);
+            this.skinGroupBox3.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.skinGroupBox3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.skinGroupBox3.Location = new System.Drawing.Point(39, 737);
+            this.skinGroupBox3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.skinGroupBox3.Name = "skinGroupBox3";
+            this.skinGroupBox3.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.skinGroupBox3.RectBackColor = System.Drawing.Color.White;
+            this.skinGroupBox3.RoundStyle = CCWin.SkinClass.RoundStyle.All;
+            this.skinGroupBox3.Size = new System.Drawing.Size(1422, 344);
+            this.skinGroupBox3.TabIndex = 2;
+            this.skinGroupBox3.TabStop = false;
+            this.skinGroupBox3.Text = "Base64转换小图片";
+            this.skinGroupBox3.TitleBorderColor = System.Drawing.Color.White;
+            this.skinGroupBox3.TitleRectBackColor = System.Drawing.Color.White;
+            this.skinGroupBox3.TitleRoundStyle = CCWin.SkinClass.RoundStyle.All;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureBox1.Location = new System.Drawing.Point(690, 62);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(700, 254);
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBox1.Location = new System.Drawing.Point(42, 62);
+            this.textBox1.MaxLength = 0;
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox1.Size = new System.Drawing.Size(627, 254);
+            this.textBox1.TabIndex = 0;
+            this.textBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyUp);
+            // 
             // Base64Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
-            this.ClientSize = new System.Drawing.Size(1490, 1002);
+            this.ClientSize = new System.Drawing.Size(1490, 1206);
             this.Controls.Add(this.skinGroupBox3);
+            this.Controls.Add(this.skinGroupBox2);
             this.Controls.Add(this.skinGroupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -275,12 +330,16 @@ namespace WEF.ModelGenerator.Forms
             this.Load += new System.EventHandler(this.Base64Form_Load);
             this.skinGroupBox1.ResumeLayout(false);
             this.skinGroupBox1.PerformLayout();
+            this.skinGroupBox2.ResumeLayout(false);
+            this.skinGroupBox2.PerformLayout();
             this.skinGroupBox3.ResumeLayout(false);
             this.skinGroupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
+        private CCWin.SkinControl.SkinGroupBox skinGroupBox2;
         private CCWin.SkinControl.SkinGroupBox skinGroupBox3;
         private System.Windows.Forms.Button button3;
         private CCWin.SkinControl.SkinWaterTextBox skinWaterTextBox5;
@@ -288,5 +347,7 @@ namespace WEF.ModelGenerator.Forms
         private CCWin.SkinControl.SkinButton skinButton6;
         private System.Windows.Forms.Button button2;
         private CCWin.SkinControl.SkinWaterTextBox skinWaterTextBox6;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

@@ -58,6 +58,8 @@ namespace WEF.Standard.Test
             };
             var pivotList1 = fdr.ToPivotList<DBFormdata, PivotObject>(pivotInfo,
                 q => q.FailReason == "拒接",
+                1,
+                1000,
                 q => q.WorkNum);
 
 
