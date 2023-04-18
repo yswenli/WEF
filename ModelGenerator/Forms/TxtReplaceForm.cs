@@ -178,8 +178,6 @@ namespace TxtReplaceTool
                 }
             }
             catch { }
-
-
         }
     }
 }
