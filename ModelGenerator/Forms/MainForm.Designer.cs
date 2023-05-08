@@ -50,6 +50,7 @@
             this.repalceFileTxtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.base64ConvertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.log读取工具ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.oCR工具ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.errorlogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,7 +61,7 @@
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.shutDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vS2015LightTheme1 = new WeifenLuo.WinFormsUI.Docking.VS2015LightTheme();
-            this.oCR工具ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.firewallToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -210,7 +211,8 @@
             this.repalceFileTxtToolStripMenuItem,
             this.base64ConvertToolStripMenuItem,
             this.log读取工具ToolStripMenuItem,
-            this.oCR工具ToolStripMenuItem});
+            this.oCR工具ToolStripMenuItem,
+            this.firewallToolToolStripMenuItem});
             this.cleanUpGarbageToolStripMenuItem.Name = "cleanUpGarbageToolStripMenuItem";
             this.cleanUpGarbageToolStripMenuItem.Size = new System.Drawing.Size(161, 38);
             this.cleanUpGarbageToolStripMenuItem.Text = "(o&)其他工具";
@@ -242,6 +244,13 @@
             this.log读取工具ToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
             this.log读取工具ToolStripMenuItem.Text = "Log读取工具";
             this.log读取工具ToolStripMenuItem.Click += new System.EventHandler(this.log读取工具ToolStripMenuItem_Click);
+            // 
+            // oCR工具ToolStripMenuItem
+            // 
+            this.oCR工具ToolStripMenuItem.Name = "oCR工具ToolStripMenuItem";
+            this.oCR工具ToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.oCR工具ToolStripMenuItem.Text = "OCR工具";
+            this.oCR工具ToolStripMenuItem.Click += new System.EventHandler(this.oCR工具ToolStripMenuItem_Click);
             // 
             // 关于ToolStripMenuItem
             // 
@@ -310,12 +319,12 @@
             this.shutDownToolStripMenuItem.Text = "退出";
             this.shutDownToolStripMenuItem.Click += new System.EventHandler(this.shutDownToolStripMenuItem_Click);
             // 
-            // oCR工具ToolStripMenuItem
+            // firewallToolToolStripMenuItem
             // 
-            this.oCR工具ToolStripMenuItem.Name = "oCR工具ToolStripMenuItem";
-            this.oCR工具ToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
-            this.oCR工具ToolStripMenuItem.Text = "OCR工具";
-            this.oCR工具ToolStripMenuItem.Click += new System.EventHandler(this.oCR工具ToolStripMenuItem_Click);
+            this.firewallToolToolStripMenuItem.Name = "firewallToolToolStripMenuItem";
+            this.firewallToolToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.firewallToolToolStripMenuItem.Text = "防火墙工具";
+            this.firewallToolToolStripMenuItem.Click += new System.EventHandler(this.firewallToolToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -328,7 +337,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "MainForm";
             this.Text = "WEF 数据库工具";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -377,6 +386,7 @@
         private System.Windows.Forms.ToolStripMenuItem base64ConvertToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem log读取工具ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem oCR工具ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem firewallToolToolStripMenuItem;
     }
 }
 

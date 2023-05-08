@@ -302,6 +302,16 @@ namespace WEF.ModelGenerator
            new OCRForm().ShowDialog(this);           
         }
 
+        /// <summary>
+        /// 防火墙工具
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void firewallToolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FirewallForm().ShowDialog(this);
+        }
+
         #region 关于菜单
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -367,8 +377,9 @@ namespace WEF.ModelGenerator
 
 
 
+
         #endregion
 
-        
+       
     }
 }
