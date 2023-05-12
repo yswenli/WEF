@@ -61,7 +61,6 @@
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.shutDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vS2015LightTheme1 = new WeifenLuo.WinFormsUI.Docking.VS2015LightTheme();
-            this.firewallToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -211,8 +210,7 @@
             this.repalceFileTxtToolStripMenuItem,
             this.base64ConvertToolStripMenuItem,
             this.log读取工具ToolStripMenuItem,
-            this.oCR工具ToolStripMenuItem,
-            this.firewallToolToolStripMenuItem});
+            this.oCR工具ToolStripMenuItem});
             this.cleanUpGarbageToolStripMenuItem.Name = "cleanUpGarbageToolStripMenuItem";
             this.cleanUpGarbageToolStripMenuItem.Size = new System.Drawing.Size(161, 38);
             this.cleanUpGarbageToolStripMenuItem.Text = "(o&)其他工具";
@@ -319,13 +317,6 @@
             this.shutDownToolStripMenuItem.Text = "退出";
             this.shutDownToolStripMenuItem.Click += new System.EventHandler(this.shutDownToolStripMenuItem_Click);
             // 
-            // firewallToolToolStripMenuItem
-            // 
-            this.firewallToolToolStripMenuItem.Name = "firewallToolToolStripMenuItem";
-            this.firewallToolToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
-            this.firewallToolToolStripMenuItem.Text = "防火墙工具";
-            this.firewallToolToolStripMenuItem.Click += new System.EventHandler(this.firewallToolToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
@@ -386,7 +377,6 @@
         private System.Windows.Forms.ToolStripMenuItem base64ConvertToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem log读取工具ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem oCR工具ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem firewallToolToolStripMenuItem;
     }
 }
 
