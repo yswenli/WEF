@@ -1545,6 +1545,11 @@ namespace WEF
         {
             var total = this.Count();
 
+            if (!string.IsNullOrEmpty(TableName) && !string.IsNullOrEmpty(order) && order.IndexOf(".") == -1)
+            {
+                order = $"{TableName}.{order}";
+            }
+
             var list = this.OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
 
             return new PagedList<T>(list, pageIndex, pageSize, total);
@@ -1672,6 +1677,6 @@ namespace WEF
 
         #endregion
 
-       
+
     }
 }

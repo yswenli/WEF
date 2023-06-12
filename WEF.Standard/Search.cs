@@ -330,9 +330,10 @@ namespace WEF
                 if (OrderByOperation.IsNullOrEmpty(_orderBy))
                     return string.Empty;
 
-                if ((_tableName.IndexOf('(') >= 0 || _tableName.IndexOf(')') >= 0 || _tableName.IndexOf(" FROM ", StringComparison.OrdinalIgnoreCase) >= 0 || _tableName.IndexOf(" AS ", StringComparison.OrdinalIgnoreCase) >= 0)
-                    && !_joinOn.ToString(_tableName, _database.DbProvider.GetType().Name).Contains(" LEFT OUTER JOIN ") //2018-04-09 新增一个&&条件
-                    )
+                if ((_tableName.IndexOf('(') >= 0 || _tableName.IndexOf(')') >= 0 
+                    || _tableName.IndexOf(" FROM ", StringComparison.OrdinalIgnoreCase) >= 0 
+                    || _tableName.IndexOf(" AS ", StringComparison.OrdinalIgnoreCase) >= 0)
+                    && !_joinOn.ToString(_tableName, _database.DbProvider.GetType().Name).Contains(" LEFT OUTER JOIN "))
                     return _orderBy.RemovePrefixTableName().OrderByString;
                 return _orderBy.OrderByString;
             }
