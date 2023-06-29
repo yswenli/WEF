@@ -28,7 +28,34 @@ namespace WEF.ModelGenerator.Common
     /// </summary>
     public class StringPlus
     {
+        /// <summary>
+        /// 字符串类
+        /// </summary>
+        public StringPlus()
+        {
+
+        }
+        /// <summary>
+        /// 字符串类
+        /// </summary>
+        /// <param name="text"></param>
+        public StringPlus(string text)
+        {
+            this.Append(text);
+        }
+
         private StringBuilder str = new StringBuilder();
+
+        /// <summary>
+        /// Length
+        /// </summary>
+        public int Length
+        {
+            get
+            {
+                return str.Length;
+            }
+        }
 
         public string Append(string Text)
         {
@@ -106,7 +133,27 @@ namespace WEF.ModelGenerator.Common
                 this.str.Append(str.Substring(0, length));
             }
         }
-
+        /// <summary>
+        /// 移除尾部
+        /// </summary>
+        public void RemoveLast()
+        {
+            if (str.Length > 0)
+                str.Remove(str.Length - 1, 1);
+        }
+        /// <summary>
+        /// 移除头部
+        /// </summary>
+        public void RemoveFirst()
+        {
+            if (str.Length > 0)
+                str.Remove(0, 1);
+        }
+        /// <summary>
+        /// 移除
+        /// </summary>
+        /// <param name="Start"></param>
+        /// <param name="Num"></param>
         public void Remove(int Start, int Num)
         {
             this.str.Remove(Start, Num);
@@ -201,7 +248,7 @@ namespace WEF.ModelGenerator.Common
         }
 
         public static string[] GetSQLKeyWords(string keyCode)
-        {            
+        {
             return SQLKeyWords.Where(b => b.IndexOf(keyCode, StringComparison.OrdinalIgnoreCase) == 0).ToArray();
         }
 

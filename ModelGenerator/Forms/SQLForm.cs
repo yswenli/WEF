@@ -367,6 +367,7 @@ namespace WEF.ModelGenerator.Forms
                 });
             }
         }
+
         private void 生成JsonToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_currentSql.StartsWith("select", StringComparison.InvariantCultureIgnoreCase))
@@ -400,6 +401,84 @@ namespace WEF.ModelGenerator.Forms
                                 LoadForm.HideLoading(this);
 
                                 InvokeHelper.Invoke(this, () => new TextForm("WEF数据库工具", json, true).ShowDialog(this));
+
+                                return;
+                            }
+                        }
+
+                        LoadForm.HideLoading(this);
+                    }
+                    catch (Exception ex)
+                    {
+                        LoadForm.HideLoading(this);
+                        MessageBox.Show("生成Json时发生异常：" + ex.Message);
+                    }
+                });
+
+
+            }
+
+        }
+
+        /// <summary>
+        /// 生成sql
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void generateSQLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_currentSql.StartsWith("select", StringComparison.InvariantCultureIgnoreCase))
+            {
+
+                Task.Run(() =>
+                {
+                    LoadForm.ShowLoading(this);
+
+                    try
+                    {
+                        WEF.DbDAL.IDbObject dbObject = DBObjectHelper.GetDBObject(ConnectionModel);
+
+                        var ds = dbObject.Query(ConnectionModel.Database, _currentSql);
+
+                        if (ds != null && ds.Tables != null)
+                        {
+                            var dt = ds.Tables[0];
+
+                            if (dt != null && dt.Rows != null && dt.Rows.Count > 0)
+                            {
+                                if (dt.Rows.Count >= 2000)
+                                {
+                                    MessageBox.Show("生成失败，当前数据量超过2000条");
+                                    LoadForm.HideLoading(this);
+                                    return;
+                                }
+
+                                var sql = new Common.StringPlus();
+
+                                foreach (DataRow dr in dt.Rows)
+                                {
+                                    var sp = new Common.StringPlus("INSERT INTO TableName(");
+                                    var columns = dt.Columns;
+                                    sp.Append(string.Join(",", columns));
+                                    sp.Append(")VALUES(");
+                                    for (int i = 0; i < columns.Count; i++)
+                                    {
+                                        var val = "null";
+                                        if (dr[i] != null)
+                                        {
+                                            val = dr[i].ToString();
+                                        }
+                                        sp.Append($"'{val}'");
+                                        sp.Append(",");
+                                    }
+                                    sp.RemoveLast();
+                                    sp.Append(")");
+                                    sql.AppendLine(sp.ToString());
+                                }
+
+                                LoadForm.HideLoading(this);
+
+                                InvokeHelper.Invoke(this, () => new TextForm("WEF数据库工具", sql.ToString(), true).ShowDialog(this));
 
                                 return;
                             }
@@ -474,6 +553,7 @@ namespace WEF.ModelGenerator.Forms
 
 
         #endregion
+
 
     }
 }
