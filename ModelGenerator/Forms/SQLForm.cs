@@ -459,7 +459,13 @@ namespace WEF.ModelGenerator.Forms
                                 {
                                     var sp = new Common.StringPlus("INSERT INTO TableName(");
                                     var columns = dt.Columns;
-                                    sp.Append(string.Join(",", columns));
+                                    foreach (DataColumn col in columns)
+                                    {
+                                        sp.Append(col.ColumnName);
+                                        sp.Append(",");
+                                    }
+                                    sp.RemoveLast();
+                                    sp.Append(")");
                                     sp.Append(")VALUES(");
                                     for (int i = 0; i < columns.Count; i++)
                                     {
