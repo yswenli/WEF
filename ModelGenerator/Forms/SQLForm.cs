@@ -427,6 +427,7 @@ namespace WEF.ModelGenerator.Forms
         /// <param name="e"></param>
         private void generateSQLToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(_currentSql)) return;
             if (_currentSql.StartsWith("select", StringComparison.InvariantCultureIgnoreCase))
             {
 
@@ -454,10 +455,15 @@ namespace WEF.ModelGenerator.Forms
                                 }
 
                                 var sql = new Common.StringPlus();
+                                var tableName = Common.StringPlus.GetTableName(_currentSql);
+                                if (string.IsNullOrEmpty(tableName))
+                                {
+                                    tableName = "TableName";
+                                }
 
                                 foreach (DataRow dr in dt.Rows)
                                 {
-                                    var sp = new Common.StringPlus("INSERT INTO TableName(");
+                                    var sp = new Common.StringPlus($"INSERT INTO {tableName}(");
                                     var columns = dt.Columns;
                                     foreach (DataColumn col in columns)
                                     {

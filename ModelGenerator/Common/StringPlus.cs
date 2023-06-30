@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace WEF.ModelGenerator.Common
@@ -250,6 +251,26 @@ namespace WEF.ModelGenerator.Common
         public static string[] GetSQLKeyWords(string keyCode)
         {
             return SQLKeyWords.Where(b => b.IndexOf(keyCode, StringComparison.OrdinalIgnoreCase) == 0).ToArray();
+        }
+
+        /// <summary>
+        /// 获取sql中表名
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public static string GetTableName(string sql)
+        {
+            if (string.IsNullOrEmpty(sql)) return null;
+            var sqlArr = sql.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+            if (sqlArr == null || sqlArr.Length < 1) return null;
+            for (int i = 0; i < sqlArr.Length; i++)
+            {
+                if ("From".Equals(sqlArr[i], StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return sqlArr[i + 1];
+                }
+            }
+            return null;
         }
 
     }
