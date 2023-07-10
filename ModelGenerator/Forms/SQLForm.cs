@@ -471,7 +471,6 @@ namespace WEF.ModelGenerator.Forms
                                         sp.Append(",");
                                     }
                                     sp.RemoveLast();
-                                    sp.Append(")");
                                     sp.Append(")VALUES(");
                                     for (int i = 0; i < columns.Count; i++)
                                     {
