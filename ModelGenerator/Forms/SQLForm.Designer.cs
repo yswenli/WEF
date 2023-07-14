@@ -39,6 +39,7 @@
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.生成JsonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lbl_execute = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -47,7 +48,6 @@
             this.allSelectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStripCopy.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -60,7 +60,7 @@
             // 
             this.cnnTxt.Dock = System.Windows.Forms.DockStyle.Top;
             this.cnnTxt.Location = new System.Drawing.Point(0, 0);
-            this.cnnTxt.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.cnnTxt.Margin = new System.Windows.Forms.Padding(6);
             this.cnnTxt.Name = "cnnTxt";
             this.cnnTxt.ReadOnly = true;
             this.cnnTxt.Size = new System.Drawing.Size(1696, 35);
@@ -92,14 +92,14 @@
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(6);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView1.RowTemplate.Height = 23;
-            this.dataGridView1.Size = new System.Drawing.Size(1696, 689);
+            this.dataGridView1.Size = new System.Drawing.Size(1696, 451);
             this.dataGridView1.TabIndex = 10;
             // 
             // contextMenuStripCopy
@@ -127,7 +127,7 @@
             this.contextMenuStripCopy.ItemSplitter = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
             this.contextMenuStripCopy.Name = "contextMenuStripCopy";
             this.contextMenuStripCopy.RadiusStyle = CCWin.SkinClass.RoundStyle.All;
-            this.contextMenuStripCopy.Size = new System.Drawing.Size(301, 200);
+            this.contextMenuStripCopy.Size = new System.Drawing.Size(188, 156);
             this.contextMenuStripCopy.SkinAllColor = true;
             this.contextMenuStripCopy.TitleAnamorphosis = true;
             this.contextMenuStripCopy.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(228)))), ((int)(((byte)(236)))));
@@ -137,23 +137,30 @@
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(300, 38);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(187, 38);
             this.copyToolStripMenuItem.Text = "复制";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // exportDataToolStripMenuItem
             // 
             this.exportDataToolStripMenuItem.Name = "exportDataToolStripMenuItem";
-            this.exportDataToolStripMenuItem.Size = new System.Drawing.Size(300, 38);
+            this.exportDataToolStripMenuItem.Size = new System.Drawing.Size(187, 38);
             this.exportDataToolStripMenuItem.Text = "导出数据";
             this.exportDataToolStripMenuItem.Click += new System.EventHandler(this.exportDataToolStripMenuItem_Click);
             // 
             // 生成JsonToolStripMenuItem
             // 
             this.生成JsonToolStripMenuItem.Name = "生成JsonToolStripMenuItem";
-            this.生成JsonToolStripMenuItem.Size = new System.Drawing.Size(300, 38);
+            this.生成JsonToolStripMenuItem.Size = new System.Drawing.Size(187, 38);
             this.生成JsonToolStripMenuItem.Text = "生成Json";
             this.生成JsonToolStripMenuItem.Click += new System.EventHandler(this.生成JsonToolStripMenuItem_Click);
+            // 
+            // generateSQLToolStripMenuItem
+            // 
+            this.generateSQLToolStripMenuItem.Name = "generateSQLToolStripMenuItem";
+            this.generateSQLToolStripMenuItem.Size = new System.Drawing.Size(187, 38);
+            this.generateSQLToolStripMenuItem.Text = "生成Sql";
+            this.generateSQLToolStripMenuItem.Click += new System.EventHandler(this.generateSQLToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -161,15 +168,15 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainer1.Location = new System.Drawing.Point(0, 54);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(6);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.dataGridView1);
-            this.splitContainer1.Size = new System.Drawing.Size(1696, 1386);
-            this.splitContainer1.SplitterDistance = 689;
+            this.splitContainer1.Size = new System.Drawing.Size(1696, 912);
+            this.splitContainer1.SplitterDistance = 453;
             this.splitContainer1.SplitterWidth = 8;
             this.splitContainer1.TabIndex = 11;
             // 
@@ -177,7 +184,7 @@
             // 
             this.lbl_execute.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lbl_execute.AutoSize = true;
-            this.lbl_execute.Location = new System.Drawing.Point(10, 1446);
+            this.lbl_execute.Location = new System.Drawing.Point(10, 972);
             this.lbl_execute.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbl_execute.Name = "lbl_execute";
             this.lbl_execute.Size = new System.Drawing.Size(58, 24);
@@ -229,24 +236,17 @@
             this.runToolStripMenuItem.Text = "运行选中的SQL(F5)";
             this.runToolStripMenuItem.Click += new System.EventHandler(this.runToolStripMenuItem_Click);
             // 
-            // generateSQLToolStripMenuItem
-            // 
-            this.generateSQLToolStripMenuItem.Name = "generateSQLToolStripMenuItem";
-            this.generateSQLToolStripMenuItem.Size = new System.Drawing.Size(300, 38);
-            this.generateSQLToolStripMenuItem.Text = "生成Sql";
-            this.generateSQLToolStripMenuItem.Click += new System.EventHandler(this.generateSQLToolStripMenuItem_Click);
-            // 
             // SQLForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1696, 1480);
+            this.ClientSize = new System.Drawing.Size(1696, 1006);
             this.Controls.Add(this.lbl_execute);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.cnnTxt);
             this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "SQLForm";
             this.Text = "SQLForm";
             this.Load += new System.EventHandler(this.SQLForm_Load);
