@@ -26,7 +26,7 @@ namespace WEF.Standard.Test
             List<DBArticle> articleList;
             List<DBComment> commentList;
 
-            var cnnstr = "Data Source=10.10.0.119;Initial Catalog=tejingcaiV2;User Id=testuser;Password=testuser";
+            var cnnstr = "";
 
             #region get and update
 
