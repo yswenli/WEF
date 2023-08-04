@@ -26,7 +26,7 @@ namespace WEF.Standard.Test
             List<DBArticle> articleList;
             List<DBComment> commentList;
 
-            var cnnstr = "";
+            var cnnstr = "Data Source=10.10.0.119;Initial Catalog=tejingcaiV2;User Id=testuser;Password=testuser";
 
             #region get and update
 
@@ -89,14 +89,33 @@ namespace WEF.Standard.Test
 
 
             var dbarticleRepository = new DBArticleRepository(WEF.DatabaseType.SqlServer, cnnstr);
+
             var article = dbarticleRepository.Search().First();
             var articles = dbarticleRepository.Search().ToPagedList(1, 2, q => q.ID);
             dbarticleRepository.Update((q) => new { ID = "111", Content = "222" }, (q) => q.IsDeleted == false);
 
-            //子查询
+
+
+            #region 子查询
+
             var qs = dbarticleRepository.Search().Select(q => q.ID).Top();
-            var sq = dbarticleRepository.Search().SubQuery(q => q.ID.SubQuery(qs, QueryOperator.Equal));
+            var sq = dbarticleRepository.Search().SubQuery(q => q.ID.SubQuery(qs,QueryOperator.Equal));
             var sqr = sq.ToList();
+
+            var qs2 = dbarticleRepository.Search().Select(q => q.ID);
+            var sq2 = dbarticleRepository.Search().SubQuery(q => q.ID.SubQueryIn(qs2));
+            var sqr2 = sq.ToList();
+
+
+
+            var subSearch = dbarticleRepository.Search().Select(q => q.ID).Top();
+            var tr = dbarticleRepository.Search().Where(DBArticle._.ID.SubQueryEqual(subSearch)).First();
+
+
+            var subSearch2 = dbarticleRepository.Search().Select(q => q.ID);
+            var tr2 = dbarticleRepository.Search().Where(DBArticle._.ID.SubQueryIn(subSearch2)).First();
+            #endregion
+
 
 
             //转换字典
@@ -469,13 +488,7 @@ namespace WEF.Standard.Test
 
             #endregion
 
-            #region 子查询
-
-            var subSearch = new DBGiftRepository().Search().Where(q => q.Name == "name").Select(q => q.Name).Top();
-            var tr = dbTaskRepository.Search().Where(DBTask._.Name.SubQueryEqual(subSearch)).First();
-
-            #endregion
-
+          
 
 
 

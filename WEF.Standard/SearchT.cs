@@ -437,47 +437,7 @@ namespace WEF
                 this._where = this._where.And(we);
 
             return this;
-        }
-        /// <summary>
-        /// 子查询
-        /// </summary>
-        /// <param name="lambdaWhere"></param>
-        /// <returns></returns>
-        public Search<T> SubQueryIn(Expression<Func<T, WhereExpression>> lambdaWhere)
-        {
-            if (lambdaWhere == null) return this;
-
-            var we = ExpressionToOperation<T>.ConvertSubQueryIn(_tableName, lambdaWhere.Body);
-
-            if (this._where == null)
-            {
-                this._where = new WhereBuilder(_tableName, we).ToWhereClip();
-            }
-            else
-                this._where = this._where.And(we);
-
-            return this;
-        }
-        /// <summary>
-        /// 子查询
-        /// </summary>
-        /// <param name="lambdaWhere"></param>
-        /// <returns></returns>
-        public Search<T> SubQueryNotIn(Expression<Func<T, WhereExpression>> lambdaWhere)
-        {
-            if (lambdaWhere == null) return this;
-
-            var we = ExpressionToOperation<T>.ConvertSubQueryNotIn(_tableName, lambdaWhere.Body);
-
-            if (this._where == null)
-            {
-                this._where = new WhereBuilder(_tableName, we).ToWhereClip();
-            }
-            else
-                this._where = this._where.And(we);
-
-            return this;
-        }
+        }        
 
         /// <summary>
         /// 
