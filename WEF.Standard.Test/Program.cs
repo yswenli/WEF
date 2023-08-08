@@ -99,7 +99,7 @@ namespace WEF.Standard.Test
             #region 子查询
 
             var qs = dbarticleRepository.Search().Select(q => q.ID).Top();
-            var sq = dbarticleRepository.Search().SubQuery(q => q.ID.SubQuery(qs,QueryOperator.Equal));
+            var sq = dbarticleRepository.Search().SubQuery(q => q.ID.SubQuery(qs, QueryOperator.Equal));
             var sqr = sq.ToList();
 
             var qs2 = dbarticleRepository.Search().Select(q => q.ID);
@@ -114,6 +114,13 @@ namespace WEF.Standard.Test
 
             var subSearch2 = dbarticleRepository.Search().Select(q => q.ID);
             var tr2 = dbarticleRepository.Search().Where(DBArticle._.ID.SubQueryIn(subSearch2)).First();
+
+
+            var subSearch3 = dbarticleRepository.Search().Select(q => q.ID).Top();
+            var subSearch31 = dbarticleRepository.Search().Select(q => q.ID);
+            var tr3 = dbarticleRepository.Search().Where(q => q.ID.SubQuery(subSearch3, QueryOperator.Equal)).ToList();
+            var tr31 = dbarticleRepository.Search().Where(q => q.ID.SubQueryIn(subSearch31)).ToList();
+            var tr4 = dbarticleRepository.Search().Where(q => q.ID.SubQueryNotIn(subSearch31)).ToList();
             #endregion
 
 
@@ -488,7 +495,7 @@ namespace WEF.Standard.Test
 
             #endregion
 
-          
+
 
 
 

@@ -54,6 +54,18 @@ namespace WEF
             throw new Exception(string.Format(Tips, "In"));
         }
         /// <summary>
+        ///  where subquery in (value,value,value)。传入Array或List&lt;T>。
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static bool SubQueryIn<T>(this object key, params T[] values)
+        {
+            throw new Exception(string.Format(Tips, "In"));
+        }
+        /// <summary>
         /// where field in (value,value,value)。传入Array或List&lt;T>。
         /// </summary>
         public static bool In<T>(this object key, List<T> values)

@@ -423,11 +423,36 @@ namespace WEF
         /// </summary>
         /// <param name="lambdaWhere"></param>
         /// <returns></returns>
+        public Search<T> Where(Expression<Func<T, WhereExpression>> lambdaWhere)
+        {
+            return SubQuery(lambdaWhere);
+        }
+
+        /// <summary>
+        /// 子查询
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
         public Search<T> SubQuery(Expression<Func<T, WhereExpression>> lambdaWhere)
         {
             if (lambdaWhere == null) return this;
 
-            var we = ExpressionToOperation<T>.ConvertSubQuery(_tableName, lambdaWhere.Body);
+            var exprBody = lambdaWhere.Body;
+
+            WhereExpression we;
+
+            if (exprBody.ToString().IndexOf("SubQueryNotIn") > -1)
+            {
+                we = ExpressionToOperation<T>.ConvertSubQueryNotIn(_tableName, exprBody);
+            }
+            else if (exprBody.ToString().IndexOf("SubQueryIn") > -1)
+            {
+                we = ExpressionToOperation<T>.ConvertSubQueryIn(_tableName, exprBody);
+            }
+            else
+            {
+                we = ExpressionToOperation<T>.ConvertSubQuery(_tableName, exprBody);
+            }
 
             if (this._where == null)
             {
@@ -437,7 +462,7 @@ namespace WEF
                 this._where = this._where.And(we);
 
             return this;
-        }        
+        }
 
         /// <summary>
         /// 

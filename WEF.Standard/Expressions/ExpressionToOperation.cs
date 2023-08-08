@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -819,13 +820,11 @@ namespace WEF.Expressions
             var key = GetMemberName(e.Arguments[0], out function, out member);
             Field f = CreateField(tableName, key, member.Expression.Type);
             var search = (Search)GetValue(e.Arguments[1]);
-            try
+            if (e.Arguments.Count == 3)
             {
                 var queryOperator = (QueryOperator)GetValue(e.Arguments[2]);
                 return f.SubQuery(search, queryOperator);
             }
-            catch { }
-
             return f.SubQueryIn(search);
         }
 
@@ -843,7 +842,6 @@ namespace WEF.Expressions
             var key = GetMemberName(e.Arguments[0], out function, out member);
             Field f = CreateField(tableName, key, member.Expression.Type);
             var search = (Search)GetValue(e.Arguments[1]);
-            var queryOperator = (QueryOperator)GetValue(e.Arguments[2]);
             return f.SubQueryIn(search);
         }
         /// <summary>
@@ -860,7 +858,6 @@ namespace WEF.Expressions
             var key = GetMemberName(e.Arguments[0], out function, out member);
             Field f = CreateField(tableName, key, member.Expression.Type);
             var search = (Search)GetValue(e.Arguments[1]);
-            var queryOperator = (QueryOperator)GetValue(e.Arguments[2]);
             return f.SubQueryNotIn(search);
         }
 
