@@ -206,9 +206,9 @@ namespace WEF.ModelGenerator.Common
                     return true;
                 }
             }
-            catch
+            catch(Exception ex)
             {
-
+                Logger.Error(ex);
             }
             return false;
         }
@@ -254,7 +254,10 @@ namespace WEF.ModelGenerator.Common
 
                 dockPanel.SaveAsXml(_configFile);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
         }
     }
 }

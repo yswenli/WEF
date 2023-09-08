@@ -110,7 +110,7 @@ namespace WEF
         /// <summary>
         /// 是否重新加载
         /// </summary>
-        protected bool isRefresh = false;
+        protected bool _isRefresh = false;
 
         /// <summary>
         /// 是否已经执行过分页
@@ -330,8 +330,8 @@ namespace WEF
                 if (OrderByOperation.IsNullOrEmpty(_orderBy))
                     return string.Empty;
 
-                if ((_tableName.IndexOf('(') >= 0 || _tableName.IndexOf(')') >= 0 
-                    || _tableName.IndexOf(" FROM ", StringComparison.OrdinalIgnoreCase) >= 0 
+                if ((_tableName.IndexOf('(') >= 0 || _tableName.IndexOf(')') >= 0
+                    || _tableName.IndexOf(" FROM ", StringComparison.OrdinalIgnoreCase) >= 0
                     || _tableName.IndexOf(" AS ", StringComparison.OrdinalIgnoreCase) >= 0)
                     && !_joinOn.ToString(_tableName, _database.DbProvider.GetType().Name).Contains(" LEFT OUTER JOIN "))
                     return _orderBy.RemovePrefixTableName().OrderByString;
@@ -515,7 +515,7 @@ namespace WEF
         /// <returns></returns>
         public Search Refresh()
         {
-            isRefresh = true;
+            _isRefresh = true;
             return this;
         }
 
@@ -541,6 +541,7 @@ namespace WEF
             this._where = new WhereExpression(whereSql, parameters);
             return this;
         }
+
         /// <summary>
         /// groupby
         /// </summary>
@@ -548,7 +549,7 @@ namespace WEF
         /// <returns></returns>
         public Search GroupBy(GroupByOperation groupBy)
         {
-            this._groupBy = groupBy;
+            this._groupBy = this._groupBy & groupBy;
             return this;
         }
 
@@ -598,7 +599,7 @@ namespace WEF
         {
             if (null == orderBys || orderBys.Length <= 0) return this;
             var temporderby = orderBys.Aggregate(OrderByOperation.None, (current, ob) => current && ob);
-            this._orderBy = temporderby;
+            this._orderBy = this._orderBy & temporderby;
             return this;
         }
         /// <summary>
@@ -1071,7 +1072,7 @@ namespace WEF
             Search tmpSearch = new Search(this._database, tname.ToString());
             tmpSearch._typeTableName = this._typeTableName;
             tmpSearch.timeout = this.timeout;
-            tmpSearch.isRefresh = this.isRefresh;
+            tmpSearch._isRefresh = this._isRefresh;
 
 
             tmpSearch._parameters.AddRange(this.Parameters);
@@ -1102,7 +1103,7 @@ namespace WEF
             Search tmpSearch = new Search(this._database, tname.ToString());
             tmpSearch._typeTableName = this._typeTableName;
             tmpSearch.timeout = this.timeout;
-            tmpSearch.isRefresh = this.isRefresh;
+            tmpSearch._isRefresh = this._isRefresh;
 
             tmpSearch._parameters.AddRange(this.Parameters);
             tmpSearch._parameters.AddRange(Search.Parameters);

@@ -41,7 +41,7 @@ namespace WEF.ModelGenerator.Common
         /// <param name="action"></param>
         public static void Invoke(this Form owner, Action action)
         {
-            if (!owner.IsHandleCreated) throw new InvalidOperationException("父对象必须是从UI线程上创建的");
+            //if (!owner.IsHandleCreated) throw new InvalidOperationException("父对象必须是从UI线程上创建的");
             if (owner.InvokeRequired)
             {
                 owner.Invoke(action);

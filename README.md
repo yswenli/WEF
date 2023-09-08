@@ -10,7 +10,7 @@ WEF类似MEF上手简单，0学习成本。使用方便，按照sql书写习惯�
 
 高性能，接近手写Sql
 
-体积小（不到200kb，仅一个dll）
+体积小（约200kb，仅一个dll）
 
 完美支持Sql Server(2000至最新版),MySql,Oracle,Access,Sqlite等数据库
 

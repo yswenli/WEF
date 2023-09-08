@@ -516,7 +516,7 @@ namespace WEF.Expressions
             if (exprBody is MemberExpression)
             {
                 var e = (MemberExpression)exprBody;
-                var filedProp = GetFieldName(e.Member);
+                var filedProp = GetFieldName(e.Member);              
                 return new GroupByOperation(CreateField(string.Empty, filedProp, e.Expression.Type));
             }
             if (exprBody is NewExpression)
@@ -571,7 +571,7 @@ namespace WEF.Expressions
                 }
                 return gb;
             }
-            if (exprBody is NewExpression)
+            else if (exprBody is NewExpression)
             {
                 var exNew = (NewExpression)exprBody;
                 var type = exNew.Constructor.DeclaringType;
@@ -591,10 +591,28 @@ namespace WEF.Expressions
                 }
                 return gb;
             }
-            if (exprBody is UnaryExpression)
+            else if (exprBody is UnaryExpression)
             {
                 var ueEx = (UnaryExpression)exprBody;
                 return ToOrderByClipChild(ueEx.Operand, orderBy);
+            }
+            else if (exprBody is MethodCallExpression)
+            {
+                OrderByOperation gb = OrderByOperation.None;
+                var method = ((MethodCallExpression)exprBody);
+                var propertyType = ((MemberExpression)method.Arguments[0]).Expression.Type;
+                var tableName = TableAttribute.GetTableName(propertyType);
+                var filedProp = ((MemberExpression)((MethodCallExpression)exprBody).Arguments[0]).Member;
+                var field= ConvertFun(tableName, method, filedProp.Name)[0];
+                if (orderBy == OrderByOperater.DESC)
+                {
+                    gb = gb && field.Desc;
+                }
+                else
+                {
+                    gb = gb && field.Asc;
+                }
+                return gb;
             }
             throw new Exception("暂时不支持的Order by lambda写法！请使用经典写法！");
         }

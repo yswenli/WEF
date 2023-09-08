@@ -129,7 +129,7 @@ namespace WEF.ModelGenerator.Forms
             {
                 try
                 {
-                    WEF.DbDAL.IDbObject dbObject = DBObjectHelper.GetDBObject(ConnectionModel);
+                    var dbObject = DBObjectHelper.GetDBObject(ConnectionModel);
 
                     if (string.IsNullOrEmpty(_currentSql))
                     {
@@ -450,7 +450,6 @@ namespace WEF.ModelGenerator.Forms
                                 if (dt.Rows.Count >= 2000)
                                 {
                                     MessageBox.Show("生成失败，当前数据量超过2000条");
-                                    LoadForm.HideLoading(this);
                                     return;
                                 }
 
@@ -487,24 +486,20 @@ namespace WEF.ModelGenerator.Forms
                                     sql.AppendLine(sp.ToString());
                                 }
 
-                                LoadForm.HideLoading(this);
-
                                 InvokeHelper.Invoke(this, () => new TextForm("WEF数据库工具", sql.ToString(), true).ShowDialog(this));
-
-                                return;
                             }
                         }
-
-                        LoadForm.HideLoading(this);
                     }
                     catch (Exception ex)
                     {
-                        LoadForm.HideLoading(this);
+                        
                         MessageBox.Show("生成Json时发生异常：" + ex.Message);
                     }
+                    finally
+                    {
+                        LoadForm.HideLoading(this);
+                    }
                 });
-
-
             }
 
         }

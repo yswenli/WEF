@@ -911,7 +911,7 @@ namespace WEF
         /// <returns></returns>
         public new Search<T> Refresh()
         {
-            isRefresh = true;
+            _isRefresh = true;
             return this;
         }
 

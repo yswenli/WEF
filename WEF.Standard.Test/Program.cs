@@ -397,13 +397,24 @@ namespace WEF.Standard.Test
 
             //多表聚合取值示例：
 
-            //Repository
-            //    .Search()
-            //    .LeftJoin<DBNotificationSetting>((x, y) => x.SettingID == y.ID)
-            //    .Where(q => q.ReceiverID == userId && q.IsDeleted != true && q.UnRead == true)
-            //    .GroupBy<DBNotificationSetting>((x, y) => y.BusinessType)
-            //    .Select<DBNotificationSetting>((x, y) => new { BusinessType = y.BusinessType, Count = x.ID.Count() })
-            //    .ToList<UnReadCountResult>();
+            new DBNotificationRepository()
+                .Search()
+                .LeftJoin<DBNotificationSetting>((x, y) => x.SettingID == y.ID)
+                .Where(q => q.ReceiverID == "" && q.IsDeleted != true && q.UnRead == true)
+                .GroupBy<DBNotificationSetting>((x, y) => y.BusinessType)
+                .Select<DBNotificationSetting>((x, y) => new { BusinessType = y.BusinessType, Count = x.ID.Count() })
+                .ToList();
+
+            var articleGroupList = new DBArticleRepository(WEF.DatabaseType.SqlServer, cnnstr)
+                .Search()
+                .GroupBy(q => new { q.ID, q.Status, q.Created })
+                .OrderBy(q => q.Created.Max())
+                .OrderBy(q => new { q.ID, q.Status })
+                .OrderByDescending(q => q.CreatedBy.Max())
+                .Select(q => new { q.ID, q.Status, q.Created })
+                .Where(q => q.ID != null)
+                .Where(q => q.Status == 1)
+                .ToList();
 
             #region where
 
