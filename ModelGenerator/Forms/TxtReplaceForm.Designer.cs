@@ -176,7 +176,6 @@
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(532, 39);
             this.textBox4.TabIndex = 7;
-            this.textBox4.Text = "User ID=";
             // 
             // button2
             // 
