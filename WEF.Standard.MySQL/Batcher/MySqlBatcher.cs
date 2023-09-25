@@ -145,7 +145,7 @@ namespace WEF.Batcher
             {
                 if (dataTable == null || dataTable.Rows.Count == 0) return;
 
-                string tmpPath = Path.Combine(Directory.GetCurrentDirectory(), dataTable.TableName + ".csv");
+                string tmpPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dataTable.TableName + ".csv");
 
                 DataTableHelper.WriteToCSV(dataTable, tmpPath, false);
 
@@ -186,7 +186,6 @@ namespace WEF.Batcher
 
             finally
             {
-
                 if (dbConnect.State == ConnectionState.Open)
                     dbConnect.Close();
                 dataTable?.Clear();
