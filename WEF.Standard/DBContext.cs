@@ -19,6 +19,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 using WEF.Batcher;
 using WEF.Common;
@@ -108,11 +109,6 @@ namespace WEF
 
 
 
-        private void initDbSesion()
-        {
-            _cmdCreator = new CommandCreator(_db);
-        }
-
         /// <summary>
         /// 构造函数    使用默认  DBContext.Default
         /// </summary>
@@ -121,7 +117,7 @@ namespace WEF
         {
             _db = Database.Default;
             _db.TimeOut = timeout;
-            initDbSesion();
+            _cmdCreator = new CommandCreator(_db);
             CallContext.SetData(CONTEXTKEY, this);
         }
 
@@ -134,7 +130,7 @@ namespace WEF
         {
             _db = new Database(ProviderFactory.CreateDbProvider(connStrName), timeout);
             _db.DbProvider.ConnectionStringsName = connStrName;
-            initDbSesion();
+            _cmdCreator = new CommandCreator(_db);
             CallContext.SetData(CONTEXTKEY, this);
         }
 
@@ -148,7 +144,7 @@ namespace WEF
         {
             _db = db;
             _db.TimeOut = timeout;
-            initDbSesion();
+            _cmdCreator = new CommandCreator(_db);
             CallContext.SetData(CONTEXTKEY, this);
         }
 
@@ -161,11 +157,8 @@ namespace WEF
         public DBContext(DatabaseType dt, string connStr, int timeout = 120)
         {
             DbProvider provider = DbProviderCreator.Create(dt, connStr);
-
             _db = new Database(provider, timeout);
-
-            initDbSesion();
-
+            _cmdCreator = new CommandCreator(_db);
             CallContext.SetData(CONTEXTKEY, this);
         }
 
@@ -2317,6 +2310,44 @@ namespace WEF
             return _db.ExecuteNonQuery(sql, dbParameters);
         }
 
+        /// <summary>
+        /// ExecuteNonQuery
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public int ExecuteNonQuery(string sql, Dictionary<string, object> dbParameters)
+        {            
+            return _db.ExecuteNonQuery(sql, dbParameters);
+        }
+
+        /// <summary>
+        /// ExecuteNonQuery
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public int ExecuteNonQuery<Model>(string sql, Model dbParameters) where Model : class, new()
+        {
+            var keyValuePairs = new Dictionary<string, object>();
+            var type = typeof(Model);
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (var property in properties)
+            {
+                var value = DynamicCalls.GetPropertyGetter(property).Invoke(dbParameters);
+                if (keyValuePairs.ContainsKey($"{ParamPrefix}{property.Name}"))
+                {
+                    keyValuePairs[$"{ParamPrefix}{property.Name}"] = value;
+                }
+                else
+                {
+                    keyValuePairs.Add($"{ParamPrefix}{property.Name}", value);
+                }
+            }
+
+            return _db.ExecuteNonQuery(sql, keyValuePairs);
+        }
 
         /// <summary>
         /// ExecuteScalar
@@ -2383,7 +2414,15 @@ namespace WEF
         /// <returns></returns>
         public SqlSection FromSqlWithdModel<T>(string sql, T parameter) where T : class, new()
         {
-            return new SqlSection(this, sql).AddInParameterWithModel(parameter);
+            List<KeyValuePair<string, object>> keyValuePairs = new List<KeyValuePair<string, object>>();
+            var type = typeof(T);
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (var property in properties)
+            {
+                var value = DynamicCalls.GetPropertyGetter(property).Invoke(parameter);
+                keyValuePairs.Add(new KeyValuePair<string, object>($"{ParamPrefix}{property.Name}", value));
+            }
+            return FromSqlWithdAutomatic(sql).AddInParameterWithModel(parameter);
         }
         /// <summary>
         /// 执行sql

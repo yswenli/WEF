@@ -7,13 +7,9 @@ public class Program
 {
     static void Main(string[] args)
     {
-        Console.Title = "MongoDBOperator.Test";
+        Console.Title = "WEF.Standard.Mongo.Test";
 
-        MongoDBFactory.OnDisconnected += MongoDBFactory_OnDisconnected;
-
-        MongoDBFactory.OnError += MongoDBFactory_OnError;
-
-        var customerOperator = MongoDBFactory.Create<Account>();
+        var customerRepository = MongoDBFactory.Create<Account>();
 
         #region test
 
@@ -35,7 +31,9 @@ public class Program
 
         Parallel.For(0, 10, i =>
         {
-            var customerOperator1 = MongoDBFactory.Create<Account>();
+            var customerRepository1 = MongoDBFactory.Create<Account>();
+
+            var customerRepository2 = new BaseRepository<Account>(connectionString: "");
 
             var account = new Account();
             account.FirstName = "li" + i;
@@ -54,42 +52,33 @@ public class Program
 
             Console.WriteLine("Create");
 
-            customerOperator1.Add(account);
+            customerRepository1.Add(account);
 
         });
 
         Console.WriteLine("Read");
 
-        var list = customerOperator.Where(b => b.FirstName.Contains("l")).OrderBy(b => b.Orders).Skip(1).Take(10).ToList();
+        var list = customerRepository.Where(b => b.FirstName.Contains("l")).OrderBy(b => b.Orders).Skip(1).Take(10).ToList();
 
-        var c = customerOperator.Where(b => b.FirstName.Contains("l")).FirstOrDefault();
+        var c = customerRepository.Where(b => b.FirstName.Contains("l")).FirstOrDefault();
 
-        var count = customerOperator.Count();
+        var count = customerRepository.Count();
 
-        var c1 = customerOperator.GetById("5ccebadfb3b7bb38408bce24");
+        var c1 = customerRepository.GetById("5ccebadfb3b7bb38408bce24");
 
         Console.WriteLine("Update");
 
-        c.FirstName = "guo li";
+        c.FirstName = "li";
 
-        customerOperator.Update(c);
+        customerRepository.Update(c);
 
         Console.WriteLine("Delete");
 
-        customerOperator.Delete(c);
+        customerRepository.Delete(c);
 
-        customerOperator.DeleteAll();
+        customerRepository.DeleteAll();
 
         Console.ReadLine();
     }
 
-    private static void MongoDBFactory_OnError(string settingInfo, Exception ex)
-    {
-        Console.WriteLine($"settingInfo:{settingInfo} \r\nex:{ex.Message}");
-    }
-
-    private static void MongoDBFactory_OnDisconnected(string settingInfo)
-    {
-        Console.WriteLine($"settingInfo:{settingInfo}");
-    }
 }

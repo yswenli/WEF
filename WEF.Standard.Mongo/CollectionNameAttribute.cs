@@ -13,7 +13,7 @@ namespace WEF.Standard.Mongo
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("不允许空collection name", "value");
-            this.Name = value;
+            Name = value;
         }
 
         /// <summary>

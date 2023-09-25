@@ -19,7 +19,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WEF.Standard.Mongo.Extention
+namespace WEF.Standard.Mongo.Core
 {
     public static class MongoEntityExtention
     {
@@ -80,7 +80,7 @@ namespace WEF.Standard.Mongo.Extention
             }
             else
             {
-                return default(TTarget);
+                return default;
             }
         }
 

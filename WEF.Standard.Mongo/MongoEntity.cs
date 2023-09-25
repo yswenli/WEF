@@ -2,8 +2,9 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Runtime.Serialization;
+using WEF.Standard.Mongo.Model;
 
-namespace WEF.Standard.Mongo.Model
+namespace WEF.Standard.Mongo
 {
     /// <summary>
     /// mongo实体

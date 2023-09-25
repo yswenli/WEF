@@ -25,11 +25,9 @@ namespace WEF.Provider
     /// </summary>
     public abstract class DbProvider
     {
-
-
         #region Protected Members
         /// <summary>
-        /// like符号。 --- 2015-09-07
+        /// like符号
         /// </summary>
         protected char likeToken;
         /// <summary>
@@ -431,7 +429,6 @@ namespace WEF.Provider
 
             foreach (DbParameter p in cmd.Parameters)
             {
-
                 if (!isStoredProcedure)
                 {
                     if (cmd.CommandText.IndexOf(p.ParameterName, StringComparison.Ordinal) == -1)
@@ -486,8 +483,6 @@ namespace WEF.Provider
                     }
                 }
                 catch { }
-
-
             }
         }
 

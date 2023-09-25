@@ -175,7 +175,7 @@ namespace WEF.Section
             foreach (var property in properties)
             {
                 var value = DynamicCalls.GetPropertyGetter(property).Invoke(parameter);
-                keyValuePairs.Add(new KeyValuePair<string, object>($"@{property.Name}", value));
+                keyValuePairs.Add(new KeyValuePair<string, object>($"{property.Name}", value));
             }
             this.AddInParameter(keyValuePairs);
             return this;

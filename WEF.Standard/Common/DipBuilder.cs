@@ -40,6 +40,8 @@ namespace WEF.Common
 
         static ConcurrentDictionary<string, dynamic> _instanceCahce;
 
+        static readonly string _version;
+
         /// <summary>
         /// 依赖倒置工具类
         /// </summary>
@@ -48,6 +50,8 @@ namespace WEF.Common
             _typeCache = new ConcurrentDictionary<string, Assembly>();
 
             _instanceCahce = new ConcurrentDictionary<string, dynamic>();
+
+            _version= Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         /// <summary>
@@ -56,7 +60,7 @@ namespace WEF.Common
         /// <returns></returns>
         public static string GetVersion()
         {
-            return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            return _version;
         }
 
         /// <summary>

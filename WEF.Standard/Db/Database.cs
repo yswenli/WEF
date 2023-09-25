@@ -24,7 +24,7 @@ namespace WEF.Db
 {
 
     /// <summary>
-    /// 下拉框选择
+    /// 数据库对象
     /// </summary>
     public sealed class Database : ILogable
     {
@@ -1103,6 +1103,36 @@ namespace WEF.Db
                     if (dbParameters != null && dbParameters.Any())
                     {
                         command.Parameters.AddRange(dbParameters);
+                    }
+                    return DoExecuteNonQuery(command);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public int ExecuteNonQuery(string sql, Dictionary<string, object> dbParameters)
+        {
+            Check.Require(sql, "sql", Check.NotNullOrEmpty);
+
+            using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
+            {
+                command.CommandTimeout = TimeOut;
+
+                using (DbConnection connection = CreateConnection())
+                {
+                    PrepareCommand(command, connection);
+
+                    if (dbParameters != null && dbParameters.Any())
+                    {
+                        foreach (var keyValuePair in dbParameters)
+                        {
+                            AddParameter(command, keyValuePair.Key, keyValuePair.Value.GetDbType(), 0, ParameterDirection.Input, true, 0, 0, String.Empty, DataRowVersion.Default, keyValuePair.Value);
+                        }
                     }
                     return DoExecuteNonQuery(command);
                 }

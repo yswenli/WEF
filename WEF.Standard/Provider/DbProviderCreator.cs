@@ -34,14 +34,14 @@ namespace WEF.Provider
         /// <summary>
         /// 创建Provider
         /// </summary>
-        /// <param name="dt"></param>
+        /// <param name="databaseType"></param>
         /// <param name="connStr"></param>
         /// <returns></returns>
-        public static DbProvider Create(DatabaseType dt, string connStr)
+        public static DbProvider Create(DatabaseType databaseType, string connStr)
         {
             var version = DipBuilder.GetVersion();
             DbProvider provider = null;
-            switch (dt)
+            switch (databaseType)
             {
                 case DatabaseType.SqlServer9:
                     provider = ProviderFactory.CreateDbProvider($"WEF.Standard.MSSQL, Version={version}, Culture=neutral, PublicKeyToken=null",
@@ -75,7 +75,7 @@ namespace WEF.Provider
             }
             if (provider != null)
             {
-                provider.DatabaseType = dt;
+                provider.DatabaseType = databaseType;
             }
             return provider;
         }

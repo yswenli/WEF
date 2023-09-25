@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -1001,6 +1002,38 @@ namespace WEF
 
 
         #region sql
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public int Execute(string sql, params DbParameter[] dbParameters)
+        {
+            return _dbContext.ExecuteNonQuery(sql, dbParameters);
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="inputParamas"></param>
+        /// <returns></returns>
+        public int Execute(string sql, Dictionary<string, object> inputParamas)
+        {
+            return _dbContext.ExecuteNonQuery(sql, inputParamas);
+        }
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="inputParamas"></param>
+        /// <returns></returns>
+        public int Execute<Model>(string sql, Model inputParamas) where Model : class, new()
+        {
+            return _dbContext.ExecuteNonQuery(sql, inputParamas);
+        }
 
         /// <summary>
         /// 执行sql语句

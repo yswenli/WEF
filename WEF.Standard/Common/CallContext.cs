@@ -11,14 +11,16 @@
  * 类名称：DBContext
  * 创建时间：2017/7/26 14:34:40
  * 创建人：wenli
- * 创建说明：
+ * 创建说明：当前Task上下文
  *****************************************************************************************************/
 using System.Collections.Concurrent;
 using System.Threading;
 
 namespace WEF.Common
 {
-
+    /// <summary>
+    /// 当前Task上下文
+    /// </summary>
     public static class CallContext
     {
         static ConcurrentDictionary<string, AsyncLocal<object>> state = new ConcurrentDictionary<string, AsyncLocal<object>>();

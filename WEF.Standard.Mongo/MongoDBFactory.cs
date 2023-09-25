@@ -23,7 +23,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Configuration;
 using WEF.Standard.Mongo.Core;
-using WEF.Standard.Mongo.Extention;
 using WEF.Standard.Mongo.Model;
 
 namespace WEF.Standard.Mongo
@@ -33,31 +32,14 @@ namespace WEF.Standard.Mongo
     /// </summary>
     public static class MongoDBFactory
     {
-        static ConcurrentDictionary<string, object> concurrentDictionary = null;
-
-        /// <summary>
-        /// 断开连接事件
-        /// </summary>
-        public static event OnDisconnectedHandler OnDisconnected;
-        /// <summary>
-        /// 异常事件
-        /// </summary>
-        public static event OnErrorHandler OnError;
+        static ConcurrentDictionary<string, object> _concurrentDictionary = null;
 
         /// <summary>
         /// mongodb工厂类
         /// </summary>
         static MongoDBFactory()
         {
-            var ns = new DateTimeSerializer(DateTimeKind.Local, BsonType.DateTime);
-
-            BsonSerializer.RegisterSerializer(typeof(DateTime), ns);
-
-            concurrentDictionary = new ConcurrentDictionary<string, object>();
-
-            MongoCoreExtentions.OnDisconnected += OnDisconnectedAction;
-
-            MongoCoreExtentions.OnError += OnErrorAction;
+            _concurrentDictionary = new ConcurrentDictionary<string, object>();
         }
 
         /// <summary>
@@ -65,7 +47,7 @@ namespace WEF.Standard.Mongo
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static IOperator<T> Create<T>() where T : MongoEntity
+        public static IRepository<T> Create<T>() where T : MongoEntity
         {
             return CreateWithName<T>();
         }
@@ -76,16 +58,14 @@ namespace WEF.Standard.Mongo
         /// <typeparam name="T"></typeparam>
         /// <param name="connectionString"></param>
         /// <returns></returns>
-        public static IOperator<T> Create<T>(string connectionString) where T : MongoEntity
+        public static IRepository<T> Create<T>(string connectionString) where T : MongoEntity
         {
-            var key = connectionString + typeof(T).Name;
-
-            var mo = concurrentDictionary.GetOrAdd(key, (k) =>
+            var mo = _concurrentDictionary.GetOrAdd(DBContextExtention.DefaultName, (k) =>
             {
-                return new MongoOperator<T>(connectionString);
+                return new BaseRepository<T>(connectionString);
             });
 
-            return (IOperator<T>)mo;
+            return (IRepository<T>)mo;
         }
 
         /// <summary>
@@ -94,7 +74,7 @@ namespace WEF.Standard.Mongo
         /// <typeparam name="T"></typeparam>
         /// <param name="appKeyName"></param>
         /// <returns></returns>
-        public static IOperator<T> CreateWithAppSetting<T>(string appKeyName = MongoCoreExtentions<ObjectId>.DefaultName) where T : MongoEntity
+        public static IRepository<T> CreateWithAppSetting<T>(string appKeyName = DBContextExtention.DefaultName) where T : MongoEntity
         {
             var connectionString = ConfigurationManager.AppSettings[appKeyName];
 
@@ -108,22 +88,11 @@ namespace WEF.Standard.Mongo
         /// <typeparam name="T"></typeparam>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static IOperator<T> CreateWithName<T>(string name = MongoCoreExtentions<ObjectId>.DefaultName) where T : MongoEntity
+        public static IRepository<T> CreateWithName<T>(string name = DBContextExtention.DefaultName) where T : MongoEntity
         {
             var connectionString = ConfigurationManager.ConnectionStrings[name].ToString();
 
             return Create<T>(connectionString);
-        }
-
-
-        internal static void OnDisconnectedAction(string settingInfo)
-        {
-            OnDisconnected?.Invoke($"MongoDBFactory.OnDisconnected,settingInfo:{settingInfo}");
-        }
-
-        internal static void OnErrorAction(string settingInfo, Exception ex)
-        {
-            OnError?.Invoke($"MongoDBFactory.OnError,settingInfo:{settingInfo}", ex);
         }
 
     }

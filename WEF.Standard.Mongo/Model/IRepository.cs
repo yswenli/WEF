@@ -1,12 +1,14 @@
-﻿using MongoDB.Driver;
+﻿using System.Collections.Generic;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
+using MongoDB.Driver;
+
 namespace WEF.Standard.Mongo.Model
 {
-    public interface IOperator<T, TKey> : IQueryable<T>
+
+    public interface IRepository<T, TKey> : IQueryable<T>
         where T : IMongoEntity<TKey>
     {
         string ConnectionString
@@ -65,5 +67,10 @@ namespace WEF.Standard.Mongo.Model
         {
             get;
         }
+    }
+
+    public interface IRepository<T> : IQueryable<T>, IRepository<T, string>
+        where T : IMongoEntity<string>
+    {
     }
 }
