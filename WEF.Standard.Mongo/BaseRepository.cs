@@ -16,18 +16,16 @@
  * 创建人：Wenli
  * 创建说明：
  *****************************************************************************************************/
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
-
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 
 using WEF.Standard.Mongo.Core;
 using WEF.Standard.Mongo.Model;
