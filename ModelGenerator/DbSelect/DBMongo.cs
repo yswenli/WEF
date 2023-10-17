@@ -19,6 +19,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Model;
 using WEF.Standard.Mongo;
@@ -30,6 +31,13 @@ namespace WEF.ModelGenerator.DbSelect
         public DBMongo()
         {
             InitializeComponent();
+        }
+
+        ConnectionModel _connectionModel = new ConnectionModel();
+
+        public DBMongo(ConnectionModel cm) : this()
+        {
+            _connectionModel = cm;
         }
 
 
@@ -96,14 +104,14 @@ namespace WEF.ModelGenerator.DbSelect
 
                     this.Invoke(new Action(() =>
                     {
-                        ConnectionModel connectionModel = new ConnectionModel();
-                        connectionModel.Database = dataBaseName;
-                        connectionModel.ID = Guid.NewGuid();
-                        connectionModel.Name = mongoTool.ServerInfo + "(MongoDB)[" + connectionModel.Database + "]";
-                        connectionModel.DbType = DatabaseType.MongoDB.ToString();
-                        connectionModel.ConnectionString = connectStr;
+                        _connectionModel.Database = dataBaseName;
+                        if (_connectionModel.ID == Guid.Empty)
+                            _connectionModel.ID = Guid.NewGuid();
+                        _connectionModel.Name = mongoTool.ServerInfo + "(MongoDB)[" + _connectionModel.Database + "]";
+                        _connectionModel.DbType = DatabaseType.MongoDB.ToString();
+                        _connectionModel.ConnectionString = connectStr;
 
-                        UtilsHelper.AddConnection(connectionModel);
+                        UtilsHelper.UpdateConnection(_connectionModel);
 
                         this.DialogResult = DialogResult.OK;
 

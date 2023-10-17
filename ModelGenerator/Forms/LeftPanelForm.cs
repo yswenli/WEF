@@ -93,28 +93,28 @@ namespace WEF.ModelGenerator
                     dia = dbsqlserver.ShowDialog();
                     break;
                 case DatabaseType.MsAccess:
-                    //DbSelect.DBMsAccess dbMsAccess = new WEF.ModelGenerator.DbSelect.DBMsAccess(cm);
-                    //dia = dbMsAccess.ShowDialog();
+                    DbSelect.DBMsAccess dbMsAccess = new WEF.ModelGenerator.DbSelect.DBMsAccess(cm);
+                    dia = dbMsAccess.ShowDialog();
                     break;
                 case DatabaseType.Oracle:
-                    //DbSelect.DBOracle dbOracle = new WEF.ModelGenerator.DbSelect.DBOracle(cm);
-                    //dia = dbOracle.ShowDialog();
+                    DbSelect.DBOracle dbOracle = new WEF.ModelGenerator.DbSelect.DBOracle(cm);
+                    dia = dbOracle.ShowDialog();
                     break;
                 case DatabaseType.Sqlite3:
-                    //DbSelect.DbSqlite dbSqlite = new WEF.ModelGenerator.DbSelect.DbSqlite(cm);
-                    //dia = dbSqlite.ShowDialog();
+                    DbSelect.DbSqlite dbSqlite = new WEF.ModelGenerator.DbSelect.DbSqlite(cm);
+                    dia = dbSqlite.ShowDialog();
                     break;
                 case DatabaseType.MySql:
                     DbSelect.DBMySql dbMySql = new WEF.ModelGenerator.DbSelect.DBMySql(cm);
                     dia = dbMySql.ShowDialog();
                     break;
                 case DatabaseType.PostgreSQL:
-                    //DbSelect.DBPostgre dbPostgreSql = new WEF.ModelGenerator.DbSelect.DBPostgre(cm);
-                    //dia = dbPostgreSql.ShowDialog();
+                    DbSelect.DBPostgre dbPostgreSql = new WEF.ModelGenerator.DbSelect.DBPostgre(cm);
+                    dia = dbPostgreSql.ShowDialog();
                     break;
                 case DatabaseType.MongoDB:
-                    //DbSelect.DBMongo dbMongo = new WEF.ModelGenerator.DbSelect.DBMongo(cm);
-                    //dia = dbMongo.ShowDialog();
+                    DbSelect.DBMongo dbMongo = new WEF.ModelGenerator.DbSelect.DBMongo(cm);
+                    dia = dbMongo.ShowDialog();
                     break;
                 default:
                     break;

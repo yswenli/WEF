@@ -15,6 +15,13 @@ namespace WEF.ModelGenerator.DbSelect
             InitializeComponent();
         }
 
+        ConnectionModel _connectionModel = new ConnectionModel();
+
+        public DBPostgre(ConnectionModel cm) : this()
+        {
+            _connectionModel = cm;
+        }
+
         /// <summary>
         /// 测试连接
         /// </summary>
@@ -129,18 +136,16 @@ namespace WEF.ModelGenerator.DbSelect
                     return;
                 }
 
+                _connectionModel.Database = keyValuePairs["database"];
+                if(_connectionModel.ID == Guid.Empty)
+                    _connectionModel.ID = Guid.NewGuid();
+                _connectionModel.Name = skinWaterTextBox2.Text;
+                if (string.IsNullOrEmpty(_connectionModel.Name))
+                    _connectionModel.Name = keyValuePairs["server"] + "(PostgreSql)[" + _connectionModel.Database + "]";
+                _connectionModel.ConnectionString = dbObejct.DbConnectStr;
+                _connectionModel.DbType = DatabaseType.PostgreSQL.ToString();
 
-
-                ConnectionModel connectionModel = new ConnectionModel();
-                connectionModel.Database = keyValuePairs["database"];
-                connectionModel.ID = Guid.NewGuid();
-                connectionModel.Name = skinWaterTextBox2.Text;
-                if (string.IsNullOrEmpty(connectionModel.Name))
-                    connectionModel.Name = keyValuePairs["server"] + "(PostgreSql)[" + connectionModel.Database + "]";
-                connectionModel.ConnectionString = dbObejct.DbConnectStr;
-                connectionModel.DbType = DatabaseType.PostgreSQL.ToString();
-
-                UtilsHelper.AddConnection(connectionModel);
+                UtilsHelper.UpdateConnection(_connectionModel);
 
                 this.DialogResult = DialogResult.OK;
 
@@ -186,14 +191,13 @@ namespace WEF.ModelGenerator.DbSelect
 
                 }
 
-                ConnectionModel connectionModel = new ConnectionModel();
-                connectionModel.Database = cbbDatabase.SelectedIndex == 0 ? "all" : cbbDatabase.Text;
-                connectionModel.ID = Guid.NewGuid();
-                connectionModel.Name = cbbServer.Text + "(DBPostgre)[" + connectionModel.Database + "]";
-                connectionModel.ConnectionString = tempconnectionstring;
-                connectionModel.DbType = DatabaseType.PostgreSQL.ToString();
-
-                UtilsHelper.AddConnection(connectionModel);
+                if (_connectionModel.ID == Guid.Empty)
+                    _connectionModel.ID = Guid.NewGuid();
+                _connectionModel.Database = cbbDatabase.SelectedIndex == 0 ? "all" : cbbDatabase.Text;
+                _connectionModel.Name = cbbServer.Text + "(DBPostgre)[" + _connectionModel.Database + "]";
+                _connectionModel.ConnectionString = tempconnectionstring;
+                _connectionModel.DbType = DatabaseType.PostgreSQL.ToString();
+                UtilsHelper.UpdateConnection(_connectionModel);
 
                 this.DialogResult = DialogResult.OK;
 

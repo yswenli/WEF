@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 
 using WEF.ModelGenerator.Common;
+using WEF.ModelGenerator.Model;
 
 namespace WEF.ModelGenerator.DbSelect
 {
@@ -12,6 +13,14 @@ namespace WEF.ModelGenerator.DbSelect
         public DBMsAccess()
         {
             InitializeComponent();
+        }
+
+
+        ConnectionModel _connModel = new ConnectionModel();
+
+        public DBMsAccess(ConnectionModel cm) : this()
+        {
+            _connModel = cm;
         }
 
 
@@ -89,7 +98,6 @@ namespace WEF.ModelGenerator.DbSelect
 
             }
 
-            Model.ConnectionModel connModel = new WEF.ModelGenerator.Model.ConnectionModel();
 
             if (rbdatabaseselect.Checked)
             {
@@ -117,13 +125,13 @@ namespace WEF.ModelGenerator.DbSelect
                     cstring.Append(";");
                 }
 
-                connModel.ConnectionString = cstring.ToString();
-                connModel.Name = skinWaterTextBox1.Text;
-                connModel.Database = connModel.Name.Substring(connModel.Name.LastIndexOf('\\') + 1);
+                _connModel.ConnectionString = cstring.ToString();
+                _connModel.Name = skinWaterTextBox1.Text;
+                _connModel.Database = _connModel.Name.Substring(_connModel.Name.LastIndexOf('\\') + 1);
             }
             else
             {
-                connModel.ConnectionString = txtConnectionString.Text;
+                _connModel.ConnectionString = txtConnectionString.Text;
 
 
                 string constring = txtConnectionString.Text;
@@ -153,14 +161,14 @@ namespace WEF.ModelGenerator.DbSelect
                 templeftstring = templeftstring.Substring(templeftstring.IndexOf('=') + 1);
 
 
-                connModel.Name = templeftstring + temprightstring;
-                connModel.Database = temprightstring;
+                _connModel.Name = templeftstring + temprightstring;
+                _connModel.Database = temprightstring;
             }
 
             try
             {
 
-                using (OleDbConnection oledbConn = new OleDbConnection(connModel.ConnectionString))
+                using (OleDbConnection oledbConn = new OleDbConnection(_connModel.ConnectionString))
                 {
                     oledbConn.Open();
                 }
@@ -172,10 +180,13 @@ namespace WEF.ModelGenerator.DbSelect
 
             }
 
-            connModel.DbType = DatabaseType.MsAccess.ToString();
-            connModel.ID = Guid.NewGuid();
+            _connModel.DbType = DatabaseType.MsAccess.ToString();
+            if (_connModel.ID == Guid.Empty)
+            {
+                _connModel.ID = Guid.NewGuid();
+            }
 
-            UtilsHelper.AddConnection(connModel);
+            UtilsHelper.UpdateConnection(_connModel);
 
             this.DialogResult = DialogResult.OK;
 

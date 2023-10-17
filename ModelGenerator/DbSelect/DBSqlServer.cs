@@ -24,13 +24,20 @@ namespace WEF.ModelGenerator.DbSelect
 
         Guid _cmdID = Guid.Empty;
 
+        ConnectionModel _connectionModel = new ConnectionModel();
+
         public DBSqlServer(ConnectionModel cm)
         {
             InitializeComponent();
 
-            cbbServerType.SelectedIndex = 0;
+            _connectionModel = cm;
 
-            _cmdID = cm.ID;
+            if (_connectionModel.ID == Guid.Empty)
+            {
+                _connectionModel.ID = Guid.NewGuid();
+            }
+
+            cbbServerType.SelectedIndex = 0;
 
             var ci = ConnectionInfo.GetConnectionInfo(cm);
             skinWaterTextBox1.Text = cm.Name;
@@ -287,51 +294,42 @@ namespace WEF.ModelGenerator.DbSelect
                                 catch { }
                             }
 
-                            ConnectionModel connectionModel = new ConnectionModel();
-                            connectionModel.Database = dic["initial catalog"];
-                            connectionModel.ID = Guid.NewGuid();
-                            connectionModel.Name = skinWaterTextBox1.Text;
-                            if (string.IsNullOrEmpty(connectionModel.Name))
-                                connectionModel.Name = dic["data source"] + "(" + DatabaseType.SqlServer9.ToString() + ")[" + connectionModel.Database + "]";
+                            _connectionModel.Database = dic["initial catalog"];
+                            _connectionModel.Name = skinWaterTextBox1.Text;
+                            if (string.IsNullOrEmpty(_connectionModel.Name))
+                                _connectionModel.Name = dic["data source"] + "(" + DatabaseType.SqlServer9.ToString() + ")[" + _connectionModel.Database + "]";
                             if (cbbServerType.SelectedIndex == 0)
                             {
-                                connectionModel.DbType = DatabaseType.SqlServer9.ToString();
+                                _connectionModel.DbType = DatabaseType.SqlServer9.ToString();
                             }
                             else
                             {
-                                connectionModel.DbType = DatabaseType.SqlServer.ToString();
+                                _connectionModel.DbType = DatabaseType.SqlServer.ToString();
                             }
-                            connectionModel.ConnectionString = tempconnectionstring;
-                            UtilsHelper.AddConnection(connectionModel);
-                            UtilsHelper.DeleteConnection(_cmdID.ToString());
-                            this.DialogResult = DialogResult.OK;
-                            this.Close();
+                            
                         }
                         else
                         {
-                            ConnectionModel connectionModel = new ConnectionModel();
-                            connectionModel.Database = cbbDatabase.SelectedIndex == 0 ? "all" : cbbDatabase.Text;
-                            connectionModel.ID = Guid.NewGuid();
-                            connectionModel.Name = skinWaterTextBox1.Text;
-                            if (string.IsNullOrEmpty(connectionModel.Name))
-                                connectionModel.Name = cbbServer.Text + "(" + cbbServerType.Text + ")[" + connectionModel.Database + "]";
+                            _connectionModel.Database = cbbDatabase.SelectedIndex == 0 ? "all" : cbbDatabase.Text;
+
+                            _connectionModel.Name = skinWaterTextBox1.Text;
+                            if (string.IsNullOrEmpty(_connectionModel.Name))
+                                _connectionModel.Name = cbbServer.Text + "(" + cbbServerType.Text + ")[" + _connectionModel.Database + "]";
                             if (cbbServerType.SelectedIndex == 0)
                             {
-                                connectionModel.DbType = DatabaseType.SqlServer9.ToString();
+                                _connectionModel.DbType = DatabaseType.SqlServer9.ToString();
                             }
                             else
                             {
-                                connectionModel.DbType = DatabaseType.SqlServer.ToString();
+                                _connectionModel.DbType = DatabaseType.SqlServer.ToString();
                             }
-                            connectionModel.ConnectionString = tempconnectionstring;
 
-                            UtilsHelper.AddConnection(connectionModel);
-                            UtilsHelper.DeleteConnection(_cmdID.ToString());
-
-                            this.DialogResult = DialogResult.OK;
-
-                            this.Close();
+                           
                         }
+                        _connectionModel.ConnectionString = tempconnectionstring;
+                        UtilsHelper.UpdateConnection(_connectionModel);
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
                     }));
 
                 }

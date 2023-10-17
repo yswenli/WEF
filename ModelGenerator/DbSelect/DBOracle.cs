@@ -16,6 +16,13 @@ namespace WEF.ModelGenerator.DbSelect
 
         WEF.DbDAL.IDbObject dbObject;
 
+        ConnectionModel _connectionModel = new ConnectionModel();
+
+        public DBOracle(ConnectionModel cm) : this()
+        {
+            _connectionModel = cm;
+        }
+
         /// <summary>
         /// 测试连接
         /// </summary>
@@ -107,16 +114,15 @@ namespace WEF.ModelGenerator.DbSelect
                 serviceName = str4;
             }
 
-
-            ConnectionModel connectionModel = new ConnectionModel();
-            connectionModel.Database = serviceName;
-            connectionModel.ID = Guid.NewGuid();
-            connectionModel.Name = skinWaterTextBox1.Text;
-            if (string.IsNullOrEmpty(connectionModel.Name))
-                connectionModel.Name = serviceName + "(Oracle)";
-            connectionModel.ConnectionString = dbObject.DbConnectStr;
-            connectionModel.DbType = DatabaseType.Oracle.ToString();
-            UtilsHelper.AddConnection(connectionModel);
+            _connectionModel.Database = serviceName;
+            if (_connectionModel.ID == Guid.Empty)
+                _connectionModel.ID = Guid.NewGuid();
+            _connectionModel.Name = skinWaterTextBox1.Text;
+            if (string.IsNullOrEmpty(_connectionModel.Name))
+                _connectionModel.Name = serviceName + "(Oracle)";
+            _connectionModel.ConnectionString = dbObject.DbConnectStr;
+            _connectionModel.DbType = DatabaseType.Oracle.ToString();
+            UtilsHelper.UpdateConnection(_connectionModel);
 
             this.DialogResult = DialogResult.OK;
 

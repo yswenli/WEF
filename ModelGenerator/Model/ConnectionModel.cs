@@ -4,7 +4,7 @@ namespace WEF.ModelGenerator.Model
 {
     public class ConnectionModel
     {
-        private Guid id;
+        private Guid id = Guid.Empty;
         public Guid ID { get { return id; } set { id = value; } }
 
         private string name;

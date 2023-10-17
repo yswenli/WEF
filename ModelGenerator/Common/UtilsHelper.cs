@@ -128,6 +128,10 @@ namespace WEF.ModelGenerator.Common
             doc.Save(DatabaseconfigPath);
         }
 
+        public static void DeleteConnection(Guid id) => DeleteConnection(id.ToString());
+
+        public static void DeleteConnection(ConnectionModel conection) => DeleteConnection(conection.ID);
+
         /// <summary>
         /// 添加
         /// </summary>
@@ -154,6 +158,12 @@ namespace WEF.ModelGenerator.Common
             root.AppendChild(xe);
 
             doc.Save(DatabaseconfigPath);
+        }
+
+        public static void UpdateConnection(ConnectionModel conection)
+        {
+            DeleteConnection(conection);
+            AddConnection(conection);
         }
 
         /// <summary>

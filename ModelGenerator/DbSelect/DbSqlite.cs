@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Data.SQLite;
 using WEF;
 using WEF.ModelGenerator.Common;
+using WEF.ModelGenerator.Model;
 
 namespace WEF.ModelGenerator.DbSelect
 {
@@ -16,6 +17,14 @@ namespace WEF.ModelGenerator.DbSelect
         public DbSqlite()
         {
             InitializeComponent();
+        }
+
+
+        Model.ConnectionModel _connModel = new ConnectionModel();
+
+        public DbSqlite(ConnectionModel cm) : this()
+        {
+            _connModel = cm;
         }
 
 
@@ -91,7 +100,10 @@ namespace WEF.ModelGenerator.DbSelect
 
             }
 
-            Model.ConnectionModel connModel = new WEF.ModelGenerator.Model.ConnectionModel();
+            if (_connModel.ID == Guid.Empty)
+            {
+                _connModel.ID = Guid.NewGuid();
+            }
 
             if (rbdatabaseselect.Checked)
             {
@@ -106,15 +118,15 @@ namespace WEF.ModelGenerator.DbSelect
                     cstring.Append(";");
                 }
 
-                connModel.ConnectionString = cstring.ToString();
-                connModel.Name = skinWaterTextBox1.Text;
-                if (string.IsNullOrEmpty(connModel.Name))
-                    connModel.Name = txtfilepath.Text;
-                connModel.Database = connModel.Name.Substring(connModel.Name.LastIndexOf('\\') + 1);
+                _connModel.ConnectionString = cstring.ToString();
+                _connModel.Name = skinWaterTextBox1.Text;
+                if (string.IsNullOrEmpty(_connModel.Name))
+                    _connModel.Name = txtfilepath.Text;
+                _connModel.Database = _connModel.Name.Substring(_connModel.Name.LastIndexOf('\\') + 1);
             }
             else
             {
-                connModel.ConnectionString = txtConnectionString.Text;
+                _connModel.ConnectionString = txtConnectionString.Text;
 
 
                 string constring = txtConnectionString.Text;
@@ -144,14 +156,14 @@ namespace WEF.ModelGenerator.DbSelect
                 templeftstring = templeftstring.Substring(templeftstring.IndexOf('=') + 1);
 
 
-                connModel.Name = templeftstring + temprightstring;
-                connModel.Database = temprightstring;
+                _connModel.Name = templeftstring + temprightstring;
+                _connModel.Database = temprightstring;
             }
 
             try
             {
 
-                using (SQLiteConnection oledbConn = new SQLiteConnection(connModel.ConnectionString))
+                using (SQLiteConnection oledbConn = new SQLiteConnection(_connModel.ConnectionString))
                 {
                     oledbConn.Open();
                 }
@@ -163,10 +175,9 @@ namespace WEF.ModelGenerator.DbSelect
 
             }
 
-            connModel.DbType = DatabaseType.Sqlite3.ToString();
-            connModel.ID = Guid.NewGuid();
+            _connModel.DbType = DatabaseType.Sqlite3.ToString();
 
-            UtilsHelper.AddConnection(connModel);
+            UtilsHelper.UpdateConnection(_connModel);
 
             this.DialogResult = DialogResult.OK;
 

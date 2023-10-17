@@ -18,13 +18,22 @@ namespace WEF.ModelGenerator.DbSelect
             InitializeComponent();
         }
 
-        Guid _cmdID = Guid.Empty;
+        Guid _cmdID = Guid.NewGuid();
+
+        ConnectionModel _connectionModel = new ConnectionModel();
 
         public DBMySql(ConnectionModel cm)
         {
             InitializeComponent();
 
+            _connectionModel = cm;
+
             _cmdID = cm.ID;
+
+            if (_cmdID == Guid.Empty)
+            {
+                _cmdID = Guid.NewGuid();
+            }
 
             var ci = ConnectionInfo.GetConnectionInfo(cm);
 
@@ -59,7 +68,7 @@ namespace WEF.ModelGenerator.DbSelect
                 Task.Run(() =>
                 {
                     try
-                    {                        
+                    {
                         DataTable dbNameTable = dbObejct.GetDBList();
 
                         LoadForm.HideLoadingAsync(this);
@@ -110,7 +119,7 @@ namespace WEF.ModelGenerator.DbSelect
                 Task.Run(() =>
                 {
                     try
-                    {                        
+                    {
                         DataTable DBNameTable = dbObejct.GetDBList();
                         LoadForm.HideLoadingAsync(this);
 
@@ -184,17 +193,15 @@ namespace WEF.ModelGenerator.DbSelect
                     return;
                 }
 
-                ConnectionModel connectionModel = new ConnectionModel();
-                connectionModel.Database = string.IsNullOrEmpty(keyValuePairs["database"]) ? "all" : keyValuePairs["database"];
-                connectionModel.ID = _cmdID;
-                connectionModel.Name = skinWaterTextBox2.Text;
-                if (string.IsNullOrEmpty(connectionModel.Name))
-                    connectionModel.Name = keyValuePairs["server"] + "(MySql)[" + connectionModel.Database + "]";
-                connectionModel.ConnectionString = dbObejct.DbConnectStr;
-                connectionModel.DbType = DatabaseType.MySql.ToString();
+                _connectionModel.Database = string.IsNullOrEmpty(keyValuePairs["database"]) ? "all" : keyValuePairs["database"];
+                _connectionModel.ID = _cmdID;
+                _connectionModel.Name = skinWaterTextBox2.Text;
+                if (string.IsNullOrEmpty(_connectionModel.Name))
+                    _connectionModel.Name = keyValuePairs["server"] + "(MySql)[" + _connectionModel.Database + "]";
+                _connectionModel.ConnectionString = dbObejct.DbConnectStr;
+                _connectionModel.DbType = DatabaseType.MySql.ToString();
 
-                UtilsHelper.DeleteConnection(_cmdID.ToString());
-                UtilsHelper.AddConnection(connectionModel);
+                UtilsHelper.UpdateConnection(_connectionModel);
 
                 this.DialogResult = DialogResult.OK;
 
@@ -245,17 +252,16 @@ namespace WEF.ModelGenerator.DbSelect
 
                 }
 
-                ConnectionModel connectionModel = new ConnectionModel();
-                connectionModel.Database = cbbDatabase.SelectedIndex == 0 ? "all" : cbbDatabase.Text;
-                connectionModel.ID = _cmdID;
-                connectionModel.Name = skinWaterTextBox2.Text;
-                if (string.IsNullOrEmpty(connectionModel.Name))
-                    connectionModel.Name = cbbServer.Text + "(MySql)[" + connectionModel.Database + "]";
-                connectionModel.ConnectionString = tempconnectionstring;
-                connectionModel.DbType = DatabaseType.MySql.ToString();
 
-                UtilsHelper.DeleteConnection(_cmdID.ToString());
-                UtilsHelper.AddConnection(connectionModel);
+                _connectionModel.Database = cbbDatabase.SelectedIndex == 0 ? "all" : cbbDatabase.Text;
+                _connectionModel.ID = _cmdID;
+                _connectionModel.Name = skinWaterTextBox2.Text;
+                if (string.IsNullOrEmpty(_connectionModel.Name))
+                    _connectionModel.Name = cbbServer.Text + "(MySql)[" + _connectionModel.Database + "]";
+                _connectionModel.ConnectionString = tempconnectionstring;
+                _connectionModel.DbType = DatabaseType.MySql.ToString();
+
+                UtilsHelper.UpdateConnection(_connectionModel);
 
 
                 this.DialogResult = DialogResult.OK;
