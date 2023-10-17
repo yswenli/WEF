@@ -70,7 +70,7 @@ namespace WEF.ModelGenerator.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.skinWaterTextBox2.Location = new System.Drawing.Point(770, 74);
             this.skinWaterTextBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.skinWaterTextBox2.MaxLength = 30000;
+            this.skinWaterTextBox2.MaxLength = 102400;
             this.skinWaterTextBox2.Multiline = true;
             this.skinWaterTextBox2.Name = "skinWaterTextBox2";
             this.skinWaterTextBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
@@ -131,7 +131,7 @@ namespace WEF.ModelGenerator.Forms
             | System.Windows.Forms.AnchorStyles.Left)));
             this.skinWaterTextBox1.Location = new System.Drawing.Point(10, 74);
             this.skinWaterTextBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.skinWaterTextBox1.MaxLength = 30000;
+            this.skinWaterTextBox1.MaxLength = 102400;
             this.skinWaterTextBox1.Multiline = true;
             this.skinWaterTextBox1.Name = "skinWaterTextBox1";
             this.skinWaterTextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
@@ -310,7 +310,7 @@ namespace WEF.ModelGenerator.Forms
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.textBox1.Location = new System.Drawing.Point(42, 62);
-            this.textBox1.MaxLength = 65536;
+            this.textBox1.MaxLength = 102400;
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
