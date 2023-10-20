@@ -70,8 +70,8 @@
     <Reference Include="Enums.NET, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7ea1c1650d506225, processorArchitecture=MSIL">
       <HintPath>..\packages\Enums.NET.4.0.1\lib\net45\Enums.NET.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Protobuf, Version=3.24.3.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Protobuf.3.24.3\lib\net45\Google.Protobuf.dll</HintPath>
+    <Reference Include="Google.Protobuf, Version=3.24.4.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Protobuf.3.24.4\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.4.2.13, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.4.2\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -113,23 +113,23 @@
     <Reference Include="Npgsql, Version=7.0.6.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <HintPath>..\packages\Npgsql.7.0.6\lib\netstandard2.0\Npgsql.dll</HintPath>
     </Reference>
-    <Reference Include="NPOI.Core, Version=2.6.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.1\lib\netstandard2.0\NPOI.Core.dll</HintPath>
+    <Reference Include="NPOI.Core, Version=2.6.2.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.6.2\lib\netstandard2.0\NPOI.Core.dll</HintPath>
     </Reference>
-    <Reference Include="NPOI.OOXML, Version=2.6.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.1\lib\netstandard2.0\NPOI.OOXML.dll</HintPath>
+    <Reference Include="NPOI.OOXML, Version=2.6.2.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.6.2\lib\netstandard2.0\NPOI.OOXML.dll</HintPath>
     </Reference>
-    <Reference Include="NPOI.OpenXml4Net, Version=2.6.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.1\lib\netstandard2.0\NPOI.OpenXml4Net.dll</HintPath>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.6.2.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.6.2\lib\netstandard2.0\NPOI.OpenXml4Net.dll</HintPath>
     </Reference>
-    <Reference Include="NPOI.OpenXmlFormats, Version=2.6.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.1\lib\netstandard2.0\NPOI.OpenXmlFormats.dll</HintPath>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.6.2.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.6.2\lib\netstandard2.0\NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
     <Reference Include="OpenCvSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenCvSharp4.4.8.0.20230708\lib\netstandard2.0\OpenCvSharp.dll</HintPath>
     </Reference>
     <Reference Include="Oracle.ManagedDataAccess, Version=2.0.19.1, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
-      <HintPath>..\packages\Oracle.ManagedDataAccess.Core.2.19.200\lib\netstandard2.0\Oracle.ManagedDataAccess.dll</HintPath>
+      <HintPath>..\packages\Oracle.ManagedDataAccess.Core.2.19.210\lib\netstandard2.0\Oracle.ManagedDataAccess.dll</HintPath>
     </Reference>
     <Reference Include="PcapDotNet.Base, Version=0.10.0.20588, Culture=neutral, PublicKeyToken=4b6f3e583145a652, processorArchitecture=MSIL">
       <HintPath>..\packages\PcapDotNet.0.10.2\lib\net40\PcapDotNet.Base.dll</HintPath>
@@ -153,14 +153,14 @@
     <Reference Include="Sdcb.PaddleOCR.Models.Online, Version=2.7.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Sdcb.PaddleOCR.Models.Online.2.7.0.1\lib\netstandard2.0\Sdcb.PaddleOCR.Models.Online.dll</HintPath>
     </Reference>
-    <Reference Include="Sdcb.PaddleOCR.Models.Shared, Version=2.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sdcb.PaddleOCR.Models.Shared.2.7.0\lib\netstandard2.0\Sdcb.PaddleOCR.Models.Shared.dll</HintPath>
+    <Reference Include="Sdcb.PaddleOCR.Models.Shared, Version=2.7.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sdcb.PaddleOCR.Models.Shared.2.7.0.1\lib\netstandard2.0\Sdcb.PaddleOCR.Models.Shared.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress, Version=0.33.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpCompress.0.33.0\lib\net462\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
-      <HintPath>..\packages\SixLabors.Fonts.1.0.0\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
+      <HintPath>..\packages\SixLabors.Fonts.1.0.1\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -268,26 +268,33 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WEF, Version=6.23.9.25, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.6.23.9.25\lib\netstandard2.0\WEF.dll</HintPath>
+    <Reference Include="WEF, Version=6.23.10.20, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WEF.Standard.6.23.10.20\lib\netstandard2.0\WEF.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="WEF.Standard.MSSQL, Version=6.23.9.25, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.MSSQL.6.23.9.25\lib\netstandard2.0\WEF.Standard.MSSQL.dll</HintPath>
+    <Reference Include="WEF.Standard.MSSQL, Version=6.23.10.20, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WEF.Standard.MSSQL.6.23.10.20\lib\netstandard2.0\WEF.Standard.MSSQL.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="WEF.Standard.MySQL, Version=6.23.9.25, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.MySQL.6.23.9.25\lib\netstandard2.0\WEF.Standard.MySQL.dll</HintPath>
+    <Reference Include="WEF.Standard.MySQL, Version=6.23.10.20, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WEF.Standard.MySQL.6.23.10.20\lib\netstandard2.0\WEF.Standard.MySQL.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="WEF.Standard.OLEDB, Version=6.23.9.25, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.OLEDB.6.23.9.25\lib\netstandard2.0\WEF.Standard.OLEDB.dll</HintPath>
+    <Reference Include="WEF.Standard.OLEDB, Version=6.23.10.20, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WEF.Standard.OLEDB.6.23.10.20\lib\netstandard2.0\WEF.Standard.OLEDB.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="WEF.Standard.Oracle, Version=6.23.9.25, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.Oracle.6.23.9.25\lib\netstandard2.0\WEF.Standard.Oracle.dll</HintPath>
+    <Reference Include="WEF.Standard.Oracle, Version=6.23.10.20, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WEF.Standard.Oracle.6.23.10.20\lib\netstandard2.0\WEF.Standard.Oracle.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="WEF.Standard.Postgre, Version=6.23.9.25, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.Postgre.6.23.9.25\lib\netstandard2.0\WEF.Standard.Postgre.dll</HintPath>
+    <Reference Include="WEF.Standard.Postgre, Version=6.23.10.20, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WEF.Standard.Postgre.6.23.10.20\lib\netstandard2.0\WEF.Standard.Postgre.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="WEF.Standard.SQLite, Version=6.23.9.25, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.SQLite.6.23.9.25\lib\netstandard2.0\WEF.Standard.SQLite.dll</HintPath>
+    <Reference Include="WEF.Standard.SQLite, Version=6.23.10.20, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WEF.Standard.SQLite.6.23.10.20\lib\netstandard2.0\WEF.Standard.SQLite.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
       <HintPath>..\packages\DockPanelSuite.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
@@ -296,8 +303,8 @@
       <HintPath>..\packages\DockPanelSuite.ThemeVS2015.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="ZstdSharp, Version=0.7.2.0, Culture=neutral, PublicKeyToken=8d151af33a4ad5cf, processorArchitecture=MSIL">
-      <HintPath>..\packages\ZstdSharp.Port.0.7.2\lib\net461\ZstdSharp.dll</HintPath>
+    <Reference Include="ZstdSharp, Version=0.7.3.0, Culture=neutral, PublicKeyToken=8d151af33a4ad5cf, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZstdSharp.Port.0.7.3\lib\net461\ZstdSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

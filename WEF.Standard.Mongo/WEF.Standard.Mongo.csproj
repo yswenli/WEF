@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>6.23.9.25</Version>
+    <Version>6.23.10.20</Version>
     <Title>WEF.Standard.Mongo</Title>
     <Authors>yswenli</Authors>
     <Description>WEF.Standard.Mongo用于快捷集成mongodb</Description>
@@ -36,7 +36,7 @@ WEF 是基于C#的数据实体框架，支持MSQSqlServer、MySql、Orcalce等�
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="mongocsharpdriver" Version="2.21.0" />
+    <PackageReference Include="mongocsharpdriver" Version="2.22.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0-rc.1.23419.4" />
   </ItemGroup>
 

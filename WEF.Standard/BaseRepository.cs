@@ -51,6 +51,10 @@ namespace WEF
 
         private T _entity;
 
+        private Field _primaryKey;
+
+        private string _tableName;
+
         /// <summary>
         /// Repository基础类，具体业务可以继承此类，或直接使用此类
         /// </summary>
@@ -59,6 +63,12 @@ namespace WEF
             _dbContext = dbContext;
 
             _entity = new T();
+
+            _primaryKey = _entity.GetPrimaryKeyFields().First();
+
+            if (_primaryKey == null) throw new Exception($"表{_entity.GetTableName()}中缺失主键！");
+
+            _tableName = TableAttribute.GetTableName<T>();
         }
 
         /// <summary>
@@ -120,7 +130,7 @@ namespace WEF
         {
             if (string.IsNullOrEmpty(tableName))
             {
-                tableName = TableAttribute.GetTableName<T>();
+                tableName = _tableName;
             }
             return _dbContext.Search<T>(tableName);
         }
@@ -133,8 +143,8 @@ namespace WEF
         /// <returns></returns>
         public T Get(string id)
         {
-            return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name}=@{_entity.GetIdentityField().Name}")
-                .AddInParameter($"@{_entity.GetIdentityField().Name}", id)
+            return _dbContext.FromSql($"select * from {_tableName} where {_primaryKey.Name}=@{_primaryKey.Name}")
+                .AddInParameter($"@{_primaryKey.Name}", id)
                 .First<T>();
         }
 
@@ -155,8 +165,8 @@ namespace WEF
         /// <returns></returns>
         public T Get(int id)
         {
-            return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name}=@{_entity.GetIdentityField().Name}")
-                .AddInParameter($"@{_entity.GetIdentityField().Name}", id)
+            return _dbContext.FromSql($"select * from {_tableName} where {_primaryKey.Name}=@{_primaryKey.Name}")
+                .AddInParameter($"@{_primaryKey.Name}", id)
                 .First<T>();
         }
         /// <summary>
@@ -304,7 +314,7 @@ namespace WEF
         public List<T> GetList(IEnumerable<string> ids)
         {
             var idsStr = $"'{string.Join("','", ids.ToArray())}'";
-            return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name} in({idsStr})").ToList<T>();
+            return _dbContext.FromSql($"select * from {_tableName} where {_primaryKey.Name} in({idsStr})").ToList<T>();
         }
 
         /// <summary>
@@ -325,7 +335,7 @@ namespace WEF
         public List<T> GetList(IEnumerable<int> ids)
         {
             var idsStr = $"'{string.Join("','", ids.ToArray())}'";
-            return _dbContext.FromSql($"select * from {_entity.GetTableName()} where {_entity.GetIdentityField().Name} in({idsStr})").ToList<T>();
+            return _dbContext.FromSql($"select * from {_tableName} where {_primaryKey.Name} in({idsStr})").ToList<T>();
         }
         /// <summary>
         /// 获取列表
