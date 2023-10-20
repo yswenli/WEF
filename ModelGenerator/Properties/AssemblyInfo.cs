@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("yswenli")]
 [assembly: AssemblyProduct("WEF数据库工具")]
-[assembly: AssemblyCopyright("Copyright yswenli ©  2021")]
+[assembly: AssemblyCopyright("Copyright yswenli ©  2023")]
 [assembly: AssemblyTrademark("WEF数据库工具")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // 可以指定所有这些值，也可以使用“内部版本号”和“修订号”的默认值，
 // 方法是按如下所示使用“*”:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("6.3.3.1")]
-[assembly: AssemblyFileVersion("6.3.3.1")]
+[assembly: AssemblyVersion("6.23.10.20")]
+[assembly: AssemblyFileVersion("6.23.10.20")]
