@@ -463,7 +463,7 @@ namespace WEF.Db
         /// <param name="tran">The tran.</param>
         public void CloseConnection(DbTransaction tran)
         {
-            if (tran.Connection != null)
+            if (tran != null && tran.Connection != null)
             {
                 CloseConnection(tran.Connection);
                 tran.Dispose();
@@ -484,12 +484,12 @@ namespace WEF.Db
         {
             try
             {
-                DbConnection connection = _dbProvider.DbProviderFactory.CreateConnection();
-
                 if (!string.IsNullOrEmpty(cnnStr) && !cnnStr.Equals(ConnectionString))
                 {
                     ConnectionString = cnnStr;
                 }
+
+                var connection = _dbProvider.DbProviderFactory.CreateConnection();
 
                 connection.ConnectionString = ConnectionString;
 
@@ -1106,6 +1106,30 @@ namespace WEF.Db
                     }
                     return DoExecuteNonQuery(command);
                 }
+            }
+        }
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="transaction"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public int ExecuteNonQuery(string sql,DbTransaction transaction, params DbParameter[] dbParameters)
+        {
+            Check.Require(sql, "sql", Check.NotNullOrEmpty);
+
+            using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
+            {
+                command.CommandTimeout = TimeOut;
+
+                PrepareCommand(command, transaction);
+
+                if (dbParameters != null && dbParameters.Any())
+                {
+                    command.Parameters.AddRange(dbParameters);
+                }
+                return DoExecuteNonQuery(command);
             }
         }
 

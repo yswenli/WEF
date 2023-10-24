@@ -18,6 +18,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Common;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -1750,5 +1751,47 @@ namespace WEF
 
         #endregion
 
+
+        #region 变量参数化
+
+        /// <summary>
+        /// 将字典转换成参数列表
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <param name="database"></param>
+        /// <returns></returns>
+        public static List<DbParameter> ToParameters(this Dictionary<string, object> parameters, Database database)
+        {
+            if (parameters == null) return null;
+            var list = new List<DbParameter>();
+            foreach (var keyValuePair in parameters)
+            {
+                list.Add(database.CreateParameter(keyValuePair.Key, keyValuePair.Value.GetDbType(), 0, ParameterDirection.Input, true, 0, 0, String.Empty, DataRowVersion.Default, keyValuePair.Value));
+            }
+            return list;
+        }
+        /// <summary>
+        /// 将实体转换成参数列表
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="parameters"></param>
+        /// <param name="database"></param>
+        /// <returns></returns>
+        public static List<DbParameter> ToParameters<Model>(this Model parameters, Database database)
+        {
+            if (parameters == null) return null;
+            var keyValuePairs = new Dictionary<string, object>();
+            var type = typeof(Model);
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            var list = new List<DbParameter>();
+            foreach (var property in properties)
+            {
+                var value = DynamicCalls.GetPropertyGetter(property).Invoke(parameters);
+                list.Add(database.CreateParameter(property.Name, value.GetDbType(), 0, ParameterDirection.Input, true, 0, 0, String.Empty, DataRowVersion.Default, value));
+            }
+            return list;
+        }
+
+        #endregion
     }
 }

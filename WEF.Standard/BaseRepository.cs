@@ -1210,6 +1210,19 @@ namespace WEF
             return _dbContext.BeginTransaction<T>(type, timeout);
         }
 
+        /// <summary>
+        /// 尝试事务提交
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="tryCount"></param>
+        /// <param name="sleep"></param>
+        /// <returns></returns>
+        public Exception TryCommit(Action<DbTrans<T>> action, int tryCount = 3, int sleep = 3 * 1000)
+        {
+            return _dbContext.BeginTransaction<T>().TryCommit(action, tryCount, sleep);
+        }
+
+
         #region 行转列
 
         /// <summary>

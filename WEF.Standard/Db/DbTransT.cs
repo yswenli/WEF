@@ -455,7 +455,6 @@ namespace WEF.Db
                 }
                 catch (Exception ex)
                 {
-                    Rollback();
                     result = ex;
                 }
                 return result;

@@ -114,6 +114,10 @@ namespace WEF.Db
                 Rollback();
                 throw ex;
             }
+            finally
+            {
+                Monitor.Exit(_locker);
+            }
         }
 
 
@@ -124,9 +128,21 @@ namespace WEF.Db
         {
             if (!_isCommitOrRollback)
             {
-                _trans.Rollback();
-                _isCommitOrRollback = true;
+                try
+                {
+                    _trans.Rollback();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    _isCommitOrRollback = true;
+                    Monitor.Exit(_locker);
+                }
             }
+
         }
 
 
@@ -398,6 +414,41 @@ namespace WEF.Db
             return DBContext.FromProc(proName, inputParams).SetDbTransaction(_trans);
         }
 
+        /// <summary>
+        /// Execute
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public int Execute(string sql, params DbParameter[] dbParameters)
+        {
+            return DBContext.ExecuteNonQuery(sql, _trans, dbParameters);
+        }
+
+        /// <summary>
+        /// Execute
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public int Execute(string sql, Dictionary<string, object> dbParameters)
+        {
+            var parameters = dbParameters.ToParameters(DBContext.Db);
+            return DBContext.ExecuteNonQuery(sql, _trans, parameters?.ToArray());
+        }
+
+        /// <summary>
+        /// Execute
+        /// </summary>
+        /// <typeparam name="Model"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public int Execute<Model>(string sql, Model dbParameters)
+        {
+            var parameters = dbParameters.ToParameters(DBContext.Db);
+            return DBContext.ExecuteNonQuery(sql, _trans, parameters?.ToArray());
+        }
 
 
         #region 行转列
@@ -649,7 +700,7 @@ namespace WEF.Db
                     return FromSql(sql)
                         .AddInParameter(whereExpression.Parameters)
                         .ToDataTable(pageIndex, pageSize, new OrderByOperation(orderBy, asc ? OrderByOperater.ASC : OrderByOperater.DESC));
-                    
+
                 }
             }
             return null;
@@ -674,11 +725,10 @@ namespace WEF.Db
                 try
                 {
                     action.Invoke(this);
-                    this.Commit();
+                    Commit();
                 }
                 catch (Exception ex)
                 {
-                    this.Rollback();
                     result = ex;
                 }
                 return result;
@@ -714,16 +764,15 @@ namespace WEF.Db
             if (_isClose)
                 return;
 
-            if (_conn.State != ConnectionState.Closed)
+            if (_conn != null && _conn.State != ConnectionState.Closed)
             {
                 _conn.Close();
+                _conn.Dispose();
             }
 
             _trans?.Dispose();
 
             _isClose = true;
-
-            Monitor.Exit(_locker);
         }
 
 

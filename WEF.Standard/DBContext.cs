@@ -2309,6 +2309,17 @@ namespace WEF
         {
             return _db.ExecuteNonQuery(sql, dbParameters);
         }
+        /// <summary>
+        /// ExecuteNonQuery
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="transaction"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public int ExecuteNonQuery(string sql, DbTransaction transaction, params DbParameter[] dbParameters)
+        {
+            return _db.ExecuteNonQuery(sql, transaction, dbParameters);
+        }
 
         /// <summary>
         /// ExecuteNonQuery
@@ -2317,7 +2328,7 @@ namespace WEF
         /// <param name="dbParameters"></param>
         /// <returns></returns>
         public int ExecuteNonQuery(string sql, Dictionary<string, object> dbParameters)
-        {            
+        {
             return _db.ExecuteNonQuery(sql, dbParameters);
         }
 

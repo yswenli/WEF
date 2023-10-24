@@ -1,6 +1,8 @@
 ﻿using System.Data;
 using System.Linq.Expressions;
 
+using RiverLand.Common.Models.DataBase.TeJingCai;
+
 using WEF.Common;
 using WEF.Db;
 using WEF.Expressions;
@@ -561,22 +563,22 @@ namespace WEF.Standard.Test
         static void Test2()
         {
 
-            UserRepository ur = new UserRepository();
+            var ur = new DBUserInfoRepository();
 
-            var e = ur.Search().Where(b => b.NickName == "adsfasdfasdf").First();
+            var e = ur.Search().Where(b => b.UserName == "adsfasdfasdf").First();
 
-            var ut = new User()
+            var ut = new DBUserInfo()
             {
-                ID = Guid.NewGuid(),
-                ImUserID = "",
-                NickName = "张三三"
+                ID = Guid.NewGuid().ToString("N"),
+
+                UserName = "张三三"
             };
 
             var r = ur.Insert(ut);
 
             var count = ur.Search().Count();
 
-            ut.NickName = "李四四";
+            ut.UserName = "李四四";
 
             //ut.ConvertTo
 
@@ -584,16 +586,16 @@ namespace WEF.Standard.Test
 
             #region search 
 
-            var search = ur.Search().Where(b => b.NickName.Like("张*"));
+            var search = ur.Search().Where(b => b.UserName.Like("张*"));
 
-            search = search.Where(b => !string.IsNullOrEmpty(b.ImUserID));
+            search = search.Where(b => !string.IsNullOrEmpty(b.ID));
 
             var rlts = search.Page(1, 20).ToList();
 
             #endregion
 
 
-            using (var batch = ur.DBContext.CreateBatch<User>())
+            using (var batch = ur.DBContext.CreateBatch<DBUserInfo>())
             {
                 batch.Insert(ut);
             }
@@ -612,7 +614,7 @@ namespace WEF.Standard.Test
 
             #region tran
 
-            var tran1 = ur.DBContext.BeginTransaction<User>();
+            var tran1 = ur.DBContext.BeginTransaction<DBUserInfo>();
 
             try
             {
@@ -621,10 +623,8 @@ namespace WEF.Standard.Test
                 var tb1 = new DBTaskRepository().GetList(1, 10);
 
                 tran1.Update<DBTask>(tb1);
-            }
-            catch
-            {
-                tran1.Rollback();
+
+                tran1.Commit();
             }
             finally
             {
@@ -632,7 +632,7 @@ namespace WEF.Standard.Test
             }
 
             //or
-            using (var tran2 = ur.DBContext.BeginTransaction<User>())
+            using (var tran2 = ur.CreateTransaction())
             {
                 tran2.Insert(ut);
 
@@ -642,7 +642,7 @@ namespace WEF.Standard.Test
             }
 
             //or
-            ur.DBContext.BeginTransaction<User>().TryCommit((tran3) =>
+            ur.DBContext.BeginTransaction<DBUserInfo>().TryCommit((tran3) =>
             {
 
                 tran3.Insert(ut);
