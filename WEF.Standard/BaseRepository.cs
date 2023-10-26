@@ -1189,6 +1189,24 @@ namespace WEF
 
         #endregion
 
+        /// <summary>
+        /// 创建事务
+        /// </summary>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
+        public DbTrans<T> BeginTransaction(int timeout = 30)
+        {
+            return _dbContext.BeginTransaction<T>(timeout);
+        }
+
+        /// <summary>
+        /// 关闭事务
+        /// </summary>
+        /// <param name="transaction"></param>
+        public void CloseTransaction(DbTransaction transaction)
+        {
+            _dbContext.CloseTransaction(transaction);
+        }
 
         /// <summary>
         /// 创建事务，使用事务curd时推荐方式 using(var tran=CreateTransaction()) 方式
@@ -1197,7 +1215,7 @@ namespace WEF
         /// <returns></returns>
         public DbTrans<T> CreateTransaction(int timeout = 30)
         {
-            return _dbContext.BeginTransaction<T>(timeout);
+            return BeginTransaction(timeout);
         }
         /// <summary>
         /// 创建事务，使用事务curd时推荐方式 using(var tran=CreateTransaction()) 方式

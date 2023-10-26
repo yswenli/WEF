@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Diagnostics;
 using System.Linq.Expressions;
 
 using RiverLand.Common.Models.DataBase.TeJingCai;
@@ -28,11 +29,24 @@ namespace WEF.Standard.Test
             List<DBArticle> articleList;
             List<DBComment> commentList;
 
-            var cnnstr = "";
+            var cnnstr = "Data Source=10.10.0.119;Initial Catalog=tejingcaiV2;User Id=testuser;Password=testuser";
 
             #region get and update
 
             var dBCommentRepository = new DBCommentRepository(DatabaseType.SqlServer9, cnnstr);
+
+            using (var a = dBCommentRepository.CreateTransaction())
+            {
+                //var f = a.Search().First();
+                //a.Delete(f);
+
+                var f2 = a.Search<DBUserInfo>().First();
+                f2.ID = "2";
+                a.Delete(f2);
+
+            }
+
+
             var dbclist = dBCommentRepository.Search()
                     .Where(q => q.IsDeleted != true)
                     .OrderBy(q => q.Created)
@@ -614,7 +628,7 @@ namespace WEF.Standard.Test
 
             #region tran
 
-            var tran1 = ur.DBContext.BeginTransaction<DBUserInfo>();
+            var tran1 = ur.BeginTransaction();
 
             try
             {
@@ -628,12 +642,14 @@ namespace WEF.Standard.Test
             }
             finally
             {
-                ur.DBContext.CloseTransaction(tran1);
+                ur.CloseTransaction(tran1);
             }
 
             //or
             using (var tran2 = ur.CreateTransaction())
             {
+                var task = tran2.Search<DBTask>().First(q => q.Groupname == "abc");
+
                 tran2.Insert(ut);
 
                 new DBTaskRepository().DBContext.Delete(tran2, new DBTask() { Taskid = "123" });
@@ -642,9 +658,8 @@ namespace WEF.Standard.Test
             }
 
             //or
-            ur.DBContext.BeginTransaction<DBUserInfo>().TryCommit((tran3) =>
+            ur.TryCommit((tran3) =>
             {
-
                 tran3.Insert(ut);
 
                 tran3.Delete(new DBTask() { Taskid = "123" });

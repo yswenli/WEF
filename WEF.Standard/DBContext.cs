@@ -1358,7 +1358,7 @@ namespace WEF
 
             Check.Require(!EntityCache.IsReadOnly<TEntity>(), string.Concat("Entity(", tableName, ") is readonly!"));
 
-            return Delete<TEntity>(tran, entity.GetTableName(), DataUtils.GetPrimaryKeyWhere(entity));
+            return Delete<TEntity>(tran, tableName, DataUtils.GetPrimaryKeyWhere(entity));
         }
         /// <summary>
         /// 删除
@@ -1383,25 +1383,17 @@ namespace WEF
         public int Delete<TEntity>(DbTransaction tran, string tableName, params TEntity[] entities)
             where TEntity : Entity
         {
-            var eCount = entities.Length;
-            switch (eCount)
+            if (entities == null || entities.Length < 1) return 0;
+            var listKey = new List<object>();
+            var where = new Where();
+            var f = entities.First().GetPrimaryKeyFields().First();
+            foreach (var entity in entities)
             {
-                case 0:
-                    return 0;
-                case 1:
-                    return Delete(tran, tableName, entities.First());
-                default:
-                    //TODO 修改成In条件，性能更高。 
-                    var listKey = new List<object>();
-                    var where = new Where();
-                    var f = entities.First().GetPrimaryKeyFields().First();
-                    foreach (var entity in entities)
-                    {
-                        listKey.Add(DataUtils.GetPropertyValue(entity, f.Name));
-                    }
-                    where.And(f.In(listKey));
-                    return Delete<TEntity>(tran, tableName, where);
+                if (entity == null) continue;
+                listKey.Add(DataUtils.GetPropertyValue(entity, f.Name));
             }
+            where.And(f.In(listKey));
+            return Delete<TEntity>(tran, tableName, where);
         }
         /// <summary>
         /// 更新
