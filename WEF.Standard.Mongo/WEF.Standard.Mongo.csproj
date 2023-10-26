@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>6.23.10.20</Version>
+    <Version>6.23.10.26</Version>
     <Title>WEF.Standard.Mongo</Title>
     <Authors>yswenli</Authors>
     <Description>WEF.Standard.Mongo用于快捷集成mongodb</Description>
