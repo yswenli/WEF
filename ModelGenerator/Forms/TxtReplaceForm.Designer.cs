@@ -251,7 +251,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.Name = "TxtReplaceForm";
-            this.Text = "文件文本查找替换工具";
+            this.Text = "文件查找替换工具提示";
             this.Load += new System.EventHandler(this.TxtReplaceForm_Load);
             this.contextMenuStrip1.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);

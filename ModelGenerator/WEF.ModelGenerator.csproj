@@ -270,31 +270,24 @@
     <Reference Include="System.Xml" />
     <Reference Include="WEF, Version=6.23.10.27, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WEF.Standard.6.23.10.27\lib\netstandard2.0\WEF.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="WEF.Standard.MSSQL, Version=6.23.10.27, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WEF.Standard.MSSQL.6.23.10.27\lib\netstandard2.0\WEF.Standard.MSSQL.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="WEF.Standard.MySQL, Version=6.23.10.27, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WEF.Standard.MySQL.6.23.10.27\lib\netstandard2.0\WEF.Standard.MySQL.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="WEF.Standard.OLEDB, Version=6.23.10.27, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WEF.Standard.OLEDB.6.23.10.27\lib\netstandard2.0\WEF.Standard.OLEDB.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="WEF.Standard.Oracle, Version=6.23.10.27, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WEF.Standard.Oracle.6.23.10.27\lib\netstandard2.0\WEF.Standard.Oracle.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="WEF.Standard.Postgre, Version=6.23.10.27, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WEF.Standard.Postgre.6.23.10.27\lib\netstandard2.0\WEF.Standard.Postgre.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="WEF.Standard.SQLite, Version=6.23.10.27, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WEF.Standard.SQLite.6.23.10.27\lib\netstandard2.0\WEF.Standard.SQLite.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
       <HintPath>..\packages\DockPanelSuite.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,6 +16,8 @@ namespace TxtReplaceTool
         public TxtReplaceForm()
         {
             InitializeComponent();
+            textBox3.Multiline = true;
+            textBox4.Multiline = true;
         }
 
 
@@ -107,9 +110,16 @@ namespace TxtReplaceTool
                 return;
             }
 
-            if (MessageBox.Show(this, "请仔细检查操作内容，确认要执行替换操作吗?", "文件文本查找替换工具提示", MessageBoxButtons.YesNo) != DialogResult.Yes)
+            if (MessageBox.Show(this, "请仔细检查操作内容，确认要执行替换操作吗?", "文件查找替换工具提示提示", MessageBoxButtons.YesNo) != DialogResult.Yes)
             {
                 return;
+            }
+
+            var replaceFileName = false;
+
+            if (MessageBox.Show(this, "是否同时替换文件名称", "文件查找替换工具提示", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                replaceFileName = true;
             }
 
             button2.Enabled = button3.Enabled = false;
@@ -121,6 +131,17 @@ namespace TxtReplaceTool
                 var stopWatch = Stopwatch.StartNew();
 
                 var list = FileHelper.Replace(source, target, _fileList);
+
+                if (list != null && list.Count > 0 && replaceFileName)
+                {
+                    foreach (var item in list)
+                    {
+                        if (File.Exists(item))
+                        {
+                            File.Move(item, item.Replace(source, target));
+                        }
+                    }
+                }
 
                 this.Invoke(new Action(() =>
                 {
@@ -173,7 +194,7 @@ namespace TxtReplaceTool
                 {
                     if (MessageBox.Show(this, "确认要删除这些文件吗？", "文件查找替换工具", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
-                        listBox1.DeleteSelectedItems((item)=> FileHelper.Delete(item));
+                        listBox1.DeleteSelectedItems((item) => FileHelper.Delete(item));
                     }
                 }
             }
