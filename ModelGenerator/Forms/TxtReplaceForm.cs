@@ -138,7 +138,8 @@ namespace TxtReplaceTool
                     {
                         if (File.Exists(item))
                         {
-                            File.Move(item, item.Replace(source, target));
+                            var fileName = item.Replace(source, target);
+                            File.Move(item, fileName);
                         }
                     }
                 }

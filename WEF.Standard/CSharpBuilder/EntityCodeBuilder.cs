@@ -168,11 +168,11 @@ namespace WEF.CSharpBuilder
             plus.AppendLine();
             plus.AppendLine();
 
+            plus.AppendLine("using System;");
             plus.AppendLine("using System.Data;");
             plus.AppendLine("using System.ComponentModel;");
             plus.AppendLine("using System.Runtime.Serialization;");
             plus.AppendLine("using WEF;");
-            plus.AppendLine("using WEF.Common;");
             plus.AppendLine("using WEF.Db;");
             plus.AppendLine();
             plus.AppendLine("namespace " + NameSpace);
