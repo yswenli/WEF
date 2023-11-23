@@ -36,9 +36,11 @@ namespace WEF.Standard.Test
             var dBCommentRepository = new DBCommentRepository(DatabaseType.SqlServer9, cnnstr);
 
             var dbclist = dBCommentRepository.Search()
+                    .Join<DBArticle>((x, y) => y.ID == x.CommentID, JoinType.InnerJoin)
                     .Where(q => q.IsDeleted != true)
                     .OrderBy(q => q.Created)
                     .Page(1, 10)
+                    .Select(q => q.All)
                     .ToList();
 
             var dbcommandResult = dBCommentRepository.Update(dbclist);
