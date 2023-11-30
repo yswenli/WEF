@@ -89,7 +89,7 @@ namespace WEF.ModelGenerator.Controls
                     //代码提示
 
                     //排除组合键和空格的提示
-                    if (e.Modifiers == Keys.Control || e.Modifiers == Keys.Shift || e.Modifiers == Keys.Alt || e.KeyCode == Keys.Space)
+                    if (e.Modifiers == Keys.Control || e.Modifiers == Keys.Shift || e.Modifiers == Keys.Alt || e.KeyCode == Keys.Space || e.KeyCode == Keys.F5)
                     {
                         listBox1.Hide();
                         return;

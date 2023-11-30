@@ -6,7 +6,7 @@
     <RootNamespace>WEF</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>WEF.Standard.SQLite</Title>
-    <Version>6.23.10.27</Version>
+    <Version>6.23.11.29</Version>
     <Authors>yswenli</Authors>
     <Description>WEF is based on the c # data entity framework supports MSQSqlServer, MySql, Orcalce, etc of conventional database and fast development, which integrates a large amount of data set under the development experience of tools, such as the Lambada without SQL query expression, add and delete, entity cloning, bulk and the parameters of the table, transaction, round of entities or stored procedures, SQL entities, etc.
 

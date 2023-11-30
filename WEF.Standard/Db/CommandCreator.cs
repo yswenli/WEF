@@ -49,7 +49,8 @@ namespace WEF.Db
         public DbCommand CreateUpdateCommand<TEntity>(TEntity entity, WhereExpression where)
             where TEntity : Entity
         {
-            return CreateUpdateCommand(entity.GetTableName(), entity, where);
+            var tableName = _db.DbProvider.BuildTableName(entity.GetTableName(), null);
+            return CreateUpdateCommand(tableName, entity, where);
         }
  
         /// <summary>
@@ -63,7 +64,8 @@ namespace WEF.Db
         public DbCommand CreateUpdateCommand<TEntity>(TEntity entity, JoinOn joinOn, WhereExpression where)
             where TEntity : Entity
         {
-            return CreateUpdateCommand(entity.GetTableName(), entity, joinOn, where);
+            var tableName = _db.DbProvider.BuildTableName(entity.GetTableName(), null);
+            return CreateUpdateCommand(tableName, entity, joinOn, where);
         }
         /// <summary>
         /// 创建更新DbCommand
@@ -350,7 +352,8 @@ namespace WEF.Db
         public DbCommand CreateInsertCommand<TEntity>(TEntity entity)
             where TEntity : Entity
         {
-            return CreateInsertCommand(entity.GetTableName(), entity);
+            var tableName = _db.DbProvider.BuildTableName(entity.GetTableName(), null);
+            return CreateInsertCommand(tableName, entity);
         }
 
         /// <summary>

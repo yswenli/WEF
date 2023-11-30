@@ -1776,7 +1776,7 @@ namespace WEF
         public int Insert<TEntity>(TEntity entity)
             where TEntity : Entity
         {
-            return insertExecute<TEntity>(_cmdCreator.CreateInsertCommand<TEntity>(entity));
+            return insertExecute<TEntity>(_cmdCreator.CreateInsertCommand(entity));
         }
 
 
