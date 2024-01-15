@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using CCWin.Win32.Const;
+
+using SqlSugar;
 
 using WEF.Common;
 using WEF.CSharpBuilder;
@@ -12,6 +17,7 @@ using WEF.Db;
 using WEF.DbDAL;
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Forms;
+using WEF.ModelGenerator.Model;
 
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -179,47 +185,99 @@ namespace WEF.ModelGenerator
         {
             _isOk = false;
 
-            if (string.IsNullOrEmpty(txtnamespace.Text))
+            try
             {
-                MessageBox.Show("命名空间不能为空!");
-                return;
-            }
-            if (string.IsNullOrEmpty(txtClassName.Text))
-            {
-                MessageBox.Show("类名不能为空!");
-                return;
-            }
-
-            UtilsHelper.WriteNamespace(txtnamespace.Text);
-
-            List<ColumnInfo> columns = UtilsHelper.GetColumnInfos(columnsdt);
-
-            foreach (ColumnInfo col in columns)
-            {
-                col.IsPrimaryKey = false;
-
-                foreach (object o in cbPrimarykey.Items)
+                if (string.IsNullOrEmpty(txtnamespace.Text))
                 {
-                    if (col.Name.Equals(o.ToString()))
+                    MessageBox.Show("命名空间不能为空!");
+                    return;
+                }
+                if (string.IsNullOrEmpty(txtClassName.Text))
+                {
+                    MessageBox.Show("类名不能为空!");
+                    return;
+                }
+
+                UtilsHelper.WriteNamespace(txtnamespace.Text);
+
+                List<ColumnInfo> columns = UtilsHelper.GetColumnInfos(columnsdt);
+
+                foreach (ColumnInfo col in columns)
+                {
+                    col.IsPrimaryKey = false;
+
+                    foreach (object o in cbPrimarykey.Items)
                     {
-                        col.IsPrimaryKey = true;
-                        break;
+                        if (col.Name.Equals(o.ToString()))
+                        {
+                            col.IsPrimaryKey = true;
+                            break;
+                        }
                     }
                 }
+
+                EntityCodeBuilder builder = new EntityCodeBuilder(TableName, txtnamespace.Text, txtClassName.Text, columns, IsView, cbToupperFrstword.Checked, ConnectionModel.DbType);
+
+                var cs = builder.Build(simple);
+
+                if (string.IsNullOrEmpty(cs))
+                {
+                    txtContent.Text = "当前表无任何主键，请在详情界面上选择某行添加为主键后再执行此操作";
+                }
+                else
+                {
+                    txtContent.Text = cs;
+                }
             }
-
-            EntityCodeBuilder builder = new EntityCodeBuilder(TableName, txtnamespace.Text, txtClassName.Text, columns, IsView, cbToupperFrstword.Checked, ConnectionModel.DbType);
-
-            var cs = builder.Build(simple);
-
-            if (string.IsNullOrEmpty(cs))
+            catch (Exception ex)
             {
-                txtContent.Text = "当前表无任何主键，请在详情界面上选择某行添加为主键后再执行此操作";
+                Logger.Error(ex);
             }
-            else
+
+
+            _isOk = true;
+        }
+
+        void GenerateSqlSugarModel()
+        {
+            _isOk = false;
+
+            var sugarConfig = new ConnectionConfig()
             {
-                txtContent.Text = cs;
+                ConfigId = "1111",
+                ConnectionString = ConnectionModel.ConnectionString,
+                IsAutoCloseConnection = true
+            };
+
+            switch (ConnectionModel.DbType)
+            {
+                case "SqlServer":
+                case "SqlServer9":
+                    sugarConfig.DbType = SqlSugar.DbType.SqlServer;
+                    sugarConfig.ConnectionString = ConnectionModel.ConnectionString.Replace("master", ConnectionModel.Database);
+                    break;
+                case "MySql":
+                    sugarConfig.DbType = SqlSugar.DbType.MySql;
+                    break;
+                case "Oracle":
+                    sugarConfig.DbType = SqlSugar.DbType.Oracle;
+                    break;
+                case "MariaDB":
+                    sugarConfig.DbType = SqlSugar.DbType.MySql;
+                    break;
+                case "Sqlite":
+                    sugarConfig.DbType = SqlSugar.DbType.Sqlite;
+                    break;
             }
+            var sqlclient = new SqlSugarClient(sugarConfig);
+            //var csFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Templates), $"WEF_{DateTime.Now.Ticks}");
+            var dic= sqlclient.DbFirst
+                .Where(TableName)
+                .IsCreateAttribute()
+                .IsCreateDefaultValue()
+                .ToClassStringList(txtnamespace.Text);
+
+            txtContent.Text = dic.Values.FirstOrDefault();
 
             _isOk = true;
         }
@@ -331,7 +389,14 @@ namespace WEF.ModelGenerator
 
         private void button2_Click(object sender, EventArgs e)
         {
-            GenerateModel(checkBox1.Checked);
+            if (checkBox2.Checked)
+            {
+                GenerateSqlSugarModel();
+            }
+            else
+            {
+                GenerateModel(checkBox1.Checked);
+            }
 
             if (_isOk)
             {
