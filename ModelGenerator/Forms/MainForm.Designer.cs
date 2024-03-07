@@ -61,6 +61,7 @@
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.shutDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vS2015LightTheme1 = new WeifenLuo.WinFormsUI.Docking.VS2015LightTheme();
+            this.sqlFileFormToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -210,7 +211,8 @@
             this.repalceFileTxtToolStripMenuItem,
             this.base64ConvertToolStripMenuItem,
             this.log读取工具ToolStripMenuItem,
-            this.oCR工具ToolStripMenuItem});
+            this.oCR工具ToolStripMenuItem,
+            this.sqlFileFormToolStripMenuItem});
             this.cleanUpGarbageToolStripMenuItem.Name = "cleanUpGarbageToolStripMenuItem";
             this.cleanUpGarbageToolStripMenuItem.Size = new System.Drawing.Size(161, 38);
             this.cleanUpGarbageToolStripMenuItem.Text = "(o&)其他工具";
@@ -218,35 +220,35 @@
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(385, 44);
             this.clearToolStripMenuItem.Text = "清理文件";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // repalceFileTxtToolStripMenuItem
             // 
             this.repalceFileTxtToolStripMenuItem.Name = "repalceFileTxtToolStripMenuItem";
-            this.repalceFileTxtToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.repalceFileTxtToolStripMenuItem.Size = new System.Drawing.Size(385, 44);
             this.repalceFileTxtToolStripMenuItem.Text = "文件内容查找替换";
             this.repalceFileTxtToolStripMenuItem.Click += new System.EventHandler(this.repalceFileTxtToolStripMenuItem_Click);
             // 
             // base64ConvertToolStripMenuItem
             // 
             this.base64ConvertToolStripMenuItem.Name = "base64ConvertToolStripMenuItem";
-            this.base64ConvertToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.base64ConvertToolStripMenuItem.Size = new System.Drawing.Size(385, 44);
             this.base64ConvertToolStripMenuItem.Text = "Base64工具";
             this.base64ConvertToolStripMenuItem.Click += new System.EventHandler(this.base64ConvertToolStripMenuItem_Click);
             // 
             // log读取工具ToolStripMenuItem
             // 
             this.log读取工具ToolStripMenuItem.Name = "log读取工具ToolStripMenuItem";
-            this.log读取工具ToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.log读取工具ToolStripMenuItem.Size = new System.Drawing.Size(385, 44);
             this.log读取工具ToolStripMenuItem.Text = "Log读取工具";
             this.log读取工具ToolStripMenuItem.Click += new System.EventHandler(this.log读取工具ToolStripMenuItem_Click);
             // 
             // oCR工具ToolStripMenuItem
             // 
             this.oCR工具ToolStripMenuItem.Name = "oCR工具ToolStripMenuItem";
-            this.oCR工具ToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.oCR工具ToolStripMenuItem.Size = new System.Drawing.Size(385, 44);
             this.oCR工具ToolStripMenuItem.Text = "OCR工具";
             this.oCR工具ToolStripMenuItem.Click += new System.EventHandler(this.oCR工具ToolStripMenuItem_Click);
             // 
@@ -317,6 +319,13 @@
             this.shutDownToolStripMenuItem.Text = "退出";
             this.shutDownToolStripMenuItem.Click += new System.EventHandler(this.shutDownToolStripMenuItem_Click);
             // 
+            // sqlFileFormToolStripMenuItem
+            // 
+            this.sqlFileFormToolStripMenuItem.Name = "sqlFileFormToolStripMenuItem";
+            this.sqlFileFormToolStripMenuItem.Size = new System.Drawing.Size(385, 44);
+            this.sqlFileFormToolStripMenuItem.Text = "超大SQL文件执行工具";
+            this.sqlFileFormToolStripMenuItem.Click += new System.EventHandler(this.sqlFileFormToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
@@ -377,6 +386,7 @@
         private System.Windows.Forms.ToolStripMenuItem base64ConvertToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem log读取工具ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem oCR工具ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sqlFileFormToolStripMenuItem;
     }
 }
 

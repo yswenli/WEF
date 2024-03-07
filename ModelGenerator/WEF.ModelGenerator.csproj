@@ -709,6 +709,12 @@
     <Compile Include="Forms\SQLExportForm.Designer.cs">
       <DependentUpon>SQLExportForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SQLFileForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SQLFileForm.Designer.cs">
+      <DependentUpon>SQLFileForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SQLForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -884,6 +890,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SQLExportForm.resx">
       <DependentUpon>SQLExportForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SQLFileForm.resx">
+      <DependentUpon>SQLFileForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SQLForm.resx">
       <DependentUpon>SQLForm.cs</DependentUpon>
