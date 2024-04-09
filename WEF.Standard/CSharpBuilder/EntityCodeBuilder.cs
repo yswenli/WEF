@@ -80,7 +80,7 @@ namespace WEF.CSharpBuilder
             _dbType = dbType;
             if (_isSZMDX)
             {
-                _className = StringPlus.ToUpperFirstword(_className);
+                _className = _className.ConvertToPropertyName();
             }
             _isView = isView;
 
@@ -91,7 +91,7 @@ namespace WEF.CSharpBuilder
                 col.Name = StringPlus.ReplaceSpace(col.Name);
                 if (_isSZMDX)
                 {
-                    col.Name = StringPlus.ToUpperFirstword(col.Name);
+                    col.Name = col.Name.ConvertToPropertyName();
                 }
 
                 col.DeText = StringPlus.ReplaceSpace(col.DeText);

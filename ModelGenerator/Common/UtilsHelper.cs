@@ -20,7 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -297,7 +299,7 @@ namespace WEF.ModelGenerator.Common
                 string str = row["Colorder"].ToString();  //序号
                 string str2 = row["ColumnName"].ToString();  //列名
                 string str3 = row["TypeName"].ToString();  //类型
-                if (str3 == "longblob" || str3== "timestamp") continue;
+                if (str3 == "longblob" || str3 == "timestamp") continue;
                 string str4 = row["IsIdentity"].ToString();  //标识
                 string str5 = row["IsPK"].ToString();  //主键
                 string str6 = row["Length"].ToString();  //长度
@@ -393,8 +395,9 @@ namespace WEF.ModelGenerator.Common
         {
             if (string.IsNullOrEmpty(value))
                 return string.Empty;
-            return value.Substring(0, 1).ToUpper() + value.Substring(1);
+            return string.Concat(value.Select((c, i) => i == 0 ? char.ToUpper(c).ToString() : c.ToString()));
         }
+
 
 
         /// <summary>

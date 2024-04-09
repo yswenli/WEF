@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
+using WEF.Common;
 using WEF.CSharpBuilder;
 using WEF.DbDAL;
 using WEF.ModelGenerator.Common;
@@ -263,7 +264,7 @@ namespace WEF.ModelGenerator
 
                 if (_isTitleCase)
                 {
-                    className = className.ToTitleCase();
+                    className = className.ConvertToPropertyName();
                 }
 
                 className = className.Replace(" ", "");

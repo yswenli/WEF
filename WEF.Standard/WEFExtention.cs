@@ -1696,15 +1696,6 @@ namespace WEF
             return sql;
         }
 
-        /// <summary>
-        /// 首字母大写
-        /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        public static string ToTitleCase(this string text)
-        {
-            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(text.ToLower());
-        }
         #endregion
 
         #region 常规类型转换

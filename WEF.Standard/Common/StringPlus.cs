@@ -368,4 +368,28 @@ namespace WEF.Common
             _sb.Clear();
         }
     }
+
+    public static class StringExctend
+    {
+        /// <summary>
+        /// 将下划线分隔的字符串转换为帕斯卡命名
+        /// </summary>
+        /// <param name="columnName"></param>
+        /// <returns></returns>
+        public static string ConvertToPropertyName(this string columnName)
+        {
+            var txt = Regex.Replace(columnName, @"_([a-z])", m => m.Groups[1].Value.ToUpper());
+            return string.Concat(txt.Select((c, i) => i == 0 ? char.ToUpper(c).ToString() : c.ToString()));
+        }
+
+        /// <summary>
+        /// 将驼峰命名的字符串转换为下划线分隔
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        public static string ConvertToColumnName(this string propertyName)
+        {
+            return Regex.Replace(propertyName, @"([A-Z])([A-Z])([a-z])|([a-z])([A-Z])", "$1$4_$2$3$5");
+        }
+    }
 }

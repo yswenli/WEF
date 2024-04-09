@@ -7,8 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using CCWin.Win32.Const;
-
 using SqlSugar;
 
 using WEF.Common;
@@ -20,6 +18,7 @@ using WEF.ModelGenerator.Forms;
 using WEF.ModelGenerator.Model;
 
 using WeifenLuo.WinFormsUI.Docking;
+
 
 namespace WEF.ModelGenerator
 {
@@ -148,12 +147,12 @@ namespace WEF.ModelGenerator
 
                     if (TableName.IndexOf("_") > -1)
                     {
-                        className = className.Replace("_", " ").ToTitleCase();
+                        className = className.ConvertToPropertyName();
                     }
 
                     if (cbToupperFrstword.Checked)
                     {
-                        className = className.ToTitleCase();
+                        className = className.ConvertToPropertyName();
                     }
 
                     if (className.StartsWith("DB", StringComparison.InvariantCultureIgnoreCase))
