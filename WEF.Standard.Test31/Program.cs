@@ -29,7 +29,7 @@ namespace WEF.Standard.Test31
             var sqr = sq.ToList();
 
             var qs2 = dbarticleRepository.Search()
-                .Join<DBUserInfo>((x, y) => x.CreatedBy == y.ID && x.ID.In(sqr), JoinType.LeftJoin)
+                .Join<DBUserInfo>((x, y) => x.CreatedBy == y.ID && y.IsDeleted == false && x.ID.In(sqr) && x.PraiseCount == 2, JoinType.LeftJoin)
                 .Where(q => q.IsDeleted == false && q.Title == "12321" && q.ID.In(sqr))
                 .Select(q => q.ID);
             var qs21 = qs2.ToList();

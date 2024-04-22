@@ -404,7 +404,7 @@ namespace WEF.Expressions
                             }
                             else
                             {
-                                return new WhereExpression(CreateField(GetTableNameByType("", ((MemberExpression)be.Right).Expression.Type), keyRightName, rightMe.Expression.Type), CreateField(tableName, keyLeft, left.Expression.Type), co);
+                                return new WhereExpression(CreateField(GetTableNameByType("", ((MemberExpression)expRight).Expression.Type), keyRightName, rightMe.Expression.Type), CreateField(tableName, keyLeft, left.Expression.Type), co);
                             }
                         }
                     }
@@ -418,7 +418,7 @@ namespace WEF.Expressions
                         return new WhereExpression(" 1=1 ");
                     }
 
-                    var rigthTableName = GetTableNameByType("", ((MemberExpression)be.Right).Expression.Type);
+                    var rigthTableName = GetTableNameByType("", ((MemberExpression)expRight).Expression.Type);
 
                     if (value != null)
                     {
@@ -458,11 +458,9 @@ namespace WEF.Expressions
                     {
                         var right = (MemberExpression)expRight;
 
-                        //if (right.Expression != null && (wtype == WhereType.JoinWhere || right.Expression == leftMe.Expression))
-
-                        if (right.Expression != null)
+                        if (right != null && right.Expression != null)
                         {
-                            var rigthTableName = GetTableNameByType("", ((MemberExpression)be.Right).Expression.Type);
+                            var rigthTableName = GetTableNameByType("", right.Expression.Type);
 
                             var keyRight = GetMemberName(expRight, out ColumnFunction functionRight, out right);
 
@@ -518,7 +516,7 @@ namespace WEF.Expressions
             if (exprBody is MemberExpression)
             {
                 var e = (MemberExpression)exprBody;
-                var filedProp = GetFieldName(e.Member);              
+                var filedProp = GetFieldName(e.Member);
                 return new GroupByOperation(CreateField(string.Empty, filedProp, e.Expression.Type));
             }
             if (exprBody is NewExpression)
@@ -605,7 +603,7 @@ namespace WEF.Expressions
                 var propertyType = ((MemberExpression)method.Arguments[0]).Expression.Type;
                 var tableName = TableAttribute.GetTableName(propertyType);
                 var filedProp = ((MemberExpression)((MethodCallExpression)exprBody).Arguments[0]).Member;
-                var field= ConvertFun(tableName, method, filedProp.Name)[0];
+                var field = ConvertFun(tableName, method, filedProp.Name)[0];
                 if (orderBy == OrderByOperater.DESC)
                 {
                     gb = gb && field.Desc;
