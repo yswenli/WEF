@@ -525,9 +525,9 @@ namespace WEF
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        public Search Where(WhereExpression where)
+        public Search Where(WhereExpression where,bool newWhere=false)
         {
-            if (this._where == null)
+            if (this._where == null || string.IsNullOrEmpty(_where.WhereString) || newWhere)
             {
                 this._where = new WhereBuilder(_tableName, where).ToWhereClip();
             }
@@ -544,7 +544,7 @@ namespace WEF
         public Search Where(string whereSql, params Parameter[] parameters)
         {
             var where = new WhereExpression(whereSql, parameters);
-            if (this._where == null)
+            if (this._where == null || string.IsNullOrEmpty(_where.WhereString))
             {
                 this._where = new WhereBuilder(_tableName, where).ToWhereClip();
             }

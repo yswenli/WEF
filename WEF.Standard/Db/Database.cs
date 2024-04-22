@@ -1115,7 +1115,7 @@ namespace WEF.Db
         /// <param name="transaction"></param>
         /// <param name="dbParameters"></param>
         /// <returns></returns>
-        public int ExecuteNonQuery(string sql,DbTransaction transaction, params DbParameter[] dbParameters)
+        public int ExecuteNonQuery(string sql, DbTransaction transaction, params DbParameter[] dbParameters)
         {
             Check.Require(sql, "sql", Check.NotNullOrEmpty);
 

@@ -1581,13 +1581,13 @@ namespace WEF
         /// <param name="order"></param>
         /// <param name="asc"></param>
         /// <returns></returns>
-        public PagedList<T> ToPagedList(int pageIndex, int pageSize, string order, bool asc)
+        public PagedList<T> ToPagedList(int pageIndex, int pageSize, string order = "", bool asc = true)
         {
             var total = this.Count();
 
-            if (!string.IsNullOrEmpty(TableName) && !string.IsNullOrEmpty(order) && order.IndexOf(".") == -1)
+            if (!string.IsNullOrEmpty(TableName) && string.IsNullOrEmpty(order))
             {
-                order = $"{TableName}.{order}";
+                order = $"{TableName}.ID";
             }
 
             var list = this.OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();

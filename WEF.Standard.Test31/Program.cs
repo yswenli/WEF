@@ -32,7 +32,7 @@ namespace WEF.Standard.Test31
                 .Join<DBUserInfo>((x, y) => x.CreatedBy == y.ID && y.IsDeleted == false && x.ID.In(sqr) && x.PraiseCount == 2, JoinType.LeftJoin)
                 .Where(q => q.IsDeleted == false && q.Title == "12321" && q.ID.In(sqr))
                 .Select(q => q.ID);
-            var qs21 = qs2.ToList();
+            var qs21 = qs2.ToPagedList(1, 10);
             var sq2 = dbarticleRepository.Search().Where(q => q.ID.SubQueryIn(qs2));
             var sqr2 = sq2.ToList();
 
