@@ -458,7 +458,9 @@ namespace WEF.Expressions
                     {
                         var right = (MemberExpression)expRight;
 
-                        if (right.Expression != null && (wtype == WhereType.JoinWhere || right.Expression == leftMe.Expression))
+                        //if (right.Expression != null && (wtype == WhereType.JoinWhere || right.Expression == leftMe.Expression))
+
+                        if (right.Expression != null)
                         {
                             var rigthTableName = GetTableNameByType("", ((MemberExpression)be.Right).Expression.Type);
 
@@ -845,6 +847,7 @@ namespace WEF.Expressions
             }
             return f.SubQueryIn(search);
         }
+
 
         /// <summary>
         /// 转换子查询

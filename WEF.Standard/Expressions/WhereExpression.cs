@@ -17,6 +17,7 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
+
 using WEF.Db;
 
 namespace WEF.Expressions
@@ -231,6 +232,18 @@ namespace WEF.Expressions
         }
 
         /// <summary>
+        /// 手动sql
+        /// </summary>
+        /// <param name="sqlWhere"></param>
+        /// <returns></returns>
+        public WhereExpression And(string sqlWhere)
+        {
+            if (string.IsNullOrEmpty(sqlWhere))
+                return this;
+            return new WhereExpression(string.Concat(this.Where, " AND ", sqlWhere));
+        }
+
+        /// <summary>
         /// Or
         /// </summary>
         /// <param name="where"></param>
@@ -251,6 +264,18 @@ namespace WEF.Expressions
 
 
             return orwhere;
+        }
+
+        /// <summary>
+        /// 手动sql
+        /// </summary>
+        /// <param name="sqlWhere"></param>
+        /// <returns></returns>
+        public WhereExpression Or(string sqlWhere)
+        {
+            if (string.IsNullOrEmpty(sqlWhere))
+                return this;
+            return new WhereExpression(string.Concat(this.Where, " OR ", sqlWhere));
         }
 
 

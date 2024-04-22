@@ -199,6 +199,18 @@ namespace WEF
         {
             throw new Exception(string.Format(Tips, "SubQuery"));
         }
+        /// <summary>
+        /// Exists语句
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static bool Exists<T>(this object key, Search<T> search)
+            where T : Entity
+        {
+            throw new Exception(string.Format(Tips, "Exists"));
+        }
         #endregion
 
         #region Convert

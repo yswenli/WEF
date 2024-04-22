@@ -407,7 +407,7 @@ namespace WEF
             {
                 if (item == null) continue;
 
-                if (this._where == null)
+                if (this._where == null || string.IsNullOrEmpty(this._where.WhereString))
                 {
                     this._where = new WhereBuilder(_tableName, ExpressionToOperation<T>.ToWhereOperation(item)).ToWhereClip();
                 }
@@ -454,13 +454,68 @@ namespace WEF
                 we = ExpressionToOperation<T>.ConvertSubQuery(_tableName, exprBody);
             }
 
-            if (this._where == null)
+            if (this._where == null || string.IsNullOrEmpty(this._where.WhereString))
             {
                 this._where = new WhereBuilder(_tableName, we).ToWhereClip();
             }
             else
                 this._where = this._where.And(we);
 
+            return this;
+        }
+
+        /// <summary>
+        /// 是否存在子查询
+        /// </summary>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public Search<T> Exists<T1>(Expression<Func<T, T1, bool>> lambdaWhere)
+            where T1 : Entity
+        {
+            if (lambdaWhere == null) return this;
+
+            var we = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
+
+            var tableName = EntityCache.GetTableName<T1>();
+
+            var wex = new WhereBuilder(tableName, we).ToWhereClip();
+
+            if (this._where == null || string.IsNullOrEmpty(this._where.WhereString))
+            {
+                this._where = $" EXISTS (SELECT 1 FROM {tableName} WHERE {wex.Where})";
+            }
+            else
+            {
+                this._where = this._where.And($"EXISTS (SELECT 1 FROM {tableName} WHERE {wex.Where})");
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// 是否存在子查询
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public Search<T> NotExists<T1>(Expression<Func<T, T1, bool>> lambdaWhere)
+            where T1 : Entity
+        {
+            if (lambdaWhere == null) return this;
+
+            var we = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
+
+            var tableName = EntityCache.GetTableName<T1>();
+
+            var wex = new WhereBuilder(tableName, we).ToWhereClip();
+
+            if (this._where == null || string.IsNullOrEmpty(this._where.WhereString))
+            {
+                this._where = $" NOT EXISTS (SELECT 1 FROM {tableName} WHERE {wex.Where})";
+            }
+            else
+            {
+                this._where = this._where.And($"NOT EXISTS (SELECT 1 FROM {tableName} WHERE {wex.Where})");
+            }
             return this;
         }
 

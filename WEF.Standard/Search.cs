@@ -527,7 +527,12 @@ namespace WEF
         /// <returns></returns>
         public Search Where(WhereExpression where)
         {
-            this._where = where;
+            if (this._where == null)
+            {
+                this._where = new WhereBuilder(_tableName, where).ToWhereClip();
+            }
+            else
+                this._where = this._where.And(where);
             return this;
         }
         /// <summary>
@@ -538,7 +543,13 @@ namespace WEF
         /// <returns></returns>
         public Search Where(string whereSql, params Parameter[] parameters)
         {
-            this._where = new WhereExpression(whereSql, parameters);
+            var where = new WhereExpression(whereSql, parameters);
+            if (this._where == null)
+            {
+                this._where = new WhereBuilder(_tableName, where).ToWhereClip();
+            }
+            else
+                this._where = this._where.And(where);
             return this;
         }
 

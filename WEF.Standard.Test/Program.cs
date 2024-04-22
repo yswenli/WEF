@@ -29,7 +29,7 @@ namespace WEF.Standard.Test
             List<DBArticle> articleList;
             List<DBComment> commentList;
 
-            var cnnstr = "";
+            var cnnstr = "Data Source=.;Initial Catalog=tejingcaiV2;Integrated Security=True";
 
             #region get and update
 
@@ -108,9 +108,15 @@ namespace WEF.Standard.Test
             var sq = dbarticleRepository.Search().SubQuery(q => q.ID.SubQuery(qs, QueryOperator.Equal));
             var sqr = sq.ToList();
 
-            var qs2 = dbarticleRepository.Search().Select(q => q.ID);
-            var sq2 = dbarticleRepository.Search().SubQuery(q => q.ID.SubQueryIn(qs2));
-            var sqr2 = sq.ToList();
+            var qs2 = dbarticleRepository.Search()
+                .Join<DBUserInfo>((x, y) => x.CreatedBy == y.ID, JoinType.LeftJoin)
+                .Where(q => q.IsDeleted == false)                
+                .Select(q => q.ID);
+            var sq2 = dbarticleRepository.Search().Where(q => q.ID.SubQueryIn(qs2));
+            var sqr2 = sq2.ToList();
+
+           
+            var qs3=  dbarticleRepository.Search().Exists<DBUserInfo>((x, y) => x.CreatedBy == y.ID);
 
 
 

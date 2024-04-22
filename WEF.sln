@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Standard.Test", "WEF.St
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Standard.Mongo", "WEF.Standard.Mongo\WEF.Standard.Mongo.csproj", "{57D02BFE-0537-401C-BB2C-CCED29E673DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.Mongo.Test", "WEF.Standard.Mongo.Test\WEF.Standard.Mongo.Test.csproj", "{F9F6B5AE-8B7E-4FB2-BB8D-ABDA7C733E78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEF.Standard.Mongo.Test", "WEF.Standard.Mongo.Test\WEF.Standard.Mongo.Test.csproj", "{F9F6B5AE-8B7E-4FB2-BB8D-ABDA7C733E78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.Test31", "WEF.Standard.Test31\WEF.Standard.Test31.csproj", "{3A45B3C4-60B2-4570-AF89-D25F5C18A141}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{F9F6B5AE-8B7E-4FB2-BB8D-ABDA7C733E78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9F6B5AE-8B7E-4FB2-BB8D-ABDA7C733E78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9F6B5AE-8B7E-4FB2-BB8D-ABDA7C733E78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A45B3C4-60B2-4570-AF89-D25F5C18A141}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A45B3C4-60B2-4570-AF89-D25F5C18A141}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A45B3C4-60B2-4570-AF89-D25F5C18A141}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A45B3C4-60B2-4570-AF89-D25F5C18A141}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
