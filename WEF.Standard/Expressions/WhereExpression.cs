@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2024
  *****************************************************************************************************
  * 所属域：WENLI-PC
 *创建人： yswenli
@@ -17,6 +17,8 @@
  * 创建说明：
  *****************************************************************************************************/
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using WEF.Db;
 
@@ -225,8 +227,8 @@ namespace WEF.Expressions
                 return where;
 
             WhereExpression andwhere = new WhereExpression(string.Concat(this.Where, " AND ", where.Where));
-            andwhere._parameters.AddRange(this.Parameters);
-            andwhere._parameters.AddRange(where.Parameters);
+            andwhere.AddParameters(Parameters);
+            andwhere.AddParameters(where.Parameters);
 
             return andwhere;
         }
@@ -235,12 +237,17 @@ namespace WEF.Expressions
         /// 手动sql
         /// </summary>
         /// <param name="sqlWhere"></param>
+        /// <param name="parameters"></param>
+        /// <param name="isNew"></param>
         /// <returns></returns>
-        public WhereExpression And(string sqlWhere)
+        public WhereExpression And(string sqlWhere, List<Parameter> parameters = null, bool isNew = false)
         {
             if (string.IsNullOrEmpty(sqlWhere))
                 return this;
-            return new WhereExpression(string.Concat(this.Where, " AND ", sqlWhere));
+            if (!isNew)
+                return new WhereExpression(string.Concat(this.Where, " AND ", sqlWhere), parameters == null ? null : parameters.ToArray());
+            else
+                return new WhereExpression(sqlWhere, parameters == null ? null : parameters.ToArray());
         }
 
         /// <summary>
@@ -360,6 +367,28 @@ namespace WEF.Expressions
         #endregion
 
 
+        /// <summary>
+        /// 添加参数，排除重名参数
+        /// </summary>
+        /// <param name="parameters"></param>
+        public void AddParameters(List<Parameter> parameters)
+        {
+            if (parameters != null || parameters.Count > 0)
+            {
+                if (Parameters.Count < 1)
+                {
+                    Parameters.AddRange(parameters);
+                }
+                else
+                {
+                    foreach (var item in parameters)
+                    {
+                        if (!Parameters.Select(q => q.ParameterName).Contains(item.ParameterName))
+                            Parameters.Add(item);
+                    }
+                }
+            }
+        }
 
         #endregion
 

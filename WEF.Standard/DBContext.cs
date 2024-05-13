@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2022
+ * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2024
  *****************************************************************************************************
  * CLR版本：4.0.30319.42000
  * 唯一标识：80082f38-5128-45aa-9217-d181a0bb7f92
@@ -20,6 +20,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 
 using WEF.Batcher;
 using WEF.Common;
@@ -675,6 +676,46 @@ namespace WEF
             }
         }
 
+
+        /// <summary>
+        /// Builds the name of the db param.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The name of the db param</returns>
+        public string BuildDbParamName(string name)
+        {
+            Check.Require(name, "name", Check.NotNullOrEmpty);
+
+            return _db.DbProvider.BuildParameterName(name);
+        }
+
+
+        #endregion
+
+
+        #region 事务
+
+        /// <summary>
+        /// Begins the transaction.
+        /// </summary>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
+        public DbTrans BeginTransaction(int timeout = 120)
+        {
+            return new DbTrans(_db.BeginTransaction(), this, timeout);
+        }
+
+        /// <summary>
+        /// Begins the transaction.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
+        public DbTrans BeginTransaction(DbTransType type, int timeout = 120)
+        {
+            return new DbTrans(_db.BeginTransaction(type), this, timeout);
+        }
+
         /// <summary>
         /// Begins the transaction.
         /// </summary>
@@ -697,6 +738,8 @@ namespace WEF
             return new DbTrans<T>(_db.BeginTransaction(type), this, timeout);
         }
 
+
+
         /// <summary>
         /// Closes the transaction.
         /// </summary>
@@ -705,19 +748,6 @@ namespace WEF
         {
             _db.CloseConnection(tran);
         }
-
-        /// <summary>
-        /// Builds the name of the db param.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>The name of the db param</returns>
-        public string BuildDbParamName(string name)
-        {
-            Check.Require(name, "name", Check.NotNullOrEmpty);
-
-            return _db.DbProvider.BuildParameterName(name);
-        }
-
 
         #endregion
 
@@ -2185,12 +2215,24 @@ namespace WEF
         /// <summary>
         /// 执行ExecuteReader
         /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public IDataReader ExecuteReader(string sql, Dictionary<string, object> dbParameters)
+        {
+            return _db.ExecuteReader(sql, dbParameters);
+        }
+
+        /// <summary>
+        /// 执行ExecuteReader
+        /// </summary>
         /// <param name="cmd"></param>
         /// <returns></returns>
         public IDataReader ExecuteReader(DbCommand cmd)
         {
             return _db.ExecuteReader(cmd);
         }
+
 
         /// <summary>
         /// 执行ExecuteReader
@@ -2201,6 +2243,18 @@ namespace WEF
         public IDataReader ExecuteReader(DbCommand cmd, DbTransaction tran)
         {
             return _db.ExecuteReader(cmd, tran);
+        }
+
+        /// <summary>
+        /// 执行ExecuteReader
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="transaction"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public IDataReader ExecuteReader(string sql, DbTransaction transaction, Dictionary<string, object> dbParameters)
+        {
+            return _db.ExecuteReader(sql, transaction, dbParameters);
         }
 
         /// <summary>
@@ -2309,6 +2363,18 @@ namespace WEF
         /// <param name="dbParameters"></param>
         /// <returns></returns>
         public int ExecuteNonQuery(string sql, DbTransaction transaction, params DbParameter[] dbParameters)
+        {
+            return _db.ExecuteNonQuery(sql, transaction, dbParameters);
+        }
+
+        /// <summary>
+        /// ExecuteNonQuery
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="transaction"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public int ExecuteNonQuery(string sql, DbTransaction transaction, Dictionary<string, object> dbParameters)
         {
             return _db.ExecuteNonQuery(sql, transaction, dbParameters);
         }
@@ -2519,6 +2585,30 @@ namespace WEF
         {
             return CreateParameter(name, dbType, size, ParameterDirection.Input, true, 0, 0, String.Empty, DataRowVersion.Default, value);
         }
+        #endregion
+
+        #region 单库分布式锁
+
+        static object _locker = new object();
+        /// <summary>
+        /// 创建分布式锁
+        /// </summary>
+        /// <param name="keyName"></param>
+        /// <param name="lockTimeout"></param>
+        /// <returns></returns>
+        public DistributedLock CreateLock(string keyName, int lockTimeout = 180)
+        {
+            lock (_locker)
+            {
+                var dl = new DistributedLock(this, keyName, lockTimeout);
+                while (!dl.AcquireLock())
+                {
+                    Thread.Sleep(10);
+                }
+                return dl;
+            }
+        }
+
         #endregion
 
         #region 数据更新

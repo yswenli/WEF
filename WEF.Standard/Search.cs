@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2022
+ * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2024
  *****************************************************************************************************
  * CLR版本：4.0.30319.42000
  * 唯一标识：1a0dd623-eae1-428c-8095-d971d079c8ab
@@ -11,7 +11,7 @@
  * 类名称：Search
  * 创建时间：2017/7/26 15:31:40
  * 创建人：wenli
- * 创建说明：
+ * 创建说明：DBContext的查询对象
  *****************************************************************************************************/
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,6 @@ using System.Linq;
 using WEF.Common;
 using WEF.Db;
 using WEF.Expressions;
-using WEF.MvcPager;
 using WEF.Provider;
 
 namespace WEF
@@ -90,17 +89,17 @@ namespace WEF
         /// <summary>
         /// 开始项
         /// </summary>
-        protected int startIndex;
+        protected int _startIndex;
         /// <summary>
         /// 结束项
         /// </summary>
-        protected int endIndex;
+        protected int _endIndex;
 
 
         /// <summary>
         /// 缓存超时时间
         /// </summary>
-        protected int? timeout;
+        protected int? _timeout;
 
         /// <summary>
         /// 某种类型的数据库表名，例如：[User]或`User`
@@ -120,7 +119,7 @@ namespace WEF
         /// <summary>
         /// 事务   -- 查询
         /// </summary>
-        protected DbTransaction trans;
+        protected DbTransaction _trans;
 
         /// <summary>
         /// 
@@ -399,7 +398,7 @@ namespace WEF
             }
             set
             {
-                this._parameters = value;
+                _parameters = value;
             }
 
 
@@ -434,7 +433,7 @@ namespace WEF
         {
             get
             {
-                return this._fields;
+                return _fields;
             }
         }
 
@@ -484,12 +483,12 @@ namespace WEF
             Check.Require(database, "database", Check.NotNull);
             Check.Require(tableName, "tableName", Check.NotNullOrEmpty);
 
-            this.trans = trans;
-            this._dbProvider = database.DbProvider;
-            this._database = database;
-            this._tableName = tableName;
-            this._asName = asName;
-            this._typeTableName = tableName.Trim(_dbProvider.LeftToken, _dbProvider.RightToken);
+            _trans = trans;
+            _dbProvider = database.DbProvider;
+            _database = database;
+            _tableName = tableName;
+            _asName = asName;
+            _typeTableName = tableName.Trim(_dbProvider.LeftToken, _dbProvider.RightToken);
         }
 
         #endregion
@@ -504,7 +503,7 @@ namespace WEF
         /// <returns></returns>
         public Search SetCacheTimeOut(int timeout)
         {
-            this.timeout = timeout;
+            _timeout = timeout;
             return this;
         }
 
@@ -524,15 +523,16 @@ namespace WEF
         /// whereclip
         /// </summary>
         /// <param name="where"></param>
+        /// <param name="newWhere"></param>
         /// <returns></returns>
-        public Search Where(WhereExpression where,bool newWhere=false)
+        public Search Where(WhereExpression where, bool newWhere = false)
         {
-            if (this._where == null || string.IsNullOrEmpty(_where.WhereString) || newWhere)
+            if (_where == null || string.IsNullOrEmpty(_where.WhereString) || newWhere)
             {
-                this._where = new WhereBuilder(_tableName, where).ToWhereClip();
+                _where = new WhereBuilder(_tableName, where).ToWhereClip();
             }
             else
-                this._where = this._where.And(where);
+                _where = _where.And(where);
             return this;
         }
         /// <summary>
@@ -544,12 +544,12 @@ namespace WEF
         public Search Where(string whereSql, params Parameter[] parameters)
         {
             var where = new WhereExpression(whereSql, parameters);
-            if (this._where == null || string.IsNullOrEmpty(_where.WhereString))
+            if (_where == null || string.IsNullOrEmpty(_where.WhereString))
             {
-                this._where = new WhereBuilder(_tableName, where).ToWhereClip();
+                _where = new WhereBuilder(_tableName, where).ToWhereClip();
             }
             else
-                this._where = this._where.And(where);
+                _where = _where.And(where);
             return this;
         }
 
@@ -560,7 +560,7 @@ namespace WEF
         /// <returns></returns>
         public Search GroupBy(GroupByOperation groupBy)
         {
-            this._groupBy = this._groupBy & groupBy;
+            _groupBy = _groupBy & groupBy;
             return this;
         }
 
@@ -572,7 +572,7 @@ namespace WEF
         /// <returns></returns>
         public Search Having(WhereExpression havingWhere)
         {
-            this._havingWhere = havingWhere;
+            _havingWhere = havingWhere;
             return this;
         }
 
@@ -585,7 +585,7 @@ namespace WEF
         {
             if (null == fields || fields.Length <= 0) return this;
             var tempgroupby = fields.Aggregate(GroupByOperation.None, (current, f) => current && f.GroupBy);
-            this._groupBy = tempgroupby;
+            _groupBy = tempgroupby;
             return this;
         }
 
@@ -596,7 +596,7 @@ namespace WEF
         /// <returns></returns>
         public Search OrderBy(OrderByOperation orderBy)
         {
-            this._orderBy = orderBy;
+            _orderBy = orderBy;
             return this;
         }
 
@@ -610,7 +610,7 @@ namespace WEF
         {
             if (null == orderBys || orderBys.Length <= 0) return this;
             var temporderby = orderBys.Aggregate(OrderByOperation.None, (current, ob) => current && ob);
-            this._orderBy = this._orderBy & temporderby;
+            _orderBy = _orderBy & temporderby;
             return this;
         }
         /// <summary>
@@ -639,7 +639,7 @@ namespace WEF
 
             var temporderby = orderBys.Aggregate(OrderByOperation.None, (current, ob) => current && ob);
 
-            this._orderBy = temporderby;
+            _orderBy = temporderby;
 
             return this;
         }
@@ -651,7 +651,7 @@ namespace WEF
         /// <returns></returns>
         public Search Select(params Field[] fields)
         {
-            this._fields.Clear();
+            _fields.Clear();
             return AddSelect(fields);
         }
 
@@ -679,9 +679,9 @@ namespace WEF
 
             Check.Require(Search.Fields.Count == 1 && !Search.Fields[0].PropertyName.Equals("*"), "Search's fields must be only one!");
 
-            this._fields.Add(new Field(string.Concat("(", Search.SqlString, ")")).As(aliasName));
+            _fields.Add(new Field(string.Concat("(", Search.SqlString, ")")).As(aliasName));
 
-            this._parameters.AddRange(Search.Parameters);
+            _parameters.AddRange(Search.Parameters);
 
             return this;
         }
@@ -700,7 +700,7 @@ namespace WEF
                 {
                     Field f = _fields.Find(fi => fi.Name.Equals(field.Name) && fi.TableName.Equals(field.TableName));
                     if (Field.IsNullOrEmpty(f))
-                        this._fields.Add(field);
+                        _fields.Add(field);
                 }
             }
             return this;
@@ -712,7 +712,7 @@ namespace WEF
         /// <returns></returns>
         public Search Distinct()
         {
-            this._distinctString = " DISTINCT ";
+            _distinctString = " DISTINCT ";
             return this;
         }
 
@@ -747,9 +747,9 @@ namespace WEF
         /// <returns></returns>
         public Search From(int startIndex, int endIndex)
         {
-            this.startIndex = startIndex;
+            _startIndex = startIndex;
 
-            this.endIndex = endIndex;
+            _endIndex = endIndex;
 
             isPageFromSection = false;
 
@@ -800,10 +800,10 @@ namespace WEF
             _database.AddCommandParameter(dbCommand, search.Parameters.ToArray());
 
             int returnValue;
-            if (trans == null)
+            if (_trans == null)
                 returnValue = DataUtils.ConvertValue<int>(_database.ExecuteScalar(dbCommand));
             else
-                returnValue = DataUtils.ConvertValue<int>(_database.ExecuteScalar(dbCommand, trans));
+                returnValue = DataUtils.ConvertValue<int>(_database.ExecuteScalar(dbCommand, _trans));
 
             return returnValue;
         }
@@ -829,10 +829,10 @@ namespace WEF
             _database.AddCommandParameter(dbCommand, search.Parameters.ToArray());
 
             long returnValue;
-            if (trans == null)
+            if (_trans == null)
                 returnValue = DataUtils.ConvertValue<long>(_database.ExecuteScalar(dbCommand));
             else
-                returnValue = DataUtils.ConvertValue<long>(_database.ExecuteScalar(dbCommand, trans));
+                returnValue = DataUtils.ConvertValue<long>(_database.ExecuteScalar(dbCommand, _trans));
 
             return returnValue;
         }
@@ -846,10 +846,10 @@ namespace WEF
             Search search = GetPagedFromSection();
 
             DataSet ds;
-            if (trans == null)
+            if (_trans == null)
                 ds = _database.ExecuteDataSet(CreateDbCommand(search));
             else
-                ds = _database.ExecuteDataSet(CreateDbCommand(search), trans);
+                ds = _database.ExecuteDataSet(CreateDbCommand(search), _trans);
 
             return ds;
         }
@@ -860,10 +860,10 @@ namespace WEF
         /// <returns></returns>
         internal Search GetPagedFromSection()
         {
-            if (startIndex > 0 && endIndex > 0 && !isPageFromSection)
+            if (_startIndex > 0 && _endIndex > 0 && !isPageFromSection)
             {
                 isPageFromSection = true;
-                return _dbProvider.CreatePageFromSection(this, startIndex, endIndex);
+                return _dbProvider.CreatePageFromSection(this, _startIndex, _endIndex);
             }
             return this;
         }
@@ -896,9 +896,9 @@ namespace WEF
         /// <returns></returns>
         protected IDataReader ToDataReader(Search search)
         {
-            return trans == null
+            return _trans == null
                 ? _database.ExecuteReader(CreateDbCommand(search))
-                : _database.ExecuteReader(CreateDbCommand(search), trans);
+                : _database.ExecuteReader(CreateDbCommand(search), _trans);
         }
 
         /// <summary>
@@ -907,7 +907,7 @@ namespace WEF
         /// <returns></returns>
         public DataTable ToDataTable()
         {
-            return this.ToDataSet().Tables[0];
+            return ToDataSet().Tables[0];
         }
 
         /// <summary>
@@ -916,18 +916,18 @@ namespace WEF
         /// <returns></returns>
         public object ToScalar()
         {
-            Check.Require(this._fields.Count == 1, "fields must be one!");
-            Check.Require(!this._fields[0].PropertyName.Trim().Equals("*"), "fields cound not be * !");
+            Check.Require(_fields.Count == 1, "fields must be one!");
+            Check.Require(!_fields[0].PropertyName.Trim().Equals("*"), "fields cound not be * !");
 
             Search search = GetPagedFromSection();
 
 
             object returnValue;
 
-            if (trans == null)
+            if (_trans == null)
                 returnValue = _database.ExecuteScalar(CreateDbCommand(search));
             else
-                returnValue = _database.ExecuteScalar(CreateDbCommand(search), trans);
+                returnValue = _database.ExecuteScalar(CreateDbCommand(search), _trans);
 
             return returnValue;
 
@@ -940,7 +940,7 @@ namespace WEF
         /// <returns></returns>
         public TResult ToScalar<TResult>()
         {
-            return DataUtils.ConvertValue<TResult>(this.ToScalar());
+            return DataUtils.ConvertValue<TResult>(ToScalar());
         }
 
 
@@ -1072,7 +1072,7 @@ namespace WEF
 
             tname.Append("(");
 
-            tname.Append(this.SqlNoneOrderbyString);
+            tname.Append(SqlNoneOrderbyString);
 
             tname.Append(" UNION ");
 
@@ -1080,13 +1080,13 @@ namespace WEF
 
             tname.Append(") tempuniontable ");
 
-            Search tmpSearch = new Search(this._database, tname.ToString());
-            tmpSearch._typeTableName = this._typeTableName;
-            tmpSearch.timeout = this.timeout;
-            tmpSearch._isRefresh = this._isRefresh;
+            Search tmpSearch = new Search(_database, tname.ToString());
+            tmpSearch._typeTableName = _typeTableName;
+            tmpSearch._timeout = _timeout;
+            tmpSearch._isRefresh = _isRefresh;
 
 
-            tmpSearch._parameters.AddRange(this.Parameters);
+            tmpSearch._parameters.AddRange(Parameters);
             tmpSearch._parameters.AddRange(Search.Parameters);
 
             return tmpSearch;
@@ -1103,7 +1103,7 @@ namespace WEF
 
             tname.Append("(");
 
-            tname.Append(this.SqlNoneOrderbyString);
+            tname.Append(SqlNoneOrderbyString);
 
             tname.Append(" UNION ALL ");
 
@@ -1111,12 +1111,12 @@ namespace WEF
 
             tname.Append(") tempuniontable ");
 
-            Search tmpSearch = new Search(this._database, tname.ToString());
-            tmpSearch._typeTableName = this._typeTableName;
-            tmpSearch.timeout = this.timeout;
-            tmpSearch._isRefresh = this._isRefresh;
+            Search tmpSearch = new Search(_database, tname.ToString());
+            tmpSearch._typeTableName = _typeTableName;
+            tmpSearch._timeout = _timeout;
+            tmpSearch._isRefresh = _isRefresh;
 
-            tmpSearch._parameters.AddRange(this.Parameters);
+            tmpSearch._parameters.AddRange(Parameters);
             tmpSearch._parameters.AddRange(Search.Parameters);
 
             return tmpSearch;

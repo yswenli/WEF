@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2022
+ * 本代码版权归Wenli所有，All Rights Reserved (C) 2015-2024
  *****************************************************************************************************
  * 所属域：WENLI-PC
 *创建人： yswenli
@@ -15,6 +15,7 @@ using System.Data;
 using System.Data.Common;
 using System.Globalization;
 using System.Linq;
+using System.Transactions;
 
 using WEF.Common;
 using WEF.Expressions;
@@ -1137,6 +1138,37 @@ namespace WEF.Db
         /// 执行sql
         /// </summary>
         /// <param name="sql"></param>
+        /// <param name="transaction"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public int ExecuteNonQuery(string sql, DbTransaction transaction, Dictionary<string, object> dbParameters)
+        {
+            Check.Require(sql, "sql", Check.NotNullOrEmpty);
+
+            using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
+            {
+                command.CommandTimeout = TimeOut;
+
+                using (DbConnection connection = CreateConnection())
+                {
+                    PrepareCommand(command, transaction);
+
+                    if (dbParameters != null && dbParameters.Any())
+                    {
+                        foreach (var keyValuePair in dbParameters)
+                        {
+                            AddParameter(command, keyValuePair.Key, keyValuePair.Value.GetDbType(), 0, ParameterDirection.Input, true, 0, 0, String.Empty, DataRowVersion.Default, keyValuePair.Value);
+                        }
+                    }
+                    return DoExecuteNonQuery(command);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql"></param>
         /// <param name="dbParameters"></param>
         /// <returns></returns>
         public int ExecuteNonQuery(string sql, Dictionary<string, object> dbParameters)
@@ -1227,6 +1259,37 @@ namespace WEF.Db
         }
 
         /// <summary>
+        /// 执行ExecuteReader
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public IDataReader ExecuteReader(string sql, Dictionary<string, object> dbParameters)
+        {
+            Check.Require(sql, "sql", Check.NotNullOrEmpty);
+
+            using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
+            {
+                command.CommandTimeout = TimeOut;
+
+                using (DbConnection connection = CreateConnection())
+                {
+                    PrepareCommand(command, connection);
+
+                    if (dbParameters != null)
+                    {
+                        foreach (var keyValuePair in dbParameters)
+                        {
+                            AddParameter(command, keyValuePair.Key, keyValuePair.Value.GetDbType(), 0, ParameterDirection.Input, true, 0, 0, String.Empty, DataRowVersion.Default, keyValuePair.Value);
+                        }
+                    }
+                    return DoExecuteReader(command, CommandBehavior.Default);
+                }
+            }
+        }
+
+
+        /// <summary>
         /// <para>Executes the <paramref name="command"/> and returns an <see cref="IDataReader"></see> through which the result can be read.
         /// It is the responsibility of the caller to close the connection and reader when finished.</para>
         /// </summary>
@@ -1279,6 +1342,37 @@ namespace WEF.Db
             command.CommandTimeout = TimeOut;
             PrepareCommand(command, transaction);
             return DoExecuteReader(command, CommandBehavior.Default);
+        }
+
+        /// <summary>
+        /// ExecuteReader
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="transaction"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public IDataReader ExecuteReader(string sql, DbTransaction transaction, Dictionary<string, object> dbParameters)
+        {
+            Check.Require(sql, "sql", Check.NotNullOrEmpty);
+
+            using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
+            {
+                command.CommandTimeout = TimeOut;
+
+                using (DbConnection connection = CreateConnection())
+                {
+                    PrepareCommand(command, transaction);
+
+                    if (dbParameters != null)
+                    {
+                        foreach (var keyValuePair in dbParameters)
+                        {
+                            AddParameter(command, keyValuePair.Key, keyValuePair.Value.GetDbType(), 0, ParameterDirection.Input, true, 0, 0, String.Empty, DataRowVersion.Default, keyValuePair.Value);
+                        }
+                    }
+                    return DoExecuteReader(command, CommandBehavior.Default);
+                }
+            }
         }
 
         /// <summary>
@@ -1604,6 +1698,7 @@ namespace WEF.Db
             //var i = 0;
             foreach (Parameter p in parameters)
             {
+                if (string.IsNullOrEmpty(p.ParameterName)) continue;
                 DbParameter dbParameter = CreateParameter(p.ParameterName);// + i
                 dbParameter.Value = p.ParameterValue;
                 //if (p.ParameterDbType.HasValue)

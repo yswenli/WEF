@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2022
+ * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2024
  *****************************************************************************************************
  * CLR版本：4.0.30319.42000
  * 唯一标识：c9935cdf-7d39-434f-a3f9-b3b3fb92bf68
@@ -19,7 +19,6 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Xml.Schema;
 
 using WEF.Common;
 using WEF.Db;
@@ -162,11 +161,11 @@ namespace WEF
         /// <returns></returns>
         internal Search GetPagedFromSection(Expression<Func<T, object>> lambdaSelect)
         {
-            if (startIndex > 0 && endIndex > 0 && !isPageFromSection)
+            if (_startIndex > 0 && _endIndex > 0 && !isPageFromSection)
             {
                 isPageFromSection = true;
-                var s = this.Select(lambdaSelect);
-                return _dbProvider.CreatePageFromSection(s, startIndex, endIndex);
+                var s = Select(lambdaSelect);
+                return _dbProvider.CreatePageFromSection(s, _startIndex, _endIndex);
             }
             return this;
         }
@@ -407,12 +406,12 @@ namespace WEF
             {
                 if (item == null) continue;
 
-                if (this._where == null || string.IsNullOrEmpty(this._where.WhereString))
+                if (_where == null || string.IsNullOrEmpty(_where.WhereString))
                 {
-                    this._where = new WhereBuilder(_tableName, ExpressionToOperation<T>.ToWhereOperation(item)).ToWhereClip();
+                    _where = new WhereBuilder(_tableName, ExpressionToOperation<T>.ToWhereOperation(item)).ToWhereClip();
                 }
                 else
-                    this._where = this._where.And(ExpressionToOperation<T>.ToWhereOperation(item));
+                    _where = _where.And(ExpressionToOperation<T>.ToWhereOperation(item));
             }
 
             return this;
@@ -454,12 +453,14 @@ namespace WEF
                 we = ExpressionToOperation<T>.ConvertSubQuery(_tableName, exprBody);
             }
 
-            if (this._where == null || string.IsNullOrEmpty(this._where.WhereString))
+            if (_where == null || string.IsNullOrEmpty(_where.WhereString))
             {
-                this._where = new WhereBuilder(_tableName, we).ToWhereClip();
+                _where = new WhereBuilder(_tableName, we).ToWhereClip();
             }
             else
-                this._where = this._where.And(we);
+                _where = _where.And(we);
+
+            _where.AddParameters(we.Parameters);
 
             return this;
         }
@@ -480,14 +481,18 @@ namespace WEF
 
             var wex = new WhereBuilder(tableName, we).ToWhereClip();
 
-            if (this._where == null || string.IsNullOrEmpty(this._where.WhereString))
+            if (_where == null || string.IsNullOrEmpty(_where.WhereString))
             {
-                this._where = $" EXISTS (SELECT 1 FROM {tableName} WHERE {wex.Where})";
+                _where = $" EXISTS (SELECT 1 FROM {tableName} WHERE {wex.Where})";
             }
             else
             {
-                this._where = this._where.And($"EXISTS (SELECT 1 FROM {tableName} WHERE {wex.Where})");
+                _where = _where.And($"EXISTS (SELECT 1 FROM {tableName} WHERE {wex.Where})");
             }
+
+
+            _where.AddParameters(wex.Parameters);
+
             return this;
         }
 
@@ -508,14 +513,16 @@ namespace WEF
 
             var wex = new WhereBuilder(tableName, we).ToWhereClip();
 
-            if (this._where == null || string.IsNullOrEmpty(this._where.WhereString))
+            if (_where == null || string.IsNullOrEmpty(_where.WhereString))
             {
-                this._where = $" NOT EXISTS (SELECT 1 FROM {tableName} WHERE {wex.Where})";
+                _where = $" NOT EXISTS (SELECT 1 FROM {tableName} WHERE {wex.Where})";
             }
             else
             {
-                this._where = this._where.And($"NOT EXISTS (SELECT 1 FROM {tableName} WHERE {wex.Where})");
+                _where = _where.And($"NOT EXISTS (SELECT 1 FROM {tableName} WHERE {wex.Where})");
             }
+            _where.AddParameters(wex.Parameters);
+
             return this;
         }
 
@@ -918,7 +925,7 @@ namespace WEF
         /// </summary>
         private void SetDefaultOrderby()
         {
-            if (!OrderByOperation.IsNullOrEmpty(this.OrderByClip)) return;
+            if (!OrderByOperation.IsNullOrEmpty(OrderByClip)) return;
             if (_fields.Count > 0)
             {
                 if (_fields.Any(f => f.PropertyName.Trim().Equals("*")))
@@ -956,7 +963,7 @@ namespace WEF
         /// <returns></returns>
         public new Search<T> SetCacheTimeOut(int timeout)
         {
-            this.timeout = timeout;
+            _timeout = timeout;
             return this;
         }
 
@@ -1004,7 +1011,7 @@ namespace WEF
         /// <returns></returns>
         public T ToFirstDefault()
         {
-            T t = this.ToFirst();
+            T t = ToFirst();
             if (t == null)
             {
                 t = DataUtils.Create<T>();
@@ -1049,7 +1056,7 @@ namespace WEF
         {
             var where = new Where<T>(lambdaWhere);
 
-            Search search = this.Top(1).GetPagedFromSection().Where(where.ToWhereClip());
+            Search search = Top(1).GetPagedFromSection().Where(where.ToWhereClip());
 
             T t = null;
 
@@ -1085,7 +1092,7 @@ namespace WEF
                 return ToFirst() as Model;
             }
 
-            Search from = this.Top(1).GetPagedFromSection();
+            Search from = Top(1).GetPagedFromSection();
 
             Model t = null;
 
@@ -1118,7 +1125,7 @@ namespace WEF
         /// <returns></returns>
         public T ToFirst()
         {
-            Search search = this.Top(1).GetPagedFromSection();
+            Search search = Top(1).GetPagedFromSection();
 
             T t = null;
 
@@ -1157,7 +1164,7 @@ namespace WEF
         /// <exception cref="Exception"></exception>
         public T ToSingle()
         {
-            Search search = this.Top(2).GetPagedFromSection();
+            Search search = Top(2).GetPagedFromSection();
 
             T t = null;
 
@@ -1190,7 +1197,7 @@ namespace WEF
         /// <exception cref="Exception"></exception>
         public T Single(Expression<Func<T, bool>> expressionWhere)
         {
-            Search search = this.Top(2).GetPagedFromSection().Where(new Where<T>(expressionWhere).ToWhereClip());
+            Search search = Top(2).GetPagedFromSection().Where(new Where<T>(expressionWhere).ToWhereClip());
 
             T t = null;
 
@@ -1238,7 +1245,7 @@ namespace WEF
                 return ToSingle() as Model;
             }
 
-            var search = this.Top(2).GetPagedFromSection();
+            var search = Top(2).GetPagedFromSection();
 
             Model m = null;
 
@@ -1419,7 +1426,7 @@ namespace WEF
 
             tname.Append("(");
 
-            tname.Append(this.SqlNoneOrderbyString);
+            tname.Append(SqlNoneOrderbyString);
 
             tname.Append(" UNION ");
 
@@ -1432,10 +1439,10 @@ namespace WEF
             tname.Append(EntityCache.GetTableName<T>());
 
 
-            Search<T> tmpfromSection = new Search<T>(this._database);
+            Search<T> tmpfromSection = new Search<T>(_database);
             tmpfromSection._tableName = tname.ToString();
 
-            tmpfromSection._parameters.AddRange(this.Parameters);
+            tmpfromSection._parameters.AddRange(Parameters);
             tmpfromSection._parameters.AddRange(fromSection.Parameters);
 
             return tmpfromSection;
@@ -1452,7 +1459,7 @@ namespace WEF
 
             tname.Append("(");
 
-            tname.Append(this.SqlNoneOrderbyString);
+            tname.Append(SqlNoneOrderbyString);
 
             tname.Append(" UNION ALL ");
 
@@ -1464,10 +1471,10 @@ namespace WEF
 
             tname.Append(EntityCache.GetTableName<T>());
 
-            Search<T> tmpfromSection = new Search<T>(this._database);
+            Search<T> tmpfromSection = new Search<T>(_database);
             tmpfromSection._tableName = tname.ToString();
 
-            tmpfromSection._parameters.AddRange(this.Parameters);
+            tmpfromSection._parameters.AddRange(Parameters);
             tmpfromSection._parameters.AddRange(fromSection.Parameters);
 
             return tmpfromSection;
@@ -1583,14 +1590,14 @@ namespace WEF
         /// <returns></returns>
         public PagedList<T> ToPagedList(int pageIndex, int pageSize, string order = "", bool asc = true)
         {
-            var total = this.Count();
+            var total = Count();
 
             if (!string.IsNullOrEmpty(TableName) && string.IsNullOrEmpty(order))
             {
                 order = $"{TableName}.ID";
             }
 
-            var list = this.OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
+            var list = OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
 
             return new PagedList<T>(list, pageIndex, pageSize, total);
         }
@@ -1636,9 +1643,9 @@ namespace WEF
         /// <returns></returns>
         public PagedList<T> ToPagedList(Expression<Func<T, bool>> lambdaWhere, int pageIndex, int pageSize, string orderBy, bool asc)
         {
-            var total = this.Where(lambdaWhere).Count();
+            var total = Where(lambdaWhere).Count();
 
-            var list = this.Where(lambdaWhere).OrderBy(new OrderByOperation(orderBy, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
+            var list = Where(lambdaWhere).OrderBy(new OrderByOperation(orderBy, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
 
             return new PagedList<T>(list, pageIndex, pageSize, total);
         }
@@ -1654,9 +1661,9 @@ namespace WEF
         /// <returns></returns>
         public PagedList<T> ToPagedList(Where where, int pageIndex, int pageSize, string orderBy, bool asc)
         {
-            var total = this.Where(where).Count();
+            var total = Where(where).Count();
 
-            var list = this.Where(where).OrderBy(new OrderByOperation(orderBy, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
+            var list = Where(where).OrderBy(new OrderByOperation(orderBy, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<T>();
 
             return new PagedList<T>(list, pageIndex, pageSize, total);
         }
@@ -1672,9 +1679,9 @@ namespace WEF
         /// <returns></returns>
         public PagedList<Model> ToPagedList<Model>(int pageIndex, int pageSize, string order, bool asc)
         {
-            var total = this.Count();
+            var total = Count();
 
-            var list = this.OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<Model>();
+            var list = OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<Model>();
 
             return new PagedList<Model>(list, pageIndex, pageSize, total);
         }
@@ -1690,9 +1697,9 @@ namespace WEF
         /// <returns></returns>
         public PagedList<Model> ToPagedList<Model>(Expression<Func<T, bool>> lambdaWhere, int pageIndex, int pageSize, string orderBy, bool asc)
         {
-            var total = this.Where(lambdaWhere).Count();
+            var total = Where(lambdaWhere).Count();
 
-            var list = this.Where(lambdaWhere).OrderBy(new OrderByOperation(orderBy, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<Model>();
+            var list = Where(lambdaWhere).OrderBy(new OrderByOperation(orderBy, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<Model>();
 
             return new PagedList<Model>(list, pageIndex, pageSize, total);
         }
@@ -1708,9 +1715,9 @@ namespace WEF
         /// <returns></returns>
         public PagedList<Model> ToPagedList<Model>(Where where, int pageIndex, int pageSize, string orderBy, bool asc)
         {
-            var total = this.Where(where).Count();
+            var total = Where(where).Count();
 
-            var list = this.Where(where).OrderBy(new OrderByOperation(orderBy, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<Model>();
+            var list = Where(where).OrderBy(new OrderByOperation(orderBy, asc ? OrderByOperater.ASC : OrderByOperater.DESC)).Page(pageIndex, pageSize).ToList<Model>();
 
             return new PagedList<Model>(list, pageIndex, pageSize, total);
         }

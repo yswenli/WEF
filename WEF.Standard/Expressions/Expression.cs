@@ -1,5 +1,5 @@
 ﻿/*****************************************************************************************************
- * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2022
+ * 本代码版权归@wenli所有，All Rights Reserved (C) 2015-2024
  *****************************************************************************************************
  * CLR版本：4.0.30319.42000
  * 唯一标识：c631644d-ae98-49d3-97c6-20e2411f1569
@@ -137,10 +137,10 @@ namespace WEF.Expressions
     [Serializable]
     public class Parameter
     {
-        private string parameterName;
-        private object parameterValue;
-        private DbType parameterDbType;
-        private int parameterSize;
+        private string _parameterName;
+        private object _parameterValue;
+        private DbType _parameterDbType;
+        private int _parameterSize;
 
         /// <summary>
         /// 
@@ -158,10 +158,10 @@ namespace WEF.Expressions
         /// <param name="parameterSize"></param>
         public Parameter(string parameterName, object parameterValue, DbType parameterDbType, int parameterSize)
         {
-            this.parameterName = parameterName;
-            this.parameterValue = parameterValue;
-            this.parameterDbType = parameterDbType;
-            this.parameterSize = parameterSize;
+            _parameterName = parameterName;
+            _parameterValue = parameterValue;
+            _parameterDbType = parameterDbType;
+            _parameterSize = parameterSize;
         }
 
         /// <summary>
@@ -171,11 +171,11 @@ namespace WEF.Expressions
         {
             get
             {
-                return parameterName;
+                return _parameterName;
             }
             set
             {
-                parameterName = value;
+                _parameterName = value;
             }
         }
 
@@ -187,11 +187,11 @@ namespace WEF.Expressions
         {
             get
             {
-                return parameterValue;
+                return _parameterValue;
             }
             set
             {
-                parameterValue = value;
+                _parameterValue = value;
             }
         }
 
@@ -202,11 +202,11 @@ namespace WEF.Expressions
         {
             get
             {
-                return parameterDbType;
+                return _parameterDbType;
             }
             set
             {
-                parameterDbType = value;
+                _parameterDbType = value;
             }
         }
 
@@ -217,11 +217,11 @@ namespace WEF.Expressions
         {
             get
             {
-                return parameterSize;
+                return _parameterSize;
             }
             set
             {
-                parameterSize = value;
+                _parameterSize = value;
             }
         }
 
@@ -260,7 +260,7 @@ namespace WEF.Expressions
         /// <param name="expressionString"></param>
         public Expression(string expressionString)
         {
-            this._expressionString = expressionString;
+            _expressionString = expressionString;
         }
 
         /// <summary>
@@ -272,10 +272,10 @@ namespace WEF.Expressions
         {
             if (!string.IsNullOrEmpty(expressionString))
             {
-                this._expressionString = expressionString;
+                _expressionString = expressionString;
 
                 if (null != parameters && parameters.Length > 0)
-                    this._parameters.AddRange(parameters);
+                    _parameters.AddRange(parameters);
             }
         }
 
@@ -324,11 +324,11 @@ namespace WEF.Expressions
 
                 if (isFieldBefore)
                 {
-                    this._expressionString = string.Concat(field.TableFieldName, DataUtils.ToString(oper), valuestring);
+                    _expressionString = string.Concat(field.TableFieldName, DataUtils.ToString(oper), valuestring);
                 }
                 else
                 {
-                    this._expressionString = string.Concat(valuestring, DataUtils.ToString(oper), field.TableFieldName);
+                    _expressionString = string.Concat(valuestring, DataUtils.ToString(oper), field.TableFieldName);
                 }
             }
         }
