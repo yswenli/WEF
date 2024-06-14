@@ -527,15 +527,15 @@ namespace WEF.ModelGenerator
             if (gridColumns.Rows != null && gridColumns.Rows.Count > 0)
             {
                 StringBuilder sb = new StringBuilder();
-
+                sb.AppendLine(">*WEF Code Generator Markdown Document*");
                 sb.AppendLine($"### 表名 {TableName}");
-                sb.AppendLine("|字段|类型|可空|默认|注释|");
-                sb.AppendLine("|:----    |:-------    |:--- |-- -|------      |");
-
+                sb.AppendLine("|字段名称|字段类型|是否可空|描述|默认值|");
+                sb.AppendLine("|:--|:--|:--|:--|:--|");
                 foreach (DataGridViewRow row in gridColumns.Rows)
                 {
-                    sb.AppendLine($"|{row.Cells["ColumnName"].Value}|{row.Cells["TypeName"].Value}({row.Cells["Length"].Value})|{row.Cells["cisNull"].Value}|{row.Cells["defaultVal"].Value}|{row.Cells["deText"].Value}|");
+                    sb.AppendLine($"|{row.Cells["ColumnName"].Value}|{row.Cells["TypeName"].Value}({row.Cells["Length"].Value})|{row.Cells["cisNull"].Value}|{row.Cells["deText"].Value}|{row.Cells["defaultVal"].Value}|");
                 }
+                
                 new TextForm("生成MarkDown文档-WEF代码生成工具", sb.ToString(), true).ShowDialog(this);
             }
         }
