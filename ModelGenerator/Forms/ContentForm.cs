@@ -534,8 +534,7 @@ namespace WEF.ModelGenerator
                 foreach (DataGridViewRow row in gridColumns.Rows)
                 {
                     sb.AppendLine($"|{row.Cells["ColumnName"].Value}|{row.Cells["TypeName"].Value}({row.Cells["Length"].Value})|{row.Cells["cisNull"].Value}|{row.Cells["deText"].Value}|{row.Cells["defaultVal"].Value}|");
-                }
-                
+                }                
                 new TextForm("生成MarkDown文档-WEF代码生成工具", sb.ToString(), true).ShowDialog(this);
             }
         }
