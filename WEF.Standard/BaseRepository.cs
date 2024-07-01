@@ -1374,6 +1374,17 @@ namespace WEF
         #endregion
 
         /// <summary>
+        /// 按天复制表
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="isTruncate"></param>
+        /// <returns></returns>
+        public bool CopyTableByDay<TEntity>(bool isTruncate = false) where TEntity : Entity
+        {
+            return _dbContext.CopyTableByDay<TEntity>(isTruncate);
+        }
+
+        /// <summary>
         /// 释放资源
         /// </summary>
         public void Dispose()

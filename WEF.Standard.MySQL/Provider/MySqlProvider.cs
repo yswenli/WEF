@@ -214,5 +214,23 @@ namespace WEF.Provider
 
             return fromSection;
         }
+
+        /// <summary>
+        /// 表是否存在
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public override bool IsTableExist(string tableName)
+        {
+            using (var cnn = new MySqlConnection(ConnectionString))
+            {
+                using (var cmd = new MySqlCommand("SHOW TABLES LIKE '" + tableName + "';", cnn))
+                {
+                    cnn.Open();
+                    var data = cmd.ExecuteScalar();
+                    return data != null && data.ToString() == tableName;
+                }
+            }
+        }
     }
 }

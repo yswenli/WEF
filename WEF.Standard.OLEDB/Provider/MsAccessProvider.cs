@@ -144,5 +144,23 @@ namespace WEF.Provider
             }
 
         }
+
+
+        /// <summary>
+        /// 表是否存在
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public override bool IsTableExist(string tableName)
+        {
+            using (var cnn = new OleDbConnection(ConnectionString))
+            {
+                cnn.Open();
+                var exists = cnn.GetSchema("Tables", new string[4] { null, null, tableName, "TABLE" }).Rows.Count > 0;
+                cnn.Close();
+                return exists;
+            }
+        }
+
     }
 }

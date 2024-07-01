@@ -178,6 +178,32 @@ namespace WEF.DbDAL
         /// 获取数据库类型(SQL2000,SQL2005,Oracle,OleDb)
         /// </summary>
         string DbType { get; }
+
+
+
+        /// <summary>
+        /// 表是否存在
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        bool IsTableExist(string dbName, string tableName);
+
+        /// <summary>
+        /// 截断表
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <param name="tableName"></param>
+        void TruncateTable(string dbName, string tableName);
+
+        /// <summary>
+        /// 复制表
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <param name="tableName"></param>
+        /// <param name="newTableName"></param>
+        /// <returns></returns>
+        bool CopyTable(string dbName, string tableName, string newTableName);
     }
 }
 

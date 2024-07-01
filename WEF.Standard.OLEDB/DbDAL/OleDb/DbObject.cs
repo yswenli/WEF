@@ -449,6 +449,42 @@ namespace WEF.DbDAL.OleDb
                 return "OleDb";
             }
         }
+
+        /// <summary>
+        /// 表是否存在
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public bool IsTableExist(string dbName, string tableName)
+        {
+            OpenDB();
+            var exists = _connect.GetSchema("Tables", new string[4] { null, null, tableName, "TABLE" }).Rows.Count > 0;
+            _connect.Close();
+            return exists;
+        }
+
+        /// <summary>
+        /// 截断表
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <param name="tableName"></param>
+        public void TruncateTable(string dbName, string tableName)
+        {
+            ExecuteSql(dbName, $"TRUNCATE TABLE {tableName};");
+        }
+
+        /// <summary>
+        /// 复制表
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <param name="tableName"></param>
+        /// <param name="newTableName"></param>
+        /// <returns></returns>
+        public bool CopyTable(string dbName, string tableName, string newTableName)
+        {
+            return ExecuteSql(dbName, $"SELECT * INTO {newTableName} FROM {tableName};") > 0;
+        }
     }
 }
 

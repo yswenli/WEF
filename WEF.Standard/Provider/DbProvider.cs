@@ -16,6 +16,7 @@ using System.Data.Common;
 
 using WEF.Common;
 using WEF.Db;
+using WEF.DbDAL;
 using WEF.Expressions;
 
 namespace WEF.Provider
@@ -29,29 +30,29 @@ namespace WEF.Provider
         /// <summary>
         /// like符号
         /// </summary>
-        protected char likeToken;
+        protected char _likeToken;
         /// <summary>
         /// 【
         /// </summary>
-        protected char leftToken;
+        protected char _leftToken;
         /// <summary>
         /// 参数前缀
         /// </summary>
-        protected char paramPrefixToken;
+        protected char _paramPrefixToken;
 
         /// <summary>
         /// 】
         /// </summary>
-        protected char rightToken;
+        protected char _rightToken;
 
         /// <summary>
         /// The db provider factory.
         /// </summary>
-        protected DbProviderFactory dbProviderFactory;
+        protected DbProviderFactory _dbProviderFactory;
         /// <summary>
         /// The db connection string builder
         /// </summary>
-        protected DbConnectionStringBuilder dbConnStrBuilder;
+        protected DbConnectionStringBuilder _dbConnStrBuilder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:DbProvider"/> class.
@@ -63,12 +64,12 @@ namespace WEF.Provider
         /// <param name="rightToken">rightToken</param>
         protected DbProvider(string connectionString, DbProviderFactory dbProviderFactory, char leftToken, char rightToken, char paramPrefixToken)
         {
-            dbConnStrBuilder = new DbConnectionStringBuilder();
-            dbConnStrBuilder.ConnectionString = RepairedMySqlConnStr(connectionString);
-            this.dbProviderFactory = dbProviderFactory;
-            this.leftToken = leftToken;
-            this.rightToken = rightToken;
-            this.paramPrefixToken = paramPrefixToken;
+            _dbConnStrBuilder = new DbConnectionStringBuilder();
+            _dbConnStrBuilder.ConnectionString = RepairedMySqlConnStr(connectionString);
+            this._dbProviderFactory = dbProviderFactory;
+            this._leftToken = leftToken;
+            this._rightToken = rightToken;
+            this._paramPrefixToken = paramPrefixToken;
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="T:DbProvider"/> class.
@@ -81,20 +82,20 @@ namespace WEF.Provider
         /// <param name="likeToken">likeToken</param>
         protected DbProvider(string connectionString, DbProviderFactory dbProviderFactory, char leftToken, char rightToken, char paramPrefixToken, char likeToken = '%')
         {
-            dbConnStrBuilder = new DbConnectionStringBuilder();
-            dbConnStrBuilder.ConnectionString = RepairedMySqlConnStr(connectionString);
-            this.dbProviderFactory = dbProviderFactory;
-            this.leftToken = leftToken;
-            this.rightToken = rightToken;
-            this.paramPrefixToken = paramPrefixToken;
-            this.likeToken = likeToken;
+            _dbConnStrBuilder = new DbConnectionStringBuilder();
+            _dbConnStrBuilder.ConnectionString = RepairedMySqlConnStr(connectionString);
+            this._dbProviderFactory = dbProviderFactory;
+            this._leftToken = leftToken;
+            this._rightToken = rightToken;
+            this._paramPrefixToken = paramPrefixToken;
+            this._likeToken = likeToken;
         }
 
         string RepairedMySqlConnStr(string mysqlConnStr)
         {
             if (!string.IsNullOrEmpty(mysqlConnStr))
             {
-                if ((dbProviderFactory != null && dbProviderFactory.GetType().Name.IndexOf("mysql", StringComparison.OrdinalIgnoreCase) > -1)
+                if ((_dbProviderFactory != null && _dbProviderFactory.GetType().Name.IndexOf("mysql", StringComparison.OrdinalIgnoreCase) > -1)
                     || mysqlConnStr.IndexOf("port=3306", StringComparison.OrdinalIgnoreCase) > -1)
                 {
                     if (mysqlConnStr.IndexOf("Convert Zero Datetime=True", StringComparison.OrdinalIgnoreCase) == -1
@@ -110,7 +111,6 @@ namespace WEF.Provider
             return mysqlConnStr;
         }
         #endregion
-
 
         #region Properties
         //2015-08-12新增
@@ -160,11 +160,11 @@ namespace WEF.Provider
         {
             get
             {
-                return dbConnStrBuilder.ConnectionString;
+                return _dbConnStrBuilder.ConnectionString;
             }
             internal set
             {
-                dbConnStrBuilder.ConnectionString = value;
+                _dbConnStrBuilder.ConnectionString = value;
             }
         }
 
@@ -176,7 +176,7 @@ namespace WEF.Provider
         {
             get
             {
-                return dbProviderFactory;
+                return _dbProviderFactory;
             }
         }
 
@@ -188,7 +188,7 @@ namespace WEF.Provider
         {
             get
             {
-                return paramPrefixToken;
+                return _paramPrefixToken;
             }
         }
 
@@ -200,7 +200,7 @@ namespace WEF.Provider
         {
             get
             {
-                return leftToken;
+                return _leftToken;
             }
         }
 
@@ -212,12 +212,11 @@ namespace WEF.Provider
         {
             get
             {
-                return rightToken;
+                return _rightToken;
             }
         }
 
         #endregion
-
 
 
         /// <summary>
@@ -243,16 +242,16 @@ namespace WEF.Provider
         /// <returns></returns>
         public virtual string BuildParameterName(string name)
         {
-            string nameStr = name.Trim(leftToken, rightToken);
-            if (nameStr[0] != paramPrefixToken)
+            string nameStr = name.Trim(_leftToken, _rightToken);
+            if (nameStr[0] != _paramPrefixToken)
             {
                 if ("@?:".Contains(nameStr[0].ToString()))
                 {
-                    nameStr = nameStr.Substring(1).Insert(0, new string(paramPrefixToken, 1));
+                    nameStr = nameStr.Substring(1).Insert(0, new string(_paramPrefixToken, 1));
                 }
                 else
                 {
-                    nameStr = nameStr.Insert(0, new string(paramPrefixToken, 1));
+                    nameStr = nameStr.Insert(0, new string(_paramPrefixToken, 1));
                 }
             }
             return nameStr.Replace(".", "_");
@@ -274,11 +273,11 @@ namespace WEF.Provider
             {
                 if (string.IsNullOrWhiteSpace(userName))
                 {
-                    return string.Concat(leftToken.ToString(), tableName.Trim(leftToken, rightToken), rightToken.ToString());
+                    return string.Concat(_leftToken.ToString(), tableName.Trim(_leftToken, _rightToken), _rightToken.ToString());
                 }
-                return string.Concat(leftToken.ToString(), userName.Trim(leftToken, rightToken), rightToken.ToString())
+                return string.Concat(_leftToken.ToString(), userName.Trim(_leftToken, _rightToken), _rightToken.ToString())
                     + "."
-                    + string.Concat(leftToken.ToString(), tableName.Trim(leftToken, rightToken), rightToken.ToString());
+                    + string.Concat(_leftToken.ToString(), tableName.Trim(_leftToken, _rightToken), _rightToken.ToString());
             }
         }
 
@@ -422,7 +421,7 @@ namespace WEF.Provider
                 }
                 else
                 {
-                    cmd.CommandText = DataUtils.FormatSQL(cmd.CommandText, leftToken, rightToken);
+                    cmd.CommandText = DataUtils.FormatSQL(cmd.CommandText, _leftToken, _rightToken);
                 }
 
             }
@@ -486,5 +485,48 @@ namespace WEF.Provider
             }
         }
 
+        /// <summary>
+        /// 表是否存在
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public abstract bool IsTableExist(string tableName);
+
+
+        /// <summary>
+        /// 截断表
+        /// </summary>
+        /// <param name="tableName"></param>
+        public void TruncateTable(string tableName)
+        {
+            using (var cnn = _dbProviderFactory.CreateConnection())
+            {
+                using (var cmd = cnn.CreateCommand())
+                {
+                    cnn.Open();
+                    cmd.CommandText = $"TRUNCATE TABLE {tableName};";
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 复制表
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="newTableName"></param>
+        /// <returns></returns>
+        public bool CopyTable(string tableName, string newTableName)
+        {
+            using (var cnn = _dbProviderFactory.CreateConnection())
+            {
+                using (var cmd = cnn.CreateCommand())
+                {
+                    cnn.Open();
+                    cmd.CommandText = $"SELECT * INTO {newTableName} FROM {tableName};";
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
+        }
     }
 }

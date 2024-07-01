@@ -9,6 +9,7 @@
  * 联系人邮箱：wenguoli_520@qq.com
  *****************************************************************************************************/
 using System;
+using System.Data.SqlClient;
 
 using WEF.Common;
 using WEF.Db;
@@ -78,6 +79,24 @@ namespace WEF.Provider
             fromSection.Where(new WhereExpression(string.Concat("tmp_rowid BETWEEN ", startIndex.ToString(), " AND ", endIndex.ToString())), true);
             fromSection.Join(JoinOn.None);
             return fromSection;
+        }
+
+        /// <summary>
+        /// 表是否存在
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public override bool IsTableExist(string tableName)
+        {
+            using (var cnn = new SqlConnection(ConnectionString))
+            {
+                using (var cmd = new SqlCommand($"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{tableName}';", cnn))
+                {
+                    cnn.Open();
+                    var data = cmd.ExecuteScalar();
+                    return data != null && data.ToString() == tableName;
+                }
+            }
         }
     }
 }

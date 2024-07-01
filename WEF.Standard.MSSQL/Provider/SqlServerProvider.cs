@@ -57,10 +57,10 @@ namespace WEF.Provider
         /// <returns></returns>
         public override string BuildParameterName(string name)
         {
-            string nameStr = name.Trim(leftToken, rightToken);
-            if (nameStr[0] != paramPrefixToken)
+            string nameStr = name.Trim(_leftToken, _rightToken);
+            if (nameStr[0] != _paramPrefixToken)
             {
-                return nameStr.Insert(0, new string(paramPrefixToken, 1));
+                return nameStr.Insert(0, new string(_paramPrefixToken, 1));
             }
             //剔除参数中的“.” 2016-04-08 added
             return nameStr.Replace(".", "_");
@@ -132,5 +132,24 @@ namespace WEF.Provider
 
             }
         }
+
+        /// <summary>
+        /// 表是否存在
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public override bool IsTableExist(string tableName)
+        {
+            using (var cnn = new SqlConnection(ConnectionString))
+            {
+                using (var cmd = new SqlCommand($"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{tableName}';", cnn))
+                {
+                    cnn.Open();
+                    var data = cmd.ExecuteScalar();
+                    return data != null && data.ToString() == tableName;
+                }
+            }
+        }
+
     }
 }

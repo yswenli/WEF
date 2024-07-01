@@ -271,6 +271,40 @@ namespace WEF.DbDAL.Oracle
                 return "Oracle";
             }
         }
+
+        /// <summary>
+        /// 表是否存在
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public bool IsTableExist(string dbName, string tableName)
+        {
+            var data = GetSingle(dbName, $"SELECT table_name FROM user_tables WHERE table_name = '{tableName}';")?.ToString() ?? "";
+            return (!string.IsNullOrEmpty(data) && data == tableName);
+        }
+
+        /// <summary>
+        /// 截断表
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <param name="tableName"></param>
+        public void TruncateTable(string dbName, string tableName)
+        {
+            ExecuteSql(dbName, $"TRUNCATE TABLE {tableName};");
+        }
+
+        /// <summary>
+        /// 复制表
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <param name="tableName"></param>
+        /// <param name="newTableName"></param>
+        /// <returns></returns>
+        public bool CopyTable(string dbName, string tableName, string newTableName)
+        {
+            return ExecuteSql(dbName, $"SELECT * INTO {newTableName} FROM {tableName};") > 0;
+        }
     }
 }
 

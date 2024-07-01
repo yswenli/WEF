@@ -692,7 +692,6 @@ namespace WEF
 
         #endregion
 
-
         #region 事务
 
         /// <summary>
@@ -2674,6 +2673,48 @@ namespace WEF
             var dataTable = list.EntitiesToDataTable();
 
             dataTable.WriteToCSV(filePath, withHeader);
+        }
+
+        #endregion
+
+        #region 复制表
+
+        /// <summary>
+        /// 按天复制表
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="isTruncate"></param>
+        /// <returns></returns>
+        public bool CopyTableByDay<TEntity>(bool isTruncate = false) where TEntity : Entity
+        {
+            var talbleName = EntityCache.GetTableName<TEntity>();
+            var newTalbeName = $"{talbleName}_{DateTime.Now.ToString("yyyyMMdd")}";
+            return CopyTable(talbleName, newTalbeName, isTruncate);
+        }
+
+        /// <summary>
+        /// 复制表
+        /// </summary>
+        /// <param name="talbName"></param>
+        /// <param name="newTableName"></param>
+        /// <param name="isTruncate"></param>
+        /// <returns></returns>
+        public bool CopyTable(string talbName, string newTableName, bool isTruncate = false)
+        {
+            var exist = _db.DbProvider.IsTableExist(newTableName);
+            if (!exist)
+            {
+                if (_db.DbProvider.CopyTable(talbName, newTableName))
+                {
+                    if (isTruncate)
+                    {
+                        _db.DbProvider.TruncateTable(talbName);
+                        return true;
+
+                    }
+                }
+            }
+            return false;
         }
 
         #endregion

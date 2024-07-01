@@ -160,5 +160,25 @@ namespace WEF.Provider
 
             return fromSection;
         }
+
+
+        /// <summary>
+        /// 表是否存在
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public override bool IsTableExist(string tableName)
+        {
+            using (var cnn = new NpgsqlConnection(ConnectionString))
+            {
+                using (var cmd = cnn.CreateCommand())
+                {
+                    cmd.CommandText = $"SELECT table_name FROM information_schema.tables WHERE table_name = '{tableName}';";
+                    cnn.Open();
+                    var data = cmd.ExecuteScalar()?.ToString() ?? "";
+                    return (!string.IsNullOrEmpty(data) && data == tableName);
+                }
+            }
+        }
     }
 }

@@ -654,6 +654,40 @@ namespace WEF.DbDAL.SQL2000
                 return "SQL2000";
             }
         }
+
+        /// <summary>
+        /// 表是否存在
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public bool IsTableExist(string dbName, string tableName)
+        {
+            var data = GetSingle(dbName, $"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{tableName}';")?.ToString() ?? "";
+            return (!string.IsNullOrEmpty(data) && data == tableName);
+        }
+
+        /// <summary>
+        /// 截断表
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <param name="tableName"></param>
+        public void TruncateTable(string dbName, string tableName)
+        {
+            ExecuteSql(dbName, $"TRUNCATE TABLE {tableName};");
+        }
+
+        /// <summary>
+        /// 复制表
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <param name="tableName"></param>
+        /// <param name="newTableName"></param>
+        /// <returns></returns>
+        public bool CopyTable(string dbName, string tableName, string newTableName)
+        {
+            return ExecuteSql(dbName, $"SELECT * INTO {newTableName} FROM {tableName};") > 0;
+        }
     }
 }
 

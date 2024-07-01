@@ -323,7 +323,7 @@ namespace WEF.Db
         }
 
 
-        private IDbTransaction BeginTransaction(DbConnection connection, IsolationLevel il)
+        private IDbTransaction BeginTransaction(DbConnection connection, System.Data.IsolationLevel il)
         {
             return connection.BeginTransaction(il);
         }

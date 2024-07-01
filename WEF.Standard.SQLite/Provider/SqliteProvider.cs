@@ -115,5 +115,24 @@ namespace WEF.Provider
 
             return fromSection;
         }
+
+        /// <summary>
+        /// 表是否存在
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public override bool IsTableExist(string tableName)
+        {
+            using (var cnn = new SQLiteConnection(ConnectionString))
+            {
+                using (var cmd = cnn.CreateCommand())
+                {
+                    cmd.CommandText = $".tables {tableName};";
+                    cnn.Open();
+                    var data = cmd.ExecuteScalar()?.ToString() ?? "";
+                    return (!string.IsNullOrEmpty(data) && data == tableName);
+                }
+            }
+        }
     }
 }
