@@ -29,6 +29,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using OpenCvSharp;
+
 namespace WEF.ModelGenerator.Common
 {
     public static class FileHelper
@@ -143,7 +145,7 @@ namespace WEF.ModelGenerator.Common
                             try
                             {
                                 var sfiles = GetFiles(dir.FullName, filters, all);
-                                if (sfiles.Count > 0)
+                                if ( sfiles != null && sfiles.Count > 0)
                                 {
                                     result.AddRange(sfiles);
                                 }
@@ -275,6 +277,44 @@ namespace WEF.ModelGenerator.Common
             });
 
             return concurrentBag.ToList();
+        }
+
+        /// <summary>
+        /// 追加
+        /// </summary>
+        /// <param name="appendTxt"></param>
+        /// <param name="files"></param>
+        /// <param name="appendStatus"></param>
+        /// <returns></returns>
+        public static List<bool> AppendText(string appendTxt, List<string> files, int appendStatus = 1)
+        {
+            ConcurrentBag<bool> result = new ConcurrentBag<bool>();
+
+            Parallel.ForEach(files, (file) =>
+            {
+                var txt = ReadTxt(file);
+                if (appendStatus == 1)
+                {
+                    WriteTxt(file, appendTxt + txt);
+                    result.Add(true);
+                }
+                else if (appendStatus == 2)
+                {
+                    WriteTxt(file, txt + appendTxt);
+                    result.Add(true);
+                }
+                else if (appendStatus == 3)
+                {
+                    WriteTxt(file, appendTxt + txt + appendTxt);
+                    result.Add(true);
+                }
+                else
+                {
+                    result.Add(false);
+                }
+            });
+
+            return result.ToList();
         }
 
         /// <summary>

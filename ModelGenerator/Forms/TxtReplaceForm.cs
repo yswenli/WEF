@@ -16,8 +16,6 @@ namespace TxtReplaceTool
         public TxtReplaceForm()
         {
             InitializeComponent();
-            textBox3.Multiline = true;
-            textBox4.Multiline = true;
         }
 
 
@@ -36,6 +34,11 @@ namespace TxtReplaceTool
             }
         }
 
+        /// <summary>
+        /// 查找文件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
             var filePath = textBox1.Text;
@@ -53,7 +56,8 @@ namespace TxtReplaceTool
                 return;
             }
 
-            button2.Enabled = button3.Enabled = false;
+            this.Enabled = false;
+
             label5.Text = "正在查找文件...";
             toolStripProgressBar1.Visible = true;
 
@@ -63,10 +67,11 @@ namespace TxtReplaceTool
                 var list = FileHelper.Find(str, filePath, filters);
                 this.Invoke(new Action(() =>
                 {
+                    this.Enabled = true;
+                    button2.Enabled = true;
                     if (list != null && list.Count > 0)
                     {
-                        label5.Text = $"已找到{list.Count}个文件,共用时{stopWatch.Elapsed.TotalSeconds}s";
-                        button3.Enabled = true;
+                        label5.Text = $"已找到{list.Count}个文件,共用时{stopWatch.Elapsed.TotalSeconds}s";                        
                         _fileList.Clear();
                         _fileList = list;
                         listBox1.Items.Clear();
@@ -74,24 +79,41 @@ namespace TxtReplaceTool
                         {
                             listBox1.Items.Add(item);
                         }
+                        button3.Enabled = true;
+                        button4.Enabled = true;
+                        textBox4.Enabled = true;
+                        textBox5.Enabled = true;
+                        checkBox1.Enabled = true;
+                        checkBox2.Enabled = true;
                     }
                     else
                     {
                         label5.Text = $"找不到任何内容,共用时{stopWatch.Elapsed.TotalSeconds}s";
                         listBox1.Items.Clear();
+
+                        button3.Enabled = false;
+                        button4.Enabled = false;
+                        textBox4.Enabled = false;
+                        textBox5.Enabled = false;
+                        checkBox1.Enabled = false;
+                        checkBox2.Enabled = false;
                     }
                     toolStripProgressBar1.Visible = false;
-                    button2.Enabled = true;
                 }));
 
             });
         }
 
+        /// <summary>
+        /// 替换
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
             if (_fileList == null || _fileList.Count < 1)
             {
-                MessageBox.Show(this, "查找的列表不能为空");
+                MessageBox.Show(this, "文件列表不能为空");
                 return;
             };
 
@@ -122,7 +144,7 @@ namespace TxtReplaceTool
                 replaceFileName = true;
             }
 
-            button2.Enabled = button3.Enabled = false;
+            this.EnableControlsOrNot();
 
             label5.Text = "正在替换文件...";
 
@@ -154,11 +176,76 @@ namespace TxtReplaceTool
                     {
                         label5.Text = $"替换操作已成功完成{list.Count}次,共用时{stopWatch.Elapsed.TotalSeconds}s";
                     }
-                    button2.Enabled = button3.Enabled = true;
+
+                    this.EnableControlsOrNot();
                 }));
             });
         }
 
+        /// <summary>
+        /// 追加文本
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (_fileList == null || _fileList.Count < 1)
+            {
+                MessageBox.Show(this, "文件列表不能为空");
+                return;
+            };
+            var appentText = textBox5.Text;
+            if (string.IsNullOrEmpty(appentText))
+            {
+                MessageBox.Show(this, "追加的内容不能为空");
+                return;
+            }
+            var addStatus = 0;
+            if (checkBox1.Checked)
+            {
+                addStatus = 1;
+
+                if (checkBox2.Checked)
+                {
+                    addStatus = 3;
+                }
+            }
+            else
+            {
+                if (checkBox2.Checked)
+                {
+                    addStatus = 2;
+                }
+            }
+            if (addStatus == 0)
+            {
+                MessageBox.Show(this, "请选择要追加的位置");
+                return;
+            }
+
+            this.EnableControlsOrNot();
+
+            Task.Factory.StartNew(() =>
+            {
+                var stopWatch = Stopwatch.StartNew();
+
+                var list = FileHelper.AppendText(appentText, _fileList);
+
+                this.Invoke(new Action(() =>
+                {
+                    if (list == null || list.Count < 1)
+                    {
+                        label5.Text = $"追加操作失败,共用时{stopWatch.Elapsed.TotalSeconds}s";
+                    }
+                    else
+                    {
+                        label5.Text = $"追加操作已成功完成{list.Count}次,共用时{stopWatch.Elapsed.TotalSeconds}s";
+                    }
+                    this.EnableControlsOrNot();
+                }));
+            });
+
+        }
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             try
@@ -201,5 +288,6 @@ namespace TxtReplaceTool
             }
             catch { }
         }
+
     }
 }

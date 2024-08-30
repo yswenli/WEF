@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\SixLabors.ImageSharp.3.0.2\build\SixLabors.ImageSharp.props" Condition="Exists('packages\SixLabors.ImageSharp.3.0.2\build\SixLabors.ImageSharp.props')" />
+  <Import Project="packages\Sdcb.PaddleInference.runtime.win64.mkl.2.5.1\build\net\Sdcb.PaddleInference.runtime.win64.mkl.props" Condition="Exists('packages\Sdcb.PaddleInference.runtime.win64.mkl.2.5.1\build\net\Sdcb.PaddleInference.runtime.win64.mkl.props')" />
+  <Import Project="packages\OpenCvSharp4.runtime.win.4.8.0.20230708\build\netstandard\OpenCvSharp4.runtime.win.props" Condition="Exists('packages\OpenCvSharp4.runtime.win.4.8.0.20230708\build\netstandard\OpenCvSharp4.runtime.win.props')" />
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="..\packages\SixLabors.ImageSharp.3.0.2\build\SixLabors.ImageSharp.props" Condition="Exists('..\packages\SixLabors.ImageSharp.3.0.2\build\SixLabors.ImageSharp.props')" />
   <Import Project="..\packages\Sdcb.PaddleInference.runtime.win64.mkl.2.5.1\build\net\Sdcb.PaddleInference.runtime.win64.mkl.props" Condition="Exists('..\packages\Sdcb.PaddleInference.runtime.win64.mkl.2.5.1\build\net\Sdcb.PaddleInference.runtime.win64.mkl.props')" />
   <Import Project="..\packages\Sdcb.Paddle2Onnx.runtime.win64.1.0.0.2\build\net\Sdcb.Paddle2Onnx.runtime.win64.props" Condition="Exists('..\packages\Sdcb.Paddle2Onnx.runtime.win64.1.0.0.2\build\net\Sdcb.Paddle2Onnx.runtime.win64.props')" />
@@ -55,32 +59,32 @@
       <HintPath>..\packages\Portable.BouncyCastle.1.9.0\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
-      <HintPath>..\packages\BouncyCastle.Cryptography.2.2.1\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+      <HintPath>packages\BouncyCastle.Cryptography.2.2.1\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
     </Reference>
     <Reference Include="CSkin, Version=16.1.14.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dlls\CSkin.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Enums.NET, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7ea1c1650d506225, processorArchitecture=MSIL">
-      <HintPath>..\packages\Enums.NET.4.0.1\lib\net45\Enums.NET.dll</HintPath>
+      <HintPath>packages\Enums.NET.4.0.1\lib\net45\Enums.NET.dll</HintPath>
     </Reference>
     <Reference Include="Google.Protobuf, Version=3.24.4.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Protobuf.3.24.4\lib\net45\Google.Protobuf.dll</HintPath>
+      <HintPath>packages\Google.Protobuf.3.24.4\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.4.2.13, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.4.2\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="K4os.Compression.LZ4, Version=1.3.6.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
-      <HintPath>..\packages\K4os.Compression.LZ4.1.3.6\lib\net462\K4os.Compression.LZ4.dll</HintPath>
+      <HintPath>packages\K4os.Compression.LZ4.1.3.6\lib\net462\K4os.Compression.LZ4.dll</HintPath>
     </Reference>
     <Reference Include="K4os.Compression.LZ4.Streams, Version=1.3.6.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
-      <HintPath>..\packages\K4os.Compression.LZ4.Streams.1.3.6\lib\net462\K4os.Compression.LZ4.Streams.dll</HintPath>
+      <HintPath>packages\K4os.Compression.LZ4.Streams.1.3.6\lib\net462\K4os.Compression.LZ4.Streams.dll</HintPath>
     </Reference>
     <Reference Include="K4os.Hash.xxHash, Version=1.0.8.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
       <HintPath>..\packages\K4os.Hash.xxHash.1.0.8\lib\net462\K4os.Hash.xxHash.dll</HintPath>
@@ -93,43 +97,43 @@
       <HintPath>..\packages\MathNet.Numerics.Signed.5.0.0\lib\net461\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=7.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.7.0.1\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+      <HintPath>packages\Microsoft.Extensions.Logging.Abstractions.7.0.1\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=2.3.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.2.3.2\lib\net462\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+      <HintPath>packages\Microsoft.IO.RecyclableMemoryStream.2.3.2\lib\net462\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data, Version=8.1.0.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.Data.8.1.0\lib\net462\MySql.Data.dll</HintPath>
+      <HintPath>packages\MySql.Data.8.1.0\lib\net462\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql, Version=7.0.6.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Npgsql.7.0.6\lib\netstandard2.0\Npgsql.dll</HintPath>
+      <HintPath>packages\Npgsql.7.0.6\lib\netstandard2.0\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="NPOI.Core, Version=2.6.2.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.2\lib\netstandard2.0\NPOI.Core.dll</HintPath>
+      <HintPath>packages\NPOI.2.6.2\lib\netstandard2.0\NPOI.Core.dll</HintPath>
     </Reference>
     <Reference Include="NPOI.OOXML, Version=2.6.2.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.2\lib\netstandard2.0\NPOI.OOXML.dll</HintPath>
+      <HintPath>packages\NPOI.2.6.2\lib\netstandard2.0\NPOI.OOXML.dll</HintPath>
     </Reference>
     <Reference Include="NPOI.OpenXml4Net, Version=2.6.2.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.2\lib\netstandard2.0\NPOI.OpenXml4Net.dll</HintPath>
+      <HintPath>packages\NPOI.2.6.2\lib\netstandard2.0\NPOI.OpenXml4Net.dll</HintPath>
     </Reference>
     <Reference Include="NPOI.OpenXmlFormats, Version=2.6.2.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.2\lib\netstandard2.0\NPOI.OpenXmlFormats.dll</HintPath>
+      <HintPath>packages\NPOI.2.6.2\lib\netstandard2.0\NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
     <Reference Include="OpenCvSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenCvSharp4.4.8.0.20230708\lib\netstandard2.0\OpenCvSharp.dll</HintPath>
+      <HintPath>packages\OpenCvSharp4.4.8.0.20230708\lib\netstandard2.0\OpenCvSharp.dll</HintPath>
     </Reference>
     <Reference Include="Oracle.ManagedDataAccess, Version=2.0.19.1, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
-      <HintPath>..\packages\Oracle.ManagedDataAccess.Core.2.19.210\lib\netstandard2.0\Oracle.ManagedDataAccess.dll</HintPath>
+      <HintPath>packages\Oracle.ManagedDataAccess.Core.2.19.210\lib\netstandard2.0\Oracle.ManagedDataAccess.dll</HintPath>
     </Reference>
     <Reference Include="PcapDotNet.Base, Version=0.10.0.20588, Culture=neutral, PublicKeyToken=4b6f3e583145a652, processorArchitecture=MSIL">
       <HintPath>..\packages\PcapDotNet.0.10.2\lib\net40\PcapDotNet.Base.dll</HintPath>
@@ -148,7 +152,7 @@
       <HintPath>..\packages\Sdcb.PaddleInference.2.5.0.1\lib\net45\Sdcb.PaddleInference.dll</HintPath>
     </Reference>
     <Reference Include="Sdcb.PaddleOCR, Version=2.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sdcb.PaddleOCR.2.7.0\lib\netstandard2.0\Sdcb.PaddleOCR.dll</HintPath>
+      <HintPath>packages\Sdcb.PaddleOCR.2.7.0\lib\netstandard2.0\Sdcb.PaddleOCR.dll</HintPath>
     </Reference>
     <Reference Include="Sdcb.PaddleOCR.Models.Online, Version=2.7.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Sdcb.PaddleOCR.Models.Online.2.7.0.1\lib\netstandard2.0\Sdcb.PaddleOCR.Models.Online.dll</HintPath>
@@ -157,20 +161,20 @@
       <HintPath>..\packages\Sdcb.PaddleOCR.Models.Shared.2.7.0.1\lib\netstandard2.0\Sdcb.PaddleOCR.Models.Shared.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress, Version=0.33.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpCompress.0.33.0\lib\net462\SharpCompress.dll</HintPath>
+      <HintPath>packages\SharpCompress.0.33.0\lib\net462\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
-      <HintPath>..\packages\SixLabors.Fonts.1.0.1\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
+      <HintPath>packages\SixLabors.Fonts.1.0.1\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
     </Reference>
     <Reference Include="SqlSugar, Version=5.1.4.134, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SqlSugar.5.1.4.134\lib\SqlSugar.dll</HintPath>
+      <HintPath>packages\SqlSugar.5.1.4.134\lib\SqlSugar.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
     <Reference Include="System.Collections.Immutable, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.7.0.0\lib\net462\System.Collections.Immutable.dll</HintPath>
+      <HintPath>packages\System.Collections.Immutable.7.0.0\lib\net462\System.Collections.Immutable.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -179,7 +183,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.ConfigurationManager, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Configuration.ConfigurationManager.7.0.0\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
+      <HintPath>packages\System.Configuration.ConfigurationManager.7.0.0\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
@@ -188,11 +192,11 @@
     </Reference>
     <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Data.OleDb, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.OleDb.7.0.0\lib\net462\System.Data.OleDb.dll</HintPath>
+      <HintPath>packages\System.Data.OleDb.7.0.0\lib\net462\System.Data.OleDb.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Data.SqlClient, Version=4.6.1.5, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SqlClient.4.8.5\lib\net461\System.Data.SqlClient.dll</HintPath>
+      <HintPath>packages\System.Data.SqlClient.4.8.5\lib\net461\System.Data.SqlClient.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.SQLite, Version=1.0.118.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\lib\net46\System.Data.SQLite.dll</HintPath>
@@ -204,10 +208,10 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.118.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=7.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.7.0.2\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
+      <HintPath>packages\System.Diagnostics.DiagnosticSource.7.0.2\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Diagnostics.PerformanceCounter, Version=6.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.PerformanceCounter.6.0.1\lib\net461\System.Diagnostics.PerformanceCounter.dll</HintPath>
+      <HintPath>packages\System.Diagnostics.PerformanceCounter.6.0.1\lib\net461\System.Diagnostics.PerformanceCounter.dll</HintPath>
     </Reference>
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.DirectoryServices.Protocols" />
@@ -215,7 +219,7 @@
       <HintPath>..\packages\System.IO.FileSystem.AccessControl.5.0.0\lib\net461\System.IO.FileSystem.AccessControl.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.Pipelines, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Pipelines.7.0.0\lib\net462\System.IO.Pipelines.dll</HintPath>
+      <HintPath>packages\System.IO.Pipelines.7.0.0\lib\net462\System.IO.Pipelines.dll</HintPath>
     </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -232,29 +236,29 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Security.AccessControl, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.AccessControl.6.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+      <HintPath>packages\System.Security.AccessControl.6.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>
     </Reference>
     <Reference Include="System.Security.Cryptography.Xml, Version=7.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Xml.7.0.1\lib\net462\System.Security.Cryptography.Xml.dll</HintPath>
+      <HintPath>packages\System.Security.Cryptography.Xml.7.0.1\lib\net462\System.Security.Cryptography.Xml.dll</HintPath>
     </Reference>
     <Reference Include="System.Security.Permissions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Permissions.7.0.0\lib\net462\System.Security.Permissions.dll</HintPath>
+      <HintPath>packages\System.Security.Permissions.7.0.0\lib\net462\System.Security.Permissions.dll</HintPath>
     </Reference>
     <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Text.Encoding.CodePages, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Encoding.CodePages.7.0.0\lib\net462\System.Text.Encoding.CodePages.dll</HintPath>
+      <HintPath>packages\System.Text.Encoding.CodePages.7.0.0\lib\net462\System.Text.Encoding.CodePages.dll</HintPath>
     </Reference>
     <Reference Include="System.Text.Encodings.Web, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Encodings.Web.7.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+      <HintPath>packages\System.Text.Encodings.Web.7.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
     <Reference Include="System.Text.Json, Version=7.0.0.3, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Json.7.0.3\lib\net462\System.Text.Json.dll</HintPath>
+      <HintPath>packages\System.Text.Json.7.0.3\lib\net462\System.Text.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Channels, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Channels.7.0.0\lib\net462\System.Threading.Channels.dll</HintPath>
+      <HintPath>packages\System.Threading.Channels.7.0.0\lib\net462\System.Threading.Channels.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
@@ -272,35 +276,35 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="WEF, Version=6.24.7.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.6.24.7.1\lib\netstandard2.0\WEF.dll</HintPath>
+      <HintPath>packages\WEF.Standard.6.24.7.1\lib\netstandard2.0\WEF.dll</HintPath>
     </Reference>
     <Reference Include="WEF.Standard.MSSQL, Version=6.24.7.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.MSSQL.6.24.7.1\lib\netstandard2.0\WEF.Standard.MSSQL.dll</HintPath>
+      <HintPath>packages\WEF.Standard.MSSQL.6.24.7.1\lib\netstandard2.0\WEF.Standard.MSSQL.dll</HintPath>
     </Reference>
     <Reference Include="WEF.Standard.MySQL, Version=6.24.7.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.MySQL.6.24.7.1\lib\netstandard2.0\WEF.Standard.MySQL.dll</HintPath>
+      <HintPath>packages\WEF.Standard.MySQL.6.24.7.1\lib\netstandard2.0\WEF.Standard.MySQL.dll</HintPath>
     </Reference>
     <Reference Include="WEF.Standard.OLEDB, Version=6.24.7.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.OLEDB.6.24.7.1\lib\netstandard2.0\WEF.Standard.OLEDB.dll</HintPath>
+      <HintPath>packages\WEF.Standard.OLEDB.6.24.7.1\lib\netstandard2.0\WEF.Standard.OLEDB.dll</HintPath>
     </Reference>
     <Reference Include="WEF.Standard.Oracle, Version=6.24.7.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.Oracle.6.24.7.1\lib\netstandard2.0\WEF.Standard.Oracle.dll</HintPath>
+      <HintPath>packages\WEF.Standard.Oracle.6.24.7.1\lib\netstandard2.0\WEF.Standard.Oracle.dll</HintPath>
     </Reference>
     <Reference Include="WEF.Standard.Postgre, Version=6.24.7.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.Postgre.6.24.7.1\lib\netstandard2.0\WEF.Standard.Postgre.dll</HintPath>
+      <HintPath>packages\WEF.Standard.Postgre.6.24.7.1\lib\netstandard2.0\WEF.Standard.Postgre.dll</HintPath>
     </Reference>
     <Reference Include="WEF.Standard.SQLite, Version=6.24.7.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEF.Standard.SQLite.6.24.7.1\lib\netstandard2.0\WEF.Standard.SQLite.dll</HintPath>
+      <HintPath>packages\WEF.Standard.SQLite.6.24.7.1\lib\netstandard2.0\WEF.Standard.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
-      <HintPath>..\packages\DockPanelSuite.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+      <HintPath>packages\DockPanelSuite.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
     </Reference>
     <Reference Include="WeifenLuo.WinFormsUI.Docking.ThemeVS2015, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
-      <HintPath>..\packages\DockPanelSuite.ThemeVS2015.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll</HintPath>
+      <HintPath>packages\DockPanelSuite.ThemeVS2015.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="ZstdSharp, Version=0.7.3.0, Culture=neutral, PublicKeyToken=8d151af33a4ad5cf, processorArchitecture=MSIL">
-      <HintPath>..\packages\ZstdSharp.Port.0.7.3\lib\net461\ZstdSharp.dll</HintPath>
+      <HintPath>packages\ZstdSharp.Port.0.7.3\lib\net461\ZstdSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -1005,9 +1009,15 @@
     <Error Condition="!Exists('..\packages\Sdcb.PaddleInference.runtime.win64.mkl.2.5.1\build\net\Sdcb.PaddleInference.runtime.win64.mkl.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Sdcb.PaddleInference.runtime.win64.mkl.2.5.1\build\net\Sdcb.PaddleInference.runtime.win64.mkl.props'))" />
     <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
     <Error Condition="!Exists('..\packages\SixLabors.ImageSharp.3.0.2\build\SixLabors.ImageSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SixLabors.ImageSharp.3.0.2\build\SixLabors.ImageSharp.props'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('packages\OpenCvSharp4.runtime.win.4.8.0.20230708\build\netstandard\OpenCvSharp4.runtime.win.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\OpenCvSharp4.runtime.win.4.8.0.20230708\build\netstandard\OpenCvSharp4.runtime.win.props'))" />
+    <Error Condition="!Exists('packages\Sdcb.PaddleInference.runtime.win64.mkl.2.5.1\build\net\Sdcb.PaddleInference.runtime.win64.mkl.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Sdcb.PaddleInference.runtime.win64.mkl.2.5.1\build\net\Sdcb.PaddleInference.runtime.win64.mkl.props'))" />
+    <Error Condition="!Exists('packages\SixLabors.ImageSharp.3.0.2\build\SixLabors.ImageSharp.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SixLabors.ImageSharp.3.0.2\build\SixLabors.ImageSharp.props'))" />
   </Target>
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

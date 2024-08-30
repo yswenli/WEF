@@ -23,6 +23,7 @@
 *****************************************************************************/
 using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -130,5 +131,51 @@ namespace WEF.ModelGenerator.Common
             });
         }
 
+        /// <summary>
+        /// 控件启用或禁用
+        /// </summary>
+        /// <param name="form"></param>
+        public static void EnableControlsOrNot(this Form form)
+        {
+            if (form.InvokeRequired)
+            {
+                form.Invoke(new Action(() =>
+                {
+                    foreach (var control in form.Controls)
+                    {
+                        if (control is ButtonBase button)
+                        {
+                            button.Enabled = !button.Enabled;
+                        }
+                        if (control is TextBoxBase textBox)
+                        {
+                            textBox.Enabled = !textBox.Enabled;
+                        }
+                        if (control is ListControl listBox)
+                        {
+                            listBox.Enabled = !listBox.Enabled;
+                        }
+                    }
+                }));
+            }
+            else
+            {
+                foreach (var control in form.Controls)
+                {
+                    if (control is ButtonBase button)
+                    {
+                        button.Enabled = !button.Enabled;
+                    }
+                    if (control is TextBoxBase textBox)
+                    {
+                        textBox.Enabled = !textBox.Enabled;
+                    }
+                    if (control is ListControl listBox)
+                    {
+                        listBox.Enabled = !listBox.Enabled;
+                    }
+                }
+            }
+        }
     }
 }
