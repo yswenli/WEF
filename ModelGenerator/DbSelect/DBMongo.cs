@@ -28,12 +28,16 @@ namespace WEF.ModelGenerator.DbSelect
 {
     public partial class DBMongo : CCWin.Skin_Mac
     {
+        ConnectionModel _connectionModel;
+
         public DBMongo()
         {
             InitializeComponent();
+            _connectionModel = new ConnectionModel()
+            {
+                ID = Guid.NewGuid()
+            };
         }
-
-        ConnectionModel _connectionModel = new ConnectionModel();
 
         public DBMongo(ConnectionModel cm) : this()
         {

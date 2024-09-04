@@ -10,13 +10,19 @@ namespace WEF.ModelGenerator.DbSelect
 {
     public partial class DBMsAccess : CCWin.Skin_Mac
     {
+        ConnectionModel _connModel;
+
+
         public DBMsAccess()
         {
             InitializeComponent();
+            _connModel = new ConnectionModel()
+            {
+                ID = Guid.NewGuid()
+            };
         }
 
 
-        ConnectionModel _connModel = new ConnectionModel();
 
         public DBMsAccess(ConnectionModel cm) : this()
         {

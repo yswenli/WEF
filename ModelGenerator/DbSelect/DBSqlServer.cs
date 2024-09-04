@@ -13,6 +13,13 @@ namespace WEF.ModelGenerator.DbSelect
 {
     public partial class DBSqlServer : CCWin.Skin_Mac
     {
+
+        ConnectionModel _connectionModel;
+
+
+        /// <summary>
+        /// 新建
+        /// </summary>
         public DBSqlServer()
         {
             InitializeComponent();
@@ -20,12 +27,18 @@ namespace WEF.ModelGenerator.DbSelect
             cbbServerType.SelectedIndex = 0;
             cbbShenFenRZ.SelectedIndex = 0;
             cbbDatabase.SelectedIndex = 0;
+
+            _connectionModel = new ConnectionModel()
+            {
+                ID = Guid.NewGuid()                 
+            };
+
         }
 
-        Guid _cmdID = Guid.Empty;
-
-        ConnectionModel _connectionModel = new ConnectionModel();
-
+        /// <summary>
+        /// 编辑
+        /// </summary>
+        /// <param name="cm"></param>
         public DBSqlServer(ConnectionModel cm)
         {
             InitializeComponent();
@@ -306,7 +319,7 @@ namespace WEF.ModelGenerator.DbSelect
                             {
                                 _connectionModel.DbType = DatabaseType.SqlServer.ToString();
                             }
-                            
+
                         }
                         else
                         {
@@ -324,7 +337,7 @@ namespace WEF.ModelGenerator.DbSelect
                                 _connectionModel.DbType = DatabaseType.SqlServer.ToString();
                             }
 
-                           
+
                         }
                         _connectionModel.ConnectionString = tempconnectionstring;
                         UtilsHelper.UpdateConnection(_connectionModel);

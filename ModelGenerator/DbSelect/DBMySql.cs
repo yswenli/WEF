@@ -1,10 +1,10 @@
-﻿using CCWin;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using CCWin;
 
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Model;
@@ -13,27 +13,22 @@ namespace WEF.ModelGenerator.DbSelect
 {
     public partial class DBMySql : Skin_Mac
     {
+        ConnectionModel _connectionModel;
         public DBMySql()
         {
             InitializeComponent();
+            _connectionModel = new ConnectionModel()
+            {
+                ID = Guid.NewGuid()
+            };
         }
 
-        Guid _cmdID = Guid.NewGuid();
-
-        ConnectionModel _connectionModel = new ConnectionModel();
 
         public DBMySql(ConnectionModel cm)
         {
             InitializeComponent();
 
-            _connectionModel = cm;
-
-            _cmdID = cm.ID;
-
-            if (_cmdID == Guid.Empty)
-            {
-                _cmdID = Guid.NewGuid();
-            }
+            _connectionModel = cm;           
 
             var ci = ConnectionInfo.GetConnectionInfo(cm);
 
@@ -194,7 +189,6 @@ namespace WEF.ModelGenerator.DbSelect
                 }
 
                 _connectionModel.Database = string.IsNullOrEmpty(keyValuePairs["database"]) ? "all" : keyValuePairs["database"];
-                _connectionModel.ID = _cmdID;
                 _connectionModel.Name = skinWaterTextBox2.Text;
                 if (string.IsNullOrEmpty(_connectionModel.Name))
                     _connectionModel.Name = keyValuePairs["server"] + "(MySql)[" + _connectionModel.Database + "]";
@@ -254,7 +248,6 @@ namespace WEF.ModelGenerator.DbSelect
 
 
                 _connectionModel.Database = cbbDatabase.SelectedIndex == 0 ? "all" : cbbDatabase.Text;
-                _connectionModel.ID = _cmdID;
                 _connectionModel.Name = skinWaterTextBox2.Text;
                 if (string.IsNullOrEmpty(_connectionModel.Name))
                     _connectionModel.Name = cbbServer.Text + "(MySql)[" + _connectionModel.Database + "]";

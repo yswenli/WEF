@@ -9,14 +9,19 @@ namespace WEF.ModelGenerator.DbSelect
 {
     public partial class DBOracle : CCWin.Skin_Mac
     {
+        WEF.DbDAL.IDbObject dbObject;
+
+        ConnectionModel _connectionModel;
+
         public DBOracle()
         {
             InitializeComponent();
+            _connectionModel = new ConnectionModel()
+            {
+                ID = Guid.NewGuid()
+            };
         }
 
-        WEF.DbDAL.IDbObject dbObject;
-
-        ConnectionModel _connectionModel = new ConnectionModel();
 
         public DBOracle(ConnectionModel cm) : this()
         {

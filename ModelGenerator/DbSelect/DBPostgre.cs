@@ -10,12 +10,16 @@ namespace WEF.ModelGenerator.DbSelect
 {
     public partial class DBPostgre : CCWin.Skin_Mac
     {
+        ConnectionModel _connectionModel;
+
         public DBPostgre()
         {
             InitializeComponent();
+            _connectionModel = new ConnectionModel()
+            {
+                ID = Guid.NewGuid()
+            };
         }
-
-        ConnectionModel _connectionModel = new ConnectionModel();
 
         public DBPostgre(ConnectionModel cm) : this()
         {
@@ -137,7 +141,7 @@ namespace WEF.ModelGenerator.DbSelect
                 }
 
                 _connectionModel.Database = keyValuePairs["database"];
-                if(_connectionModel.ID == Guid.Empty)
+                if (_connectionModel.ID == Guid.Empty)
                     _connectionModel.ID = Guid.NewGuid();
                 _connectionModel.Name = skinWaterTextBox2.Text;
                 if (string.IsNullOrEmpty(_connectionModel.Name))

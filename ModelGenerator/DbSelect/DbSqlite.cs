@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Data.SQLite;
 using System.Text;
 using System.Windows.Forms;
-using System.Data.SQLite;
-using WEF;
+
 using WEF.ModelGenerator.Common;
 using WEF.ModelGenerator.Model;
 
@@ -14,13 +10,17 @@ namespace WEF.ModelGenerator.DbSelect
 {
     public partial class DbSqlite : CCWin.Skin_Mac
     {
+
+        Model.ConnectionModel _connModel;
         public DbSqlite()
         {
             InitializeComponent();
+            _connModel = new ConnectionModel()
+            {
+                ID = Guid.NewGuid()
+            };
         }
 
-
-        Model.ConnectionModel _connModel = new ConnectionModel();
 
         public DbSqlite(ConnectionModel cm) : this()
         {
