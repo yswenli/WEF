@@ -5,6 +5,8 @@ WEF is based on the c # data entity framework supports MSQSqlServer, MySql, Orca
 WEF 是基于C#的数据实体框架，支持MSQSqlServer、MySql、Orcalce等等常规的数据库的快捷开发，其中集成了大量数据开发经验下的工具类集合，比如Lambada表达式查询、无sql的增删改查、实体克隆、批量、多表、事务、参数、SQL转实体或存储过程转实体等。
 
 [![GitHub release](https://img.shields.io/github/release/yswenli/wef.svg)](https://github.com/yswenli/wef/releases)
+[![NuGet version (SAEA)](https://img.shields.io/nuget/v/WEF.Standard.svg?style=flat-square)](https://www.nuget.org/packages?q=WEF.Standard)
+[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 WEF类似MEF上手简单，0学习成本。使用方便，按照sql书写习惯编写C#.NET代码
 
@@ -15,6 +17,11 @@ WEF类似MEF上手简单，0学习成本。使用方便，按照sql书写习惯�
 完美支持Sql Server(2000至最新版),MySql,Oracle,Access,Sqlite等数据库
 
 支持大量Lambda表达式写法不需要像NHibernate的XML配置，不需要像MEF的各种数据库连接驱动
+
+```
+dotnet add package WEF.Standard --version 6.24.7.1
+dotnet add package WEF.Standard.MySQL --version 6.24.7.1
+```
 
 ## 查询简例
 
