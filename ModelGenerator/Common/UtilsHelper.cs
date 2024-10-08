@@ -78,6 +78,7 @@ namespace WEF.ModelGenerator.Common
                     connection.DbType = node.Attributes["dbtype"].Value;
                     list.Add(connection);
                 }
+                list= list.OrderBy(p => p.Name).ToList();
             }
             return list;
         }

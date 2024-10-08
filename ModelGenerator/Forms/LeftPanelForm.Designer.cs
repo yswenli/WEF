@@ -386,7 +386,7 @@
             this.searchTextBox.Size = new System.Drawing.Size(354, 39);
             this.searchTextBox.TabIndex = 5;
             this.searchTextBox.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
-            this.searchTextBox.WaterText = "查询：请输入表名或视图名";
+            this.searchTextBox.WaterText = "查询";
             this.searchTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.searchTextBox_KeyUp);
             // 
             // toolStripMenuItem9

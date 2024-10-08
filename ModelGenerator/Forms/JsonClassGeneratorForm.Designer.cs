@@ -527,7 +527,7 @@
             this.linkLabel1.Size = new System.Drawing.Size(155, 12);
             this.linkLabel1.TabIndex = 48;
             this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Power by leigh @2015-1-29";
+            this.linkLabel1.Text = "Power by yswenli @2015-1-29";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // pictureBox6

@@ -224,6 +224,7 @@ namespace WEF.ModelGenerator
             Treeview.Nodes.Add("服务器", "数据库服务器", 0);
 
             _connectList = UtilsHelper.GetConnectionList();
+            if (_connectList == null || _connectList.Count == 0) return;
 
             TreeNode node = Treeview.Nodes[0];
 
@@ -234,6 +235,7 @@ namespace WEF.ModelGenerator
                 TreeNode nnode = new TreeNode(connection.Name, 0, 0);
                 nnode.ContextMenuStrip = contextMenuStripDatabase;
                 nnode.Tag = connection.ID.ToString();
+                nnode.ToolTipText = connection.ConnectionString;                
                 node.Nodes.Add(nnode);
             }
 
@@ -310,7 +312,7 @@ namespace WEF.ModelGenerator
 
 
         /// <summary>
-        /// 
+        /// 新建
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -356,7 +358,11 @@ namespace WEF.ModelGenerator
             Treeview.ExpandAll();
         }
 
-
+        /// <summary>
+        /// remove
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show(this, "确定要移除当前配置么？", "WEF数据库工具", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)

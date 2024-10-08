@@ -50,9 +50,9 @@
             this.label2.Location = new System.Drawing.Point(34, 160);
             this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(250, 24);
+            this.label2.Size = new System.Drawing.Size(370, 24);
             this.label2.TabIndex = 1;
-            this.label2.Text = "developed by yswenli";
+            this.label2.Text = "developed by yswenli 2015-2024";
             // 
             // linkLabel1
             // 
@@ -76,7 +76,7 @@
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.MaximizeBox = false;
             this.Name = "AboutForm";
             this.Text = "关于WEF数据库工具";

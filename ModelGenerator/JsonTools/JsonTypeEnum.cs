@@ -1,5 +1,5 @@
 ﻿// JSON 实体类生成器
-// Power By Leigh.Wen @2015
+// Power By YsWenli @2015 - 2024
 
 
 namespace WEF.ModelGenerator.JsonTools
