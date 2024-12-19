@@ -20,6 +20,9 @@ using System.Windows.Forms;
 
 namespace WEF.ModelGenerator.Common
 {
+    /// <summary>
+    /// 快捷键帮助类
+    /// </summary>
     public class ShortcutKeyHelper
     {
         public static void Enter(object sender, System.Windows.Forms.KeyEventArgs e, Action action)

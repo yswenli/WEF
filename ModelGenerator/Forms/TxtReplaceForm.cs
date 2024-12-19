@@ -19,11 +19,18 @@ namespace TxtReplaceTool
         }
 
 
-
         private void TxtReplaceForm_Load(object sender, EventArgs e)
         {
             toolStripProgressBar1.Style = ProgressBarStyle.Marquee;
             toolStripProgressBar1.MarqueeAnimationSpeed = 10;
+        }
+
+        private void textBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            ShortcutKeyHelper.Enter(textBox1, e, () =>
+            {
+                button1_Click(button1, EventArgs.Empty);
+            });
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -32,6 +39,15 @@ namespace TxtReplaceTool
             {
                 textBox1.Text = folderBrowserDialog1.SelectedPath;
             }
+        }
+
+        private void textBox2_KeyUp(object sender, KeyEventArgs e)
+        {
+            ShortcutKeyHelper.Enter(textBox2, e, () =>
+            {
+                button2_Click(button2, EventArgs.Empty);
+            });
+
         }
 
         /// <summary>
@@ -337,10 +353,9 @@ namespace TxtReplaceTool
             }
             catch { }
         }
+
+
+
         #endregion
-
-
-
-
     }
 }

@@ -39,6 +39,7 @@
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,7 +58,6 @@
             this.button4 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -79,6 +79,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(607, 39);
             this.textBox1.TabIndex = 1;
+            this.textBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyUp);
             // 
             // button1
             // 
@@ -109,6 +110,7 @@
             this.textBox2.Size = new System.Drawing.Size(632, 39);
             this.textBox2.TabIndex = 4;
             this.textBox2.Text = "*.csproj";
+            this.textBox2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox2_KeyUp);
             // 
             // label3
             // 
@@ -156,6 +158,13 @@
             this.deleteToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(233, 168);
+            // 
+            // openFileToolStripMenuItem
+            // 
+            this.openFileToolStripMenuItem.Name = "openFileToolStripMenuItem";
+            this.openFileToolStripMenuItem.Size = new System.Drawing.Size(232, 38);
+            this.openFileToolStripMenuItem.Text = "打开文件";
+            this.openFileToolStripMenuItem.Click += new System.EventHandler(this.openFileToolStripMenuItem_Click);
             // 
             // openInExplorerToolStripMenuItem
             // 
@@ -318,13 +327,6 @@
             this.checkBox2.Text = "尾部";
             this.checkBox2.UseVisualStyleBackColor = true;
             // 
-            // openFileToolStripMenuItem
-            // 
-            this.openFileToolStripMenuItem.Name = "openFileToolStripMenuItem";
-            this.openFileToolStripMenuItem.Size = new System.Drawing.Size(232, 38);
-            this.openFileToolStripMenuItem.Text = "打开文件";
-            this.openFileToolStripMenuItem.Click += new System.EventHandler(this.openFileToolStripMenuItem_Click);
-            // 
             // TxtReplaceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 31F);
@@ -354,7 +356,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.Name = "TxtReplaceForm";
-            this.Text = "文件查找替换工具提示";
+            this.Text = "文件查找替换工具";
             this.Load += new System.EventHandler(this.TxtReplaceForm_Load);
             this.contextMenuStrip1.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
