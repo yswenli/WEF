@@ -71,7 +71,7 @@ namespace TxtReplaceTool
                     button2.Enabled = true;
                     if (list != null && list.Count > 0)
                     {
-                        label5.Text = $"已找到{list.Count}个文件,共用时{stopWatch.Elapsed.TotalSeconds}s";                        
+                        label5.Text = $"已找到{list.Count}个文件,共用时{stopWatch.Elapsed.TotalSeconds}s";
                         _fileList.Clear();
                         _fileList = list;
                         listBox1.Items.Clear();
@@ -246,6 +246,12 @@ namespace TxtReplaceTool
             });
 
         }
+
+        /// <summary>
+        /// 双击打开当前文件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             try
@@ -259,6 +265,48 @@ namespace TxtReplaceTool
             catch { }
         }
 
+        #region 快捷菜单
+        /// <summary>
+        /// 打开文件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listBox1.SelectedItems != null && listBox1.SelectedItems.Count > 0)
+                {
+                    var selectItem = listBox1.SelectedItem?.ToString() ?? "";
+                    if (!string.IsNullOrEmpty(selectItem))
+                    {
+                        Process.Start(selectItem);
+                    }
+                }
+            }
+            catch { }
+        }
+        /// <summary>
+        /// 在目录中打开
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listBox1.SelectedItems != null && listBox1.SelectedItems.Count > 0)
+                {
+                    var selectItem = listBox1.SelectedItem?.ToString() ?? "";
+                    if (!string.IsNullOrEmpty(selectItem))
+                    {
+                        var path = Path.GetDirectoryName(selectItem);
+                        Process.Start(path);
+                    }
+                }
+            }
+            catch { }
+        }
         /// <summary>
         /// 排除
         /// </summary>
@@ -266,7 +314,8 @@ namespace TxtReplaceTool
         /// <param name="e"></param>
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            listBox1.DeleteSelectedItems();
+            if (MessageBox.Show(this, "确认要排除当前文件吗？", "文件查找替换工具", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                listBox1.DeleteSelectedItems();
         }
 
         /// <summary>
@@ -288,27 +337,10 @@ namespace TxtReplaceTool
             }
             catch { }
         }
+        #endregion
 
-        /// <summary>
-        /// 在目录中打开
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (listBox1.SelectedItems != null && listBox1.SelectedItems.Count > 0)
-                {
-                    var selectItem= listBox1.SelectedItem?.ToString()??"";
-                    if (!string.IsNullOrEmpty(selectItem))
-                    {
-                        var path = Path.GetDirectoryName(selectItem);
-                        Process.Start(path);
-                    }
-                }
-            }
-            catch { }
-        }
+
+
+
     }
 }
