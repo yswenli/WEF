@@ -397,27 +397,19 @@ namespace WEF.ModelGenerator.Properties {
         }
         
         /// <summary>
-        ///   查找类似 SELECT TOP 20
-        ///
-        ///total_worker_time/1000 AS [总消耗CPU 时间(ms)],execution_count [运行次数],
-        ///
-        /// qs.total_worker_time/qs.execution_count/1000 AS [平均消耗CPU 时间(ms)],
-        ///
-        /// last_execution_time AS [最后一次执行时间],max_worker_time /1000 AS [最大执行时间(ms)],
-        ///
-        /// SUBSTRING(qt.text,qs.statement_start_offset/2+1,
-        ///
-        /// (CASE WHEN qs.statement_end_offset = -1
-        ///
-        /// THEN DATALENGTH(qt.text)
-        ///
-        /// ELSE qs.statement_end_offset END -qs.statement_start_offset)/2 + 1)
-        ///
-        ///AS [使用CPU的语法], qt.text [完整语法],
-        ///
-        ///dbname=db_name(qt.dbid),
-        ///
-        ///object_name(qt.obje [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///   查找类似 SELECT TOP
+        /// 20 ( total_elapsed_time / execution_count ) / 1000 N&apos;平均时间ms&apos;,
+        /// total_elapsed_time / 1000 N&apos;总花费时间ms&apos;,
+        /// total_worker_time / 1000 N&apos;所用的CPU总时间ms&apos;,
+        /// total_physical_reads N&apos;物理读取总次数&apos;,
+        /// total_logical_reads / execution_count N&apos;每次逻辑读次数&apos;,
+        /// total_logical_reads N&apos;逻辑读取总次数&apos;,
+        /// total_logical_writes N&apos;逻辑写入总次数&apos;,
+        /// execution_count N&apos;执行次数&apos;,
+        /// SUBSTRING (
+        ///  st.text,
+        ///  ( qs.statement_start_offset / 2 ) + 1,
+        /// ( ( CASE statement_end_offset WHEN - 1 THEN DATALENGTH( st.text ) ELSE qs.statement_end_offset END - qs.statement [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string 慢查询 {
             get {
