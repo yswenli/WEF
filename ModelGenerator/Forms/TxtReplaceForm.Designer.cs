@@ -55,6 +55,8 @@
             this.button4 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -65,7 +67,7 @@
             this.label1.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label1.Location = new System.Drawing.Point(31, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(79, 20);
+            this.label1.Size = new System.Drawing.Size(155, 36);
             this.label1.TabIndex = 0;
             this.label1.Text = "请选择目录";
             // 
@@ -74,7 +76,7 @@
             this.textBox1.Location = new System.Drawing.Point(114, 11);
             this.textBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(607, 23);
+            this.textBox1.Size = new System.Drawing.Size(607, 39);
             this.textBox1.TabIndex = 1;
             // 
             // button1
@@ -94,7 +96,7 @@
             this.label2.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label2.Location = new System.Drawing.Point(31, 47);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 20);
+            this.label2.Size = new System.Drawing.Size(127, 36);
             this.label2.TabIndex = 3;
             this.label2.Text = "文件类型";
             // 
@@ -103,7 +105,7 @@
             this.textBox2.Location = new System.Drawing.Point(114, 44);
             this.textBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(632, 23);
+            this.textBox2.Size = new System.Drawing.Size(632, 39);
             this.textBox2.TabIndex = 4;
             this.textBox2.Text = "*.csproj";
             // 
@@ -113,7 +115,7 @@
             this.label3.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label3.Location = new System.Drawing.Point(31, 389);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(74, 21);
+            this.label3.Size = new System.Drawing.Size(146, 41);
             this.label3.TabIndex = 5;
             this.label3.Text = "查找文本";
             // 
@@ -132,12 +134,12 @@
             this.listBox1.ContextMenuStrip = this.contextMenuStrip1;
             this.listBox1.FormattingEnabled = true;
             this.listBox1.HorizontalScrollbar = true;
-            this.listBox1.ItemHeight = 17;
+            this.listBox1.ItemHeight = 31;
             this.listBox1.Location = new System.Drawing.Point(35, 78);
             this.listBox1.Name = "listBox1";
             this.listBox1.ScrollAlwaysVisible = true;
             this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBox1.Size = new System.Drawing.Size(711, 276);
+            this.listBox1.Size = new System.Drawing.Size(711, 252);
             this.listBox1.TabIndex = 6;
             this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
             // 
@@ -145,28 +147,30 @@
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openInExplorerToolStripMenuItem,
+            this.toolStripMenuItem1,
             this.removeToolStripMenuItem,
             this.toolStripMenuItem2,
             this.deleteToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(125, 54);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(301, 174);
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(300, 38);
             this.removeToolStripMenuItem.Text = "排除此项";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(121, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(297, 6);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(300, 38);
             this.deleteToolStripMenuItem.Text = "删除文件";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
@@ -176,7 +180,7 @@
             this.label4.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label4.Location = new System.Drawing.Point(31, 462);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(74, 21);
+            this.label4.Size = new System.Drawing.Size(146, 41);
             this.label4.TabIndex = 8;
             this.label4.Text = "替换文本";
             // 
@@ -220,9 +224,9 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.label5,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 594);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 588);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(761, 38);
+            this.statusStrip1.Size = new System.Drawing.Size(761, 44);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 12;
             this.statusStrip1.Text = "statusStrip1";
@@ -232,7 +236,7 @@
             this.label5.AutoSize = false;
             this.label5.ForeColor = System.Drawing.Color.Red;
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(500, 33);
+            this.label5.Size = new System.Drawing.Size(500, 34);
             this.label5.Text = "就绪";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -260,7 +264,7 @@
             this.label6.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label6.Location = new System.Drawing.Point(33, 537);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(74, 21);
+            this.label6.Size = new System.Drawing.Size(146, 41);
             this.label6.TabIndex = 8;
             this.label6.Text = "追加文本";
             // 
@@ -284,7 +288,7 @@
             this.checkBox1.Enabled = false;
             this.checkBox1.Location = new System.Drawing.Point(114, 521);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(51, 21);
+            this.checkBox1.Size = new System.Drawing.Size(94, 35);
             this.checkBox1.TabIndex = 13;
             this.checkBox1.Text = "头部";
             this.checkBox1.UseVisualStyleBackColor = true;
@@ -295,14 +299,26 @@
             this.checkBox2.Enabled = false;
             this.checkBox2.Location = new System.Drawing.Point(113, 548);
             this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(51, 21);
+            this.checkBox2.Size = new System.Drawing.Size(94, 35);
             this.checkBox2.TabIndex = 13;
             this.checkBox2.Text = "尾部";
             this.checkBox2.UseVisualStyleBackColor = true;
             // 
+            // openInExplorerToolStripMenuItem
+            // 
+            this.openInExplorerToolStripMenuItem.Name = "openInExplorerToolStripMenuItem";
+            this.openInExplorerToolStripMenuItem.Size = new System.Drawing.Size(300, 38);
+            this.openInExplorerToolStripMenuItem.Text = "打开目录";
+            this.openInExplorerToolStripMenuItem.Click += new System.EventHandler(this.openInExplorerToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(297, 6);
+            // 
             // TxtReplaceForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 31F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(761, 632);
             this.Controls.Add(this.checkBox2);
@@ -366,6 +382,8 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.ToolStripMenuItem openInExplorerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
     }
 }
 

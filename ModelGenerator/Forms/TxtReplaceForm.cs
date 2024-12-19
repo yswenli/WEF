@@ -289,5 +289,26 @@ namespace TxtReplaceTool
             catch { }
         }
 
+        /// <summary>
+        /// 在目录中打开
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listBox1.SelectedItems != null && listBox1.SelectedItems.Count > 0)
+                {
+                    var selectItem= listBox1.SelectedItem?.ToString()??"";
+                    if (!string.IsNullOrEmpty(selectItem))
+                    {
+                        var path = Path.GetDirectoryName(selectItem);
+                        Process.Start(path);
+                    }
+                }
+            }
+            catch { }
+        }
     }
 }
