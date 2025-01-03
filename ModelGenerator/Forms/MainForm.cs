@@ -229,10 +229,6 @@ namespace WEF.ModelGenerator
 
         }
 
-        private void xSDToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new XsdGeneratorForm().ShowDialog(this);
-        }
 
         /// <summary>
         /// json工具
@@ -245,14 +241,18 @@ namespace WEF.ModelGenerator
         }
 
         /// <summary>
-        /// 二维码
+        /// base64转码
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void qRCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void base64ToolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new QrCodeForm().ShowDialog(this);
+            new Base64Form().ShowDialog(this);
         }
+
+        
+
+        
 
         /// <summary>
         /// 清理垃圾
@@ -269,7 +269,7 @@ namespace WEF.ModelGenerator
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void repalceFileTxtToolStripMenuItem_Click(object sender, EventArgs e)
+        private void fileFinderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new TxtReplaceForm().ShowDialog(this);
         }
@@ -282,6 +282,15 @@ namespace WEF.ModelGenerator
         {
             new Base64Form().ShowDialog(this);
         }
+        /// <summary>
+        /// xsd代码生成工具
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void xSDToolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new XsdGeneratorForm().ShowDialog(this);
+        }
 
         /// <summary>
         /// log读取工具
@@ -291,6 +300,16 @@ namespace WEF.ModelGenerator
         private void log读取工具ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new ApiLogForm().ShowDialog(this);
+        }
+
+        /// <summary>
+        /// 二维码
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void qRCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new QrCodeForm().ShowDialog(this);
         }
         /// <summary>
         /// ocr工具
@@ -309,6 +328,16 @@ namespace WEF.ModelGenerator
         private void sqlFileFormToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new SQLFileForm().ShowDialog(this);
+        }
+
+        /// <summary>
+        /// 二维码
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void qRCodeToolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new QrCodeForm().ShowDialog(this);
         }
 
         #region 关于菜单
@@ -378,8 +407,8 @@ namespace WEF.ModelGenerator
 
 
 
+
         #endregion
 
-       
     }
 }
