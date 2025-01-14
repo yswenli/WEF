@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -6,6 +7,7 @@ using WEF.ModelGenerator.Common;
 
 namespace WEF.ModelGenerator
 {
+
     static class Program
     {
         /// <summary>
@@ -14,14 +16,13 @@ namespace WEF.ModelGenerator
         [STAThread]
         static void Main()
         {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
             //全局异常
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             //线程异常
             Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
-            Application.EnableVisualStyles();
-            //文本渲染
-            Application.SetCompatibleTextRenderingDefault(false);
             //单例
             SingleProcessHelper.ProcessRun<MainForm>((f) =>
             {

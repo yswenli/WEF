@@ -40,21 +40,24 @@
             this.刷新ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripDatabase = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.连接ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.刷新ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewConnectStringToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
+            this.刷新ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripSeparator();
+            this.viewConnectStringToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
             this.删除ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripOneDataBase = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.刷新ToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.批量生成ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripSeparator();
             this.执行SQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripSeparator();
+            this.批量生成ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripSeparator();
             this.createTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripTable = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.生成代码ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sQL查询ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyFieldNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.modifyTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
@@ -62,17 +65,14 @@
             this.exportDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
+            this.modifyTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyFieldNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem13 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuStripOneMongoDB = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.searchTextBox = new CCWin.SkinControl.SkinWaterTextBox();
-            this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem13 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1.SuspendLayout();
             this.contextMenuStripTop.SuspendLayout();
             this.contextMenuStripDatabase.SuspendLayout();
@@ -88,8 +88,8 @@
             this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.toolStrip1.Size = new System.Drawing.Size(354, 30);
+            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 4, 0);
+            this.toolStrip1.Size = new System.Drawing.Size(413, 30);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -111,15 +111,15 @@
             this.Treeview.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Treeview.ImageIndex = 0;
             this.Treeview.ImageList = this.imgList;
-            this.Treeview.Location = new System.Drawing.Point(0, 94);
-            this.Treeview.Margin = new System.Windows.Forms.Padding(6);
+            this.Treeview.Location = new System.Drawing.Point(0, 49);
+            this.Treeview.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
             this.Treeview.Name = "Treeview";
             treeNode1.Name = "节点0";
             treeNode1.Text = "数据库服务器";
             this.Treeview.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1});
             this.Treeview.SelectedImageIndex = 0;
-            this.Treeview.Size = new System.Drawing.Size(342, 630);
+            this.Treeview.Size = new System.Drawing.Size(413, 889);
             this.Treeview.TabIndex = 1;
             this.Treeview.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tview_NodeMouseClick);
             this.Treeview.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tview_NodeMouseDoubleClick);
@@ -176,40 +176,50 @@
             // 连接ToolStripMenuItem
             // 
             this.连接ToolStripMenuItem.Name = "连接ToolStripMenuItem";
-            this.连接ToolStripMenuItem.Size = new System.Drawing.Size(300, 38);
+            this.连接ToolStripMenuItem.Size = new System.Drawing.Size(256, 38);
             this.连接ToolStripMenuItem.Text = "连接";
             this.连接ToolStripMenuItem.Click += new System.EventHandler(this.connectToolStripMenuItem_Click);
-            // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(300, 38);
-            this.editToolStripMenuItem.Text = "编辑";
-            this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
-            // 
-            // 刷新ToolStripMenuItem1
-            // 
-            this.刷新ToolStripMenuItem1.Name = "刷新ToolStripMenuItem1";
-            this.刷新ToolStripMenuItem1.Size = new System.Drawing.Size(300, 38);
-            this.刷新ToolStripMenuItem1.Text = "刷新";
-            this.刷新ToolStripMenuItem1.Click += new System.EventHandler(this.refreshToolStripMenuItem1_Click);
-            // 
-            // viewConnectStringToolStripMenuItem
-            // 
-            this.viewConnectStringToolStripMenuItem.Name = "viewConnectStringToolStripMenuItem";
-            this.viewConnectStringToolStripMenuItem.Size = new System.Drawing.Size(300, 38);
-            this.viewConnectStringToolStripMenuItem.Text = "查看连接字符串";
-            this.viewConnectStringToolStripMenuItem.Click += new System.EventHandler(this.viewConnectStringToolStripMenuItem_Click);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(297, 6);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(253, 6);
+            // 
+            // 刷新ToolStripMenuItem1
+            // 
+            this.刷新ToolStripMenuItem1.Name = "刷新ToolStripMenuItem1";
+            this.刷新ToolStripMenuItem1.Size = new System.Drawing.Size(256, 38);
+            this.刷新ToolStripMenuItem1.Text = "刷新";
+            this.刷新ToolStripMenuItem1.Click += new System.EventHandler(this.refreshToolStripMenuItem1_Click);
+            // 
+            // toolStripMenuItem9
+            // 
+            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(253, 6);
+            // 
+            // viewConnectStringToolStripMenuItem
+            // 
+            this.viewConnectStringToolStripMenuItem.Name = "viewConnectStringToolStripMenuItem";
+            this.viewConnectStringToolStripMenuItem.Size = new System.Drawing.Size(256, 38);
+            this.viewConnectStringToolStripMenuItem.Text = "查看连接字符串";
+            this.viewConnectStringToolStripMenuItem.Click += new System.EventHandler(this.viewConnectStringToolStripMenuItem_Click);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(256, 38);
+            this.editToolStripMenuItem.Text = "编辑";
+            this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem8
+            // 
+            this.toolStripMenuItem8.Name = "toolStripMenuItem8";
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(253, 6);
             // 
             // 删除ToolStripMenuItem
             // 
             this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
-            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(300, 38);
+            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(256, 38);
             this.删除ToolStripMenuItem.Text = "删除";
             this.删除ToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
@@ -234,12 +244,10 @@
             this.刷新ToolStripMenuItem2.Text = "刷新";
             this.刷新ToolStripMenuItem2.Click += new System.EventHandler(this.刷新ToolStripMenuItem2_Click);
             // 
-            // 批量生成ToolStripMenuItem
+            // toolStripMenuItem10
             // 
-            this.批量生成ToolStripMenuItem.Name = "批量生成ToolStripMenuItem";
-            this.批量生成ToolStripMenuItem.Size = new System.Drawing.Size(230, 38);
-            this.批量生成ToolStripMenuItem.Text = "生成代码";
-            this.批量生成ToolStripMenuItem.Click += new System.EventHandler(this.批量生成ToolStripMenuItem_Click);
+            this.toolStripMenuItem10.Name = "toolStripMenuItem10";
+            this.toolStripMenuItem10.Size = new System.Drawing.Size(227, 6);
             // 
             // 执行SQLToolStripMenuItem
             // 
@@ -247,6 +255,23 @@
             this.执行SQLToolStripMenuItem.Size = new System.Drawing.Size(230, 38);
             this.执行SQLToolStripMenuItem.Text = "SQL查询窗口";
             this.执行SQLToolStripMenuItem.Click += new System.EventHandler(this.执行SQLToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem11
+            // 
+            this.toolStripMenuItem11.Name = "toolStripMenuItem11";
+            this.toolStripMenuItem11.Size = new System.Drawing.Size(227, 6);
+            // 
+            // 批量生成ToolStripMenuItem
+            // 
+            this.批量生成ToolStripMenuItem.Name = "批量生成ToolStripMenuItem";
+            this.批量生成ToolStripMenuItem.Size = new System.Drawing.Size(230, 38);
+            this.批量生成ToolStripMenuItem.Text = "生成代码";
+            this.批量生成ToolStripMenuItem.Click += new System.EventHandler(this.批量生成ToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem12
+            // 
+            this.toolStripMenuItem12.Name = "toolStripMenuItem12";
+            this.toolStripMenuItem12.Size = new System.Drawing.Size(227, 6);
             // 
             // createTableToolStripMenuItem
             // 
@@ -273,12 +298,12 @@
             this.deleteTableToolStripMenuItem,
             this.toolStripMenuItem13});
             this.contextMenuStripTable.Name = "contextMenuStripOneDataBase";
-            this.contextMenuStripTable.Size = new System.Drawing.Size(301, 414);
+            this.contextMenuStripTable.Size = new System.Drawing.Size(281, 370);
             // 
             // 生成代码ToolStripMenuItem
             // 
             this.生成代码ToolStripMenuItem.Name = "生成代码ToolStripMenuItem";
-            this.生成代码ToolStripMenuItem.Size = new System.Drawing.Size(300, 38);
+            this.生成代码ToolStripMenuItem.Size = new System.Drawing.Size(280, 38);
             this.生成代码ToolStripMenuItem.Text = "查看表结构";
             this.生成代码ToolStripMenuItem.Click += new System.EventHandler(this.生成代码ToolStripMenuItem_Click);
             // 
@@ -288,20 +313,6 @@
             this.sQL查询ToolStripMenuItem.Size = new System.Drawing.Size(280, 38);
             this.sQL查询ToolStripMenuItem.Text = "SQL查询窗口";
             this.sQL查询ToolStripMenuItem.Click += new System.EventHandler(this.sQL查询ToolStripMenuItem_Click);
-            // 
-            // copyFieldNameToolStripMenuItem
-            // 
-            this.copyFieldNameToolStripMenuItem.Name = "copyFieldNameToolStripMenuItem";
-            this.copyFieldNameToolStripMenuItem.Size = new System.Drawing.Size(280, 38);
-            this.copyFieldNameToolStripMenuItem.Text = "复制表名";
-            this.copyFieldNameToolStripMenuItem.Click += new System.EventHandler(this.copyFieldNameToolStripMenuItem_Click);
-            // 
-            // modifyTableToolStripMenuItem
-            // 
-            this.modifyTableToolStripMenuItem.Name = "modifyTableToolStripMenuItem";
-            this.modifyTableToolStripMenuItem.Size = new System.Drawing.Size(280, 38);
-            this.modifyTableToolStripMenuItem.Text = "修改表";
-            this.modifyTableToolStripMenuItem.Click += new System.EventHandler(this.modifyTableToolStripMenuItem_Click);
             // 
             // toolStripMenuItem6
             // 
@@ -346,12 +357,31 @@
             this.toolStripMenuItem7.Name = "toolStripMenuItem7";
             this.toolStripMenuItem7.Size = new System.Drawing.Size(277, 6);
             // 
+            // modifyTableToolStripMenuItem
+            // 
+            this.modifyTableToolStripMenuItem.Name = "modifyTableToolStripMenuItem";
+            this.modifyTableToolStripMenuItem.Size = new System.Drawing.Size(280, 38);
+            this.modifyTableToolStripMenuItem.Text = "修改表";
+            this.modifyTableToolStripMenuItem.Click += new System.EventHandler(this.modifyTableToolStripMenuItem_Click);
+            // 
+            // copyFieldNameToolStripMenuItem
+            // 
+            this.copyFieldNameToolStripMenuItem.Name = "copyFieldNameToolStripMenuItem";
+            this.copyFieldNameToolStripMenuItem.Size = new System.Drawing.Size(280, 38);
+            this.copyFieldNameToolStripMenuItem.Text = "复制表名";
+            this.copyFieldNameToolStripMenuItem.Click += new System.EventHandler(this.copyFieldNameToolStripMenuItem_Click);
+            // 
             // deleteTableToolStripMenuItem
             // 
             this.deleteTableToolStripMenuItem.Name = "deleteTableToolStripMenuItem";
             this.deleteTableToolStripMenuItem.Size = new System.Drawing.Size(280, 38);
             this.deleteTableToolStripMenuItem.Text = "删除表";
             this.deleteTableToolStripMenuItem.Click += new System.EventHandler(this.deleteTableToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem13
+            // 
+            this.toolStripMenuItem13.Name = "toolStripMenuItem13";
+            this.toolStripMenuItem13.Size = new System.Drawing.Size(277, 6);
             // 
             // contextMenuStripOneMongoDB
             // 
@@ -378,58 +408,30 @@
             // 
             // searchTextBox
             // 
-            this.searchTextBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.searchTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.searchTextBox.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.searchTextBox.Location = new System.Drawing.Point(0, 30);
-            this.searchTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.searchTextBox.Location = new System.Drawing.Point(0, 27);
+            this.searchTextBox.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.searchTextBox.Name = "searchTextBox";
-            this.searchTextBox.Size = new System.Drawing.Size(354, 39);
+            this.searchTextBox.Size = new System.Drawing.Size(413, 39);
             this.searchTextBox.TabIndex = 5;
             this.searchTextBox.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
             this.searchTextBox.WaterText = "查询";
             this.searchTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.searchTextBox_KeyUp);
             // 
-            // toolStripMenuItem9
-            // 
-            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(297, 6);
-            // 
-            // toolStripMenuItem8
-            // 
-            this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(253, 6);
-            // 
-            // toolStripMenuItem10
-            // 
-            this.toolStripMenuItem10.Name = "toolStripMenuItem10";
-            this.toolStripMenuItem10.Size = new System.Drawing.Size(297, 6);
-            // 
-            // toolStripMenuItem11
-            // 
-            this.toolStripMenuItem11.Name = "toolStripMenuItem11";
-            this.toolStripMenuItem11.Size = new System.Drawing.Size(297, 6);
-            // 
-            // toolStripMenuItem12
-            // 
-            this.toolStripMenuItem12.Name = "toolStripMenuItem12";
-            this.toolStripMenuItem12.Size = new System.Drawing.Size(297, 6);
-            // 
-            // toolStripMenuItem13
-            // 
-            this.toolStripMenuItem13.Name = "toolStripMenuItem13";
-            this.toolStripMenuItem13.Size = new System.Drawing.Size(297, 6);
-            // 
             // LeftPanelForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 31F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(354, 728);
+            this.ClientSize = new System.Drawing.Size(413, 940);
+            this.CloseButtonVisible = false;
             this.Controls.Add(this.searchTextBox);
             this.Controls.Add(this.Treeview);
             this.Controls.Add(this.toolStrip1);
-            this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(6);
+            this.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
             this.Name = "LeftPanelForm";
             this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.Float;
             this.ShowIcon = false;

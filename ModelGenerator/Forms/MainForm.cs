@@ -15,13 +15,13 @@
 *版 本 号： V1.0.0.0
 *描    述：
 *****************************************************************************/
-using CCWin;
-
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+
+using CCWin;
 
 using TxtReplaceTool;
 
@@ -42,6 +42,7 @@ namespace WEF.ModelGenerator
         public MainForm()
         {
             InitializeComponent();
+            this.AutoScaleMode = AutoScaleMode.Font;
 
             dockPanel.Theme = vS2015LightTheme1;
 
@@ -250,9 +251,9 @@ namespace WEF.ModelGenerator
             new Base64Form().ShowDialog(this);
         }
 
-        
 
-        
+
+
 
         /// <summary>
         /// 清理垃圾
@@ -264,6 +265,8 @@ namespace WEF.ModelGenerator
             new FileCleaner.FileClearForm().ShowDialog(this);
         }
 
+
+        TxtReplaceForm _txtReplaceForm = new TxtReplaceForm();
         /// <summary>
         /// 文件文本查找替换
         /// </summary>
@@ -271,7 +274,8 @@ namespace WEF.ModelGenerator
         /// <param name="e"></param>
         private void fileFinderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new TxtReplaceForm().ShowDialog(this);
+            if (!_txtReplaceForm.IsDisposed)
+                _txtReplaceForm.ShowDialog(this);
         }
         /// <summary>
         /// base64转码
@@ -318,7 +322,7 @@ namespace WEF.ModelGenerator
         /// <param name="e"></param>
         private void oCR工具ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           new OCRForm().ShowDialog(this);           
+            new OCRForm().ShowDialog(this);
         }
         /// <summary>
         /// 超大sql文件执行工具

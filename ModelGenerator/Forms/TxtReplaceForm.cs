@@ -357,5 +357,16 @@ namespace TxtReplaceTool
 
 
         #endregion
+
+        /// <summary>
+        /// 不关闭仅隐藏,便于复用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TxtReplaceForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.Visible = false;
+            e.Cancel = true;
+        }
     }
 }
