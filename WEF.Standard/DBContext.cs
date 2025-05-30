@@ -21,6 +21,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 
 using WEF.Batcher;
 using WEF.Common;
@@ -1805,7 +1806,7 @@ namespace WEF
         public int Insert<TEntity>(TEntity entity)
             where TEntity : Entity
         {
-            return insertExecute<TEntity>(_cmdCreator.CreateInsertCommand(entity));
+            return InsertExecute<TEntity>(_cmdCreator.CreateInsertCommand(entity));
         }
 
 
@@ -1909,7 +1910,7 @@ namespace WEF
         public int Insert<TEntity>(string tableName, Field[] fields, object[] values)
             where TEntity : Entity
         {
-            return insertExecute<TEntity>(_cmdCreator.CreateInsertCommand<TEntity>(tableName, fields, values));
+            return InsertExecute<TEntity>(_cmdCreator.CreateInsertCommand<TEntity>(tableName, fields, values));
         }
 
         /// <summary>
@@ -1928,12 +1929,12 @@ namespace WEF
         }
 
         /// <summary>
-        /// 
+        /// InsertExecute
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="cmd"></param>
         /// <returns></returns>
-        private int insertExecute<TEntity>(DbCommand cmd)
+        private int InsertExecute<TEntity>(DbCommand cmd)
              where TEntity : Entity
         {
             int returnValue = 0;
@@ -1945,7 +1946,7 @@ namespace WEF
         }
 
         /// <summary>
-        /// 
+        /// InsertExecute
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="cmd"></param>
@@ -2264,6 +2265,16 @@ namespace WEF
         public DataSet ExecuteDataSet(DbCommand cmd)
         {
             return _db.ExecuteDataSet(cmd);
+        }
+
+        /// <summary>
+        /// 执行ExecuteDataSet
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <returns></returns>
+        public async Task<DataSet> ExecuteDataSetAsync(DbCommand cmd)
+        {
+            return await _db.ExecuteDataSetAsync(cmd);
         }
 
         /// <summary>
@@ -2693,6 +2704,19 @@ namespace WEF
         }
 
         /// <summary>
+        /// 按天复制表
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="isTruncate"></param>
+        /// <returns></returns>
+        public async Task<bool> CopyTableByDayAsync<TEntity>(bool isTruncate = false) where TEntity : Entity
+        {
+            var talbleName = EntityCache.GetTableName<TEntity>();
+            var newTalbeName = $"{talbleName}_{DateTime.Now.ToString("yyyyMMdd")}";
+            return await CopyTableAsync(talbleName, newTalbeName, isTruncate);
+        }
+
+        /// <summary>
         /// 复制表
         /// </summary>
         /// <param name="talbName"></param>
@@ -2711,6 +2735,30 @@ namespace WEF
                         _db.DbProvider.TruncateTable(talbName);
                         return true;
 
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 复制表
+        /// </summary>
+        /// <param name="talbName"></param>
+        /// <param name="newTableName"></param>
+        /// <param name="isTruncate"></param>
+        /// <returns></returns>
+        public async Task<bool> CopyTableAsync(string talbName, string newTableName, bool isTruncate = false)
+        {
+            var exist = _db.DbProvider.IsTableExist(newTableName);
+            if (!exist)
+            {
+                if (await _db.DbProvider.CopyTableAsync(talbName, newTableName))
+                {
+                    if (isTruncate)
+                    {
+                        await _db.DbProvider.TruncateTableAsync(talbName);
+                        return true;
                     }
                 }
             }

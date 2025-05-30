@@ -13,6 +13,7 @@
  * 创建人：wenli
  * 创建说明：
  *****************************************************************************************************/
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Data;
@@ -24,50 +25,24 @@ namespace WEF.MvcPager
     /// </summary>
     public static class PageLinqExtensions
     {
-        public static PagedList<T> ToPagedList<T>
-            (
-                this IQueryable<T> allItems,
-                int pageIndex,
-                int pageSize
-            )
+        /// <summary>
+        /// 将IQueryable转换为分页列表
+        /// </summary>
+        /// <typeparam name="T">数据类型</typeparam>
+        /// <param name="allItems">数据源</param>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">页大小</param>
+        /// <returns>分页列表</returns>
+        public static PagedList<T> ToPagedList<T>(this IQueryable<T> allItems, int pageIndex, int pageSize)
         {
-            var totalItemCount = Enumerable.Count(allItems);
+            if (allItems == null)
+                throw new ArgumentNullException(nameof(allItems));
+
+            var totalItemCount = allItems.Count();
 
             if (pageIndex < 1 || (totalItemCount / pageSize) < (pageIndex - 1))
                 pageIndex = 1;
-            var itemIndex = (pageIndex - 1) * pageSize;
-            var pageOfItems = allItems.Skip(itemIndex).Take(pageSize);
 
-            return new PagedList<T>(pageOfItems, pageIndex, pageSize, totalItemCount);
-        }
-        public static PagedList<T> ToPagedList<T>
-            (
-                this IList<T> allItems,
-                int pageIndex,
-                int pageSize
-            )
-        {
-            var totalItemCount = Enumerable.Count(allItems);
-
-            if (pageIndex < 1 || (totalItemCount / pageSize) < (pageIndex - 1))
-                pageIndex = 1;
-            var itemIndex = (pageIndex - 1) * pageSize;
-            var pageOfItems = allItems.Skip(itemIndex).Take(pageSize);
-
-            return new PagedList<T>(pageOfItems, pageIndex, pageSize, totalItemCount);
-        }
-
-        public static PagedList<T> ToPagedList<T>
-           (
-               this IEnumerable<T> allItems,
-               int pageIndex,
-               int pageSize
-           )
-        {
-            var totalItemCount = Enumerable.Count(allItems);
-
-            if (pageIndex < 1 || (totalItemCount / pageSize) < (pageIndex - 1))
-                pageIndex = 1;
             var itemIndex = (pageIndex - 1) * pageSize;
             var pageOfItems = allItems.Skip(itemIndex).Take(pageSize);
 
@@ -75,90 +50,159 @@ namespace WEF.MvcPager
         }
 
         /// <summary>
-        /// 自定义DataTable分页控件
+        /// 将IList转换为分页列表
         /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">数据类型</typeparam>
+        /// <param name="allItems">数据源</param>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">页大小</param>
+        /// <returns>分页列表</returns>
+        public static PagedList<T> ToPagedList<T>(this IList<T> allItems, int pageIndex, int pageSize)
+        {
+            if (allItems == null)
+                throw new ArgumentNullException(nameof(allItems));
+
+            var totalItemCount = allItems.Count;
+
+            if (pageIndex < 1 || (totalItemCount / pageSize) < (pageIndex - 1))
+                pageIndex = 1;
+
+            var itemIndex = (pageIndex - 1) * pageSize;
+            var pageOfItems = allItems.Skip(itemIndex).Take(pageSize);
+
+            return new PagedList<T>(pageOfItems, pageIndex, pageSize, totalItemCount);
+        }
+
+        /// <summary>
+        /// 将IEnumerable转换为分页列表
+        /// </summary>
+        /// <typeparam name="T">数据类型</typeparam>
+        /// <param name="allItems">数据源</param>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">页大小</param>
+        /// <returns>分页列表</returns>
+        public static PagedList<T> ToPagedList<T>(this IEnumerable<T> allItems, int pageIndex, int pageSize)
+        {
+            if (allItems == null)
+                throw new ArgumentNullException(nameof(allItems));
+
+            var totalItemCount = allItems.Count();
+
+            if (pageIndex < 1 || (totalItemCount / pageSize) < (pageIndex - 1))
+                pageIndex = 1;
+
+            var itemIndex = (pageIndex - 1) * pageSize;
+            var pageOfItems = allItems.Skip(itemIndex).Take(pageSize);
+
+            return new PagedList<T>(pageOfItems, pageIndex, pageSize, totalItemCount);
+        }
+
+        /// <summary>
+        /// 将DataTable转换为分页列表
+        /// </summary>
+        /// <param name="source">数据源</param>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">页大小</param>
+        /// <returns>分页列表</returns>
         public static PagedList<DataRow> ToPagedList(this DataTable source, int pageIndex, int pageSize)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             var allItems = source.AsEnumerable();
             if (pageIndex < 1)
             {
                 pageIndex = 1;
             }
+
             int count = (pageIndex - 1) * pageSize;
-            IEnumerable<DataRow> items = allItems.Skip<DataRow>(count).Take<DataRow>(pageSize);
-            return new PagedList<DataRow>(items.ToList(), pageIndex, pageSize, System.Linq.Enumerable.Count(allItems));
+            var items = allItems.Skip(count).Take(pageSize);
+            return new PagedList<DataRow>(items.ToList(), pageIndex, pageSize, allItems.Count());
         }
 
         /// <summary>
-        /// standarnd中不支持此方法AsEnumerable
+        /// 将DataTable转换为IEnumerable
         /// </summary>
-        /// <param name="dt"></param>
-        /// <returns></returns>
+        /// <param name="dt">数据表</param>
+        /// <returns>数据行枚举</returns>
         public static IEnumerable<DataRow> AsEnumerable(this DataTable dt)
         {
+            if (dt == null)
+                throw new ArgumentNullException(nameof(dt));
+
             foreach (DataRow item in dt.Rows)
             {
                 yield return item;
             }
         }
 
-
         /// <summary>
-        /// 自定义List分页控件
+        /// 将List转换为分页列表
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">数据类型</typeparam>
+        /// <param name="source">数据源</param>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">页大小</param>
+        /// <returns>分页列表</returns>
         public static PagedList<T> ToPagedList<T>(this List<T> source, int pageIndex, int pageSize)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             var allItems = source.AsEnumerable();
             if (pageIndex < 1)
             {
                 pageIndex = 1;
             }
+
             int count = (pageIndex - 1) * pageSize;
-            IEnumerable<T> items = allItems.Skip<T>(count).Take<T>(pageSize);
-            return new PagedList<T>(items.ToList(), pageIndex, pageSize, System.Linq.Enumerable.Count(allItems));
-        }
-        /// <summary>
-        /// 自定义IOrderedEnumerable分页控件
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
-        public static PagedList<T> ToPagedList<T>(this IOrderedEnumerable<T> source, int pageIndex, int pageSize)
-        {
-            var allItems = source.AsEnumerable();
-            if (pageIndex < 1)
-            {
-                pageIndex = 1;
-            }
-            int count = (pageIndex - 1) * pageSize;
-            IEnumerable<T> items = allItems.Skip<T>(count).Take<T>(pageSize);
-            return new PagedList<T>(items.ToList(), pageIndex, pageSize, Enumerable.Count(allItems));
+            var items = allItems.Skip(count).Take(pageSize);
+            return new PagedList<T>(items.ToList(), pageIndex, pageSize, allItems.Count());
         }
 
         /// <summary>
-        /// 自定义Page分页控件
+        /// 将IOrderedEnumerable转换为分页列表
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">数据类型</typeparam>
+        /// <param name="source">数据源</param>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">页大小</param>
+        /// <returns>分页列表</returns>
+        public static PagedList<T> ToPagedList<T>(this IOrderedEnumerable<T> source, int pageIndex, int pageSize)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            var allItems = source.AsEnumerable();
+            if (pageIndex < 1)
+            {
+                pageIndex = 1;
+            }
+
+            int count = (pageIndex - 1) * pageSize;
+            var items = allItems.Skip(count).Take(pageSize);
+            return new PagedList<T>(items.ToList(), pageIndex, pageSize, allItems.Count());
+        }
+
+        /// <summary>
+        /// 将Page转换为分页列表
+        /// </summary>
+        /// <typeparam name="T">数据类型</typeparam>
+        /// <param name="source">数据源</param>
+        /// <returns>分页列表</returns>
         public static PagedList<T> ToPagedList<T>(this Page<T> source)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             var allItem = source.PageList.ToList();
             if (allItem.Count <= source.PageSize)
             {
                 return new PagedList<T>(allItem, source.PageIndex, source.PageSize, source.TotalItemCount);
             }
+
             int count = (source.PageIndex - 1) * source.PageSize;
-            IEnumerable<T> items = allItem.Skip<T>(count).Take<T>(source.PageSize);
+            var items = allItem.Skip(count).Take(source.PageSize);
             return new PagedList<T>(items, source.PageIndex, source.PageSize, source.TotalItemCount);
         }
     }

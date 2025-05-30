@@ -19,6 +19,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 using WEF.Common;
 using WEF.Db;
@@ -1015,7 +1016,6 @@ namespace WEF
             if (t == null)
             {
                 t = DataUtils.Create<T>();
-                //t.SetTableName(_tableName);
             }
             return t;
         }
@@ -1724,6 +1724,328 @@ namespace WEF
 
         #endregion
 
+        #region 异步查询方法
+
+        /// <summary>
+        /// 异步返回第一个实体，无数据返回Null
+        /// </summary>
+        /// <returns>第一个实体</returns>
+        public async Task<T> FirstAsync()
+        {
+            return await ToFirstAsync();
+        }
+
+        /// <summary>
+        /// 异步返回第一个实体，无数据返回Null
+        /// </summary>
+        /// <typeparam name="Model">返回类型</typeparam>
+        /// <returns>第一个实体</returns>
+        public async Task<Model> FirstAsync<Model>() where Model : class
+        {
+            return await ToFirstAsync<Model>();
+        }
+
+        /// <summary>
+        /// 异步返回第一个实体，无数据返回Null
+        /// </summary>
+        /// <param name="lambdaWhere">查询条件</param>
+        /// <returns>第一个实体</returns>
+        public async Task<T> FirstAsync(Expression<Func<T, bool>> lambdaWhere)
+        {
+            var where = new Where<T>(lambdaWhere);
+            Search search = Top(1).GetPagedFromSection().Where(where.ToWhereClip());
+
+            using (var reader = await ToDataReaderAsync(search))
+            {
+                var result = EntityUtils.ReaderToList<T>(reader);
+                if (result.Any())
+                {
+                    var t = result.First();
+                    if (t != null)
+                    {
+                        t.ClearModifyFields();
+                    }
+                    return t;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 异步返回第一个实体，无数据返回Null
+        /// </summary>
+        /// <returns>第一个实体</returns>
+        public async Task<T> ToFirstAsync()
+        {
+            Search search = Top(1).GetPagedFromSection();
+
+            using (var reader = await ToDataReaderAsync(search))
+            {
+                var result = EntityUtils.ReaderToList<T>(reader);
+                if (result.Any())
+                {
+                    var t = result.First();
+                    if (t != null)
+                    {
+                        t.ClearModifyFields();
+                    }
+                    return t;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 异步返回第一个实体，无数据返回Null
+        /// </summary>
+        /// <typeparam name="Model">返回类型</typeparam>
+        /// <returns>第一个实体</returns>
+        public async Task<Model> ToFirstAsync<Model>() where Model : class
+        {
+            var typet = typeof(Model);
+            if (typet == typeof(T))
+            {
+                return await ToFirstAsync() as Model;
+            }
+
+            Search from = Top(1).GetPagedFromSection();
+
+            using (var reader = ToDataReader(from))
+            {
+                var result = await EntityUtils.ReaderToListAsync<Model>(reader);
+                if (result.Any())
+                {
+                    var t = result.First();
+                    if (t != null)
+                    {
+                        var st = t as Entity;
+                        if (st != null)
+                        {
+                            st.ClearModifyFields();
+                        }
+                    }
+                    return t;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 异步获取列表
+        /// </summary>
+        /// <returns>实体列表</returns>
+        public async Task<List<T>> ToListAsync()
+        {
+            var from = GetPagedFromSection();
+
+            using (var reader = await ToDataReaderAsync(from))
+            {
+                var list = EntityUtils.ReaderToList<T>(reader);
+                foreach (var m in list)
+                {
+                    if (m != null)
+                    {
+                        m.ClearModifyFields();
+                    }
+                }
+                return list;
+            }
+        }
+
+        /// <summary>
+        /// 异步获取列表
+        /// </summary>
+        /// <typeparam name="Model">返回类型</typeparam>
+        /// <returns>实体列表</returns>
+        public async Task<List<Model>> ToListAsync<Model>()
+        {
+            var typet = typeof(Model);
+            if (typet == typeof(T))
+            {
+                return await ToListAsync() as List<Model>;
+            }
+
+            var from = GetPagedFromSection();
+
+            if (typet.IsClass && !_notClass.Contains(typet.Name))
+            {
+                using (var reader = await ToDataReaderAsync(from))
+                {
+                    return EntityUtils.ReaderToList<Model>(reader);
+                }
+            }
+
+            if (!from.Fields.Any())
+            {
+                throw new Exception($".ToListAsync<{typet.Name}>()至少需要.Select()一个字段！");
+            }
+            if (from.Fields.Count > 1)
+            {
+                throw new Exception($".ToListAsync<{typet.Name}>()最多.Select()一个字段！");
+            }
+
+            var list = new List<Model>();
+            using (var reader = await ToDataReaderAsync(from))
+            {
+                while (reader.Read())
+                {
+                    var t = DataUtils.ConvertValue<Model>(reader[from.Fields[0].Name]);
+                    var st = t as Entity;
+                    if (st != null)
+                    {
+                        st.ClearModifyFields();
+                    }
+                    list.Add(t);
+                }
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// 异步获取分页列表
+        /// </summary>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">每页大小</param>
+        /// <param name="order">排序字段</param>
+        /// <param name="asc">是否升序</param>
+        /// <returns>分页列表</returns>
+        public async Task<PagedList<T>> ToPagedListAsync(int pageIndex, int pageSize, string order = "", bool asc = true)
+        {
+            var total = await CountAsync();
+
+            if (!string.IsNullOrEmpty(TableName) && string.IsNullOrEmpty(order))
+            {
+                order = $"{TableName}.ID";
+            }
+
+            var list = await OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC))
+                .Page(pageIndex, pageSize)
+                .ToListAsync<T>();
+
+            return new PagedList<T>(list, pageIndex, pageSize, total);
+        }
+
+        /// <summary>
+        /// 异步获取分页列表
+        /// </summary>
+        /// <typeparam name="Model">返回类型</typeparam>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">每页大小</param>
+        /// <param name="order">排序字段</param>
+        /// <param name="asc">是否升序</param>
+        /// <returns>分页列表</returns>
+        public async Task<PagedList<Model>> ToPagedListAsync<Model>(int pageIndex, int pageSize, string order, bool asc)
+        {
+            var total = await CountAsync();
+
+            var list = await OrderBy(new OrderByOperation(order, asc ? OrderByOperater.ASC : OrderByOperater.DESC))
+                .Page(pageIndex, pageSize)
+                .ToListAsync<Model>();
+
+            return new PagedList<Model>(list, pageIndex, pageSize, total);
+        }
+
+        /// <summary>
+        /// 异步转换为字典
+        /// </summary>
+        /// <param name="keyExpress">键表达式</param>
+        /// <returns>字典</returns>
+        public async Task<Dictionary<dynamic, T>> ToDictionaryAsync(Expression<Func<T, dynamic>> keyExpress)
+        {
+            var keyFiled = ExpressionToOperation<T>.ToSelect(_tableName, keyExpress).First();
+            var list = await ToListAsync();
+            if (list != null && list.Count > 0)
+            {
+                var result = new Dictionary<dynamic, T>();
+                foreach (var item in list)
+                {
+                    var key = DataUtils.GetPropertyValue(item, keyFiled.Name);
+                    if (key != null)
+                        result.Add(key, item);
+                }
+                return result;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 异步转换为字典
+        /// </summary>
+        /// <typeparam name="Model">值类型</typeparam>
+        /// <param name="keyExpress">键表达式</param>
+        /// <returns>字典</returns>
+        public async Task<Dictionary<dynamic, Model>> ToDictionaryAsync<Model>(Expression<Func<T, dynamic>> keyExpress)
+        {
+            var keyFiled = ExpressionToOperation<T>.ToSelect(_tableName, keyExpress).First();
+            var list = await ToListAsync<Model>();
+            if (list != null && list.Count > 0)
+            {
+                var result = new Dictionary<dynamic, Model>();
+                foreach (var item in list)
+                {
+                    var key = DataUtils.GetPropertyValue(item, keyFiled.Name);
+                    if (key != null)
+                        result.Add(key, item);
+                }
+                return result;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 异步转换为字典
+        /// </summary>
+        /// <param name="keyExpress">键表达式</param>
+        /// <param name="valExpress">值表达式</param>
+        /// <returns>字典</returns>
+        public async Task<Dictionary<dynamic, dynamic>> ToDictionaryAsync(Expression<Func<T, dynamic>> keyExpress, Expression<Func<T, dynamic>> valExpress)
+        {
+            var keyFiled = ExpressionToOperation<T>.ToSelect(_tableName, keyExpress).First();
+            var valFiled = ExpressionToOperation<T>.ToSelect(_tableName, valExpress).First();
+            var list = await ToListAsync();
+            if (list != null && list.Count > 0)
+            {
+                var result = new Dictionary<dynamic, dynamic>();
+                foreach (var item in list)
+                {
+                    var key = DataUtils.GetPropertyValue(item, keyFiled.Name);
+                    if (key != null)
+                    {
+                        var val = DataUtils.GetPropertyValue(item, valFiled.Name);
+                        result.Add(key, val);
+                    }
+                }
+                return result;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 异步转换为字典
+        /// </summary>
+        /// <typeparam name="TKey">键类型</typeparam>
+        /// <typeparam name="TVal">值类型</typeparam>
+        /// <param name="keyExpress">键表达式</param>
+        /// <param name="valExpress">值表达式</param>
+        /// <returns>字典</returns>
+        public async Task<Dictionary<TKey, TVal>> ToDictionaryAsync<TKey, TVal>(Expression<Func<T, dynamic>> keyExpress, Expression<Func<T, dynamic>> valExpress)
+        {
+            var data = await ToDictionaryAsync(keyExpress, valExpress);
+            if (data == null || data.Count < 1) return null;
+            var result = new Dictionary<TKey, TVal>();
+            foreach (var item in data)
+            {
+                result.Add((TKey)item.Key, (TVal)item.Value);
+            }
+            return result;
+        }
+
+        internal Task<T1> ToScalarAsync<T1>()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
     }
 }

@@ -22,7 +22,7 @@ namespace WEF.MvcPager
     /// <summary>
     /// 分页列表
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">数据类型</typeparam>
     [Serializable, DataContract]
     public class PagedList<T>
     {
@@ -31,59 +31,80 @@ namespace WEF.MvcPager
         /// </summary>
         [DataMember(Name = "pageIndex")]
         public int PageIndex { get; set; }
+
         /// <summary>
         /// 页容量
         /// </summary>
         [DataMember(Name = "pageSize")]
         public int PageSize { get; set; }
+
         /// <summary>
         /// 总数
         /// </summary>
         [DataMember(Name = "totalItemCount")]
         public int TotalItemCount { get; set; }
+
         /// <summary>
         /// 总页数
         /// </summary>
         [DataMember(Name = "totalPageCount")]
         public int TotalPageCount { get; private set; }
+
         /// <summary>
-        /// 开始页数
+        /// 开始记录索引
         /// </summary>
         [DataMember(Name = "startRecordIndex")]
         public int StartRecordIndex { get; private set; }
+
         /// <summary>
-        /// 结束页数
+        /// 结束记录索引
         /// </summary>
         [DataMember(Name = "endRecordIndex")]
         public int EndRecordIndex { get; private set; }
+
         /// <summary>
-        /// 数据
+        /// 数据列表
         /// </summary>
         [DataMember(Name = "data")]
         public List<T> Data { get; set; } = new List<T>();
+
+        /// <summary>
+        /// 是否有上一页
+        /// </summary>
+        [DataMember(Name = "hasPreviousPage")]
+        public bool HasPreviousPage => PageIndex > 1;
+
+        /// <summary>
+        /// 是否有下一页
+        /// </summary>
+        [DataMember(Name = "hasNextPage")]
+        public bool HasNextPage => PageIndex < TotalPageCount;
 
         /// <summary>
         /// 分页列表
         /// </summary>
         public PagedList()
         {
-
         }
 
         /// <summary>
         /// 分页列表
         /// </summary>
-        /// <param name="items"></param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="items">数据项</param>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">页大小</param>
         public PagedList(IList<T> items, int pageIndex, int pageSize)
         {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
             PageSize = pageSize;
             TotalItemCount = items.Count;
             TotalPageCount = (int)Math.Ceiling(TotalItemCount / (double)PageSize);
             PageIndex = pageIndex;
             StartRecordIndex = (PageIndex - 1) * PageSize + 1;
             EndRecordIndex = TotalItemCount > pageIndex * pageSize ? pageIndex * pageSize : TotalItemCount;
+            
             for (int i = StartRecordIndex - 1; i < EndRecordIndex; i++)
             {
                 Data.Add(items[i]);
@@ -93,12 +114,15 @@ namespace WEF.MvcPager
         /// <summary>
         /// 分页列表
         /// </summary>
-        /// <param name="items"></param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="totalItemCount"></param>
+        /// <param name="items">数据项</param>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">页大小</param>
+        /// <param name="totalItemCount">总记录数</param>
         public PagedList(IList<T> items, int pageIndex, int pageSize, int totalItemCount)
         {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
             Data.AddRange(items);
             TotalItemCount = totalItemCount;
             TotalPageCount = (int)Math.Ceiling(totalItemCount / (double)pageSize);
@@ -111,12 +135,15 @@ namespace WEF.MvcPager
         /// <summary>
         /// 分页列表
         /// </summary>
-        /// <param name="items"></param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="totalItemCount"></param>
+        /// <param name="items">数据项</param>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">页大小</param>
+        /// <param name="totalItemCount">总记录数</param>
         public PagedList(IEnumerable<T> items, int pageIndex, int pageSize, int totalItemCount)
         {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
             Data.AddRange(items);
             TotalItemCount = totalItemCount;
             TotalPageCount = (int)Math.Ceiling(totalItemCount / (double)pageSize);
@@ -129,9 +156,9 @@ namespace WEF.MvcPager
         /// <summary>
         /// 分页列表
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="totalItemCount"></param>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="pageSize">页大小</param>
+        /// <param name="totalItemCount">总记录数</param>
         public PagedList(int pageIndex, int pageSize, int totalItemCount)
         {
             PageSize = pageSize;

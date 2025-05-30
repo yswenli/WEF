@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Threading.Tasks;
 
 using WEF.Common;
 using WEF.Db;
@@ -809,6 +810,25 @@ namespace WEF
         }
 
         /// <summary>
+        /// 获取记录数(内部使用)
+        /// </summary>
+        /// <returns></returns>
+        internal async Task<int> CountAsync()
+        {
+            DbCommand dbCommand = _database.GetSqlStringCommand(CountSqlString);
+
+            _database.AddCommandParameter(dbCommand, Parameters.ToArray());
+
+            int returnValue;
+            if (_trans == null)
+                returnValue = DataUtils.ConvertValue<int>(await _database.ExecuteScalarAsync(dbCommand));
+            else
+                returnValue = DataUtils.ConvertValue<int>(await _database.ExecuteScalarAsync(dbCommand, _trans));
+
+            return returnValue;
+        }
+
+        /// <summary>
         /// 获取记录数
         /// </summary>
         /// <returns></returns>
@@ -899,6 +919,18 @@ namespace WEF
             return _trans == null
                 ? _database.ExecuteReader(CreateDbCommand(search))
                 : _database.ExecuteReader(CreateDbCommand(search), _trans);
+        }
+
+        /// <summary>
+        ///  To DataReader
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        protected async Task<IDataReader> ToDataReaderAsync(Search search)
+        {
+            return _trans == null
+                ? await _database.ExecuteReaderAsync(CreateDbCommand(search))
+                : await _database.ExecuteReaderAsync(CreateDbCommand(search), _trans);
         }
 
         /// <summary>

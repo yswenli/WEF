@@ -28,6 +28,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 using WEF.Common;
 using WEF.Expressions;
@@ -692,5 +693,16 @@ namespace WEF.Db
             return ToPivotList<Model, TEntity2>(pivotInfo, where, typeof(Model).Name, pageIndex, pageSize, orderBy, asc);
         }
         #endregion
+
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task<List<int>> UpdateAsync(params TEntity[] entities)
+        {
+            return await DBContext.UpdateAsync(entities);
+        }
     }
 }

@@ -15,10 +15,13 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
+using System.Threading.Tasks;
+
 using WEF.Db;
 
 namespace WEF.Common
@@ -1237,6 +1240,49 @@ namespace WEF.Common
             }
             return result;
         }
+
+        /// <summary>
+        /// ReaderToListAsync method updated to fix CS1061 error.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static async Task<List<T>> ReaderToListAsync<T>(this IDataReader reader)
+        {
+            List<T> result = new List<T>();
+            var info = new CacheInfo
+            {
+                Deserializer = GetDeserializer(typeof(T), reader, 0, -1, false)
+            };
+            if (reader is DbDataReader dbReader)
+            {
+                while (await dbReader.ReadAsync())
+                {
+                    dynamic next = info.Deserializer(dbReader);
+                    result.Add((T)next);
+                }
+            }
+            else
+            {
+                throw new NotSupportedException("ReaderToListAsync only supports DbDataReader.");
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 读取一个对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static T Reader<T>(this IDataReader reader)
+        {
+            var list = reader.ReaderToList<T>();
+            if (list == null || list.Count < 1) return default;
+            return list[0];
+        }
+
         /// <summary>
         /// ReaderToEnumerable
         /// </summary>
@@ -1257,6 +1303,19 @@ namespace WEF.Common
                 result.Add(next);
             }
             return result;
+        }
+
+        /// <summary>
+        /// 读取一个对象
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static dynamic Reader(this IDataReader reader, Type type)
+        {
+            var list = reader.ReaderToList(type);
+            if (list == null || list.Count < 1) return default;
+            return list[0];
         }
     }
 }

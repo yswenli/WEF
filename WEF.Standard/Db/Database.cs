@@ -16,6 +16,7 @@ using System.Data.Common;
 using System.Globalization;
 using System.Linq;
 using System.Transactions;
+using System.Threading.Tasks;
 
 using WEF.Common;
 using WEF.Expressions;
@@ -27,7 +28,7 @@ namespace WEF.Db
     /// <summary>
     /// 数据库对象
     /// </summary>
-    public sealed class Database : ILogable
+    public sealed partial class Database : ILogable
     {
 
         private DbProvider _dbProvider;
@@ -292,6 +293,18 @@ namespace WEF.Db
             }
         }
 
+        private async Task<object> DoExecuteScalarAsync(DbCommand command)
+        {
+            try
+            {
+                return await command.ExecuteScalarAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"DoExecuteScalarAsync 异常，ConnectionString:{ConnectionString} CommandText:{command.CommandText}", ex);
+            }
+        }
+
         private int DoExecuteNonQuery(DbCommand command)
         {
             try
@@ -316,7 +329,17 @@ namespace WEF.Db
             }
         }
 
-
+        private async Task<DbDataReader> DoExecuteReaderAsync(DbCommand command, CommandBehavior cmdBehavior)
+        {
+            try
+            {
+                return await command.ExecuteReaderAsync(cmdBehavior);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"DoExecuteReaderAsync 异常， ConnectionString:{ConnectionString} CommandText:{command.CommandText}", ex);
+            }
+        }
         private DbTransaction BeginTransaction(DbConnection connection)
         {
             return connection.BeginTransaction();
@@ -887,7 +910,8 @@ namespace WEF.Db
         }
 
         /// <summary>
-        /// <para>Executes the <paramref name="commandText"/> as part of the given <paramref name="transaction" /> and returns the results in a new <see cref="DataSet"/>.</para>
+        /// <para>Executes the <paramref name="commandText"/> interpreted as specified by the <paramref name="commandType" /> 
+        /// within the given <paramref name="transaction" /> and returns the results in a new <see cref="DataSet"/>.</para>
         /// </summary>
         /// <param name="transaction">
         /// <para>The <see cref="IDbTransaction"/> to execute the command within.</para>
@@ -1499,6 +1523,250 @@ namespace WEF.Db
                 sourceDataTable.Clear();
             }
         }
+
+        /// <summary>
+        /// 异步批量导入
+        /// </summary>
+        /// <param name="tableName">表名</param>
+        /// <param name="sourceDataTable">源数据表</param>
+        /// <param name="timeOut">超时时间</param>
+        /// <returns></returns>
+        public async Task<int> BulkInsertAsync(string tableName, DataTable sourceDataTable, int timeOut = 180)
+        {
+            Check.Require(tableName, "tableName", Check.NotNullOrEmpty);
+
+            if (sourceDataTable == null || sourceDataTable.Rows == null || sourceDataTable.Rows.Count < 1)
+                return -1;
+
+            try
+            {
+                sourceDataTable.Locale = CultureInfo.InvariantCulture;
+
+                using (DbConnection connection = CreateConnection())
+                {
+                    var selectCommand = CreateCommandByCommandType(timeOut, CommandType.Text, $"select * from {tableName} where 1=1");
+
+                    PrepareCommand(selectCommand, connection);
+
+                    using (var transaction =  connection.BeginTransaction())
+                    {
+                        selectCommand.Transaction = transaction;
+
+                        using (DbDataAdapter adapter = GetDataAdapter())
+                        {
+                            DataTable targetDataTable = new DataTable(tableName)
+                            {
+                                Locale = CultureInfo.InvariantCulture
+                            };
+
+                            try
+                            {
+                                adapter.SelectCommand = selectCommand;
+
+                                await Task.Run(() => adapter.Fill(targetDataTable));
+
+                                PrepareAdapter(adapter, transaction);
+
+                                var columns1 = sourceDataTable.Columns;
+                                var columns2 = targetDataTable.Columns;
+
+                                for (int i = 0; i < sourceDataTable.Rows.Count; i++)
+                                {
+                                    var newRow = targetDataTable.NewRow();
+
+                                    for (int j = 0; j < columns1.Count; j++)
+                                    {
+                                        if (sourceDataTable.Rows[i][j] == null || sourceDataTable.Rows[i][j] is DBNull)
+                                        {
+                                            continue;
+                                        }
+                                        if (columns2[j].DataType.Name == "MySqlDateTime")
+                                        {
+                                            var datetime = sourceDataTable.Rows[i][j];
+                                            if (datetime != null)
+                                            {
+                                                var dtVal = (DateTime)datetime;
+                                                newRow[j] = dtVal.ToMysqlDateTime();
+                                            }
+                                        }
+                                        else if (columns2[j].DataType.Name == "Image" || columns2[j].DataType.Name == "Byte[]" || columns2[j].DataType.Name == "Timespan")
+                                        {
+                                            continue;
+                                        }
+                                        else
+                                        {
+                                            newRow[j] = sourceDataTable.Rows[i][j];
+                                        }
+                                    }
+
+                                    targetDataTable.Rows.Add(newRow);
+                                }
+
+                                var count = await Task.Run(() => adapter.Update(targetDataTable));
+
+                                transaction.Commit();
+
+                                return count;
+                            }
+                            catch (Exception)
+                            {
+                                transaction.Rollback();
+                                throw;
+                            }
+                            finally
+                            {
+                                targetDataTable.Clear();
+                            }
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                sourceDataTable.Clear();
+            }
+        }
+
+        /// <summary>
+        /// 异步加载数据集
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="dataSet"></param>
+        /// <param name="tableNames"></param>
+        /// <returns></returns>
+        public async Task LoadDataSetAsync(DbCommand command, DataSet dataSet, string[] tableNames)
+        {
+            Check.Require(tableNames != null && tableNames.Length > 0, "tableNames could not be null or empty.");
+            Check.Require(dataSet != null, "dataSet could not be null.");
+
+            using (DbDataAdapter adapter = GetDataAdapter())
+            {
+                WriteLog(command);
+
+                ((IDbDataAdapter)adapter).SelectCommand = command;
+
+                string systemCreatedTableNameRoot = "Table";
+                for (int i = 0; i < tableNames.Length; i++)
+                {
+                    string systemCreatedTableName = (i == 0)
+                         ? systemCreatedTableNameRoot
+                         : systemCreatedTableNameRoot + i;
+
+                    adapter.TableMappings.Add(systemCreatedTableName, tableNames[i]);
+                }
+
+                await Task.Run(() => adapter.Fill(dataSet));
+            }
+        }
+
+        /// <summary>
+        /// 异步加载数据集
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="dataSet"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public async Task LoadDataSetAsync(DbCommand command, DataSet dataSet, string tableName)
+        {
+            await LoadDataSetAsync(command, dataSet, new string[] { tableName });
+        }
+
+        /// <summary>
+        /// 异步加载数据集
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="dataSet"></param>
+        /// <param name="tableNames"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public async Task LoadDataSetAsync(DbCommand command, DataSet dataSet, string[] tableNames, DbTransaction transaction)
+        {
+            PrepareCommand(command, transaction);
+            await LoadDataSetAsync(command, dataSet, tableNames);
+        }
+
+        /// <summary>
+        /// 异步执行数据集
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        public async Task<DataSet> ExecuteDataSetAsync(DbCommand command)
+        {
+            DataSet dataSet = new DataSet();
+            dataSet.Locale = CultureInfo.InvariantCulture;
+            await LoadDataSetAsync(command, dataSet, new[] { "Table" });
+            return dataSet;
+        }
+
+        /// <summary>
+        /// 异步执行数据集
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="dbParameters"></param>
+        /// <returns></returns>
+        public async Task<DataSet> ExecuteDataSetAsync(string sql, params DbParameter[] dbParameters)
+        {
+            Check.Require(sql, "sql", Check.NotNullOrEmpty);
+            using (DbConnection connection = CreateConnection())
+            {
+                using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
+                {
+                    PrepareCommand(command, connection);
+                    if (dbParameters != null && dbParameters.Any())
+                    {
+                        command.Parameters.AddRange(dbParameters);
+                    }
+                    DataSet dataSet = new DataSet();
+                    dataSet.Locale = CultureInfo.InvariantCulture;
+                    await LoadDataSetAsync(command, dataSet, new[] { "Table" });
+                    return dataSet;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 异步执行数据集
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public async Task<DataSet> ExecuteDataSetAsync(DbCommand command, DbTransaction transaction)
+        {
+            DataSet dataSet = new DataSet();
+            dataSet.Locale = CultureInfo.InvariantCulture;
+            PrepareCommand(command, transaction);
+            await LoadDataSetAsync(command, dataSet, new[] { "Table" });
+            return dataSet;
+        }
+
+        /// <summary>
+        /// 异步执行数据集
+        /// </summary>
+        /// <param name="commandType"></param>
+        /// <param name="commandText"></param>
+        /// <returns></returns>
+        public async Task<DataSet> ExecuteDataSetAsync(CommandType commandType, string commandText)
+        {
+            using (DbCommand command = CreateCommandByCommandType(commandType, commandText))
+            {
+                return await ExecuteDataSetAsync(command);
+            }
+        }
+
+        /// <summary>
+        /// 异步执行数据集
+        /// </summary>
+        /// <param name="transaction"></param>
+        /// <param name="commandType"></param>
+        /// <param name="commandText"></param>
+        /// <returns></returns>
+        public async Task<DataSet> ExecuteDataSetAsync(DbTransaction transaction, CommandType commandType, string commandText)
+        {
+            using (DbCommand command = CreateCommandByCommandType(commandType, commandText))
+            {
+                return await ExecuteDataSetAsync(command, transaction);
+            }
+        }
         #endregion
 
         #region Transactions
@@ -1803,6 +2071,77 @@ namespace WEF.Db
                 }
             }
         }
-        #endregion
+
+        /// <summary>
+        /// 异步获取表结构
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public async Task<DataTable> GetMapAsync(string tableName)
+        {
+            Check.Require(tableName, "tableName", Check.NotNullOrEmpty);
+
+            if (tableName.IndexOf("`") > -1)
+            {
+                tableName = tableName.Replace("`", "");
+            }
+
+            if (tableName.IndexOf("[") > -1)
+            {
+                tableName = tableName.Replace("[", "").Replace("]", "");
+            }
+
+            var sql = "select * from " + tableName + " where 1=2";
+
+            using (DbConnection connection = CreateConnection())
+            {
+                using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
+                {
+                    command.CommandTimeout = TimeOut;
+                    PrepareCommand(command, connection);
+                    return await Task.Run(() => LoadMap(command, tableName));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 异步获取最大自增长主键值
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="idName"></param>
+        /// <returns></returns>
+        public async Task<int> GetMaxIdAsync(string tableName, string idName)
+        {
+            Check.Require(tableName, "tableName", Check.NotNullOrEmpty);
+
+            if (tableName.IndexOf("`") > -1)
+            {
+                tableName = tableName.Replace("`", "");
+            }
+
+            if (tableName.IndexOf("[") > -1)
+            {
+                tableName = tableName.Replace("[", "").Replace("]", "");
+            }
+
+            var sql = "select max(" + idName + ") from " + tableName;
+
+            using (DbConnection connection = CreateConnection())
+            {
+                using (DbCommand command = CreateCommandByCommandType(CommandType.Text, sql))
+                {
+                    command.CommandTimeout = TimeOut;
+                    PrepareCommand(command, connection);
+                    var result = await command.ExecuteScalarAsync();
+
+                    if (result != null && int.TryParse(result.ToString(), out int maxId))
+                    {
+                        return maxId;
+                    }
+                    return 0;
+                }
+            }
+        }
+        #endregion      
     }
 }

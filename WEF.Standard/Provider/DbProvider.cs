@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Threading.Tasks;
 
 using WEF.Common;
 using WEF.Db;
@@ -511,6 +512,24 @@ namespace WEF.Provider
         }
 
         /// <summary>
+        /// 截断表
+        /// </summary>
+        /// <param name="tableName"></param>
+        public async Task TruncateTableAsync(string tableName)
+        {
+            using (var cnn = _dbProviderFactory.CreateConnection())
+            {
+                using (var cmd = cnn.CreateCommand())
+                {
+                    cnn.Open();
+                    cmd.CommandText = $"TRUNCATE TABLE {tableName};";
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+
+        /// <summary>
         /// 复制表
         /// </summary>
         /// <param name="tableName"></param>
@@ -525,6 +544,25 @@ namespace WEF.Provider
                     cnn.Open();
                     cmd.CommandText = $"SELECT * INTO {newTableName} FROM {tableName};";
                     return cmd.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 复制表
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="newTableName"></param>
+        /// <returns></returns>
+        public async Task<bool> CopyTableAsync(string tableName, string newTableName)
+        {
+            using (var cnn = _dbProviderFactory.CreateConnection())
+            {
+                using (var cmd = cnn.CreateCommand())
+                {
+                    cnn.Open();
+                    cmd.CommandText = $"SELECT * INTO {newTableName} FROM {tableName};";
+                    return (await cmd.ExecuteNonQueryAsync()) > 0;
                 }
             }
         }

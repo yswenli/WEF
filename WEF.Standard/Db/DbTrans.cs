@@ -15,6 +15,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 using WEF.Common;
 using WEF.Expressions;
@@ -120,6 +121,30 @@ namespace WEF.Db
             }
         }
 
+        /// <summary>
+        /// 异步提交
+        /// </summary>
+        public async Task CommitAsync()
+        {
+            try
+            {
+                if (!_isCommitOrRollback)
+                {
+                    // 修复问题：DbTransaction 不支持 CommitAsync 方法
+                    await Task.Run(() => _trans.Commit());
+                    _isCommitOrRollback = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                await RollbackAsync();
+                throw;
+            }
+            finally
+            {
+                Monitor.Exit(_locker);
+            }
+        }
 
         /// <summary>
         /// 回滚
@@ -142,9 +167,31 @@ namespace WEF.Db
                     Monitor.Exit(_locker);
                 }
             }
-
         }
 
+        /// <summary>
+        /// 异步回滚
+        /// </summary>
+        public async Task RollbackAsync()
+        {
+            if (!_isCommitOrRollback)
+            {
+                try
+                {
+                    // 修复问题：DbTransaction 不支持 RollbackAsync 方法
+                    await Task.Run(() => _trans.Rollback());
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    _isCommitOrRollback = true;
+                    Monitor.Exit(_locker);
+                }
+            }
+        }
 
         /// <summary>
         /// 隐式转换
@@ -754,6 +801,38 @@ namespace WEF.Db
             }
         }
 
+        /// <summary>
+        /// 异步尝试提交
+        /// </summary>
+        /// <param name="action">要执行的操作</param>
+        /// <param name="tryCount">重试次数</param>
+        /// <param name="sleep">重试间隔(毫秒)</param>
+        /// <returns>异常信息</returns>
+        public async Task<Exception> TryCommitAsync(Func<DbTrans, Task> action, int tryCount = 3, int sleep = 3 * 1000)
+        {
+            var count = 0;
+            while (true)
+            {
+                try
+                {
+                    await action.Invoke(this);
+                    await CommitAsync();
+                    await CloseAsync();
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    count++;
+                    if (count >= tryCount)
+                    {
+                        await CloseAsync();
+                        return ex;
+                    }
+                    await Task.Delay(sleep);
+                }
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -775,6 +854,31 @@ namespace WEF.Db
             _isClose = true;
         }
 
+        /// <summary>
+        /// 异步关闭
+        /// </summary>
+        public async Task CloseAsync()
+        {
+            await Task.Run(() =>
+            {
+                if (_isClose)
+                    return;
+
+                if (_conn != null && _conn.State != ConnectionState.Closed)
+                {
+                    _conn.Close();
+                    _conn.Dispose();
+                }
+
+                if (_trans != null)
+                {
+                    _trans.Dispose();
+                }
+
+                _isClose = true;
+            });
+
+        }
 
         #region IDisposable 成员
 
@@ -785,6 +889,15 @@ namespace WEF.Db
         {
             Commit();
             Close();
+        }
+
+        /// <summary>
+        /// 异步关闭连接并释放资源
+        /// </summary>
+        public async Task DisposeAsync()
+        {
+            await CommitAsync();
+            await CloseAsync();
         }
 
         #endregion

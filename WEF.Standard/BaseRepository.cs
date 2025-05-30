@@ -1391,5 +1391,111 @@ namespace WEF
         {
             _dbContext.Dispose();
         }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql">SQL语句</param>
+        /// <param name="dbParameters">参数数组</param>
+        /// <returns>受影响的行数</returns>
+        public async Task<int> ExecuteAsync(string sql, params DbParameter[] dbParameters)
+        {
+            return await _dbContext.ExecuteNonQueryAsync(sql, dbParameters);
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="sql">SQL语句</param>
+        /// <param name="inputParamas">参数字典</param>
+        /// <returns>受影响的行数</returns>
+        public async Task<int> ExecuteAsync(string sql, Dictionary<string, object> inputParamas)
+        {
+            return await _dbContext.ExecuteNonQueryAsync(sql, inputParamas);
+        }
+
+        /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <typeparam name="Model">参数类型</typeparam>
+        /// <param name="sql">SQL语句</param>
+        /// <param name="inputParamas">参数对象</param>
+        /// <returns>受影响的行数</returns>
+        public async Task<int> ExecuteAsync<Model>(string sql, Model inputParamas) where Model : class, new()
+        {
+            return await _dbContext.ExecuteNonQueryAsync(sql, inputParamas.ToDictionary());
+        }
+
+        /// <summary>
+        /// 查询数据表
+        /// </summary>
+        /// <param name="tableName">表名</param>
+        /// <param name="inputParamas">参数字典</param>
+        /// <returns>数据表</returns>
+        public async Task<DataTable> GetDataTableAsync(string tableName, Dictionary<string, dynamic> inputParamas)
+        {
+            var sp = new StringPlus();
+            sp.Append($"SELECT * FROM [{tableName}] WHERE 1=1");
+            foreach (var item in inputParamas)
+            {
+                sp.Append($" AND [{item.Key}]=@{item.Key}");
+            }
+            var sqlSection = FromSql(sp.ToString());
+            foreach (var item in inputParamas)
+            {
+                sqlSection = sqlSection.AddInParameter($"@{item.Key}", item.Value);
+            }
+            return await sqlSection.ToDataTableAsync();
+        }
+
+        /// <summary>
+        /// 更新数据
+        /// </summary>
+        /// <param name="tableName">表名</param>
+        /// <param name="inputParamas">参数字典</param>
+        /// <returns>是否成功</returns>
+        public async Task<bool> UpdateAsync(string tableName, Dictionary<string, dynamic> inputParamas)
+        {
+            var sp = new StringPlus();
+            sp.Append($"UPDATE [{tableName}] SET");
+            foreach (var item in inputParamas)
+            {
+                if (!item.Key.Equals("ID"))
+                {
+                    sp.Append($" [{item.Key}]=@{item.Key},");
+                }
+            }
+            sp.Remove(sp.Length - 1, 1);
+            sp.Append(" WHERE [ID]=@ID");
+
+            var sqlSection = FromSql(sp.ToString());
+
+            foreach (var item in inputParamas)
+            {
+                if (item.Key.Equals("ID"))
+                {
+                    sqlSection = sqlSection.AddInParameter($"@{item.Key}", DbType.String, item.Value.ToString());
+                }
+                else
+                {
+                    sqlSection = sqlSection.AddInParameter($"@{item.Key}", item.Value);
+                }
+            }
+            return await sqlSection.ExecuteNonQueryAsync() > 0;
+        }
+
+        /// <summary>
+        /// 按天复制表
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="isTruncate">是否清空目标表</param>
+        /// <returns>是否成功</returns>
+        public async Task<bool> CopyTableByDayAsync<TEntity>(bool isTruncate = false) where TEntity : Entity
+        {
+            return await _dbContext.CopyTableByDayAsync<TEntity>(isTruncate);
+        }
+
+
+
     }
 }

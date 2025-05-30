@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Threading.Tasks;
 
 using WEF.Common;
 using WEF.Expressions;
@@ -107,7 +108,16 @@ namespace WEF.Section
         /// <returns></returns>
         public virtual DataSet ToDataSet()
         {
-            return (_dbTransaction == null ? this._dbContext.ExecuteDataSet(_dbCommand) : this._dbContext.ExecuteDataSet(_dbCommand, _dbTransaction));
+            return (_dbTransaction == null ? _dbContext.ExecuteDataSet(_dbCommand) : _dbContext.ExecuteDataSet(_dbCommand, _dbTransaction));
+        }
+
+        /// <summary>
+        /// 返回DataSet
+        /// </summary>
+        /// <returns></returns>
+        public async virtual Task<DataSet> ToDataSetAsync()
+        {
+            return (_dbTransaction == null ? await _dbContext.ExecuteDataSetAsync(_dbCommand) : await _dbContext.ExecuteDataSetAsync(_dbCommand, _dbTransaction));
         }
 
         /// <summary>
@@ -139,6 +149,15 @@ namespace WEF.Section
         {
             return ToDataSet().Tables[0];
         }
+
+        /// <summary>
+        /// 返回DataTable
+        /// </summary>
+        /// <returns></returns>
+        public async Task<DataTable> ToDataTableAsync()
+        {
+            return (await ToDataSetAsync()).Tables[0];
+        }
         /// <summary>
         /// 返回DataTable
         /// </summary>
@@ -159,7 +178,14 @@ namespace WEF.Section
         {
             return (_dbTransaction == null ? this._dbContext.ExecuteNonQuery(_dbCommand) : this._dbContext.ExecuteNonQuery(_dbCommand, _dbTransaction));
         }
-
+        /// <summary>
+        /// 执行ExecuteNonQuery
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<int> ExecuteNonQueryAsync()
+        {
+            return (_dbTransaction == null ? await _dbContext.ExecuteNonQueryAsync(_dbCommand) : await _dbContext.ExecuteNonQueryAsync(_dbCommand, _dbTransaction));
+        }
         /// <summary>
         /// 数量
         /// </summary>
