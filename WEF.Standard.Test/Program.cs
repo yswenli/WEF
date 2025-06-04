@@ -110,13 +110,13 @@ namespace WEF.Standard.Test
 
             var qs2 = dbarticleRepository.Search()
                 .Join<DBUserInfo>((x, y) => x.CreatedBy == y.ID, JoinType.LeftJoin)
-                .Where(q => q.IsDeleted == false)                
+                .Where(q => q.IsDeleted == false)
                 .Select(q => q.ID);
             var sq2 = dbarticleRepository.Search().Where(q => q.ID.SubQueryIn(qs2));
             var sqr2 = sq2.ToList();
 
-           
-            var qs3=  dbarticleRepository.Search().Exists<DBUserInfo>((x, y) => x.CreatedBy == y.ID);
+
+            var qs3 = dbarticleRepository.Search().Exists<DBUserInfo>((x, y) => x.CreatedBy == y.ID);
 
 
 
@@ -361,9 +361,9 @@ namespace WEF.Standard.Test
 
             var count = giftopt.Search().Count(q => q.Supservicesku);
 
-            var sum = giftopt.Search().Select(b => b.Supporttype.Sum()).ToFirstDefault().Supporttype;
+            var sum = giftopt.Search().Select(b => b.Supporttype.Sum()).ToScalar<int>();
 
-            var avg = giftopt.Search().Select(b => b.Supporttype.Avg()).ToFirstDefault().Supporttype;
+            var avg = giftopt.Search().Select(b => b.Supporttype.Avg()).ToScalar<int>();
 
             var select = giftopt.Search().LeftJoin<DBTask>((m, n) => m.Name == n.Name).Select<DBTask>((a, b) => new { a.Activename, b.Daylimit });
 

@@ -840,6 +840,15 @@ namespace WEF
         /// <summary>
         /// 获取记录数
         /// </summary>
+        /// <returns></returns>
+        public async Task<long> LongCountAsync()
+        {
+            return await LongCountAsync(GetPagedFromSection());
+        }
+
+        /// <summary>
+        /// 获取记录数
+        /// </summary>
         /// <param name="search"></param>
         /// <returns></returns>
         internal long LongCount(Search search)
@@ -853,6 +862,26 @@ namespace WEF
                 returnValue = DataUtils.ConvertValue<long>(_database.ExecuteScalar(dbCommand));
             else
                 returnValue = DataUtils.ConvertValue<long>(_database.ExecuteScalar(dbCommand, _trans));
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// 获取记录数
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        internal async Task<long> LongCountAsync(Search search)
+        {
+            DbCommand dbCommand = _database.GetSqlStringCommand(search.CountSqlString);
+
+            _database.AddCommandParameter(dbCommand, search.Parameters.ToArray());
+
+            long returnValue;
+            if (_trans == null)
+                returnValue = DataUtils.ConvertValue<long>(await _database.ExecuteScalarAsync(dbCommand));
+            else
+                returnValue = DataUtils.ConvertValue<long>(await _database.ExecuteScalarAsync(dbCommand, _trans));
 
             return returnValue;
         }

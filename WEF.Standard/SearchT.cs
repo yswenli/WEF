@@ -1223,6 +1223,39 @@ namespace WEF
         }
 
         /// <summary>
+        /// 有则返回，无则null，多于一个则error
+        /// </summary>
+        /// <param name="expressionWhere"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<T> SingleAsync(Expression<Func<T, bool>> expressionWhere)
+        {
+            Search search = Top(2).GetPagedFromSection().Where(new Where<T>(expressionWhere).ToWhereClip());
+
+            T t = null;
+
+            using (IDataReader reader = await ToDataReaderAsync(search))
+            {
+                var result =await EntityUtils.ReaderToListAsync<T>(reader);
+
+                if (result.Any())
+                {
+                    if (result.Count > 1) throw new Exception("There are multiple records for the acquired data");
+
+                    t = result.First();
+                }
+            }
+
+            if (t != null)
+            {
+                //t.SetTableName(_tableName);
+                t.ClearModifyFields();
+            }
+
+            return t;
+        }
+
+        /// <summary>
         /// Single,有则返回，无则null，多于一个则error
         /// </summary>
         /// <typeparam name="Model"></typeparam>
@@ -1372,7 +1405,33 @@ namespace WEF
             List<T> list;
             using (var reader = ToDataReader(from))
             {
-                list = EntityUtils.ReaderToList<T>(reader).ToList();
+                list = EntityUtils.ReaderToList<T>(reader);
+            }
+
+            foreach (var m in list)
+            {
+                if (m != null)
+                {
+                    m.ClearModifyFields();
+                    //m.SetTableName(_tableName);
+                }
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// tolist
+        /// </summary>
+        /// <param name="expressionWhere"></param>
+        /// <returns></returns>
+        public async Task<List<T>> ToListAsync(Expression<Func<T, bool>> expressionWhere)
+        {
+            var from = GetPagedFromSection().Where(new Where<T>(expressionWhere).ToWhereClip());
+
+            List<T> list;
+            using (var reader = await ToDataReaderAsync(from))
+            {
+                list =await EntityUtils.ReaderToListAsync<T>(reader);
             }
 
             foreach (var m in list)
@@ -1757,7 +1816,7 @@ namespace WEF
 
             using (var reader = await ToDataReaderAsync(search))
             {
-                var result = EntityUtils.ReaderToList<T>(reader);
+                var result = await EntityUtils.ReaderToListAsync<T>(reader);
                 if (result.Any())
                 {
                     var t = result.First();
@@ -1781,7 +1840,7 @@ namespace WEF
 
             using (var reader = await ToDataReaderAsync(search))
             {
-                var result = EntityUtils.ReaderToList<T>(reader);
+                var result = await EntityUtils.ReaderToListAsync<T>(reader);
                 if (result.Any())
                 {
                     var t = result.First();
@@ -1840,7 +1899,7 @@ namespace WEF
 
             using (var reader = await ToDataReaderAsync(from))
             {
-                var list = EntityUtils.ReaderToList<T>(reader);
+                var list = await EntityUtils.ReaderToListAsync<T>(reader);
                 foreach (var m in list)
                 {
                     if (m != null)

@@ -155,7 +155,9 @@ namespace WEF
         /// <returns></returns>
         public async Task<T> GetAsync(string id)
         {
-            return await Task.Run(() => Get(id));
+            return await _dbContext.FromSql($"select * from {_tableName} where {_primaryKey.Name}=@{_primaryKey.Name}")
+                .AddInParameter($"@{_primaryKey.Name}", id)
+                .FirstAsync<T>();
         }
 
         /// <summary>
@@ -176,7 +178,9 @@ namespace WEF
         /// <returns></returns>
         public async Task<T> GetAsync(int id)
         {
-            return await Task.Run(() => Get(id));
+            return await _dbContext.FromSql($"select * from {_tableName} where {_primaryKey.Name}=@{_primaryKey.Name}")
+                .AddInParameter($"@{_primaryKey.Name}", id)
+                .FirstAsync<T>();
         }
 
         /// <summary>
@@ -196,7 +200,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<T> GetAsync(Expression<Func<T, bool>> lambdaWhere)
         {
-            return await Task.Run(() => Get(lambdaWhere));
+            return await Search().FirstAsync(lambdaWhere);
         }
 
         /// <summary>
@@ -208,6 +212,7 @@ namespace WEF
         {
             return Search().Single(lambdaWhere);
         }
+
         /// <summary>
         /// 获取单个
         /// </summary>
@@ -215,7 +220,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<T> SingleAsync(Expression<Func<T, bool>> lambdaWhere)
         {
-            return await Task.Run(() => Single(lambdaWhere));
+            return await Search().SingleAsync(lambdaWhere);
         }
 
         /// <summary>
@@ -233,7 +238,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<List<T>> GetAllAsync()
         {
-            return await Task.Run(GetAll);
+            return await Search().ToListAsync();
         }
 
         /// <summary>
@@ -244,6 +249,7 @@ namespace WEF
         {
             return Search().Count();
         }
+
         /// <summary>
         /// 返回总数
         /// </summary>
@@ -259,7 +265,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<int> CountAsync()
         {
-            return await Task.Run(Count);
+            return await Search().CountAsync();
         }
         /// <summary>
         /// 返回总数
@@ -268,7 +274,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<int> CountAsync(Expression<Func<T, bool>> lambdaWhere)
         {
-            return await Task.Run(() => Count(lambdaWhere));
+            return await Search().Where(lambdaWhere).CountAsync();
         }
 
         /// <summary>
@@ -294,7 +300,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<long> LongCountAsync()
         {
-            return await Task.Run(LongCount);
+            return await Search().LongCountAsync();
         }
         /// <summary>
         /// 返回总数
@@ -303,7 +309,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<long> LongCountAsync(Expression<Func<T, bool>> lambdaWhere)
         {
-            return await Task.Run(() => LongCount(lambdaWhere));
+            return await Search().Where(lambdaWhere).LongCountAsync();
         }
 
         /// <summary>
@@ -324,7 +330,8 @@ namespace WEF
         /// <returns></returns>
         public async Task<List<T>> GetListAsync(IEnumerable<string> ids)
         {
-            return await Task.Run(() => GetList(ids));
+            var idsStr = $"'{string.Join("','", ids.ToArray())}'";
+            return await _dbContext.FromSql($"select * from {_tableName} where {_primaryKey.Name} in({idsStr})").ToListAsync<T>();
         }
 
         /// <summary>
@@ -344,7 +351,8 @@ namespace WEF
         /// <returns></returns>
         public async Task<List<T>> GetListAsync(IEnumerable<int> ids)
         {
-            return await Task.Run(() => GetList(ids));
+            var idsStr = $"'{string.Join("','", ids.ToArray())}'";
+            return await _dbContext.FromSql($"select * from {_tableName} where {_primaryKey.Name} in({idsStr})").ToListAsync<T>();
         }
 
         /// <summary>
@@ -364,7 +372,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<List<T>> GetListAsync(Expression<Func<T, bool>> lambdaWhere)
         {
-            return await Task.Run(() => GetList(lambdaWhere));
+            return await Search().ToListAsync(lambdaWhere);
         }
 
         /// <summary>
@@ -385,7 +393,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<List<T>> GetListAsync(int pageIndex, int pageSize)
         {
-            return await Task.Run(() => GetList(pageIndex, pageSize));
+            return await Search().Page(pageIndex, pageSize).ToListAsync();
         }
 
         /// <summary>
@@ -408,7 +416,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<List<T>> GetListAsync(string tableName, int pageIndex = 1, int pageSize = 12)
         {
-            return await Task.Run(() => GetList(tableName, pageIndex, pageSize));
+            return await Search(tableName).Page(pageIndex, pageSize).ToListAsync();
         }
 
         /// <summary>
@@ -433,7 +441,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<PagedList<T>> GetPagedListAsync(int pageIndex, int pageSize, string orderBy = "ID", bool asc = true)
         {
-            return await Task.Run(() => GetPagedList(pageIndex, pageSize, orderBy, asc));
+            return await Search().ToPagedListAsync(pageIndex, pageSize, orderBy, asc);
         }
 
         /// <summary>
@@ -460,7 +468,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<PagedList<T>> GetPagedListAsync(Expression<Func<T, bool>> lambdaWhere, int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
         {
-            return await Task.Run(() => GetPagedList(lambdaWhere, pageIndex, pageSize, orderBy, asc));
+            return await GetPagedListAsync(lambdaWhere, pageIndex, pageSize, orderBy, asc);
         }
 
         /// <summary>
@@ -489,7 +497,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<PagedList<T>> GetPagedListAsync(Expression<Func<T, bool>> lambdaWhere, string tableName = "", int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
         {
-            return await Task.Run(() => GetPagedList(lambdaWhere, tableName, pageIndex, pageSize, orderBy, asc));
+            return await GetPagedListAsync(lambdaWhere, tableName, pageIndex, pageSize, orderBy, asc);
         }
 
         /// <summary>
@@ -516,7 +524,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<PagedList<Model>> GetPagedListAsync<Model>(int pageIndex, int pageSize, string orderBy = "ID", bool asc = true)
         {
-            return await Task.Run(() => GetPagedList<Model>(pageIndex, pageSize, orderBy, asc));
+            return await GetPagedListAsync<Model>(pageIndex, pageSize, orderBy, asc);
         }
 
         /// <summary>
@@ -545,7 +553,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<PagedList<Model>> GetPagedListAsync<Model>(Expression<Func<T, bool>> lambdaWhere, int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
         {
-            return await Task.Run(() => GetPagedList<Model>(lambdaWhere, pageIndex, pageSize, orderBy, asc));
+            return await GetPagedListAsync<Model>(lambdaWhere, pageIndex, pageSize, orderBy, asc);
         }
 
         /// <summary>
@@ -577,7 +585,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<PagedList<Model>> GetPagedListAsync<Model>(Expression<Func<T, bool>> lambdaWhere, string tableName = "", int pageIndex = 1, int pageSize = 12, string orderBy = "ID", bool asc = true)
         {
-            return await Task.Run(() => GetPagedList<Model>(lambdaWhere, tableName, pageIndex, pageSize, orderBy, asc));
+            return await GetPagedListAsync<Model>(lambdaWhere, tableName, pageIndex, pageSize, orderBy, asc);
         }
 
         /// <summary>
@@ -596,7 +604,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<bool> ExistsAsync(Expression<Func<T, bool>> lambdaWhere)
         {
-            return await Task.Run(() => Exists(lambdaWhere));
+            return await ExistsAsync(lambdaWhere);
         }
 
         /// <summary>
@@ -614,7 +622,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<int> InsertAsync(T entity)
         {
-            return await Task.Run(() => Insert(entity));
+            return await InsertAsync(entity);
         }
 
 
@@ -635,7 +643,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<List<int>> InsertAsync(IEnumerable<T> entities)
         {
-            return await Task.Run(() => Insert(entities));
+            return await InsertAsync(entities);
         }
 
         /// <summary>
@@ -654,15 +662,6 @@ namespace WEF
         {
             return _dbContext.Update(entity);
         }
-        /// <summary>
-        /// 更新实体
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public async Task<int> UpdateAsync(T entity)
-        {
-            return await Task.Run(() => Update(entity));
-        }
 
         /// <summary>
         /// 更新实体
@@ -679,7 +678,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<List<int>> UpdateAsync(IEnumerable<T> entities)
         {
-            return await Task.Run(() => Update(entities));
+            return await _dbContext.UpdateAsync(entities);
         }
 
         /// <summary>
@@ -711,7 +710,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<int> UpdateAsync(T entity, Expression<Func<T, bool>> lambdaWhere)
         {
-            return await Task.Run(() => Update(entity, lambdaWhere));
+            return await _dbContext.UpdateAsync(entity, lambdaWhere);
         }
 
         /// <summary>
@@ -732,7 +731,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<int> UpdateAsync(T entity, string whereSql)
         {
-            return await Task.Run(() => Update(entity, whereSql));
+            return await _dbContext.UpdateAsync(entity, whereSql);
         }
 
         /// <summary>
@@ -762,7 +761,8 @@ namespace WEF
             JoinOn<T, TEntity> joinOn,
             Expression<Func<T, TEntity, bool>> lambdaWhere)
         {
-            return await Task.Run(() => Update(entity, joinOn, lambdaWhere));
+            var where = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
+            return await _dbContext.UpdateAsync(entity, joinOn, where);
         }
 
         /// <summary>
@@ -791,7 +791,7 @@ namespace WEF
           JoinOn<T, TEntity> joinOn,
           Where where)
         {
-            return await Task.Run(() => Update(entity, joinOn, where));
+            return await _dbContext.UpdateAsync(entity, joinOn, where.ToWhereClip());
         }
 
         /// <summary>
@@ -826,7 +826,9 @@ namespace WEF
             JoinType joinType,
             Expression<Func<T, TEntity, bool>> lambdaWhere)
         {
-            return await Task.Run(() => Update(entity, joinOn, joinType, lambdaWhere));
+            var jo = new JoinOn<T, TEntity>(joinOn, joinType);
+            var where = ExpressionToOperation<T>.ToWhereOperation(lambdaWhere);
+            return await _dbContext.UpdateAsync(entity, jo, where);
         }
 
         /// <summary>
@@ -860,7 +862,8 @@ namespace WEF
            JoinType joinType,
            Where where)
         {
-            return await Task.Run(() => Update(entity, joinOn, joinType, where));
+            var jo = new JoinOn<T, TEntity>(joinOn, joinType);
+            return await _dbContext.UpdateAsync(entity, jo, where.ToWhereClip());
         }
 
         /// <summary>
@@ -878,7 +881,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<int> DeleteAsync(T entity)
         {
-            return await Task.Run(() => Delete(entity));
+            return await _dbContext.DeleteAsync(entity);
         }
 
 
@@ -903,7 +906,12 @@ namespace WEF
         /// <returns></returns>
         public async Task<int> DeleteAsync(string id)
         {
-            return await Task.Run(() => Delete(id));
+            var entity = await GetAsync(id);
+            if (entity != null)
+            {
+                return await DeleteAsync(entity);
+            }
+            return -1;
         }
 
         /// <summary>
@@ -927,7 +935,12 @@ namespace WEF
         /// <returns></returns>
         public async Task<int> DeleteAsync(int id)
         {
-            return await Task.Run(() => Delete(id));
+            var entity = await GetAsync(id);
+            if (entity != null)
+            {
+                return await DeleteAsync(entity);
+            }
+            return -1;
         }
 
         /// <summary>
@@ -937,7 +950,7 @@ namespace WEF
         /// <returns></returns>
         public int Deletes(IEnumerable<T> entities)
         {
-            var list = System.Linq.Enumerable.ToList(entities);
+            var list = Enumerable.ToList(entities);
             return _dbContext.Delete(list);
         }
         /// <summary>
@@ -947,7 +960,8 @@ namespace WEF
         /// <returns></returns>
         public async Task<int> DeletesAsync(IEnumerable<T> entities)
         {
-            return await Task.Run(() => Deletes(entities));
+            var list = Enumerable.ToList(entities);
+            return await _dbContext.DeleteAsync(list);
         }
 
         /// <summary>
@@ -968,7 +982,8 @@ namespace WEF
         /// <returns></returns>
         public async Task<int> DeleteAsync(IEnumerable<string> ids)
         {
-            return await Task.Run(() => Delete(ids));
+            var list = await GetListAsync(ids);
+            return await DeletesAsync(list);
         }
 
         /// <summary>
@@ -988,7 +1003,8 @@ namespace WEF
         /// <returns></returns>
         public async Task<int> DeleteAsync(IEnumerable<int> ids)
         {
-            return await Task.Run(() => Delete(ids));
+            var list = await GetListAsync(ids);
+            return await DeletesAsync(list);
         }
 
         /// <summary>
@@ -1007,7 +1023,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<int> DeleteAsync(Expression<Func<T, bool>> lambdaWhere)
         {
-            return await Task.Run(() => Delete(lambdaWhere));
+            return await _dbContext.DeleteAsync<T>(lambdaWhere);
         }
 
 

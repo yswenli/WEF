@@ -631,6 +631,7 @@ namespace WEF.Db
         }
 
 
+
         #endregion
 
         #region Load & Execute Methods
@@ -1600,7 +1601,7 @@ namespace WEF.Db
                                     }
 
                                     targetDataTable.Rows.Add(newRow);
-                                }
+                                }                                
 
                                 var count = await Task.Run(() => adapter.Update(targetDataTable));
 

@@ -67,10 +67,31 @@ namespace WEF.Section
         /// 返回单个值
         /// </summary>
         /// <returns></returns>
+        public virtual async Task<object> ToScalarAsync()
+        {
+            return (_dbTransaction == null ? await _dbContext.ExecuteScalarAsync(_dbCommand) : await _dbContext.ExecuteScalarAsync(_dbCommand, _dbTransaction));
+        }
+
+
+
+        /// <summary>
+        /// 返回单个值
+        /// </summary>
+        /// <returns></returns>
         public TResult ToScalar<TResult>()
         {
             return DataUtils.ConvertValue<TResult>(ToScalar());
         }
+
+        /// <summary>
+        /// 返回单个值
+        /// </summary>
+        /// <returns></returns>
+        public async Task<TResult> ToScalarAsync<TResult>()
+        {
+            return DataUtils.ConvertValue<TResult>(await ToScalarAsync());
+        }
+
 
         /// <summary>
         /// 返回DataReader
@@ -79,6 +100,16 @@ namespace WEF.Section
         public virtual IDataReader ToDataReader()
         {
             return (_dbTransaction == null ? this._dbContext.ExecuteReader(_dbCommand) : this._dbContext.ExecuteReader(_dbCommand, _dbTransaction));
+        }
+
+
+        /// <summary>
+        /// 返回DataReader
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IDataReader> ToDataReaderAsync()
+        {
+            return (_dbTransaction == null ? await _dbContext.ExecuteReaderAsync(_dbCommand) : await _dbContext.ExecuteReaderAsync(_dbCommand, _dbTransaction));
         }
 
         /// <summary>
@@ -100,6 +131,28 @@ namespace WEF.Section
                 }
             }
             return (_dbTransaction == null ? this._dbContext.ExecuteReader(cmd) : this._dbContext.ExecuteReader(cmd, _dbTransaction));
+        }
+
+
+        /// <summary>
+        /// 返回DataReader
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderByOperation"></param>
+        /// <returns></returns>
+        public virtual async Task<IDataReader> ToDataReaderAsync(int pageIndex, int pageSize, OrderByOperation orderByOperation)
+        {
+            Dictionary<string, OrderByOperater> orderDic = orderByOperation;
+            var cmd = _dbContext.Db.GetSqlStringCommand(_dbCommand.CommandText, pageIndex, pageSize, orderDic);
+            if (_dbCommand.Parameters != null && _dbCommand.Parameters.Count > 0)
+            {
+                foreach (var p in _dbCommand.Parameters)
+                {
+                    cmd.Parameters.Add(p.Clone());
+                }
+            }
+            return (_dbTransaction == null ? await _dbContext.ExecuteReaderAsync(cmd) : await _dbContext.ExecuteReaderAsync(cmd, _dbTransaction));
         }
 
         /// <summary>
@@ -142,6 +195,27 @@ namespace WEF.Section
         }
 
         /// <summary>
+        /// 返回DataSet
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderByOperation"></param>
+        /// <returns></returns>
+        public virtual async Task<DataSet> ToDataSetAsync(int pageIndex, int pageSize, OrderByOperation orderByOperation)
+        {
+            Dictionary<string, OrderByOperater> orderDic = orderByOperation;
+            var cmd = _dbContext.Db.GetSqlStringCommand(_dbCommand.CommandText, pageIndex, pageSize, orderDic);
+            if (_dbCommand.Parameters != null && _dbCommand.Parameters.Count > 0)
+            {
+                foreach (var p in _dbCommand.Parameters)
+                {
+                    cmd.Parameters.Add(p.Clone());
+                }
+            }
+            return (_dbTransaction == null ? await _dbContext.ExecuteDataSetAsync(cmd) : await _dbContext.ExecuteDataSetAsync(cmd, _dbTransaction));
+        }
+
+        /// <summary>
         /// 返回DataTable
         /// </summary>
         /// <returns></returns>
@@ -158,6 +232,7 @@ namespace WEF.Section
         {
             return (await ToDataSetAsync()).Tables[0];
         }
+
         /// <summary>
         /// 返回DataTable
         /// </summary>
@@ -171,12 +246,24 @@ namespace WEF.Section
         }
 
         /// <summary>
+        /// 返回DataTable
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderByOperation"></param>
+        /// <returns></returns>
+        public async Task<DataTable> ToDataTableAsync(int pageIndex, int pageSize, OrderByOperation orderByOperation)
+        {
+            return (await ToDataSetAsync(pageIndex, pageSize, orderByOperation)).Tables[0];
+        }
+
+        /// <summary>
         /// 执行ExecuteNonQuery
         /// </summary>
         /// <returns></returns>
         public virtual int ExecuteNonQuery()
         {
-            return (_dbTransaction == null ? this._dbContext.ExecuteNonQuery(_dbCommand) : this._dbContext.ExecuteNonQuery(_dbCommand, _dbTransaction));
+            return (_dbTransaction == null ? _dbContext.ExecuteNonQuery(_dbCommand) : _dbContext.ExecuteNonQuery(_dbCommand, _dbTransaction));
         }
         /// <summary>
         /// 执行ExecuteNonQuery
@@ -195,6 +282,17 @@ namespace WEF.Section
             var obj = (_dbTransaction == null ? this._dbContext.ExecuteScalar(_dbCountCommand) : this._dbContext.ExecuteScalar(_dbCountCommand, _dbTransaction));
             return DataUtils.ConvertValue<int>(obj);
         }
+
+        /// <summary>
+        /// 数量
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int> CountAsync()
+        {
+            var obj = (_dbTransaction == null ? await _dbContext.ExecuteScalarAsync(_dbCountCommand) : await _dbContext.ExecuteScalarAsync(_dbCountCommand, _dbTransaction));
+            return DataUtils.ConvertValue<int>(obj);
+        }
+
         #endregion
 
         #region 返回模型
@@ -377,6 +475,173 @@ namespace WEF.Section
             if (types == null || types.Length < 1) return null;
             Dictionary<string, List<dynamic>> keyValuePairs = new Dictionary<string, List<dynamic>>();
             using (IDataReader reader = ToDataReader())
+            {
+                foreach (var type in types)
+                {
+                    keyValuePairs[type.FullName] = reader.ReaderToList(type);
+                    reader.NextResult();
+                }
+            }
+            return keyValuePairs;
+        }
+
+        /// <summary>
+        /// 异步返回第一个实体，同ToFirstAsync()。无数据返回Null。
+        /// </summary>
+        /// <returns></returns>
+        public async Task<TModel> FirstAsync<TModel>()
+        {
+            return await ToFirstAsync<TModel>();
+        }
+
+        /// <summary>
+        /// 异步返回单个实体
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <returns></returns>
+        public async Task<TModel> ToFirstAsync<TModel>()
+        {
+            using (var reader = await ToDataReaderAsync())
+            {
+                var list = reader.ReaderToList<TModel>();
+                if (list != null)
+                {
+                    return list.FirstOrDefault();
+                }
+                return default;
+            }
+        }
+
+        /// <summary>
+        /// 异步返回单个实体
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <returns></returns>
+        public async Task<TModel> ToFirstDefaultAsync<TModel>()
+            where TModel : Entity
+        {
+            TModel t = await ToFirstAsync<TModel>();
+
+            if (t == null)
+                t = DataUtils.Create<TModel>();
+            return t;
+        }
+
+        /// <summary>
+        /// 异步返回实体列表
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <returns></returns>
+        public async Task<List<TModel>> ToListAsync<TModel>()
+        {
+            using (var reader = await ToDataReaderAsync())
+            {
+                var list = reader.ReaderToList<TModel>();
+                if (list != null)
+                    return list;
+                else
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// 异步返回多集合列表
+        /// </summary>
+        public async Task<Tuple<List<T1>, List<T2>>> ToMultipleListAsync<T1, T2>()
+        {
+            using (var reader = await ToDataReaderAsync())
+            {
+                var list1 = reader.ReaderToList<T1>();
+                reader.NextResult();
+                var list2 = reader.ReaderToList<T2>();
+                return new Tuple<List<T1>, List<T2>>(list1, list2);
+            }
+        }
+
+        /// <summary>
+        /// 异步返回多集合列表
+        /// </summary>
+        public async Task<Tuple<List<T1>, List<T2>, List<T3>>> ToMultipleListAsync<T1, T2, T3>()
+        {
+            using (var reader = await ToDataReaderAsync())
+            {
+                var list1 = reader.ReaderToList<T1>();
+                reader.NextResult();
+                var list2 = reader.ReaderToList<T2>();
+                reader.NextResult();
+                var list3 = reader.ReaderToList<T3>();
+                return new Tuple<List<T1>, List<T2>, List<T3>>(list1, list2, list3);
+            }
+        }
+
+        /// <summary>
+        /// 异步返回多集合列表
+        /// </summary>
+        public async Task<Tuple<List<T1>, List<T2>, List<T3>, List<T4>>> ToMultipleListAsync<T1, T2, T3, T4>()
+        {
+            using (var reader = await ToDataReaderAsync())
+            {
+                var list1 = reader.ReaderToList<T1>();
+                reader.NextResult();
+                var list2 = reader.ReaderToList<T2>();
+                reader.NextResult();
+                var list3 = reader.ReaderToList<T3>();
+                reader.NextResult();
+                var list4 = reader.ReaderToList<T4>();
+                return new Tuple<List<T1>, List<T2>, List<T3>, List<T4>>(list1, list2, list3, list4);
+            }
+        }
+
+        /// <summary>
+        /// 异步返回多集合列表
+        /// </summary>
+        public async Task<Tuple<List<T1>, List<T2>, List<T3>, List<T4>, List<T5>>> ToMultipleListAsync<T1, T2, T3, T4, T5>()
+        {
+            using (var reader = await ToDataReaderAsync())
+            {
+                var list1 = reader.ReaderToList<T1>();
+                reader.NextResult();
+                var list2 = reader.ReaderToList<T2>();
+                reader.NextResult();
+                var list3 = reader.ReaderToList<T3>();
+                reader.NextResult();
+                var list4 = reader.ReaderToList<T4>();
+                reader.NextResult();
+                var list5 = reader.ReaderToList<T5>();
+                return new Tuple<List<T1>, List<T2>, List<T3>, List<T4>, List<T5>>(list1, list2, list3, list4, list5);
+            }
+        }
+
+        /// <summary>
+        /// 异步返回多集合列表
+        /// </summary>
+        public async Task<Tuple<List<T1>, List<T2>, List<T3>, List<T4>, List<T5>, List<T6>>> ToMultipleListAsync<T1, T2, T3, T4, T5, T6>()
+        {
+            using (var reader = await ToDataReaderAsync())
+            {
+                var list1 = reader.ReaderToList<T1>();
+                reader.NextResult();
+                var list2 = reader.ReaderToList<T2>();
+                reader.NextResult();
+                var list3 = reader.ReaderToList<T3>();
+                reader.NextResult();
+                var list4 = reader.ReaderToList<T4>();
+                reader.NextResult();
+                var list5 = reader.ReaderToList<T5>();
+                reader.NextResult();
+                var list6 = reader.ReaderToList<T6>();
+                return new Tuple<List<T1>, List<T2>, List<T3>, List<T4>, List<T5>, List<T6>>(list1, list2, list3, list4, list5, list6);
+            }
+        }
+
+        /// <summary>
+        /// 异步返回多集合列表
+        /// </summary>
+        public async Task<Dictionary<string, List<dynamic>>> ToMultipleListAsync(params Type[] types)
+        {
+            if (types == null || types.Length < 1) return null;
+            Dictionary<string, List<dynamic>> keyValuePairs = new Dictionary<string, List<dynamic>>();
+            using (var reader = await ToDataReaderAsync())
             {
                 foreach (var type in types)
                 {

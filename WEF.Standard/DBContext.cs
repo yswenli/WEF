@@ -788,6 +788,7 @@ namespace WEF
             }
             return result;
         }
+
         /// <summary>
         /// 更新  
         /// </summary>
@@ -797,6 +798,16 @@ namespace WEF
             where TEntity : Entity
         {
             return Update(entities.ToArray());
+        }
+        /// <summary>
+        /// 更新  
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
+        public async Task<List<int>> UpdateAsync<TEntity>(IEnumerable<TEntity> entities)
+            where TEntity : Entity
+        {
+            return await UpdateAsync(entities.ToArray());
         }
         /// <summary>
         /// 更新  
@@ -837,6 +848,23 @@ namespace WEF
         {
             return Update<TEntity>(tran, tableName, data.Keys.ToArray(), data.Values.ToArray(), JoinOn.None, where);
         }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tran"></param>
+        /// <param name="tableName"></param>
+        /// <param name="data"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync<TEntity>(DbTransaction tran, string tableName, Dictionary<Field, object> data, JoinOn joinOn, WhereExpression where)
+           where TEntity : Entity
+        {
+            return await UpdateAsync<TEntity>(tran, tableName, data.Keys.ToArray(), data.Values.ToArray(), JoinOn.None, where);
+        }
+
         /// <summary>
         /// 更新
         /// </summary>
@@ -886,6 +914,23 @@ namespace WEF
         /// <summary>
         /// 更新
         /// </summary>
+        /// <typeparam name="TEntity1"></typeparam>
+        /// <typeparam name="TEntity2"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync<TEntity1, TEntity2>(TEntity1 entity, JoinOn<TEntity1, TEntity2> joinOn, WhereExpression where)
+           where TEntity1 : Entity
+        {
+            return !entity.IsModify()
+                ? 0
+                : await ExecuteNonQueryAsync(_cmdCreator.CreateUpdateCommand(entity, joinOn, @where));
+        }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
         /// <param name="lambdaWhere"></param>
@@ -895,6 +940,20 @@ namespace WEF
         {
             return Update(entity, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync<TEntity>(TEntity entity, Expression<Func<TEntity, bool>> lambdaWhere)
+            where TEntity : Entity
+        {
+            return await UpdateAsync(entity, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+        }
+
         /// <summary>
         /// 更新
         /// </summary>
@@ -911,6 +970,19 @@ namespace WEF
         /// 更新
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="lambadaSelect"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync<TEntity>(Expression<Func<TEntity, object>> lambadaSelect, Expression<Func<TEntity, bool>> lambdaWhere)
+                    where TEntity : Entity
+        {
+            return await UpdateAsync(EntityCache.GetTableName<TEntity>(), lambadaSelect, lambdaWhere);
+        }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
         /// <param name="tableName"></param>
         /// <param name="lambadaSelect"></param>
         /// <param name="lambdaWhere"></param>
@@ -920,6 +992,21 @@ namespace WEF
         {
             return Update(null, tableName, lambadaSelect, lambdaWhere);
         }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="lambadaSelect"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync<TEntity>(string tableName, Expression<Func<TEntity, object>> lambadaSelect, Expression<Func<TEntity, bool>> lambdaWhere)
+                    where TEntity : Entity
+        {
+            return await UpdateAsync(null, tableName, lambadaSelect, lambdaWhere);
+        }
+
         /// <summary>
         /// 更新
         /// </summary>
@@ -933,6 +1020,21 @@ namespace WEF
                    where TEntity : Entity
         {
             return Update(tran, tableName, lambadaSelect, JoinOn.None, lambdaWhere);
+        }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tran"></param>
+        /// <param name="tableName"></param>
+        /// <param name="lambadaSelect"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync<TEntity>(DbTransaction tran, string tableName, Expression<Func<TEntity, object>> lambadaSelect, Expression<Func<TEntity, bool>> lambdaWhere)
+                   where TEntity : Entity
+        {
+            return await UpdateAsync(tran, tableName, lambadaSelect, JoinOn.None, lambdaWhere);
         }
         /// <summary>
         /// 更新
@@ -949,6 +1051,23 @@ namespace WEF
         {
             return Update<TEntity>(tran, tableName, lambadaSelect.GetFieldVals(tableName), joinOn, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tran"></param>
+        /// <param name="tableName"></param>
+        /// <param name="lambadaSelect"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync<TEntity>(DbTransaction tran, string tableName, Expression<Func<TEntity, object>> lambadaSelect, JoinOn joinOn, Expression<Func<TEntity, bool>> lambdaWhere)
+                  where TEntity : Entity
+        {
+            return await UpdateAsync<TEntity>(tran, tableName, lambadaSelect.GetFieldVals(tableName), joinOn, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+        }
+
         /// <summary>
         /// 更新
         /// </summary>
@@ -1009,6 +1128,21 @@ namespace WEF
                 return 0;
             return Update(tran, entities.First().GetTableName(), entities);
         }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tran"></param>
+        /// <param name="entities"></param>
+        public async Task<int> UpdateAsync<TEntity>(DbTransaction tran, params TEntity[] entities)
+            where TEntity : Entity
+        {
+
+            if (null == entities || entities.Length == 0)
+                return 0;
+            return await UpdateAsync(tran, entities.First().GetTableName(), entities);
+        }
         /// <summary>
         /// 更新
         /// </summary>
@@ -1029,6 +1163,30 @@ namespace WEF
                 if (!entity.IsModify())
                     continue;
                 count += Update(tran, tableName, entity, DataUtils.GetPrimaryKeyWhere(entity));
+            }
+            return count;
+
+        }
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tran"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync<TEntity>(DbTransaction tran, string tableName, params TEntity[] entities)
+           where TEntity : Entity
+        {
+
+            if (null == entities || entities.Length == 0)
+                return 0;
+            int count = 0;
+            foreach (TEntity entity in entities)
+            {
+                if (!entity.IsModify())
+                    continue;
+                count += await UpdateAsync(tran, tableName, entity, DataUtils.GetPrimaryKeyWhere(entity));
             }
             return count;
 
@@ -1098,6 +1256,23 @@ namespace WEF
             if (!entity.IsModify())
                 return 0;
             return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand(tableName, entity, where), tran);
+        }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tran"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entity"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync<TEntity>(DbTransaction tran, string tableName, TEntity entity, WhereExpression where)
+           where TEntity : Entity
+        {
+            if (!entity.IsModify())
+                return 0;
+            return await ExecuteNonQueryAsync(_cmdCreator.CreateUpdateCommand(tableName, entity, where), tran);
         }
 
         /// <summary>
@@ -1295,6 +1470,27 @@ namespace WEF
             return ExecuteNonQuery(_cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, joinOn, where), tran);
         }
 
+        // <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tran"></param>
+        /// <param name="tableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="values"></param>
+        /// <param name="joinOn"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateAsync<TEntity>(DbTransaction tran, string tableName, Field[] fields, object[] values, JoinOn joinOn, WhereExpression where)
+            where TEntity : Entity
+        {
+            if (null == fields || fields.Length == 0)
+                return 0;
+            if (tran == null)
+                return await ExecuteNonQueryAsync(_cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, joinOn, where));
+            return await ExecuteNonQueryAsync(_cmdCreator.CreateUpdateCommand<TEntity>(tableName, fields, values, joinOn, where), tran);
+        }
+
         /// <summary>
         /// 更新
         /// </summary>
@@ -1371,6 +1567,18 @@ namespace WEF
              where TEntity : Entity
         {
             return Delete(EntityCache.GetTableName<TEntity>(), lambdaWhere);
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> lambdaWhere)
+             where TEntity : Entity
+        {
+            return await DeleteAsync(EntityCache.GetTableName<TEntity>(), lambdaWhere);
         }
 
 
@@ -1517,6 +1725,19 @@ namespace WEF
         {
             return Delete(EntityCache.GetTableName<TEntity>(), entities);
         }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteAsync<TEntity>(IEnumerable<TEntity> entities)
+            where TEntity : Entity
+        {
+            return await DeleteAsync(EntityCache.GetTableName<TEntity>(), entities);
+        }
+
         /// <summary>
         /// 删除
         /// </summary>
@@ -1545,6 +1766,37 @@ namespace WEF
                     }
                     where.And(f.In(listKey));
                     return Delete<TEntity>(tableName, where);
+            }
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteAsync<TEntity>(string tableName, IEnumerable<TEntity> entities)
+            where TEntity : Entity
+        {
+            var arr = entities as TEntity[] ?? entities.ToArray();
+            var eCount = arr.Length;
+            switch (eCount)
+            {
+                case 0:
+                    return 0;
+                case 1:
+                    return await DeleteAsync(tableName, arr.First());
+                default:
+                    var listKey = new List<object>();
+                    var where = new Where();
+                    var f = arr.First().GetPrimaryKeyFields().First();
+                    foreach (var entity in arr)
+                    {
+                        listKey.Add(DataUtils.GetPropertyValue(entity, f.Name));
+                    }
+                    where.And(f.In(listKey));
+                    return await DeleteAsync<TEntity>(tableName, where);
             }
         }
 
@@ -1689,6 +1941,20 @@ namespace WEF
         {
             return Delete<TEntity>(tableName, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
         }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="lambdaWhere"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteAsync<TEntity>(string tableName, Expression<Func<TEntity, bool>> lambdaWhere)
+            where TEntity : Entity
+        {
+            return await DeleteAsync<TEntity>(tableName, ExpressionToOperation<TEntity>.ToWhereOperation(lambdaWhere));
+        }
+
         /// <summary>
         /// 删除
         /// </summary>
@@ -1725,6 +1991,7 @@ namespace WEF
 
             return ExecuteNonQuery(_cmdCreator.CreateDeleteCommand(tableName ?? EntityCache.GetTableName<TEntity>(), EntityCache.GetUserName<TEntity>(), where));
         }
+
         /// <summary>
         /// 删除
         /// </summary>
@@ -1733,6 +2000,16 @@ namespace WEF
         {
             return Delete<TEntity>(tableName, where.ToWhereClip());
         }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        public async Task<int> DeleteAsync<TEntity>(string tableName, Where where)
+            where TEntity : Entity
+        {
+            return await DeleteAsync<TEntity>(tableName, where.ToWhereClip());
+        }
+
         /// <summary>
         /// 删除整表数据
         /// </summary>

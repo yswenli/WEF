@@ -299,6 +299,13 @@ namespace WEF
             return await UpdateAsync(entity, where);
         }
 
+        /// <summary>
+        /// 异步更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tran"></param>
+        /// <param name="entities"></param>
+        /// <returns></returns>
         public async Task<List<int>> UpdateAsync<TEntity>(DbTrans<TEntity> tran, params TEntity[] entities)
           where TEntity : Entity
         {
