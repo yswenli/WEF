@@ -54,7 +54,7 @@ namespace WEFInternal.Newtonsoft.Json.Serialization
         }
 
         private ErrorContext _currentErrorContext;
-        private BidirectionalDictionary<string, object> _mappings;
+        private Utilities.BidirectionalDictionary<string, object> _mappings;
         private bool _serializing;
 
         internal readonly JsonSerializer Serializer;
@@ -71,14 +71,14 @@ namespace WEFInternal.Newtonsoft.Json.Serialization
             _serializing = (GetType() == typeof(JsonSerializerInternalWriter));
         }
 
-        internal BidirectionalDictionary<string, object> DefaultReferenceMappings
+        internal Utilities.BidirectionalDictionary<string, object> DefaultReferenceMappings
         {
             get
             {
                 // override equality comparer for object key dictionary
                 // object will be modified as it deserializes and might have mutable hashcode
                 if (_mappings == null)
-                    _mappings = new BidirectionalDictionary<string, object>(
+                    _mappings = new Utilities.BidirectionalDictionary<string, object>(
                         EqualityComparer<string>.Default,
                         new ReferenceEqualsEqualityComparer(),
                         "A different value already has the Id '{0}'.",
