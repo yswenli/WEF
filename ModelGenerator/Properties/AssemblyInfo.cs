@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("yswenli")]
 [assembly: AssemblyProduct("WEF数据库工具")]
-[assembly: AssemblyCopyright("Copyright yswenli ©  2024")]
+[assembly: AssemblyCopyright("Copyright yswenli ©  2025")]
 [assembly: AssemblyTrademark("WEF数据库工具")]
 [assembly: AssemblyCulture("")]
 

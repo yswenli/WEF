@@ -643,7 +643,7 @@ namespace WEF
         /// <returns></returns>
         public async Task<List<int>> InsertAsync(IEnumerable<T> entities)
         {
-            return await InsertAsync(entities);
+            return await _dbContext.InsertAsync(entities);
         }
 
         /// <summary>

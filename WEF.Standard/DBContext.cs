@@ -2051,6 +2051,18 @@ namespace WEF
         {
             return Insert(entities.ToArray());
         }
+
+
+        /// <summary>
+        /// 添加
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task<List<int>> InsertAsync<TEntity>(IEnumerable<TEntity> entities)
+        {
+            return await InsertAsync(entities.ToArray());
+        }
+
         /// <summary>
         /// 添加
         /// </summary>
