@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\WEF.Standard.MSSQL\WEF.Standard.MSSQL.csproj" />
     <ProjectReference Include="..\WEF.Standard.MySQL\WEF.Standard.MySQL.csproj" />
     <ProjectReference Include="..\WEF.Standard.OLEDB\WEF.Standard.OLEDB.csproj" />

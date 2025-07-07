@@ -11,7 +11,7 @@ using WEF.ModelGenerator.JsonTools.CodeWriters;
 
 namespace WEF.ModelGenerator.Forms
 {
-    public partial class JsonClassGeneratorForm : Skin_Mac
+    public partial class JsonClassGeneratorForm : Form
     {
 
         public string targetPath;

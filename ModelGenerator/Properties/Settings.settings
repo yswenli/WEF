@@ -1,9 +1,9 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="JsonClassGenerator.UI.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WEF.ModelGenerator.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="Namespace" Type="System.String" Scope="User">
-      <Value Profile="(Default)">YsWenli.Soft</Value>
+      <Value Profile="(Default)">yswenli.soft</Value>
     </Setting>
     <Setting Name="UseProperties" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

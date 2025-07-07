@@ -73,7 +73,9 @@ namespace WEF.ModelGenerator.JsonTools.CodeWriters
                 sw.WriteLine();
                 sw.WriteLine("using System;");
                 sw.WriteLine("using System.Collections.Generic;");
-                sw.WriteLine("using System.Runtime.Serialization;");
+                sw.WriteLine("using Newtonsoft.Json;");
+                sw.WriteLine("using Newtonsoft.Json.Converters;");
+                sw.WriteLine("using Newtonsoft.Json.Serialization;");
                 if (ShouldApplyNoPruneAttribute(config) || ShouldApplyNoRenamingAttribute(config))
                     sw.WriteLine("using System.Reflection;");
                 if (!config.ExplicitDeserialization && config.UsePascalCase)
@@ -117,7 +119,7 @@ namespace WEF.ModelGenerator.JsonTools.CodeWriters
             //
             if (config.UseNestedClasses)
             {
-                sw.WriteLine("    [DataContract]");
+                //sw.WriteLine("    [DataContract]");
                 sw.WriteLine("    {0} class {1}", config.InternalVisibility ? "internal" : "public", config.MainClass);
                 sw.WriteLine("    {");
             }
@@ -151,7 +153,7 @@ namespace WEF.ModelGenerator.JsonTools.CodeWriters
                 {
                     if (ShouldApplyNoRenamingAttribute(config)) sw.WriteLine("        " + NoRenameAttribute);
                     if (ShouldApplyNoPruneAttribute(config)) sw.WriteLine("        " + NoPruneAttribute);
-                    sw.WriteLine("    [DataContract]");
+                    //sw.WriteLine("    [DataContract]");
                     sw.WriteLine("        {0} class {1}", visibility, type.AssignedName);
                     sw.WriteLine("        {");
                 }
@@ -160,7 +162,7 @@ namespace WEF.ModelGenerator.JsonTools.CodeWriters
             {
                 if (ShouldApplyNoRenamingAttribute(config)) sw.WriteLine("    " + NoRenameAttribute);
                 if (ShouldApplyNoPruneAttribute(config)) sw.WriteLine("    " + NoPruneAttribute);
-                sw.WriteLine("    [DataContract]");
+                //sw.WriteLine("    [DataContract]");
                 sw.WriteLine("    {0} class {1}", visibility, type.AssignedName);
                 sw.WriteLine("    {");
             }
@@ -233,7 +235,7 @@ namespace WEF.ModelGenerator.JsonTools.CodeWriters
                 if (config.UsePascalCase)
                 {
 
-                    sw.WriteLine(prefix + "[DataMember(Name=\"{0}\")]", field.JsonMemberName);
+                    sw.WriteLine(prefix + "[JsonProperty(\"{0}\")]", field.JsonMemberName);
                 }
 
                 if (config.UseProperties)

@@ -1,46 +1,50 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>WEF</RootNamespace>
-    <Title>WEF.Standard.MSSQL</Title>
-    <Version>6.25.6.20</Version>
-    <Authors>yswenli</Authors>
-    <Description>WEF is based on the c # data entity framework supports MSQSqlServer, MySql, Orcalce, etc of conventional database and fast development, which integrates a large amount of data set under the development experience of tools, such as the Lambada without SQL query expression, add and delete, entity cloning, bulk and the parameters of the table, transaction, round of entities or stored procedures, SQL entities, etc.
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<RootNamespace>WEF</RootNamespace>
+		<Title>WEF.Standard.MSSQL</Title>
+		<Version>6.25.6.20</Version>
+		<Authors>yswenli</Authors>
+		<Description>
+			WEF is based on the c # data entity framework supports MSQSqlServer, MySql, Orcalce, etc of conventional database and fast development, which integrates a large amount of data set under the development experience of tools, such as the Lambada without SQL query expression, add and delete, entity cloning, bulk and the parameters of the table, transaction, round of entities or stored procedures, SQL entities, etc.
 
-WEF 是基于C#的数据实体框架，支持MSQSqlServer、MySql、Orcalce等等常规的数据库的快捷开发，其中集成了大量数据开发经验下的工具类集合，比如Lambada表达式查询、无sql的增删改查、实体克隆、批量、多表、事务、参数、SQL转实体或存储过程转实体等。</Description>
-    <Copyright>yswenli</Copyright>
-    <PackageProjectUrl>https://github.com/yswenli/WEF</PackageProjectUrl>
-    <PackageIcon>favicon.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/yswenli/WEF</RepositoryUrl>
-    <RepositoryType>https://github.com/yswenli/WEF.git</RepositoryType>
-    <PackageTags>orm,datebase,wef</PackageTags>
-    <PackageReleaseNotes>WEF is based on the c # data entity framework supports MSQSqlServer, MySql, Orcalce, etc of conventional database and fast development, which integrates a large amount of data set under the development experience of tools, such as the Lambada without SQL query expression, add and delete, entity cloning, bulk and the parameters of the table, transaction, round of entities or stored procedures, SQL entities, etc.
+			WEF 是基于C#的数据实体框架，支持MSQSqlServer、MySql、Orcalce等等常规的数据库的快捷开发，其中集成了大量数据开发经验下的工具类集合，比如Lambada表达式查询、无sql的增删改查、实体克隆、批量、多表、事务、参数、SQL转实体或存储过程转实体等。
+		</Description>
+		<Copyright>yswenli</Copyright>
+		<PackageProjectUrl>https://github.com/yswenli/WEF</PackageProjectUrl>
+		<PackageIcon>favicon.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/yswenli/WEF</RepositoryUrl>
+		<RepositoryType>https://github.com/yswenli/WEF.git</RepositoryType>
+		<PackageTags>orm,datebase,wef</PackageTags>
+		<PackageReleaseNotes>
+			WEF is based on the c # data entity framework supports MSQSqlServer, MySql, Orcalce, etc of conventional database and fast development, which integrates a large amount of data set under the development experience of tools, such as the Lambada without SQL query expression, add and delete, entity cloning, bulk and the parameters of the table, transaction, round of entities or stored procedures, SQL entities, etc.
 
-WEF 是基于C#的数据实体框架，支持MSQSqlServer、MySql、Orcalce等等常规的数据库的快捷开发，其中集成了大量数据开发经验下的工具类集合，比如Lambada表达式查询、无sql的增删改查、实体克隆、批量、多表、事务、参数、SQL转实体或存储过程转实体等。</PackageReleaseNotes>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <AssemblyName>WEF.Standard.MSSQL</AssemblyName>
-    <PackageId>WEF.Standard.MSSQL</PackageId>
-  </PropertyGroup>
+			WEF 是基于C#的数据实体框架，支持MSQSqlServer、MySql、Orcalce等等常规的数据库的快捷开发，其中集成了大量数据开发经验下的工具类集合，比如Lambada表达式查询、无sql的增删改查、实体克隆、批量、多表、事务、参数、SQL转实体或存储过程转实体等。
+		</PackageReleaseNotes>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<AssemblyName>WEF.Standard.MSSQL</AssemblyName>
+		<PackageId>WEF.Standard.MSSQL</PackageId>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\favicon.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\favicon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\WEF.Standard\WEF.Standard.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\WEF.Standard\WEF.Standard.csproj" />
+	</ItemGroup>
 
 </Project>
