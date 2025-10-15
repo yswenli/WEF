@@ -236,50 +236,6 @@ namespace WEF.Standard.DevelopTools
             _isOk = true;
         }
 
-        void GenerateSqlSugarModel()
-        {
-            _isOk = false;
-
-            //var sugarConfig = new ConnectionConfig()
-            //{
-            //    ConfigId = "1111",
-            //    ConnectionString = ConnectionModel.ConnectionString,
-            //    IsAutoCloseConnection = true
-            //};
-
-            //switch (ConnectionModel.DbType)
-            //{
-            //    case "SqlServer":
-            //    case "SqlServer9":
-            //        sugarConfig.DbType = SqlSugar.DbType.SqlServer;
-            //        sugarConfig.ConnectionString = ConnectionModel.ConnectionString.Replace("master", ConnectionModel.Database);
-            //        break;
-            //    case "MySql":
-            //        sugarConfig.DbType = SqlSugar.DbType.MySql;
-            //        break;
-            //    case "Oracle":
-            //        sugarConfig.DbType = SqlSugar.DbType.Oracle;
-            //        break;
-            //    case "MariaDB":
-            //        sugarConfig.DbType = SqlSugar.DbType.MySql;
-            //        break;
-            //    case "Sqlite":
-            //        sugarConfig.DbType = SqlSugar.DbType.Sqlite;
-            //        break;
-            //}
-            //var sqlclient = new SqlSugarClient(sugarConfig);
-            //var csFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Templates), $"WEF_{DateTime.Now.Ticks}");
-            //var dic= sqlclient.DbFirst
-            //    .Where(TableName)
-            //    .IsCreateAttribute()
-            //    .IsCreateDefaultValue()
-            //    .ToClassStringList(txtnamespace.Text);
-
-            txtContent.Text = "";// dic.Values.FirstOrDefault();
-
-            _isOk = true;
-        }
-
         /// <summary>
         /// 生成Json
         /// </summary>
@@ -387,14 +343,7 @@ namespace WEF.Standard.DevelopTools
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (checkBox2.Checked)
-            {
-                GenerateSqlSugarModel();
-            }
-            else
-            {
-                GenerateModel(checkBox1.Checked);
-            }
+            GenerateModel(checkBox1.Checked);
 
             if (_isOk)
             {

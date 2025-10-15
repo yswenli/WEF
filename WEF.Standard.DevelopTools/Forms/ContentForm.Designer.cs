@@ -65,7 +65,6 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.cnnTxt = new System.Windows.Forms.TextBox();
             this.saveEntity = new System.Windows.Forms.SaveFileDialog();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tp1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridColumns)).BeginInit();
@@ -99,9 +98,9 @@
             this.tp1.Controls.Add(this.groupBox1);
             this.tp1.ImageIndex = 0;
             this.tp1.Location = new System.Drawing.Point(8, 8);
-            this.tp1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tp1.Margin = new System.Windows.Forms.Padding(6);
             this.tp1.Name = "tp1";
-            this.tp1.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tp1.Padding = new System.Windows.Forms.Padding(6);
             this.tp1.Size = new System.Drawing.Size(1424, 1243);
             this.tp1.TabIndex = 0;
             this.tp1.Text = "代码生成设置";
@@ -134,7 +133,7 @@
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.gridColumns.DefaultCellStyle = dataGridViewCellStyle2;
             this.gridColumns.Location = new System.Drawing.Point(6, 6);
-            this.gridColumns.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.gridColumns.Margin = new System.Windows.Forms.Padding(6);
             this.gridColumns.Name = "gridColumns";
             this.gridColumns.ReadOnly = true;
             this.gridColumns.RowHeadersWidth = 51;
@@ -202,7 +201,6 @@
             this.groupBox1.Controls.Add(this.button3);
             this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Controls.Add(this.checkBox2);
             this.groupBox1.Controls.Add(this.checkBox1);
             this.groupBox1.Controls.Add(this.cbToupperFrstword);
             this.groupBox1.Controls.Add(this.txtClassName);
@@ -212,9 +210,9 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.cbPrimarykey);
             this.groupBox1.Location = new System.Drawing.Point(4, 650);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(6);
             this.groupBox1.Size = new System.Drawing.Size(1412, 586);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
@@ -223,7 +221,7 @@
             // button5
             // 
             this.button5.Location = new System.Drawing.Point(830, 440);
-            this.button5.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.button5.Margin = new System.Windows.Forms.Padding(6);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(298, 70);
             this.button5.TabIndex = 10;
@@ -245,7 +243,7 @@
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(567, 440);
-            this.button3.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.button3.Margin = new System.Windows.Forms.Padding(6);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(250, 70);
             this.button3.TabIndex = 8;
@@ -256,7 +254,7 @@
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(180, 440);
-            this.button2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.button2.Margin = new System.Windows.Forms.Padding(6);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(182, 70);
             this.button2.TabIndex = 8;
@@ -267,7 +265,7 @@
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(374, 440);
-            this.button1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.button1.Margin = new System.Windows.Forms.Padding(6);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(182, 70);
             this.button1.TabIndex = 7;
@@ -279,7 +277,7 @@
             // 
             this.checkBox1.AutoSize = true;
             this.checkBox1.Location = new System.Drawing.Point(180, 352);
-            this.checkBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.checkBox1.Margin = new System.Windows.Forms.Padding(6);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(234, 28);
             this.checkBox1.TabIndex = 6;
@@ -292,7 +290,7 @@
             this.cbToupperFrstword.Checked = true;
             this.cbToupperFrstword.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbToupperFrstword.Location = new System.Drawing.Point(182, 309);
-            this.cbToupperFrstword.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.cbToupperFrstword.Margin = new System.Windows.Forms.Padding(6);
             this.cbToupperFrstword.Name = "cbToupperFrstword";
             this.cbToupperFrstword.Size = new System.Drawing.Size(162, 28);
             this.cbToupperFrstword.TabIndex = 6;
@@ -302,7 +300,7 @@
             // txtClassName
             // 
             this.txtClassName.Location = new System.Drawing.Point(182, 235);
-            this.txtClassName.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.txtClassName.Margin = new System.Windows.Forms.Padding(6);
             this.txtClassName.Name = "txtClassName";
             this.txtClassName.Size = new System.Drawing.Size(608, 35);
             this.txtClassName.TabIndex = 5;
@@ -330,7 +328,7 @@
             // txtnamespace
             // 
             this.txtnamespace.Location = new System.Drawing.Point(182, 83);
-            this.txtnamespace.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.txtnamespace.Margin = new System.Windows.Forms.Padding(6);
             this.txtnamespace.Name = "txtnamespace";
             this.txtnamespace.Size = new System.Drawing.Size(1216, 35);
             this.txtnamespace.TabIndex = 4;
@@ -350,7 +348,7 @@
             this.cbPrimarykey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPrimarykey.FormattingEnabled = true;
             this.cbPrimarykey.Location = new System.Drawing.Point(182, 160);
-            this.cbPrimarykey.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.cbPrimarykey.Margin = new System.Windows.Forms.Padding(6);
             this.cbPrimarykey.Name = "cbPrimarykey";
             this.cbPrimarykey.Size = new System.Drawing.Size(308, 32);
             this.cbPrimarykey.TabIndex = 1;
@@ -360,9 +358,9 @@
             this.tp2.Controls.Add(this.txtContent);
             this.tp2.ImageIndex = 1;
             this.tp2.Location = new System.Drawing.Point(8, 8);
-            this.tp2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tp2.Margin = new System.Windows.Forms.Padding(6);
             this.tp2.Name = "tp2";
-            this.tp2.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tp2.Padding = new System.Windows.Forms.Padding(6);
             this.tp2.Size = new System.Drawing.Size(1424, 1243);
             this.tp2.TabIndex = 1;
             this.tp2.Text = "生成代码预览";
@@ -427,22 +425,11 @@
             this.cnnTxt.ContextMenuStrip = this.contextMenuCopy;
             this.cnnTxt.Dock = System.Windows.Forms.DockStyle.Top;
             this.cnnTxt.Location = new System.Drawing.Point(0, 0);
-            this.cnnTxt.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.cnnTxt.Margin = new System.Windows.Forms.Padding(6);
             this.cnnTxt.Name = "cnnTxt";
             this.cnnTxt.ReadOnly = true;
             this.cnnTxt.Size = new System.Drawing.Size(1440, 35);
             this.cnnTxt.TabIndex = 7;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(180, 392);
-            this.checkBox2.Margin = new System.Windows.Forms.Padding(6);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(282, 28);
-            this.checkBox2.TabIndex = 6;
-            this.checkBox2.Text = "生成SqlSugar模型代码";
-            this.checkBox2.UseVisualStyleBackColor = true;
             // 
             // ContentForm
             // 
@@ -454,7 +441,7 @@
             this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.Document)));
             this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.MinimizeBox = false;
             this.Name = "ContentForm";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -507,6 +494,5 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem generateMarkDownDocToolStripMenuItem;
         private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.CheckBox checkBox2;
     }
 }
