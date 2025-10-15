@@ -29,7 +29,7 @@ namespace WEF.Standard.Test
             List<DBArticle> articleList;
             List<DBComment> commentList;
 
-            var cnnstr = "Data Source=.;Initial Catalog=tejingcaiV2;Integrated Security=True";
+            var cnnstr = "Data Source=.;Initial Catalog=eastmoneydb;Integrated Security=True";
 
             #region get and update
 
