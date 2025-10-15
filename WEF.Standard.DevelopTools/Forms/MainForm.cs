@@ -25,6 +25,7 @@ using CCWin;
 
 using TxtReplaceTool;
 
+using WEF.Standard.DevelopTools.Capture;
 using WEF.Standard.DevelopTools.Common;
 using WEF.Standard.DevelopTools.Forms;
 using WEF.Standard.DevelopTools.Model;
@@ -251,10 +252,6 @@ namespace WEF.Standard.DevelopTools
             new Base64Form().ShowDialog(this);
         }
 
-
-
-
-
         /// <summary>
         /// 清理垃圾
         /// </summary>
@@ -264,6 +261,28 @@ namespace WEF.Standard.DevelopTools
         {
             new FileCleaner.FileClearForm().ShowDialog(this);
         }
+
+        #region 截图工具
+
+        private CaptureForm frmCapture;
+        private void 截图工具ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if ((frmCapture == null) || frmCapture.IsDisposed)
+            {
+                frmCapture = new CaptureForm();
+                frmCapture.OnCaptured += frmCapture_OnCaptured;
+            }
+            frmCapture.IsCaptureCursor = true;
+            frmCapture.IsFromClipBoard = false;
+            frmCapture.Show();
+        }
+        private void frmCapture_OnCaptured(Image imgDatas)
+        {
+            Clipboard.SetImage(imgDatas);
+            MessageBox.Show("截图成功，已复制到剪切板");
+        }
+
+        #endregion
 
 
         TxtReplaceForm _txtReplaceForm = new TxtReplaceForm();
@@ -413,6 +432,8 @@ namespace WEF.Standard.DevelopTools
 
 
         #endregion
+
+
 
     }
 }

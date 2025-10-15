@@ -226,6 +226,7 @@
     <Reference Include="System.Data.SQLite.Linq, Version=1.0.119.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.119.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.Design" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=7.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.7.0.2\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
@@ -382,6 +383,44 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="capture\CaptureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="capture\CaptureForm.designer.cs">
+      <DependentUpon>CaptureForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="capture\ColorBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="capture\ColorBox.designer.cs">
+      <DependentUpon>ColorBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="capture\FrmOut.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="capture\FrmOut.designer.cs">
+      <DependentUpon>FrmOut.cs</DependentUpon>
+    </Compile>
+    <Compile Include="capture\FrmSize.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="capture\FrmSize.designer.cs">
+      <DependentUpon>FrmSize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="capture\ImageProcessBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="capture\ImageProcessBox.designer.cs">
+      <DependentUpon>ImageProcessBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="capture\ScreenCapture.cs" />
+    <Compile Include="capture\ToolButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="capture\ToolButton.designer.cs">
+      <DependentUpon>ToolButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="capture\ToolButtonDesigner.cs" />
     <Compile Include="Common\BlockingQueue.cs" />
     <Compile Include="Common\ConfigHelper.cs" />
     <Compile Include="Common\CsvHelper.cs" />
@@ -597,6 +636,10 @@
     <Compile Include="Common\UtilsHelper.cs" />
     <Compile Include="Common\WEFMessageBox.cs" />
     <Compile Include="Common\Win32Helper.cs" />
+    <Compile Include="Common\win32\HookHelper.cs" />
+    <Compile Include="Common\win32\MouseAndKeyHelper.cs" />
+    <Compile Include="Common\win32\SendMessageClass.cs" />
+    <Compile Include="Common\win32\WindowsHelper.cs" />
     <Compile Include="Common\XSDToCSharp.cs" />
     <Compile Include="Controls\AutoTextBox.cs">
       <SubType>UserControl</SubType>
@@ -884,6 +927,21 @@
     <None Include="Resources\HR.jpg" />
     <None Include="Resources\help.png" />
     <None Include="Resources\0616152d52f214c689f01819eefb836d.gif" />
+    <EmbeddedResource Include="capture\CaptureForm.resx">
+      <DependentUpon>CaptureForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="capture\ColorBox.resx">
+      <DependentUpon>ColorBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="capture\FrmOut.resx">
+      <DependentUpon>FrmOut.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="capture\FrmSize.resx">
+      <DependentUpon>FrmSize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="capture\ImageProcessBox.resx">
+      <DependentUpon>ImageProcessBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\AutoTextBox.resx">
       <DependentUpon>AutoTextBox.cs</DependentUpon>
     </EmbeddedResource>
