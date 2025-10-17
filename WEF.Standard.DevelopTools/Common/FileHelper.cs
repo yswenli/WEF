@@ -29,8 +29,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using OpenCvSharp;
-
 namespace WEF.Standard.DevelopTools.Common
 {
     public static class FileHelper

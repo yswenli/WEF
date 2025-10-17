@@ -1,11 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace WEF.Standard.DevelopTools.Model
 {
     public class Sysconfig
     {
+        /// <summary>
+        /// 针对高dpi的显示器系统屏幕缩放比例
+        /// </summary>
+        public float DpiScale { get; set; } = 2.0f;
+
+
         private string _namespace = "WEF.Models";
 
         /// <summary>
@@ -33,7 +37,7 @@ namespace WEF.Standard.DevelopTools.Model
             {
                 if (string.IsNullOrEmpty(batchDirectoryPath))
                 {
-                    batchDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)+"\\GenerateCS";
+                    batchDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\GenerateCS";
                 }
                 return batchDirectoryPath;
             }

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F1746CB3-8DF3-4EF2-A9E7-3C9C594FBAE3}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>WEF.Standard.DevelopTools.ScreenCapture</RootNamespace>
+    <AssemblyName>ScreenCapture</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>favourite.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>WEF.Standard.DevelopTools.ScreenCapture.Program</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CSkin, Version=16.1.14.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\CSkin.dll</HintPath>
+    </Reference>
+    <Reference Include="Leigh.Wen.QRCode, Version=1.0.7495.20585, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leigh.Wen.QRCode.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking.ThemeVS2015, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CaptureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CaptureForm.designer.cs">
+      <DependentUpon>CaptureForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ColorBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ColorBox.designer.cs">
+      <DependentUpon>ColorBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\Win32\HookHelper.cs" />
+    <Compile Include="Common\Win32\MouseAndKeyHelper.cs" />
+    <Compile Include="Common\Win32\ScreenHelper.cs" />
+    <Compile Include="Common\Win32\SendMessageClass.cs" />
+    <Compile Include="Common\Win32\WindowsHelper.cs" />
+    <Compile Include="FrmOut.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmOut.designer.cs">
+      <DependentUpon>FrmOut.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmSize.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSize.designer.cs">
+      <DependentUpon>FrmSize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImageProcessBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ImageProcessBox.designer.cs">
+      <DependentUpon>ImageProcessBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScreenCapture.cs" />
+    <Compile Include="ToolButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ToolButton.designer.cs">
+      <DependentUpon>ToolButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ToolButtonDesigner.cs" />
+    <EmbeddedResource Include="CaptureForm.resx">
+      <DependentUpon>CaptureForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ColorBox.resx">
+      <DependentUpon>ColorBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmOut.resx">
+      <DependentUpon>FrmOut.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmSize.resx">
+      <DependentUpon>FrmSize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImageProcessBox.resx">
+      <DependentUpon>ImageProcessBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Dlls\CSkin.dll" />
+    <Content Include="Dlls\Leigh.Wen.QRCode.dll" />
+    <Content Include="Dlls\WeifenLuo.WinFormsUI.Docking.dll" />
+    <Content Include="Dlls\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll" />
+    <Content Include="favourite.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

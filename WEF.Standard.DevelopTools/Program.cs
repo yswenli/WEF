@@ -3,6 +3,7 @@ using System.Threading;
 using System.Windows.Forms;
 
 using WEF.Standard.DevelopTools.Common;
+using WEF.Standard.DevelopTools.Common.Win32;
 
 namespace WEF.Standard.DevelopTools
 {

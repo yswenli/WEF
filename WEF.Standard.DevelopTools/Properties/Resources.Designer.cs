@@ -262,6 +262,16 @@ namespace WEF.Standard.DevelopTools.Properties {
         }
         
         /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] ScreenCapture {
+            get {
+                object obj = ResourceManager.GetObject("ScreenCapture", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
         internal static System.Drawing.Bitmap separator {

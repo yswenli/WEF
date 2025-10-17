@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.Test31", "WEF.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.DevelopTools", "WEF.Standard.DevelopTools\WEF.Standard.DevelopTools.csproj", "{F7C57904-E752-4117-A1B0-BAEDAF601217}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEF.Standard.DevelopTools.ScreenCapture", "WEF.Standard.DevelopTools.ScreenCapture\WEF.Standard.DevelopTools.ScreenCapture.csproj", "{F1746CB3-8DF3-4EF2-A9E7-3C9C594FBAE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{F7C57904-E752-4117-A1B0-BAEDAF601217}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7C57904-E752-4117-A1B0-BAEDAF601217}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7C57904-E752-4117-A1B0-BAEDAF601217}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1746CB3-8DF3-4EF2-A9E7-3C9C594FBAE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1746CB3-8DF3-4EF2-A9E7-3C9C594FBAE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1746CB3-8DF3-4EF2-A9E7-3C9C594FBAE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1746CB3-8DF3-4EF2-A9E7-3C9C594FBAE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

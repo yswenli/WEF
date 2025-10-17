@@ -13,15 +13,13 @@
  * 创建人：wenli
  * 创建说明：
  *****************************************************************************************************/
+using Microsoft.Win32;
+
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.Win32;
 
 namespace WEF.Standard.DevelopTools.Common.Win32
 {
@@ -65,9 +63,29 @@ namespace WEF.Standard.DevelopTools.Common.Win32
         public static extern bool ScreenToClient(IntPtr hWnd, out LPPOINT lpPoint);
         [DllImport("user32.dll")]//获得句柄对象的位置
         public static extern bool GetWindowRect(IntPtr hWnd, out LPRECT lpRect);
-        [DllImport("user32.dll")]//注册全局热键
+
+        /// <summary>
+        /// 常量：WM_HOTKEY 消息ID（系统定义，用于识别热键触发事件）
+        /// </summary>
+        public const int WM_HOTKEY = 0x0312;
+
+        /// <summary>
+        /// 注册全局热键
+        /// </summary>
+        /// <param name="hWnd"></param>
+        /// <param name="id"></param>
+        /// <param name="fsModifiers"></param>
+        /// <param name="vk"></param>
+        /// <returns></returns>
+        [DllImport("user32.dll")]
         public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
-        [DllImport("user32.dll")]//卸载全局热键
+        /// <summary>
+        /// 卸载全局热键
+        /// </summary>
+        /// <param name="hWnd"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [DllImport("user32.dll")]
         public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
         [DllImport("user32.dll")]
         public static extern bool InvalidateRect(IntPtr hWnd, ref LPRECT lpRect, bool bErase);
@@ -371,7 +389,6 @@ namespace WEF.Standard.DevelopTools.Common.Win32
         }
 
 
-        private const uint WM_HOTKEY = 0x312;
         private const uint MOD_ALT = 0x1;
         private const uint MOD_CONTROL = 0x2;
         private const uint MOD_SHIFT = 0x4;
@@ -392,13 +409,13 @@ namespace WEF.Standard.DevelopTools.Common.Win32
         {
             bool result = false;
 
-            MouseAndKeyHelper.UnregisterHotKey(control.Handle, hotKeyID);
+            UnregisterHotKey(control, hotKeyID);
 
             comboKeys = 0 | (hasCtrl ? MOD_CONTROL : 0) | (hasAlt ? MOD_ALT : 0) | (hasShift ? MOD_SHIFT : 0);
 
             uint keyCode = Convert.ToUInt32((Keys)Enum.Parse(typeof(Keys), key));
 
-            if (MouseAndKeyHelper.RegisterHotKey(control.Handle, hotKeyID, comboKeys, keyCode))
+            if (RegisterHotKey(control.Handle, hotKeyID, comboKeys, keyCode))
             {
                 result = true;
             }
@@ -407,6 +424,17 @@ namespace WEF.Standard.DevelopTools.Common.Win32
                 //throw new Exception("注册热键失败！");
             }
             return result;
+        }
+        /// <summary>
+        /// 取消注册热键
+        /// </summary>
+        /// <param name="control"></param>
+        /// <param name="hotKeyID"></param>
+        /// <returns></returns>
+        public static bool UnregisterHotKey(Control control, int hotKeyID)
+        {
+            return UnregisterHotKey(control.Handle, hotKeyID);
+
         }
 
         #endregion

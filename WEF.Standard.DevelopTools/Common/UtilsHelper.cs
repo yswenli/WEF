@@ -78,7 +78,7 @@ namespace WEF.Standard.DevelopTools.Common
                     connection.DbType = node.Attributes["dbtype"].Value;
                     list.Add(connection);
                 }
-                list= list.OrderBy(p => p.Name).ToList();
+                list = list.OrderBy(p => p.Name).ToList();
             }
             return list;
         }
@@ -213,7 +213,17 @@ namespace WEF.Standard.DevelopTools.Common
 
             XmlDocument doc = new XmlDocument();
             doc.Load(SysconfigPath);
-            XmlNode node = doc.SelectSingleNode("configs/config[@key='namespace']");
+            XmlNode node = doc.SelectSingleNode("configs/config[@key='dpiscale']");
+            if (null != node)
+            {
+                if (float.TryParse(node.FirstChild.InnerText, out float dpiScale))
+                    sysconfigModel.DpiScale = dpiScale;
+                else
+                    sysconfigModel.DpiScale = 2.0f;
+
+                WriteDpiScale(dpiScale);
+            }
+            node = doc.SelectSingleNode("configs/config[@key='namespace']");
             if (null != node)
             {
                 sysconfigModel.Namespace = node.FirstChild.InnerText;
@@ -247,6 +257,20 @@ namespace WEF.Standard.DevelopTools.Common
                 node.FirstChild.Value = sysconfigModel.BatchDirectoryPath;
             }
 
+            doc.Save(SysconfigPath);
+        }
+
+
+        /// <summary>
+        /// 写命名空间
+        /// </summary>
+        /// <param name="dpiScale"></param>
+        public static void WriteDpiScale(float dpiScale)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(SysconfigPath);
+            XmlNode node = doc.SelectSingleNode("configs/config[@key='dpiscale']");
+            node.FirstChild.Value = dpiScale.ToString();
             doc.Save(SysconfigPath);
         }
 
