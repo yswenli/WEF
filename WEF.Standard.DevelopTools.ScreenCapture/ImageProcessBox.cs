@@ -310,7 +310,47 @@ namespace WEF.Standard.DevelopTools.Capture
                             m_rectClip = new Rectangle(0, 0, this.baseImage.Width, this.baseImage.Height);
                         }
                     }
-                    Cursor.Clip = RectangleToScreen(m_rectClip);
+                    // 修复多屏环境下鼠标乱跳问题：使用更安全的坐标计算
+                    try
+                    {
+                        // 在多屏环境下，先检查是否应该在当前屏幕上设置clip
+                        if (this.FindForm() != null && Screen.AllScreens.Length > 1)
+                        {
+                            Screen currentScreen = Screen.FromControl(this);
+                            if (currentScreen != null)
+                            {
+                                Rectangle clipRect = RectangleToScreen(m_rectClip);
+                                
+                                // 验证clip区域是否在当前屏幕或相邻屏幕上
+                                if (clipRect.Width > 0 && clipRect.Height > 0)
+                                {
+                                    // 检查clip区域是否与当前屏幕相交
+                                    Rectangle currentBounds = currentScreen.Bounds;
+                                    if (clipRect.IntersectsWith(currentBounds) || 
+                                        clipRect.Contains(currentBounds) || 
+                                        currentBounds.Contains(clipRect))
+                                    {
+                                        Cursor.Clip = clipRect;
+                                    }
+                                    // 如果clip区域不在合理范围内，则不设置，避免鼠标乱跳
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // 单屏环境或无法确定屏幕信息时，使用原始方法
+                            Rectangle clipRect = RectangleToScreen(m_rectClip);
+                            if (clipRect.Width > 0 && clipRect.Height > 0)
+                            {
+                                Cursor.Clip = clipRect;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // 如果设置Cursor.Clip失败，则不设置，避免鼠标乱跳
+                        System.Diagnostics.Debug.WriteLine($"设置Cursor.Clip失败: {ex.Message}");
+                    }
                     isStartDraw = true;
                     m_ptOriginal = e.Location;
                 }
@@ -457,7 +497,15 @@ namespace WEF.Standard.DevelopTools.Capture
                 isMoving = m_bLockH = m_bLockW = false; //取消锁定
                 isStartDraw = false;
                 m_ptTempStarPos = this.selectedRectangle.Location;
-                Cursor.Clip = new Rectangle();
+                // 安全地清理Cursor.Clip，避免多屏环境下的问题
+                try
+                {
+                    Cursor.Clip = new Rectangle();
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"清理Cursor.Clip失败: {ex.Message}");
+                }
             }
             else if (e.Button == MouseButtons.Right)
                 this.ClearDraw();
