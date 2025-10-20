@@ -111,6 +111,8 @@ namespace WEF.Standard.DevelopTools.Capture
         private Bitmap captureDatas;
         private Bitmap m_bmpLayerShow;
 
+        Rectangle _virtualScreen;
+
 
         /// <summary>
         /// 截图主窗体
@@ -126,14 +128,50 @@ namespace WEF.Standard.DevelopTools.Capture
             this.TopMost = true;
             this.ShowInTaskbar = false;
 
-            m_MHook = new HookHelper();
-            m_MHook.SetMHook();
-            m_MHook.MHookEvent += new HookHelper.MHookEventHandler(m_MHook_MHookEvent);
+            // 优化：延迟Hook初始化，避免阻塞UI
+            this.Shown += CaptureForm_Shown;
             this.FormClosing += (s, ce) =>
             {
-                m_MHook.UnLoadMHook();
+                if (m_MHook != null)
+                {
+                    m_MHook.UnLoadMHook();
+                    m_MHook.MHookEvent -= m_MHook_MHookEvent;
+                }
                 this.DelResource();
             };
+        }
+
+        /// <summary>
+        /// 窗体显示后初始化Hook（性能优化）
+        /// </summary>
+        private void CaptureForm_Shown(object sender, EventArgs e)
+        {
+            // 在UI线程上异步初始化Hook，避免阻塞主线程
+            this.BeginInvoke(new Action(() =>
+            {
+                try
+                {
+                    m_MHook = new HookHelper();
+                    if (m_MHook.SetMHook())
+                    {
+                        m_MHook.MHookEvent += m_MHook_MHookEvent;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // 记录错误但不中断启动流程
+                    System.Diagnostics.Debug.WriteLine($"Hook初始化失败: {ex.Message}");
+                }
+            }));
+        }
+
+        /// <summary>
+        /// 截图主窗体
+        /// </summary>
+        /// <param name="captureCursor"></param>
+        public CaptureForm(bool captureCursor) : this()
+        {
+            this.IsCaptureCursor = captureCursor;
         }
 
         /// <summary>
@@ -148,17 +186,20 @@ namespace WEF.Standard.DevelopTools.Capture
 
             imageProcessBox1.MouseLeave += (s, ce) => this.Cursor = Cursors.Default;
             imageProcessBox1.IsDrawOperationDot = false;
-            timer1.Interval = 50;
+            timer1.Interval = 500;
             timer1.Enabled = true;
         }
 
         private void m_MHook_MHookEvent(object sender, MHookEventArgs e)
         {
+            // 添加空引用检查
+            if (this.IsDisposed || imageProcessBox1 == null)
+                return;
+
             //如果窗体禁用 调用控件的方法设置信息显示位置
             if (!this.Enabled)
             {
-                Rectangle virtualScreen = ScreenHelper.GetVirtualScreenBounds();
-                imageProcessBox1.SetInfoPoint(MousePosition.X - virtualScreen.X, MousePosition.Y - virtualScreen.Y);
+                imageProcessBox1.SetInfoPoint(MousePosition.X - _virtualScreen.X, MousePosition.Y - _virtualScreen.Y);
             }
             //鼠标点下恢复窗体禁用
             if (e.MButton == ButtonStatus.LeftDown || e.MButton == ButtonStatus.RightDown)
@@ -180,7 +221,7 @@ namespace WEF.Standard.DevelopTools.Capture
             #region 找寻窗体
 
             if (!this.Enabled)
-                this.FoundAndDrawWindowRect();
+                this.FoundAndDrawWindowRect(_virtualScreen);
             #endregion
 
         }
@@ -442,26 +483,30 @@ namespace WEF.Standard.DevelopTools.Capture
         {
             //m_bSave = true;
             SaveFileDialog saveDlg = new SaveFileDialog();
-            saveDlg.Filter = "Bitmap(*.bmp)|*.bmp|JPEG(*.jpg)|*.jpg|png(*.png)|*.png";
-            saveDlg.FilterIndex = 2;
-            saveDlg.FileName = "CAPTURE_" + GetTimeString();
+            saveDlg.Filter = "PNG(*.png)|*.png|JPEG(*.jpg)|*.jpg|Bitmap(*.bmp)|*.bmp";
+            saveDlg.FilterIndex = 1;
+            saveDlg.FileName = "YSWENLI_WEF_CAPTURE_" + GetTimeString();
             if (saveDlg.ShowDialog() == DialogResult.OK)
             {
                 switch (saveDlg.FilterIndex)
                 {
                     case 1:
                         captureDatas.Clone(new Rectangle(0, 0, captureDatas.Width, captureDatas.Height),
-                            PixelFormat.Format24bppRgb).Save(saveDlg.FileName,
-                            ImageFormat.Bmp);
+                            PixelFormat.Format32bppArgb).Save(saveDlg.FileName,
+                            ImageFormat.Png);
                         this.Close();
                         break;
                     case 2:
-                        captureDatas.Save(saveDlg.FileName, ImageFormat.Jpeg);
+                        captureDatas.Clone(new Rectangle(0, 0, captureDatas.Width, captureDatas.Height),
+                            PixelFormat.Format24bppRgb).Save(saveDlg.FileName,
+                            ImageFormat.Jpeg);
                         this.Close();
                         break;
                     case 3:
                     default:
-                        captureDatas.Save(saveDlg.FileName, ImageFormat.Png);
+                        captureDatas.Clone(new Rectangle(0, 0, captureDatas.Width, captureDatas.Height),
+                            PixelFormat.Format24bppRgb).Save(saveDlg.FileName,
+                            ImageFormat.Bmp);
                         this.Close();
                         break;
                 }
@@ -500,15 +545,13 @@ namespace WEF.Standard.DevelopTools.Capture
         {
             if (!this.Enabled)
             {
-                // 修复多显示屏问题：将屏幕坐标转换为相对于虚拟屏幕的坐标
-                Rectangle virtualScreen = ScreenHelper.GetVirtualScreenBounds();
-                imageProcessBox1.SetInfoPoint(MousePosition.X - virtualScreen.X, MousePosition.Y - virtualScreen.Y);
+                imageProcessBox1.SetInfoPoint(MousePosition.X - _virtualScreen.X, MousePosition.Y - _virtualScreen.Y);
             }
         }
         /// <summary>
         /// 根据鼠标位置找寻窗体平绘制边框
         /// </summary>
-        private void FoundAndDrawWindowRect()
+        private void FoundAndDrawWindowRect(Rectangle virtualScreen)
         {
             MouseAndKeyHelper.LPPOINT pt = new MouseAndKeyHelper.LPPOINT();
             pt.X = MousePosition.X; pt.Y = MousePosition.Y;
@@ -528,8 +571,6 @@ namespace WEF.Standard.DevelopTools.Capture
                 }
                 MouseAndKeyHelper.LPRECT rect = new MouseAndKeyHelper.LPRECT();
                 MouseAndKeyHelper.GetWindowRect(hWnd, out rect);
-
-                Rectangle virtualScreen = ScreenHelper.GetVirtualScreenBounds();
                 Rectangle windowRect = new Rectangle(
                     rect.Left - virtualScreen.X,
                     rect.Top - virtualScreen.Y,
@@ -542,7 +583,7 @@ namespace WEF.Standard.DevelopTools.Capture
 
 
         /// <summary>
-        /// 绘制图片
+        /// 绘制图片 - 优化版本，提升性能
         /// </summary>
         /// <param name="virtualScreen"></param>
         /// <param name="bCaptureCursor"></param>
@@ -551,27 +592,43 @@ namespace WEF.Standard.DevelopTools.Capture
         private static Bitmap LoadImage(Rectangle virtualScreen, bool bCaptureCursor, bool bFromClipBoard)
         {
             Bitmap bmp = new Bitmap(virtualScreen.Width, virtualScreen.Height, PixelFormat.Format32bppArgb);
-
-            if (bFromClipBoard)
+            try
             {
-                using (Graphics g = Graphics.FromImage(bmp))
+                if (bFromClipBoard)
                 {
-                    using (Image img_clip = Clipboard.GetImage())
+                    using (Graphics g = Graphics.FromImage(bmp))
                     {
-                        if (img_clip != null)
+                        // 优化：使用高效的Graphics设置
+                        g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighSpeed;
+                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Low;
+                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
+
+                        using (Image img_clip = Clipboard.GetImage())
                         {
-                            using (SolidBrush sb = new SolidBrush(Color.FromArgb(150, 0, 0, 0)))
+                            if (img_clip != null)
                             {
-                                g.FillRectangle(sb, 0, 0, bmp.Width, bmp.Height);
-                                g.DrawImage(img_clip, 0, 0);
+                                using (SolidBrush sb = new SolidBrush(Color.FromArgb(150, 0, 0, 0)))
+                                {
+                                    g.FillRectangle(sb, 0, 0, bmp.Width, bmp.Height);
+                                    g.DrawImage(img_clip, 0, 0);
+                                }
                             }
                         }
                     }
                 }
+                else
+                {
+                    ScreenHelper.CaptureScreen(bmp, virtualScreen, MousePosition, bCaptureCursor);
+                }
+                return bmp;
             }
-            else
-                ScreenHelper.CaptureScreen(bmp, virtualScreen, MousePosition, bCaptureCursor);
-            return bmp;
+            catch (Exception ex)
+            {
+                // 清理资源
+                bmp?.Dispose();
+                System.Diagnostics.Debug.WriteLine($"LoadImage失败: {ex.Message}");
+                throw;
+            }
         }
 
 
@@ -638,12 +695,47 @@ namespace WEF.Standard.DevelopTools.Capture
         /// </summary>
         public new void Show()
         {
-            base.Show();
-            Rectangle virtualScreen = ScreenHelper.GetVirtualScreenBounds();
-            this.Bounds = virtualScreen;
+            _virtualScreen = ScreenHelper.GetVirtualScreenBounds();
+            this.Bounds = _virtualScreen;
             imageProcessBox1.Dock = DockStyle.Fill;
-            Image screenImage = LoadImage(virtualScreen, isCaptureCursor, isFromClipBoard);
-            imageProcessBox1.WorkImage = screenImage;
+            Image screenImage = LoadImage(_virtualScreen, isCaptureCursor, isFromClipBoard);
+            if (!this.IsDisposed && imageProcessBox1 != null)
+            {
+                imageProcessBox1.WorkImage = screenImage;
+                base.Show();
+            }
+            else
+            {
+                screenImage?.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// 显示对话框 - 优化版本，快速启动
+        /// </summary>
+        public new void ShowDialog()
+        {
+            _virtualScreen = ScreenHelper.GetVirtualScreenBounds();
+            this.Bounds = _virtualScreen;
+            imageProcessBox1.Dock = DockStyle.Fill;
+            try
+            {
+                Image screenImage = LoadImage(_virtualScreen, isCaptureCursor, isFromClipBoard);
+                if (!this.IsDisposed && imageProcessBox1 != null)
+                {
+                    imageProcessBox1.WorkImage = screenImage;
+                }
+                else
+                {
+                    screenImage?.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"异步加载截图失败: {ex.Message}");
+            }
+
+            base.ShowDialog();
         }
 
     }

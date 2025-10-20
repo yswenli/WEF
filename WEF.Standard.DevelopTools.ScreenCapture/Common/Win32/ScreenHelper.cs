@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -32,6 +31,14 @@ namespace WEF.Standard.DevelopTools.Common.Win32
 {
     public class ScreenHelper
     {
+        #region 性能优化 - 缓存静态数据
+        
+        private static Rectangle _cachedVirtualScreenBounds = Rectangle.Empty;
+        private static DateTime _lastCacheTime = DateTime.MinValue;
+        private static readonly TimeSpan _cacheValidDuration = TimeSpan.FromDays(365);
+        
+        #endregion
+
         #region API 声明
 
         /// <summary>
@@ -202,11 +209,18 @@ namespace WEF.Standard.DevelopTools.Common.Win32
 
 
         /// <summary>
-        /// 获取虚拟屏幕边界（包含所有显示器）
+        /// 获取虚拟屏幕边界（包含所有显示器）- 优化版本，支持缓存
         /// </summary>
         /// <returns>虚拟屏幕边界</returns>
         public static Rectangle GetVirtualScreenBounds()
         {
+            // 检查缓存是否有效
+            if (!_cachedVirtualScreenBounds.IsEmpty && 
+                DateTime.Now - _lastCacheTime < _cacheValidDuration)
+            {
+                return _cachedVirtualScreenBounds;
+            }
+
             int minX = int.MaxValue;
             int minY = int.MaxValue;
             int maxX = int.MinValue;
@@ -214,20 +228,23 @@ namespace WEF.Standard.DevelopTools.Common.Win32
 
             // 确保获取所有可用的屏幕
             Screen[] allScreens = Screen.AllScreens;
-            if (allScreens.Length == 0)
+            if (allScreens == null || allScreens.Length == 0)
             {
                 // 如果没有检测到屏幕，使用主屏幕
                 allScreens = new Screen[] { Screen.PrimaryScreen };
             }
 
+            // 优化：批量处理屏幕边界计算
             foreach (Screen screen in allScreens)
             {
+                if (screen?.Bounds == Rectangle.Empty) continue;
+                
                 Rectangle bounds = screen.Bounds;
-
                 minX = Math.Min(minX, bounds.X);
                 minY = Math.Min(minY, bounds.Y);
 
-                var scale = GetScreenDpiScale(screen);
+                // 优化：避免重复计算DPI，使用简化的计算
+                var scale = GetScreenDpiScaleFast(screen);
                 var boundRight = (int)(bounds.Right * scale);
                 var boundsBottom = (int)(bounds.Bottom * scale);
 
@@ -235,22 +252,55 @@ namespace WEF.Standard.DevelopTools.Common.Win32
                 maxY = Math.Max(maxY, boundsBottom);
             }
 
+            Rectangle result;
             // 确保返回有效的矩形
             if (minX == int.MaxValue || minY == int.MaxValue || maxX == int.MinValue || maxY == int.MinValue)
             {
                 // 如果计算失败，回退到主屏幕
-                var scale = GetScreenDpiScale(Screen.PrimaryScreen);
+                var scale = GetScreenDpiScaleFast(Screen.PrimaryScreen);
                 Rectangle primaryBounds = Screen.PrimaryScreen.Bounds;
                 var primaryBoundsWidth = (int)(primaryBounds.Width * scale);
                 var primaryBoundsHeight = (int)(primaryBounds.Height * scale);
-                return new Rectangle(0, 0, primaryBoundsWidth, primaryBoundsHeight);
+                result = new Rectangle(0, 0, primaryBoundsWidth, primaryBoundsHeight);
             }
-            return new Rectangle(minX, minY, maxX - minX, maxY - minY + 1500);
+            else
+            {
+                result = new Rectangle(minX, minY, maxX - minX, maxY - minY + 1500);
+            }
+
+            // 缓存结果
+            _cachedVirtualScreenBounds = result;
+            _lastCacheTime = DateTime.Now;
+            
+            return result;
+        }
+
+        /// <summary>
+        /// 快速获取屏幕DPI比例
+        /// </summary>
+        private static float GetScreenDpiScaleFast(Screen screen)
+        {
+            try
+            {
+                IntPtr hMonitor = GetDC(screen);
+                if (hMonitor != IntPtr.Zero)
+                {
+                    GetDpiForMonitor(hMonitor, MONITOR_DPI_TYPE.MDT_RAW_DPI, out uint dpiX, out uint dpiY);
+                    ReleaseDC(IntPtr.Zero, hMonitor);
+                    return (float)dpiX / 96f;
+                }
+            }
+            catch
+            {
+                // 发生异常时返回默认值
+            }
+            
+            return 1.0f; // 默认DPI比例
         }
 
 
         /// <summary>
-        /// 绘制屏幕
+        /// 绘制屏幕 - 优化版本，提升性能
         /// </summary>
         /// <param name="bmp"></param>
         /// <param name="virtualScreen"></param>
@@ -260,23 +310,33 @@ namespace WEF.Standard.DevelopTools.Common.Win32
         {
             using (Graphics g = Graphics.FromImage(bmp))
             {
-                g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighSpeed;
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.None; 
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit; 
+                
                 g.CopyFromScreen(virtualScreen.X, virtualScreen.Y, 0, 0, virtualScreen.Size);
 
                 if (captureCursor)
                 {
-                    MouseAndKeyHelper.CURSORINFO pci;
-                    pci.cbSize = Marshal.SizeOf(typeof(MouseAndKeyHelper.CURSORINFO));
-                    MouseAndKeyHelper.GetCursorInfo(out pci);
-                    if (pci.hCursor != IntPtr.Zero)
+                    try
                     {
-                        Cursor cur = new Cursor(pci.hCursor);
-                        Rectangle rect_cur = new Rectangle((Point)((Size)mousePosition - (Size)cur.HotSpot), cur.Size);
-                        cur.Draw(g, rect_cur);
+                        MouseAndKeyHelper.CURSORINFO pci;
+                        pci.cbSize = Marshal.SizeOf(typeof(MouseAndKeyHelper.CURSORINFO));
+                        MouseAndKeyHelper.GetCursorInfo(out pci);
+                        if (pci.hCursor != IntPtr.Zero)
+                        {
+                            using (Cursor cur = new Cursor(pci.hCursor))
+                            {
+                                Rectangle rect_cur = new Rectangle((Point)((Size)mousePosition - (Size)cur.HotSpot), cur.Size);
+                                cur.Draw(g, rect_cur);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"绘制鼠标光标失败: {ex.Message}");
                     }
                 }
             }

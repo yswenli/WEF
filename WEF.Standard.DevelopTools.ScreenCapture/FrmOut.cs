@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-
-using System.Threading;
 using System.Drawing.Imaging;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace WEF.Standard.DevelopTools.Capture
 {
@@ -67,8 +62,8 @@ namespace WEF.Standard.DevelopTools.Capture
             {
                 if (e.X >= this.Width - 20 && e.Y <= 20) this.Close();
             }
-            if (m_bOnSaveC) SaveBmp(false);
-            if (m_bOnSaveO) SaveBmp(true);
+            if (m_bOnSaveC) SaveImage(false);
+            if (m_bOnSaveO) SaveImage(true);
             base.OnMouseClick(e);
         }
 
@@ -221,8 +216,7 @@ namespace WEF.Standard.DevelopTools.Capture
                     g.FillRectangle(sb, rectString);
                     g.DrawString(strDraw, this.Font, Brushes.Wheat, rectString, sf);
 
-                    rectString = new Rectangle(0, this.Height - 2 * this.Font.Height - 1,
-                        this.Width, this.Font.Height * 2);
+                    rectString = new Rectangle(0, this.Height - 2 * this.Font.Height - 1, this.Width, this.Font.Height * 2);
                     sf.Alignment = StringAlignment.Far;
                     g.FillRectangle(sb, rectString);
                     g.DrawString("Move [W,S,A,D] ReSize [T,G,F,H]\r\nScale [MouseWheel] Exit [MouseRight]", this.Font, Brushes.Wheat, rectString, sf);
@@ -230,13 +224,13 @@ namespace WEF.Standard.DevelopTools.Capture
 
                     g.FillRectangle(sb, this.Width - 21, 1, 20, 20);
                     if (m_bOnClose)
-                        g.FillRectangle(Brushes.Red, this.Width - 20, 1, 19, 19);
+                        g.FillRectangle(Brushes.DarkRed, this.Width - 20, 1, 25, 25);
 
-                    sb.Color = m_bOnSaveO ? Color.Red : Color.Wheat;
-                    m_rectSaveO = new Rectangle(2, rectString.Y + 2, 10, this.Font.Height - 3);
+                    sb.Color = m_bOnSaveO ? Color.DarkRed : Color.Wheat;
+                    m_rectSaveO = new Rectangle(2, rectString.Y + 2, 25, this.Font.Height - 3);
                     g.FillRectangle(sb, m_rectSaveO);
-                    sb.Color = m_bOnSaveC ? Color.Red : Color.Wheat;
-                    m_rectSaveC = new Rectangle(2, rectString.Y + this.Font.Height + 1, 10, this.Font.Height - 2);
+                    sb.Color = m_bOnSaveC ? Color.DarkRed : Color.Wheat;
+                    m_rectSaveC = new Rectangle(2, rectString.Y + this.Font.Height + 1, 25, this.Font.Height - 2);
                     g.FillRectangle(sb, m_rectSaveC);
                 }
             }
@@ -282,12 +276,12 @@ namespace WEF.Standard.DevelopTools.Capture
 
         private void TMenuItem_SaveOriginal_Click(object sender, EventArgs e)
         {
-            this.SaveBmp(true);
+            this.SaveImage(true);
         }
 
         private void TMenuItem_SaveCurrent_Click(object sender, EventArgs e)
         {
-            this.SaveBmp(false);
+            this.SaveImage(false);
         }
 
         private void TMenuItem_Size_Click(object sender, EventArgs e)
@@ -347,12 +341,12 @@ namespace WEF.Standard.DevelopTools.Capture
             }
         }
 
-        private void SaveBmp(bool bOriginal)
+        private void SaveImage(bool bOriginal)
         {
             SaveFileDialog saveDlg = new SaveFileDialog();
-            saveDlg.Filter = "Bitmap(*.bmp)|*.bmp|JPEG(*.jpg)|*.jpg";
-            saveDlg.FilterIndex = 2;
-            saveDlg.FileName = "CAPTURE_" + GetTimeString();
+            saveDlg.Filter = "PNG(*.png)|*.png|JPEG(*.jpg)|*.jpg|Bitmap(*.bmp)|*.bmp";
+            saveDlg.FilterIndex = 1;
+            saveDlg.FileName = "YSWENLI_WEF_CAPTURE_" + GetTimeString();
             if (saveDlg.ShowDialog() == DialogResult.OK)
             {
                 using (Bitmap bmp = bOriginal ? m_bmp.Clone() as Bitmap :
@@ -368,10 +362,13 @@ namespace WEF.Standard.DevelopTools.Capture
                     switch (saveDlg.FilterIndex)
                     {
                         case 1:
-                            bmp.Save(saveDlg.FileName, ImageFormat.Bmp);
+                            bmp.Save(saveDlg.FileName, ImageFormat.Png);
                             break;
                         case 2:
                             bmp.Save(saveDlg.FileName, ImageFormat.Jpeg);
+                            break;
+                        case 3:
+                            bmp.Save(saveDlg.FileName, ImageFormat.Bmp);
                             break;
                     }
                 }

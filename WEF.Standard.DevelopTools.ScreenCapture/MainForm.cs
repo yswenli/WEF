@@ -10,7 +10,7 @@ namespace WEF.Standard.DevelopTools.ScreenCapture
 {
     public partial class MainForm : Form
     {
-        bool isHidden = false;
+        bool _isHidden = false;
 
         public MainForm()
         {
@@ -21,7 +21,7 @@ namespace WEF.Standard.DevelopTools.ScreenCapture
         {
             if (args != null && args.Any(q => q == "-h"))
             {
-                isHidden = true;
+                _isHidden = true;
             }
         }
 
@@ -33,10 +33,10 @@ namespace WEF.Standard.DevelopTools.ScreenCapture
             openFileDialog1.CheckPathExists = true;
             openFileDialog1.DefaultExt = "jpg";
             MouseAndKeyHelper.RegistHotKeys(this, true, false, true, "C", 1);
-            if (isHidden)
+            if (_isHidden)
             {
                 StartCapture();
-                this.Close();
+                Hide();
             }
         }
 
@@ -60,10 +60,7 @@ namespace WEF.Standard.DevelopTools.ScreenCapture
 
             if (m.Msg == MouseAndKeyHelper.WM_HOTKEY)
             {
-                // 解析热键ID：m.WParam 存储的是注册时的 id 参数
                 int hotKeyId = m.WParam.ToInt32();
-
-                // 根据不同热键ID执行逻辑
                 switch (hotKeyId)
                 {
                     case 1:
@@ -77,28 +74,25 @@ namespace WEF.Standard.DevelopTools.ScreenCapture
 
 
 
-        private static CaptureForm frmCapture;
+        private void StartCapture()
+        {
+            Hide();
+            CaptureForm frmCapture = new CaptureForm(true);
+            frmCapture.OnCaptured += frmCapture_OnCaptured;
+            
+            // 优化：使用ShowDialog确保模态显示，但内部会异步加载截图
+            frmCapture.ShowDialog();
+            
+            if (_isHidden)
+                Close();
+            else
+                Show();
+        }
 
         private static void frmCapture_OnCaptured(Image imgDatas)
         {
             Clipboard.SetImage(imgDatas);
             MessageBox.Show("截图成功，已复制到剪切板");
         }
-
-        private void StartCapture()
-        {
-            this.Hide();
-            if ((frmCapture == null) || frmCapture.IsDisposed)
-            {
-                frmCapture = new CaptureForm();
-                frmCapture.OnCaptured += frmCapture_OnCaptured;
-            }
-            frmCapture.IsCaptureCursor = true;
-            frmCapture.IsFromClipBoard = false;
-            frmCapture.Show();
-            if (!isHidden)
-                this.Show();
-        }
-
     }
 }

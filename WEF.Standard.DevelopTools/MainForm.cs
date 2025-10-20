@@ -27,6 +27,7 @@ using System.Windows.Forms;
 using TxtReplaceTool;
 
 using WEF.Standard.DevelopTools.Common;
+using WEF.Standard.DevelopTools.Common.Win32;
 using WEF.Standard.DevelopTools.Forms;
 using WEF.Standard.DevelopTools.Model;
 
@@ -51,8 +52,33 @@ namespace WEF.Standard.DevelopTools
 
             MessageQueue.Instance.OnMessage += Instance_OnMessage;
             MessageQueue.Instance.OnComplete += Instance_OnComplete;
+
+
+            MouseAndKeyHelper.RegistHotKeys(this, true, false, true, "C", 1);
         }
 
+
+        /// <summary>
+        /// 重写 WndProc：监听系统发送的 WM_HOTKEY 消息
+        /// </summary>
+        /// <param name="m"></param>
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+
+            if (m.Msg == MouseAndKeyHelper.WM_HOTKEY)
+            {
+                int hotKeyId = m.WParam.ToInt32();
+                switch (hotKeyId)
+                {
+                    case 1:
+                        截图工具ToolStripMenuItem_Click(null, null);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
 
         private void Instance_OnMessage(string msg)
@@ -343,10 +369,10 @@ namespace WEF.Standard.DevelopTools
 
         private void 截图工具ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var screenCaptureExePath = $"{UtilsHelper.CurrentPath}/temp";
+            var screenCaptureExePath = $"{UtilsHelper.CurrentPath}";
             if (!Directory.Exists(screenCaptureExePath))
             {
-                Directory.CreateDirectory(screenCaptureExePath);
+                return;
             }
             screenCaptureExePath = $"{screenCaptureExePath}/ScreenCapture.exe";
             if (!File.Exists(screenCaptureExePath))
@@ -365,6 +391,11 @@ namespace WEF.Standard.DevelopTools
         private void errorlogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _leftPannelForm.ShowLogs();
+        }
+
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Quit();
         }
         #endregion
 
@@ -402,32 +433,24 @@ namespace WEF.Standard.DevelopTools
 
                 if (MessageBox.Show("确定要退出WEF数据库工具吗？", "WEF数据库工具", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    NotifyIcon.Dispose();
-                    Application.Exit();
-                    Environment.Exit(0);
+                    Quit();
                 }
             }
             catch { }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         #endregion
 
-
+        /// <summary>
+        /// 退出
+        /// </summary>
+        private void Quit()
+        {
+            DockContentHelper.Save(dockPanel);
+            NotifyIcon.Dispose();
+            MouseAndKeyHelper.UnregisterHotKey(this, 1);
+            Application.Exit();
+            Environment.Exit(0);
+        }
     }
 }

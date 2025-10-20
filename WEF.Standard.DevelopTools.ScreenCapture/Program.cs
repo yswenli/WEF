@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Forms;
 
+using WEF.Standard.DevelopTools.Common;
 using WEF.Standard.DevelopTools.Common.Win32;
 
 namespace WEF.Standard.DevelopTools.ScreenCapture
@@ -15,8 +17,59 @@ namespace WEF.Standard.DevelopTools.ScreenCapture
         {
             ScreenHelper.SetProcessDPIAware();
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);           
-            Application.Run(new MainForm(args));
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            //全局异常
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            //线程异常
+            Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
+
+            try
+            {
+                Application.Run(new MainForm(args));
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 全局异常
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            var error = e.ExceptionObject as Exception;
+
+            if (error.Message.IndexOf("矩形") > -1) return;
+
+            if (error.Message.IndexOf("GDI+ 中发生一般性错误") > -1) return;
+
+            MessageBox.Show(error.Message + "\r\n 详情请查看日志!", "出错啦!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            Logger.Error(error);
+        }
+
+
+        /// <summary>
+        /// 记录错误
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+        {
+            if (e.Exception.Message.IndexOf("矩形") > -1) return;
+
+            if (e.Exception.Message.IndexOf("GDI+ 中发生一般性错误") > -1) return;
+
+            MessageBox.Show(e.Exception.Message + "\r\n 详情请查看日志!", "出错啦!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            Logger.Error(e.Exception);
         }
     }
 }

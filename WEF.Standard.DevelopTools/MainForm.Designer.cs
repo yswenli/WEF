@@ -63,6 +63,7 @@
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.shutDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vS2015LightTheme1 = new WeifenLuo.WinFormsUI.Docking.VS2015LightTheme();
+            this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -221,49 +222,49 @@
             // qRCodeToolToolStripMenuItem
             // 
             this.qRCodeToolToolStripMenuItem.Name = "qRCodeToolToolStripMenuItem";
-            this.qRCodeToolToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.qRCodeToolToolStripMenuItem.Size = new System.Drawing.Size(347, 44);
             this.qRCodeToolToolStripMenuItem.Text = "二维码工具";
             this.qRCodeToolToolStripMenuItem.Click += new System.EventHandler(this.qRCodeToolToolStripMenuItem_Click);
             // 
             // log读取工具ToolStripMenuItem
             // 
             this.log读取工具ToolStripMenuItem.Name = "log读取工具ToolStripMenuItem";
-            this.log读取工具ToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.log读取工具ToolStripMenuItem.Size = new System.Drawing.Size(347, 44);
             this.log读取工具ToolStripMenuItem.Text = "Log读取工具";
             this.log读取工具ToolStripMenuItem.Click += new System.EventHandler(this.log读取工具ToolStripMenuItem_Click);
             // 
             // oCR工具ToolStripMenuItem
             // 
             this.oCR工具ToolStripMenuItem.Name = "oCR工具ToolStripMenuItem";
-            this.oCR工具ToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.oCR工具ToolStripMenuItem.Size = new System.Drawing.Size(347, 44);
             this.oCR工具ToolStripMenuItem.Text = "OCR工具";
             this.oCR工具ToolStripMenuItem.Click += new System.EventHandler(this.oCR工具ToolStripMenuItem_Click);
             // 
             // sqlFileFormToolStripMenuItem
             // 
             this.sqlFileFormToolStripMenuItem.Name = "sqlFileFormToolStripMenuItem";
-            this.sqlFileFormToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.sqlFileFormToolStripMenuItem.Size = new System.Drawing.Size(347, 44);
             this.sqlFileFormToolStripMenuItem.Text = "大sql文件执行工具";
             this.sqlFileFormToolStripMenuItem.Click += new System.EventHandler(this.sqlFileFormToolStripMenuItem_Click);
             // 
             // xSDToolToolStripMenuItem
             // 
             this.xSDToolToolStripMenuItem.Name = "xSDToolToolStripMenuItem";
-            this.xSDToolToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.xSDToolToolStripMenuItem.Size = new System.Drawing.Size(347, 44);
             this.xSDToolToolStripMenuItem.Text = "xsd工具";
             this.xSDToolToolStripMenuItem.Click += new System.EventHandler(this.xSDToolToolStripMenuItem_Click);
             // 
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(347, 44);
             this.clearToolStripMenuItem.Text = "清理垃圾工具";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // 截图工具ToolStripMenuItem
             // 
             this.截图工具ToolStripMenuItem.Name = "截图工具ToolStripMenuItem";
-            this.截图工具ToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.截图工具ToolStripMenuItem.Size = new System.Drawing.Size(347, 44);
             this.截图工具ToolStripMenuItem.Text = "ScreenCapture";
             this.截图工具ToolStripMenuItem.Click += new System.EventHandler(this.截图工具ToolStripMenuItem_Click);
             // 
@@ -271,7 +272,8 @@
             // 
             this.关于ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem,
-            this.errorlogToolStripMenuItem});
+            this.errorlogToolStripMenuItem,
+            this.quitToolStripMenuItem});
             this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
             this.关于ToolStripMenuItem.Size = new System.Drawing.Size(111, 38);
             this.关于ToolStripMenuItem.Text = "(&a)关于";
@@ -279,14 +281,14 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(239, 44);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
             this.aboutToolStripMenuItem.Text = "about";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // errorlogToolStripMenuItem
             // 
             this.errorlogToolStripMenuItem.Name = "errorlogToolStripMenuItem";
-            this.errorlogToolStripMenuItem.Size = new System.Drawing.Size(239, 44);
+            this.errorlogToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
             this.errorlogToolStripMenuItem.Text = "errorlog";
             this.errorlogToolStripMenuItem.Click += new System.EventHandler(this.errorlogToolStripMenuItem_Click);
             // 
@@ -333,6 +335,13 @@
             this.shutDownToolStripMenuItem.Size = new System.Drawing.Size(208, 38);
             this.shutDownToolStripMenuItem.Text = "退出";
             this.shutDownToolStripMenuItem.Click += new System.EventHandler(this.shutDownToolStripMenuItem_Click);
+            // 
+            // quitToolStripMenuItem
+            // 
+            this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.quitToolStripMenuItem.Text = "quit";
+            this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -396,6 +405,7 @@
         private System.Windows.Forms.ToolStripMenuItem qRCodeToolToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem base64ToolToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 截图工具ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
     }
 }
 
