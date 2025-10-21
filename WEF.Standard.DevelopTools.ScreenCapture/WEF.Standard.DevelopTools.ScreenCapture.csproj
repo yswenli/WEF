@@ -93,12 +93,6 @@
     <Compile Include="ImageProcessBox.designer.cs">
       <DependentUpon>ImageProcessBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="MagnifyForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MagnifyForm.Designer.cs">
-      <DependentUpon>MagnifyForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -129,9 +123,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ImageProcessBox.resx">
       <DependentUpon>ImageProcessBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MagnifyForm.resx">
-      <DependentUpon>MagnifyForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -178,7 +169,6 @@
     <Content Include="Resources\separator.png" />
     <Content Include="Resources\small.png" />
     <Content Include="Resources\text.png" />
-    <None Include="Resources\magnify.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
