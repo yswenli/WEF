@@ -272,6 +272,7 @@ namespace WEF.Standard.DevelopTools.Capture
             if (imageProcessBox1.Cursor != Cursors.SizeAll &&
                 imageProcessBox1.Cursor != Cursors.Default)
                 panel1.Visible = false;         //表示改变选取大小 隐藏工具条
+
             //若果在选区内点击 并且有选择工具
             if (e.Button == MouseButtons.Left && imageProcessBox1.IsDrawed && HaveSelectedToolButton())
             {
@@ -279,19 +280,18 @@ namespace WEF.Standard.DevelopTools.Capture
                 {
                     if (tBtn_Text.IsSelected)
                     {
-                        //如果选择的是绘制文本 弹出文本框
-                        textBox1.Location = e.Location;
+                        textBox1.Location = imageProcessBox1.PointToScreen(e.Location);
                         textBox1.Visible = true;
                         textBox1.Focus();
                         return;
                     }
                     m_isStartDraw = true;
-                    Cursor.Clip = imageProcessBox1.SelectedRectangle;
+                    Rectangle selectedRectScreen = imageProcessBox1.RectangleToScreen(imageProcessBox1.SelectedRectangle);
+                    Cursor.Clip = selectedRectScreen;
                 }
             }
             m_ptOriginal = e.Location;
         }
-
         private void imageProcessBox1_MouseMove(object sender, MouseEventArgs e)
         {
             m_ptCurrent = e.Location;
