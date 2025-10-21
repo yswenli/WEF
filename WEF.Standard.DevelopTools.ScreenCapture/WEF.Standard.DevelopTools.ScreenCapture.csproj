@@ -162,6 +162,22 @@
   <ItemGroup>
     <Content Include="Dlls\CSkin.dll" />
     <Content Include="favourite.ico" />
+    <Content Include="Resources\arrow.png" />
+    <Content Include="Resources\brush.png" />
+    <Content Include="Resources\cancel.png" />
+    <Content Include="Resources\close.png" />
+    <Content Include="Resources\color.bmp" />
+    <Content Include="Resources\ellips.png" />
+    <Content Include="Resources\large.png" />
+    <Content Include="Resources\middle.png" />
+    <Content Include="Resources\none.png" />
+    <Content Include="Resources\ok.png" />
+    <Content Include="Resources\out.png" />
+    <Content Include="Resources\rect.png" />
+    <Content Include="Resources\save.png" />
+    <Content Include="Resources\separator.png" />
+    <Content Include="Resources\small.png" />
+    <Content Include="Resources\text.png" />
     <None Include="Resources\magnify.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
