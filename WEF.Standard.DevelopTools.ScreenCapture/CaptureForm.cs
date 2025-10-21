@@ -726,5 +726,47 @@ namespace WEF.Standard.DevelopTools.Capture
             base.ShowDialog();
         }
 
+        /// <summary>
+        /// 窗体快捷键
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            // 在放大镜出现时，Ctrl+C 复制当前颜色
+            if (e.Control && e.KeyCode == Keys.C)
+            {
+                TryCopyMagnifierColor();
+            }
+        }
+
+        /// <summary>
+        /// 复制放大镜选取的颜色
+        /// </summary>
+        private void TryCopyMagnifierColor()
+        {
+            try
+            {
+                // 仅在放大镜信息显示阶段生效（未锁定选区）
+                if (imageProcessBox1 == null || imageProcessBox1.WorkImage == null) return;
+                if (!imageProcessBox1.IsShowInfo || imageProcessBox1.IsDrawed) return;
+
+                // 将全局坐标转换为控件坐标，避免多屏/DPI误差
+                Point clientPt = imageProcessBox1.PointToClient(MousePosition);
+                Bitmap bmp = imageProcessBox1.WorkImage as Bitmap;
+                if (bmp == null) return;
+
+                int x = Math.Max(0, Math.Min(clientPt.X, bmp.Width - 1));
+                int y = Math.Max(0, Math.Min(clientPt.Y, bmp.Height - 1));
+                Color clr = bmp.GetPixel(x, y);
+
+                // 复制为常用格式：#RRGGBB
+                string hexRgb = $"#{clr.R:X2}{clr.G:X2}{clr.B:X2}";
+                Clipboard.SetText(hexRgb);
+            }
+            catch { }
+        }
+
     }
 }
+

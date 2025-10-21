@@ -567,7 +567,7 @@ namespace WEF.Standard.DevelopTools.Capture
             this.DrawOperationBox(g);
             if (this.baseImage != null && e != null && e.Graphics != null && !isDrawed && !isMoving && m_bMouseEnter && isShowInfo)
             {
-                DrawInfo(e.Graphics);
+                DrawMagnifyInfo(e.Graphics);
             }
             base.OnPaint(e);
         }
@@ -648,9 +648,8 @@ namespace WEF.Standard.DevelopTools.Capture
         /// 绘制图像放大信息
         /// </summary>
         /// <param name="g"></param>
-        protected virtual void DrawInfo(Graphics g)
+        protected virtual void DrawMagnifyInfo(Graphics g)
         {
-
             #region Calculate point
 
             int tempX = (m_ptCurrent.X > this.ClientRectangle.Width - 2 ? this.ClientRectangle.Width - 2 : m_ptCurrent.X) + 20;
@@ -706,9 +705,9 @@ namespace WEF.Standard.DevelopTools.Capture
             Color clr = ((Bitmap)this.baseImage).GetPixel((m_ptCurrent.X >= this.ClientRectangle.Width - 2 ? this.ClientRectangle.Width - 2 : m_ptCurrent.X), m_ptCurrent.Y);
             g.DrawString($"尺寸:{this.selectedRectangle.Width + 1} x {this.selectedRectangle.Height + 1}",
                 this.Font, m_sb, tempX + 2, tempRectBorder.Bottom + 2);
-            g.DrawString($"颜色: {clr.R.ToString("X").PadLeft(2, '0')}{clr.G.ToString("X").PadLeft(2, '0')}{clr.B.ToString("X").PadLeft(2, '0')}",
+            g.DrawString($"颜色: #{clr.R.ToString("X").PadLeft(2, '0')}{clr.G.ToString("X").PadLeft(2, '0')}{clr.B.ToString("X").PadLeft(2, '0')}",
                 this.Font, m_sb, tempX + 2, tempRectBorder.Bottom + 2 + this.Font.Height);
-            g.DrawString($"Ctrl+c 复制", this.Font, m_sb, tempX + 2, tempRectBorder.Bottom + 2 + this.Font.Height * 2);
+            g.DrawString($"Ctrl+C 复制", this.Font, m_sb, tempX + 2, tempRectBorder.Bottom + 2 + this.Font.Height * 2);
             m_sb.Color = clr;
             g.FillRectangle(m_sb, tempX + tempW - 2 - this.Font.Height,         //右下角颜色
                 tempY + tempH - 2 - this.Font.Height,
@@ -778,7 +777,7 @@ namespace WEF.Standard.DevelopTools.Capture
         }
 
         /// <summary>
-        /// 在当前控件上画图
+        /// 将屏幕截图绘制到控件上，并增加一个半透明的遮罩
         /// </summary>
         private void DrawImage()
         {
@@ -794,7 +793,7 @@ namespace WEF.Standard.DevelopTools.Capture
                     g.PixelOffsetMode = PixelOffsetMode.None;
                     g.CompositingQuality = CompositingQuality.HighSpeed;
 
-                    using (SolidBrush sb = new SolidBrush(Color.FromArgb(125, 0, 0, 0)))
+                    using (SolidBrush sb = new SolidBrush(Color.FromArgb(150, 0, 0, 0)))
                     {
                         g.FillRectangle(sb, 0, 0, m_bmpDark.Width, m_bmpDark.Height);
                     }
