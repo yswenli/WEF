@@ -31,7 +31,7 @@ namespace WEF.Standard.DevelopTools.Capture
 
         private void DelResource()
         {
-            if (captureDatas != null) captureDatas.Dispose();
+            if (_captureDatas != null) _captureDatas.Dispose();
             if (m_bmpLayerShow != null) m_bmpLayerShow.Dispose();
             m_layer.Clear();
             imageProcessBox1.DeleResource();
@@ -108,10 +108,10 @@ namespace WEF.Standard.DevelopTools.Capture
         private bool m_isStartDraw;
         private Point m_ptOriginal;
         private Point m_ptCurrent;
-        private Bitmap captureDatas;
+        private Bitmap _captureDatas;
         private Bitmap m_bmpLayerShow;
 
-        Rectangle _virtualScreen;
+        Rectangle _virtualScreenBounds;
 
 
         /// <summary>
@@ -139,10 +139,14 @@ namespace WEF.Standard.DevelopTools.Capture
                 }
                 this.DelResource();
             };
+
+
+            // 设置窗体可以接收键盘输入
+            this.KeyPreview = true;
         }
 
         /// <summary>
-        /// 窗体显示后初始化Hook（性能优化）
+        /// 窗体显示后初始化Hook
         /// </summary>
         private void CaptureForm_Shown(object sender, EventArgs e)
         {
@@ -199,7 +203,7 @@ namespace WEF.Standard.DevelopTools.Capture
             //如果窗体禁用 调用控件的方法设置信息显示位置
             if (!this.Enabled)
             {
-                imageProcessBox1.SetInfoPoint(MousePosition.X - _virtualScreen.X, MousePosition.Y - _virtualScreen.Y);
+                imageProcessBox1.SetInfoPoint(MousePosition.X - _virtualScreenBounds.X, MousePosition.Y - _virtualScreenBounds.Y);
             }
             //鼠标点下恢复窗体禁用
             if (e.MButton == ButtonStatus.LeftDown || e.MButton == ButtonStatus.RightDown)
@@ -221,7 +225,7 @@ namespace WEF.Standard.DevelopTools.Capture
             #region 找寻窗体
 
             if (!this.Enabled)
-                this.FoundAndDrawWindowRect(_virtualScreen);
+                this.FoundAndDrawWindowRect(_virtualScreenBounds);
             #endregion
 
         }
@@ -376,7 +380,7 @@ namespace WEF.Standard.DevelopTools.Capture
                 imageProcessBox1.CanReset = true;
                 imageProcessBox1.IsDrawOperationDot = false;
                 m_layer.Clear();    //清空历史记录
-                captureDatas = null;
+                _captureDatas = null;
                 m_bmpLayerShow = null;
                 ClearToolBarBtnSelected();
                 panel1.Visible = false;
@@ -391,14 +395,14 @@ namespace WEF.Standard.DevelopTools.Capture
             {           //否则显示工具条
                 this.SetToolBarLocation();          //重置工具条位置
                 panel1.Visible = true;
-                captureDatas = imageProcessBox1.GetResultBmp();    //获取选取图形
-                m_bmpLayerShow = new Bitmap(captureDatas.Width, captureDatas.Height);
+                _captureDatas = imageProcessBox1.GetResultBmp();    //获取选取图形
+                m_bmpLayerShow = new Bitmap(_captureDatas.Width, _captureDatas.Height);
             }
             //如果移动了选取位置 重新获取选取的图形
             if (imageProcessBox1.Cursor == Cursors.SizeAll && m_ptOriginal != e.Location)
             {
-                captureDatas.Dispose();
-                captureDatas = imageProcessBox1.GetResultBmp();
+                _captureDatas.Dispose();
+                _captureDatas = imageProcessBox1.GetResultBmp();
             }
 
             if (!m_isStartDraw) return;
@@ -430,7 +434,7 @@ namespace WEF.Standard.DevelopTools.Capture
         {
             textBox1.Visible = false;
             if (string.IsNullOrEmpty(textBox1.Text.Trim())) { textBox1.Text = ""; return; }
-            using (Graphics g = Graphics.FromImage(captureDatas))
+            using (Graphics g = Graphics.FromImage(_captureDatas))
             {
                 SolidBrush sb = new SolidBrush(colorBox1.SelectedColor);
                 g.DrawString(textBox1.Text, textBox1.Font, sb,
@@ -463,9 +467,9 @@ namespace WEF.Standard.DevelopTools.Capture
             {            //删除最后一层
                 m_layer.RemoveAt(m_layer.Count - 1);
                 if (m_layer.Count > 0)
-                    captureDatas = m_layer[m_layer.Count - 1].Clone() as Bitmap;
+                    _captureDatas = m_layer[m_layer.Count - 1].Clone() as Bitmap;
                 else
-                    captureDatas = imageProcessBox1.GetResultBmp();
+                    _captureDatas = imageProcessBox1.GetResultBmp();
                 imageProcessBox1.Invalidate();
                 imageProcessBox1.CanReset = m_layer.Count == 0 && !HaveSelectedToolButton();
             }
@@ -491,20 +495,20 @@ namespace WEF.Standard.DevelopTools.Capture
                 switch (saveDlg.FilterIndex)
                 {
                     case 1:
-                        captureDatas.Clone(new Rectangle(0, 0, captureDatas.Width, captureDatas.Height),
+                        _captureDatas.Clone(new Rectangle(0, 0, _captureDatas.Width, _captureDatas.Height),
                             PixelFormat.Format32bppArgb).Save(saveDlg.FileName,
                             ImageFormat.Png);
                         this.Close();
                         break;
                     case 2:
-                        captureDatas.Clone(new Rectangle(0, 0, captureDatas.Width, captureDatas.Height),
+                        _captureDatas.Clone(new Rectangle(0, 0, _captureDatas.Width, _captureDatas.Height),
                             PixelFormat.Format24bppRgb).Save(saveDlg.FileName,
                             ImageFormat.Jpeg);
                         this.Close();
                         break;
                     case 3:
                     default:
-                        captureDatas.Clone(new Rectangle(0, 0, captureDatas.Width, captureDatas.Height),
+                        _captureDatas.Clone(new Rectangle(0, 0, _captureDatas.Width, _captureDatas.Height),
                             PixelFormat.Format24bppRgb).Save(saveDlg.FileName,
                             ImageFormat.Bmp);
                         this.Close();
@@ -520,23 +524,23 @@ namespace WEF.Standard.DevelopTools.Capture
         /// <param name="e"></param>
         private void tBtn_Finish_Click(object sender, EventArgs e)
         {
-            Clipboard.SetImage(captureDatas);
-            this.RaiseOnCaptured(Image.FromHbitmap(captureDatas.GetHbitmap()));
+            Clipboard.SetImage(_captureDatas);
+            this.RaiseOnCaptured(Image.FromHbitmap(_captureDatas.GetHbitmap()));
             this.Close();
         }
 
         private void tBtn_Out_Click(object sender, EventArgs e)
         {
-            new FrmOut(captureDatas.Clone() as Bitmap).Show();
+            new FrmOut(_captureDatas.Clone() as Bitmap).Show();
             this.Close();
         }
 
         private void imageProcessBox1_DoubleClick(object sender, EventArgs e)
         {
-            if (captureDatas != null)
+            if (_captureDatas != null)
             {
-                Clipboard.SetImage(captureDatas);
-                this.RaiseOnCaptured(Image.FromHbitmap(captureDatas.GetHbitmap()));
+                Clipboard.SetImage(_captureDatas);
+                this.RaiseOnCaptured(Image.FromHbitmap(_captureDatas.GetHbitmap()));
                 this.Close();
             }
         }
@@ -545,7 +549,8 @@ namespace WEF.Standard.DevelopTools.Capture
         {
             if (!this.Enabled)
             {
-                imageProcessBox1.SetInfoPoint(MousePosition.X - _virtualScreen.X, MousePosition.Y - _virtualScreen.Y);
+                Rectangle virtualScreen = ScreenHelper.GetVirtualScreenBounds();
+                imageProcessBox1.SetInfoPoint(MousePosition.X - virtualScreen.X, MousePosition.Y - virtualScreen.Y);
             }
         }
         /// <summary>
@@ -583,7 +588,7 @@ namespace WEF.Standard.DevelopTools.Capture
 
 
         /// <summary>
-        /// 绘制图片 - 优化版本，提升性能
+        /// 绘制图片
         /// </summary>
         /// <param name="virtualScreen"></param>
         /// <param name="bCaptureCursor"></param>
@@ -598,7 +603,6 @@ namespace WEF.Standard.DevelopTools.Capture
                 {
                     using (Graphics g = Graphics.FromImage(bmp))
                     {
-                        // 优化：使用高效的Graphics设置
                         g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighSpeed;
                         g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Low;
                         g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
@@ -632,9 +636,9 @@ namespace WEF.Standard.DevelopTools.Capture
         }
 
 
-
-
-        //设置工具条位置
+        /// <summary>
+        /// 设置工具条位置
+        /// </summary>
         private void SetToolBarLocation()
         {
             int tempX = imageProcessBox1.SelectedRectangle.Left;
@@ -657,7 +661,10 @@ namespace WEF.Standard.DevelopTools.Capture
             panel1.Top = tempY;
             panel2.Top = imageProcessBox1.SelectedRectangle.Top > tempY ? tempY - tempHeight : panel1.Bottom + 2;
         }
-        //确定是否工具条上面有被选中的按钮
+        /// <summary>
+        /// 确定是否工具条上面有被选中的按钮
+        /// </summary>
+        /// <returns></returns>
         private bool HaveSelectedToolButton()
         {
             return tBtn_Rect.IsSelected || tBtn_Ellipse.IsSelected
@@ -674,11 +681,11 @@ namespace WEF.Standard.DevelopTools.Capture
         private void SetLayer()
         {
             if (this.IsDisposed) return;
-            using (Graphics g = Graphics.FromImage(captureDatas))
+            using (Graphics g = Graphics.FromImage(_captureDatas))
             {
                 g.DrawImage(m_bmpLayerShow, 0, 0);
             }
-            Bitmap bmpTemp = captureDatas.Clone() as Bitmap;
+            Bitmap bmpTemp = _captureDatas.Clone() as Bitmap;
             m_layer.Add(bmpTemp);
         }
         //保存时获取当前时间字符串作文默认文件名
@@ -691,36 +698,17 @@ namespace WEF.Standard.DevelopTools.Capture
 
 
         /// <summary>
-        /// 显示窗口
-        /// </summary>
-        public new void Show()
-        {
-            _virtualScreen = ScreenHelper.GetVirtualScreenBounds();
-            this.Bounds = _virtualScreen;
-            imageProcessBox1.Dock = DockStyle.Fill;
-            Image screenImage = LoadImage(_virtualScreen, isCaptureCursor, isFromClipBoard);
-            if (!this.IsDisposed && imageProcessBox1 != null)
-            {
-                imageProcessBox1.WorkImage = screenImage;
-                base.Show();
-            }
-            else
-            {
-                screenImage?.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// 显示对话框 - 优化版本，快速启动
+        /// 显示对话框
         /// </summary>
         public new void ShowDialog()
         {
-            _virtualScreen = ScreenHelper.GetVirtualScreenBounds();
-            this.Bounds = _virtualScreen;
+            _virtualScreenBounds = ScreenHelper.GetVirtualScreenBounds();
+            this.Bounds = _virtualScreenBounds;
             imageProcessBox1.Dock = DockStyle.Fill;
+            imageProcessBox1.VirtualScreenBounds = _virtualScreenBounds;
             try
             {
-                Image screenImage = LoadImage(_virtualScreen, isCaptureCursor, isFromClipBoard);
+                Image screenImage = LoadImage(_virtualScreenBounds, isCaptureCursor, isFromClipBoard);
                 if (!this.IsDisposed && imageProcessBox1 != null)
                 {
                     imageProcessBox1.WorkImage = screenImage;

@@ -79,8 +79,6 @@ namespace WEF.Standard.DevelopTools.ScreenCapture
             Hide();
             CaptureForm frmCapture = new CaptureForm(true);
             frmCapture.OnCaptured += frmCapture_OnCaptured;
-            
-            // 优化：使用ShowDialog确保模态显示，但内部会异步加载截图
             frmCapture.ShowDialog();
             
             if (_isHidden)

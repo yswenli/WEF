@@ -300,7 +300,7 @@ namespace WEF.Standard.DevelopTools.Common.Win32
 
 
         /// <summary>
-        /// 绘制屏幕 - 优化版本，提升性能
+        /// 绘制屏幕
         /// </summary>
         /// <param name="bmp"></param>
         /// <param name="virtualScreen"></param>
@@ -314,10 +314,8 @@ namespace WEF.Standard.DevelopTools.Common.Win32
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
                 g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.None; 
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit; 
-                
+                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;                 
                 g.CopyFromScreen(virtualScreen.X, virtualScreen.Y, 0, 0, virtualScreen.Size);
-
                 if (captureCursor)
                 {
                     try
@@ -341,10 +339,5 @@ namespace WEF.Standard.DevelopTools.Common.Win32
                 }
             }
         }
-
-
-
-
-
     }
 }
