@@ -11,8 +11,14 @@ using WEF.Standard.DevelopTools.Common.Win32;
 
 namespace WEF.Standard.DevelopTools.Capture
 {
+    /// <summary>
+    /// 图像处理控件，支持选区与遮罩绘制，提供高性能绘制优化
+    /// </summary>
     public partial class ImageProcessBox : Control
     {
+        /// <summary>
+        /// 初始化控件，启用双缓冲与样式以减少闪烁
+        /// </summary>
         public ImageProcessBox()
         {
             InitializeComponent();
@@ -27,6 +33,7 @@ namespace WEF.Standard.DevelopTools.Capture
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             this.SetStyle(ControlStyles.UserPaint, true);
             this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+            this.UpdateStyles();
         }
 
         private void InitMember()
@@ -297,6 +304,9 @@ namespace WEF.Standard.DevelopTools.Capture
 
         #endregion
 
+        /// <summary>
+        /// 鼠标按下开始绘制或移动选区，设置光标限制区域
+        /// </summary>
         protected override void OnMouseDown(MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -321,41 +331,16 @@ namespace WEF.Standard.DevelopTools.Capture
                     // 修复多屏环境下鼠标乱跳问题：使用更安全的坐标计算
                     try
                     {
-                        // 在多屏环境下，先检查是否应该在当前屏幕上设置clip
-                        if (this.FindForm() != null && Screen.AllScreens.Length > 1)
+                        // 使用 ScreenHelper 进行客户端矩形到屏幕坐标转换，兼容多屏/DPI
+                        var clipRect = ScreenHelper.ClientRectToScreen(this, m_rectClip);
+                        if (clipRect.Width > 0 && clipRect.Height > 0)
                         {
-                            Screen currentScreen = Screen.FromControl(this);
-                            if (currentScreen != null)
-                            {
-                                Rectangle clipRect = RectangleToScreen(m_rectClip);
-
-                                // 验证clip区域是否在当前屏幕或相邻屏幕上
-                                if (clipRect.Width > 0 && clipRect.Height > 0)
-                                {
-                                    // 检查clip区域是否与当前屏幕相交
-                                    Rectangle currentBounds = currentScreen.Bounds;
-                                    if (clipRect.IntersectsWith(currentBounds) ||
-                                        clipRect.Contains(currentBounds) ||
-                                        currentBounds.Contains(clipRect))
-                                    {
-                                        Cursor.Clip = clipRect;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            // 单屏环境或无法确定屏幕信息时，使用原始方法
-                            Rectangle clipRect = RectangleToScreen(m_rectClip);
-                            if (clipRect.Width > 0 && clipRect.Height > 0)
-                            {
-                                Cursor.Clip = clipRect;
-                            }
+                            // 限制光标活动区域，防止跨屏拖动越界
+                            Cursor.Clip = clipRect;
                         }
                     }
                     catch (Exception ex)
                     {
-                        // 如果设置Cursor.Clip失败，则不设置，避免鼠标乱跳
                         System.Diagnostics.Debug.WriteLine($"设置Cursor.Clip失败: {ex.Message}");
                     }
                     isStartDraw = true;
@@ -366,6 +351,9 @@ namespace WEF.Standard.DevelopTools.Capture
             base.OnMouseDown(e);
         }
 
+        /// <summary>
+        /// 鼠标移动处理：移动或缩放选区，并进行局部失效刷新（含节流）
+        /// </summary>
         protected override void OnMouseMove(MouseEventArgs e)
         {
             m_ptCurrent = e.Location;
@@ -445,7 +433,7 @@ namespace WEF.Standard.DevelopTools.Capture
                 if (isMoving)
                 {
                     //如果移动选区 只重置 location
-                    //Point ptLast = this.selectedRectangle.Location;
+                    var oldRect = this.selectedRectangle;
                     this.selectedRectangle.X = m_ptTempStarPos.X + e.X - m_ptOriginal.X;
                     this.selectedRectangle.Y = m_ptTempStarPos.Y + e.Y - m_ptOriginal.Y;
 
@@ -456,26 +444,24 @@ namespace WEF.Standard.DevelopTools.Capture
                         this.selectedRectangle.X = m_rectClip.Width - this.selectedRectangle.Width - 1;
                     if (this.selectedRectangle.Bottom > m_rectClip.Height)
                         this.selectedRectangle.Y = m_rectClip.Height - this.selectedRectangle.Height - 1;
-                    //if (this.Location == ptLast) return;
+
+                    // 合并旧/新选区并执行局部失效刷新（含节流）
+                    // 合并旧/新选区并执行局部失效刷新（含节流）
+                    InvalidateSelectionChange(oldRect, this.selectedRectangle);
                 }
                 else
                 {
-                    //其他情况 判断是锁定高 还是锁定宽
-                    if (Math.Abs(e.X - m_ptOriginal.X) > 1 || Math.Abs(e.Y - m_ptOriginal.Y) > 1)
+                    // 重置大小
+                    var oldRect = this.selectedRectangle;
+                    selectedRectangle.X = m_ptOriginal.X - e.X < 0 ? m_ptOriginal.X : e.X;
+                    selectedRectangle.Width = Math.Abs(m_ptOriginal.X - e.X);
+                    if (!m_bLockW)
                     {
-                        if (!m_bLockW)
-                        {
-                            selectedRectangle.X = m_ptOriginal.X - e.X < 0 ? m_ptOriginal.X : e.X;
-                            selectedRectangle.Width = Math.Abs(m_ptOriginal.X - e.X);
-                        }
-                        if (!m_bLockH)
-                        {
-                            selectedRectangle.Y = m_ptOriginal.Y - e.Y < 0 ? m_ptOriginal.Y : e.Y;
-                            selectedRectangle.Height = Math.Abs(m_ptOriginal.Y - e.Y);
-                        }
+                        selectedRectangle.Y = m_ptOriginal.Y - e.Y < 0 ? m_ptOriginal.Y : e.Y;
+                        selectedRectangle.Height = Math.Abs(m_ptOriginal.Y - e.Y);
                     }
+                    InvalidateSelectionChange(oldRect, this.selectedRectangle);
                 }
-                this.Invalidate();
             }
 
             #endregion
@@ -535,24 +521,60 @@ namespace WEF.Standard.DevelopTools.Capture
         }
 
         /// <summary>
+        /// 背景绘制策略：仅在无底图时绘制背景，避免重复背景涂刷造成闪烁
+        /// </summary>
+        protected override void OnPaintBackground(PaintEventArgs pevent)
+        {
+            // 减少闪烁：在绘制基图时跳过背景涂刷，仅在无图像时绘制背景
+            if (this.baseImage == null)
+            {
+                base.OnPaintBackground(pevent);
+            }
+            // 否则不绘制背景，由 OnPaint 完整覆盖
+        }
+
+        /// <summary>
         /// 重写控件的绘制图像
         /// </summary>
         /// <param name="e"></param>
+        /// <summary>
+        /// 主绘制流程：遮罩与选区内容绘制，并按拖拽状态切换绘制质量
+        /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
 
             if (this.baseImage != null)
             {
-                // 修复图像质量问题：确保1:1像素映射，避免失真
-                g.CompositingQuality = CompositingQuality.HighQuality;
-                g.InterpolationMode = InterpolationMode.NearestNeighbor;
-                g.PixelOffsetMode = PixelOffsetMode.Half;
-                g.SmoothingMode = SmoothingMode.None;
-                g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                // 根据拖拽/移动状态切换绘制质量：拖拽用高速，静止用高质量
+                // 拖拽/移动中：采用高速绘制参数，提升帧率
+                if (isMoving || isStartDraw)
+                {
+                    g.CompositingQuality = CompositingQuality.HighSpeed;
+                    g.InterpolationMode = InterpolationMode.NearestNeighbor;
+                    g.PixelOffsetMode = PixelOffsetMode.None;
+                    g.SmoothingMode = SmoothingMode.None;
+                }
+                else
+                {
+                    // 静止状态：采用高质量绘制参数，提升显示效果
+                    g.CompositingQuality = CompositingQuality.HighQuality;
+                    g.InterpolationMode = InterpolationMode.NearestNeighbor;
+                    g.PixelOffsetMode = PixelOffsetMode.Half;
+                    g.SmoothingMode = SmoothingMode.None;
+                    g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                }
 
-                // 绘制带半透明遮罩的整个图像
-                g.DrawImage(m_bmpDark, 0, 0, m_bmpDark.Width, m_bmpDark.Height);
+                // 绘制带半透明遮罩的整个图像（仅绘制无效区域）
+                var clip = e.ClipRectangle;
+                // 使用 SourceCopy 进行遮罩覆盖，降低混合成本
+                g.CompositingMode = CompositingMode.SourceCopy;
+                if (!clip.IsEmpty)
+                    g.DrawImage(m_bmpDark, clip, clip, GraphicsUnit.Pixel);
+                else
+                    g.DrawImage(m_bmpDark, 0, 0, m_bmpDark.Width, m_bmpDark.Height);
+                // 恢复默认的 SourceOver 混合模式，用于后续正常绘制
+                g.CompositingMode = CompositingMode.SourceOver;
 
                 // 绘制选取框内的原始清晰图像
                 if (this.selectedRectangle.Width > 0 && this.selectedRectangle.Height > 0 &&
@@ -575,24 +597,31 @@ namespace WEF.Standard.DevelopTools.Capture
         /// 绘制操作框
         /// </summary>
         /// <param name="g"></param>
+        /// <summary>
+        /// 绘制操作框（控制点与尺寸信息），无选区时跳过绘制
+        /// </summary>
         protected virtual void DrawOperationBox(Graphics g)
         {
+            if (this.selectedRectangle.Width <= 0 || this.selectedRectangle.Height <= 0) return;
 
             #region Draw SizeInfo
 
-            string strDrawSize = "X:" + this.selectedRectangle.X + " Y:" + this.selectedRectangle.Y +
-                " W:" + (this.selectedRectangle.Width + 1) + " H:" + (this.selectedRectangle.Height + 1);
-            Size seStr = TextRenderer.MeasureText(strDrawSize, this.Font);
-            int tempX = this.selectedRectangle.X;
-            int tempY = this.selectedRectangle.Y - seStr.Height - 5;
-            if (!m_rectClip.IsEmpty)
-                if (tempX + seStr.Width >= m_rectClip.Right) tempX -= seStr.Width;
-            if (tempY <= 0) tempY += seStr.Height + 10;
+            if (!isMoving && !isStartDraw)
+            {
+                string strDrawSize = "X:" + this.selectedRectangle.X + " Y:" + this.selectedRectangle.Y +
+                    " W:" + (this.selectedRectangle.Width + 1) + " H:" + (this.selectedRectangle.Height + 1);
+                Size seStr = TextRenderer.MeasureText(strDrawSize, this.Font);
+                int tempX = this.selectedRectangle.X;
+                int tempY = this.selectedRectangle.Y - seStr.Height - 5;
+                if (!m_rectClip.IsEmpty)
+                    if (tempX + seStr.Width >= m_rectClip.Right) tempX -= seStr.Width;
+                if (tempY <= 0) tempY += seStr.Height + 10;
 
-            m_sb.Color = Color.FromArgb(125, 0, 0, 0);
-            g.FillRectangle(m_sb, tempX, tempY, seStr.Width, seStr.Height);
-            m_sb.Color = this.ForeColor;
-            g.DrawString(strDrawSize, this.Font, m_sb, tempX, tempY);
+                m_sb.Color = Color.FromArgb(125, 0, 0, 0);
+                g.FillRectangle(m_sb, tempX, tempY, seStr.Width, seStr.Height);
+                m_sb.Color = this.ForeColor;
+                g.DrawString(strDrawSize, this.Font, m_sb, tempX, tempY);
+            }
 
             #endregion
 
@@ -618,7 +647,6 @@ namespace WEF.Standard.DevelopTools.Capture
                 ? this.selectedRectangle.Bottom - dotSize - margin
                 : this.selectedRectangle.Y + margin;
             m_rectDots[5].Y = m_rectDots[6].Y = m_rectDots[7].Y = bottomY;
-
             // 左边三个点：移到框内左侧
             m_rectDots[0].X = m_rectDots[3].X = m_rectDots[5].X = this.selectedRectangle.X + margin;
             // 右边三个点：移到框内右侧（边界检查）
@@ -906,5 +934,26 @@ namespace WEF.Standard.DevelopTools.Capture
             }
             return bmp;
         }
+
+
+
+        private long _lastInvalidateTick; // 最近一次局部失效的时间戳（毫秒）
+        private const int InvalidateMinIntervalMs = 8; // 局部失效的最小间隔，避免高频重绘
+
+        /// <summary>
+        /// 根据选区变化进行最小化失效并节流，减少重复重绘
+        /// </summary>
+        private void InvalidateSelectionChange(Rectangle oldRect, Rectangle newRect)
+        {
+            if (oldRect == newRect) return; // 无变化直接跳过
+            var r = Rectangle.Union(oldRect, newRect); // 合并旧/新区域，得到最小刷新区域
+            r.Inflate(2, 2); // 适度扩大，避免边缘残影
+            var now = Environment.TickCount; // 当前时间戳（毫秒）
+            if (now - _lastInvalidateTick < InvalidateMinIntervalMs) return; // 节流：小于最小间隔则跳过
+            _lastInvalidateTick = now; // 更新最后一次失效时间戳
+            this.Invalidate(r); // 仅对必要区域进行局部刷新
+        }
+
     }
+
 }

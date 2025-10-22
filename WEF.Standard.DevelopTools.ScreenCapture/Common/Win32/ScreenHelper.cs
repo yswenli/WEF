@@ -29,14 +29,17 @@ using System.Windows.Forms;
 
 namespace WEF.Standard.DevelopTools.Common.Win32
 {
+    /// <summary>
+    /// 屏幕与坐标辅助工具：封装多屏/DPI处理、虚拟屏幕边界与屏幕捕获。
+    /// </summary>
     public class ScreenHelper
     {
         #region 性能优化 - 缓存静态数据
-        
+
         private static Rectangle _cachedVirtualScreenBounds = Rectangle.Empty;
         private static DateTime _lastCacheTime = DateTime.MinValue;
         private static readonly TimeSpan _cacheValidDuration = TimeSpan.FromDays(365);
-        
+
         #endregion
 
         #region API 声明
@@ -152,6 +155,11 @@ namespace WEF.Standard.DevelopTools.Common.Win32
         /// </summary>
         /// <param name="targetPoint">系统全局坐标（如 new Point(0,0) 为主屏幕左上角）</param>
         /// <returns>屏幕句柄，失败返回 IntPtr.Zero</returns>
+        /// <summary>
+        /// 根据屏幕上的点获取其所在显示器的句柄（HMONITOR）
+        /// </summary>
+        /// <param name="targetPoint">屏幕坐标点</param>
+        /// <returns>显示器句柄</returns>
         public static IntPtr GetMonitorHandleByPoint(Point targetPoint)
         {
             // 调用 API：根据坐标获取屏幕句柄，无匹配时返回主屏幕
@@ -167,6 +175,11 @@ namespace WEF.Standard.DevelopTools.Common.Win32
         /// </summary>
         /// <param name="screen"></param>
         /// <returns></returns>
+        /// <summary>
+        /// 获取指定屏幕的设备上下文（DC），用于原生绘制或DPI查询
+        /// </summary>
+        /// <param name="screen">目标屏幕</param>
+        /// <returns>设备上下文句柄</returns>
         public static IntPtr GetDC(Screen screen)
         {
             return GetMonitorHandleByPoint(screen.Bounds.Location);
@@ -177,6 +190,11 @@ namespace WEF.Standard.DevelopTools.Common.Win32
         /// </summary>
         /// <param name="screen"></param>
         /// <returns></returns>
+        /// <summary>
+        /// 获取指定屏幕的DPI缩放比例（相对96dpi），如125%返回1.25
+        /// </summary>
+        /// <param name="screen">目标屏幕</param>
+        /// <returns>DPI缩放比例</returns>
         public static float GetScreenDpiScale(Screen screen)
         {
             IntPtr hMonitor = GetDC(screen);
@@ -190,6 +208,10 @@ namespace WEF.Standard.DevelopTools.Common.Win32
         /// </summary>
         /// <param name="rectangle"></param>
         /// <returns></returns>
+        /// <summary>
+        /// 获取所有屏幕的DPI缩放比例列表，按屏幕顺序返回
+        /// </summary>
+        /// <returns>各屏幕的DPI缩放比例集合</returns>
         public static List<float> GetDpiScaleList()
         {
             var result = new List<float>();
@@ -212,10 +234,14 @@ namespace WEF.Standard.DevelopTools.Common.Win32
         /// 获取虚拟屏幕边界（包含所有显示器）- 优化版本，支持缓存
         /// </summary>
         /// <returns>虚拟屏幕边界</returns>
+        /// <summary>
+        /// 获取虚拟屏幕的边界矩形（所有屏幕的联合区域）
+        /// </summary>
+        /// <returns>虚拟屏幕的全局坐标矩形</returns>
         public static Rectangle GetVirtualScreenBounds()
         {
             // 检查缓存是否有效
-            if (!_cachedVirtualScreenBounds.IsEmpty && 
+            if (!_cachedVirtualScreenBounds.IsEmpty &&
                 DateTime.Now - _lastCacheTime < _cacheValidDuration)
             {
                 return _cachedVirtualScreenBounds;
@@ -238,7 +264,7 @@ namespace WEF.Standard.DevelopTools.Common.Win32
             foreach (Screen screen in allScreens)
             {
                 if (screen?.Bounds == Rectangle.Empty) continue;
-                
+
                 Rectangle bounds = screen.Bounds;
                 minX = Math.Min(minX, bounds.X);
                 minY = Math.Min(minY, bounds.Y);
@@ -271,7 +297,7 @@ namespace WEF.Standard.DevelopTools.Common.Win32
             // 缓存结果
             _cachedVirtualScreenBounds = result;
             _lastCacheTime = DateTime.Now;
-            
+
             return result;
         }
 
@@ -294,7 +320,7 @@ namespace WEF.Standard.DevelopTools.Common.Win32
             {
                 // 发生异常时返回默认值
             }
-            
+
             return 1.0f; // 默认DPI比例
         }
 
@@ -306,15 +332,22 @@ namespace WEF.Standard.DevelopTools.Common.Win32
         /// <param name="virtualScreen"></param>
         /// <param name="mousePosition"></param>
         /// <param name="captureCursor"></param>
+        /// <summary>
+        /// 将虚拟屏幕区域绘制到位图，并可选叠加鼠标指针
+        /// </summary>
+        /// <param name="bmp">目标位图（需与区域大小一致）</param>
+        /// <param name="virtualScreen">虚拟屏幕区域</param>
+        /// <param name="mousePosition">当前鼠标全局坐标</param>
+        /// <param name="captureCursor">是否叠加鼠标指针</param>
         public static void CaptureScreen(Bitmap bmp, Rectangle virtualScreen, Point mousePosition, bool captureCursor = true)
         {
             using (Graphics g = Graphics.FromImage(bmp))
             {
                 g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighSpeed;
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.None; 
+                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.None;
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;                 
+                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
                 g.CopyFromScreen(virtualScreen.X, virtualScreen.Y, 0, 0, virtualScreen.Size);
                 if (captureCursor)
                 {
@@ -338,6 +371,68 @@ namespace WEF.Standard.DevelopTools.Common.Win32
                     }
                 }
             }
+        }
+
+        // 坐标与矩形转换辅助（屏幕/客户端互转）
+        /// <summary>
+        /// 将屏幕坐标转换为指定控件的客户端坐标（支持多屏/DPI）
+        /// </summary>
+        /// <param name="ctrl">目标控件</param>
+        /// <param name="screenPoint">屏幕坐标点</param>
+        /// <returns>客户端坐标点</returns>
+        public static Point ScreenToClient(Control ctrl, Point screenPoint)
+        {
+            return ctrl.PointToClient(screenPoint);
+        }
+        /// <summary>
+        /// 将客户端坐标转换为屏幕坐标（支持多屏/DPI）
+        /// </summary>
+        /// <param name="ctrl">源控件</param>
+        /// <param name="clientPoint">客户端坐标点</param>
+        /// <returns>屏幕坐标点</returns>
+        public static Point ClientToScreen(Control ctrl, Point clientPoint)
+        {
+            return ctrl.PointToScreen(clientPoint);
+        }
+        /// <summary>
+        /// 将控件客户端矩形转换为屏幕矩形（自动考虑偏移与DPI）
+        /// </summary>
+        /// <param name="ctrl">源控件</param>
+        /// <param name="clientRect">客户端矩形</param>
+        /// <returns>对应的屏幕坐标矩形</returns>
+        public static Rectangle ClientRectToScreen(Control ctrl, Rectangle clientRect)
+        {
+            return ctrl.RectangleToScreen(clientRect);
+        }
+        /// <summary>
+        /// 将屏幕矩形转换为控件客户端矩形（支持多屏/DPI）
+        /// </summary>
+        /// <param name="ctrl">目标控件</param>
+        /// <param name="screenRect">屏幕坐标矩形</param>
+        /// <returns>对应的客户端坐标矩形</returns>
+        public static Rectangle ScreenRectToClient(Control ctrl, Rectangle screenRect)
+        {
+            return ctrl.RectangleToClient(screenRect);
+        }
+        /// <summary>
+        /// 获取当前鼠标在指定控件中的客户端坐标
+        /// </summary>
+        /// <param name="ctrl">目标控件</param>
+        /// <returns>客户端坐标点</returns>
+        public static Point GetCursorClient(Control ctrl)
+        {
+            return ctrl.PointToClient(Control.MousePosition);
+        }
+        /// <summary>
+        /// 将给定的屏幕矩形裁剪至其所在的屏幕边界内（避免越界）
+        /// </summary>
+        /// <param name="ctrl">用于确定当前屏幕的控件</param>
+        /// <param name="screenRect">屏幕坐标矩形</param>
+        /// <returns>裁剪后的屏幕矩形</returns>
+        public static Rectangle ClipToCurrentScreen(Control ctrl, Rectangle screenRect)
+        {
+            var bounds = Screen.FromControl(ctrl)?.Bounds ?? Screen.PrimaryScreen.Bounds;
+            return Rectangle.Intersect(screenRect, bounds);
         }
     }
 }

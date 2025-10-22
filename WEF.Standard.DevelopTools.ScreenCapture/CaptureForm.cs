@@ -12,6 +12,9 @@ namespace WEF.Standard.DevelopTools.Capture
     /// <summary>
     /// 截图功能窗体
     /// </summary>
+    /// <summary>
+    /// 截图主窗体：负责截图显示、选区交互、工具条绘制与保存。
+    /// </summary>
     public partial class CaptureForm : Form
     {
 
@@ -29,6 +32,9 @@ namespace WEF.Standard.DevelopTools.Capture
             if (this.OnCaptured != null) this.OnCaptured(imgDatas);
         }
 
+        /// <summary>
+        /// 释放截图相关资源（图层、位图、钩子等），防止泄漏
+        /// </summary>
         private void DelResource()
         {
             if (_captureDatas != null) _captureDatas.Dispose();
@@ -40,7 +46,7 @@ namespace WEF.Standard.DevelopTools.Capture
 
         #region Properties
 
-        private bool isCaptureCursor;
+        private bool isCaptureCursor; // 是否捕捉鼠标指针
         /// <summary>
         /// 获取或设置是否捕获鼠标
         /// </summary>
@@ -49,7 +55,7 @@ namespace WEF.Standard.DevelopTools.Capture
             get { return isCaptureCursor; }
             set { isCaptureCursor = value; }
         }
-        private bool isFromClipBoard;
+        private bool isFromClipBoard; // 是否从剪贴板加载图像
         /// <summary>
         /// 获取或设置是否从剪切板获取图像
         /// </summary>
@@ -101,15 +107,19 @@ namespace WEF.Standard.DevelopTools.Capture
 
         #endregion
 
-        private HookHelper m_MHook;
+        private HookHelper m_MHook; // 全局输入钩子（鼠标/键盘）
         private List<Bitmap> m_layer;       //记录历史图层
 
         //private bool m_bSave;
-        private bool m_isStartDraw;
-        private Point m_ptOriginal;
-        private Point m_ptCurrent;
-        private Bitmap _captureDatas;
-        private Bitmap m_bmpLayerShow;
+        private bool m_isStartDraw; // 是否进入绘制状态（按下到抬起）
+        private Point m_ptOriginal; // 绘制起点（客户端坐标）
+        private Point m_ptCurrent; // 当前鼠标位置（客户端坐标）
+        private Bitmap _captureDatas; // 截取的最终图像数据（裁剪结果）
+        private Bitmap m_bmpLayerShow; // 当前叠加层显示位图（用于预览）
+
+        // 绘图资源缓存（减少频繁 new Pen 的成本）
+        private readonly Dictionary<string, Pen> _penCache = new Dictionary<string, Pen>();
+        private readonly System.Drawing.Drawing2D.AdjustableArrowCap _arrowCap = new System.Drawing.Drawing2D.AdjustableArrowCap(5, 5, true);
 
         Rectangle _virtualScreenBounds;
 
@@ -122,6 +132,10 @@ namespace WEF.Standard.DevelopTools.Capture
             m_layer = new List<Bitmap>();
 
             InitializeComponent();
+            // 开启双缓冲与减少 WM_PAINT 重绘，提高拖拽绘制性能与减少闪烁
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+
             this.FormBorderStyle = FormBorderStyle.None;
             this.AutoScaleMode = AutoScaleMode.None;
             this.StartPosition = FormStartPosition.Manual;
@@ -137,6 +151,12 @@ namespace WEF.Standard.DevelopTools.Capture
                     m_MHook.UnLoadMHook();
                     m_MHook.MHookEvent -= m_MHook_MHookEvent;
                 }
+                // 释放绘图缓存资源
+                foreach (var kv in _penCache)
+                {
+                    kv.Value?.Dispose();
+                }
+                _arrowCap?.Dispose();
                 this.DelResource();
             };
 
@@ -148,6 +168,11 @@ namespace WEF.Standard.DevelopTools.Capture
         /// <summary>
         /// 窗体显示后初始化Hook
         /// </summary>
+        /// <summary>
+        /// 窗体显示后初始化全局Hook（异步），避免阻塞UI线程
+        /// </summary>
+        /// <param name="sender">截图主窗体</param>
+        /// <param name="e">事件参数</param>
         private void CaptureForm_Shown(object sender, EventArgs e)
         {
             // 在UI线程上异步初始化Hook，避免阻塞主线程
@@ -183,6 +208,11 @@ namespace WEF.Standard.DevelopTools.Capture
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        /// <summary>
+        /// 窗体加载：初始化成员、禁用窗口用于信息显示，并启用定时器
+        /// </summary>
+        /// <param name="sender">截图主窗体</param>
+        /// <param name="e">事件参数</param>
         private void FrmCapture_Load(object sender, EventArgs e)
         {
             this.BeginInvoke(new MethodInvoker(() => this.Enabled = false));
@@ -194,6 +224,11 @@ namespace WEF.Standard.DevelopTools.Capture
             timer1.Enabled = true;
         }
 
+        /// <summary>
+        /// 全局输入钩子事件：处理 Ctrl+C 复制颜色、Esc 取消等快捷键
+        /// </summary>
+        /// <param name="sender">事件源</param>
+        /// <param name="e">钩子事件参数</param>
         private void m_MHook_MHookEvent(object sender, MHookEventArgs e)
         {
             // 添加空引用检查
@@ -203,7 +238,8 @@ namespace WEF.Standard.DevelopTools.Capture
             //如果窗体禁用 调用控件的方法设置信息显示位置
             if (!this.Enabled)
             {
-                imageProcessBox1.SetInfoPoint(MousePosition.X - _virtualScreenBounds.X, MousePosition.Y - _virtualScreenBounds.Y);
+                var ptClient = ScreenHelper.ScreenToClient(imageProcessBox1, Control.MousePosition);
+                imageProcessBox1.SetInfoPoint(ptClient);
             }
             //鼠标点下恢复窗体禁用
             if (e.MButton == ButtonStatus.LeftDown || e.MButton == ButtonStatus.RightDown)
@@ -232,6 +268,9 @@ namespace WEF.Standard.DevelopTools.Capture
 
 
         //初始化参数
+        /// <summary>
+        /// 初始化成员与事件绑定：工具条、颜色框、钩子等
+        /// </summary>
         private void InitMember()
         {
             panel1.Visible = false;
@@ -257,6 +296,11 @@ namespace WEF.Standard.DevelopTools.Capture
             colorBox1.ColorChanged += (s, e) => textBox1.ForeColor = e.Color;
         }
         //工具条前五个按钮绑定的公共事件
+        /// <summary>
+        /// 工具条选择事件：矩形、椭圆、箭头、画笔、文字的选择切换
+        /// </summary>
+        /// <param name="sender">工具按钮</param>
+        /// <param name="e">事件参数</param>
         private void selectToolButton_Click(object sender, EventArgs e)
         {
             panel2.Visible = ((ToolButton)sender).IsSelected;
@@ -267,6 +311,11 @@ namespace WEF.Standard.DevelopTools.Capture
 
         #region 截图后的一些后期绘制
 
+        /// <summary>
+        /// 鼠标按下：开始绘制或移动选区，并限制光标范围
+        /// </summary>
+        /// <param name="sender">图像控件</param>
+        /// <param name="e">鼠标事件参数</param>
         private void imageProcessBox1_MouseDown(object sender, MouseEventArgs e)
         {
             if (imageProcessBox1.Cursor != Cursors.SizeAll &&
@@ -280,18 +329,37 @@ namespace WEF.Standard.DevelopTools.Capture
                 {
                     if (tBtn_Text.IsSelected)
                     {
-                        textBox1.Location = imageProcessBox1.PointToScreen(e.Location);
+                        textBox1.Location = ScreenHelper.ClientToScreen(imageProcessBox1, e.Location);
                         textBox1.Visible = true;
                         textBox1.Focus();
                         return;
                     }
                     m_isStartDraw = true;
-                    Rectangle selectedRectScreen = imageProcessBox1.RectangleToScreen(imageProcessBox1.SelectedRectangle);
+                    Rectangle selectedRectScreen = ScreenHelper.ClientRectToScreen(imageProcessBox1, imageProcessBox1.SelectedRectangle);
                     Cursor.Clip = selectedRectScreen;
                 }
             }
             m_ptOriginal = e.Location;
         }
+
+        /// <summary>
+        /// 获得画笔
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="width"></param>
+        /// <returns></returns>
+        private Pen GetPen(Color color, int width)
+        {
+            Pen pen = new Pen(color);
+            pen.Width = width;
+            return pen;
+        }
+
+        /// <summary>
+        /// 鼠标移动：更新选区位置或大小，并进行局部刷新（含节流）
+        /// </summary>
+        /// <param name="sender">图像控件</param>
+        /// <param name="e">鼠标事件参数</param>
         private void imageProcessBox1_MouseMove(object sender, MouseEventArgs e)
         {
             m_ptCurrent = e.Location;
@@ -304,13 +372,14 @@ namespace WEF.Standard.DevelopTools.Capture
             if (imageProcessBox1.IsStartDraw && panel1.Visible)   //在重置选取的时候 重置工具条位置(成立于移动选取的时候)
                 this.SetToolBarLocation();
             if (m_isStartDraw && m_bmpLayerShow != null)
-            {        //如果在区域内点下那么绘制相应图形
+            {
+                //如果在区域内点下那么绘制相应图形
                 using (Graphics g = Graphics.FromImage(m_bmpLayerShow))
                 {
                     int tempWidth = 1;
                     if (toolButton2.IsSelected) tempWidth = 3;
                     if (toolButton3.IsSelected) tempWidth = 5;
-                    Pen p = new Pen(colorBox1.SelectedColor, tempWidth);
+                    var p = GetPen(colorBox1.SelectedColor, tempWidth);
                     g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
                     #region   绘制矩形
@@ -321,7 +390,7 @@ namespace WEF.Standard.DevelopTools.Capture
                         int tempY = e.Y - m_ptOriginal.Y > 0 ? m_ptOriginal.Y : e.Y;
                         g.Clear(Color.Transparent);
                         g.DrawRectangle(p, tempX - imageProcessBox1.SelectedRectangle.Left, tempY - imageProcessBox1.SelectedRectangle.Top, Math.Abs(e.X - m_ptOriginal.X), Math.Abs(e.Y - m_ptOriginal.Y));
-                        imageProcessBox1.Invalidate();
+                        InvalidateSelectionBounds();
                     }
 
                     #endregion
@@ -333,7 +402,7 @@ namespace WEF.Standard.DevelopTools.Capture
                         g.DrawLine(Pens.Red, 0, 0, 200, 200);
                         g.Clear(Color.Transparent);
                         g.DrawEllipse(p, m_ptOriginal.X - imageProcessBox1.SelectedRectangle.Left, m_ptOriginal.Y - imageProcessBox1.SelectedRectangle.Top, e.X - m_ptOriginal.X, e.Y - m_ptOriginal.Y);
-                        imageProcessBox1.Invalidate();
+                        InvalidateSelectionBounds();
                     }
 
                     #endregion
@@ -343,11 +412,9 @@ namespace WEF.Standard.DevelopTools.Capture
                     if (tBtn_Arrow.IsSelected)
                     {
                         g.Clear(Color.Transparent);
-                        System.Drawing.Drawing2D.AdjustableArrowCap lineArrow =
-                            new System.Drawing.Drawing2D.AdjustableArrowCap(5, 5, true);
-                        p.CustomEndCap = lineArrow;
+                        p.CustomEndCap = _arrowCap;
                         g.DrawLine(p, (Point)((Size)m_ptOriginal - (Size)imageProcessBox1.SelectedRectangle.Location), (Point)((Size)m_ptCurrent - (Size)imageProcessBox1.SelectedRectangle.Location));
-                        imageProcessBox1.Invalidate();
+                        InvalidateSelectionBounds();
                     }
 
                     #endregion
@@ -357,10 +424,9 @@ namespace WEF.Standard.DevelopTools.Capture
                     if (tBtn_Brush.IsSelected)
                     {
                         Point ptTemp = (Point)((Size)m_ptOriginal - (Size)imageProcessBox1.SelectedRectangle.Location);
-                        p.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
                         g.DrawLine(p, ptTemp, (Point)((Size)e.Location - (Size)imageProcessBox1.SelectedRectangle.Location));
                         m_ptOriginal = e.Location;
-                        imageProcessBox1.Invalidate();
+                        InvalidateSelectionBounds();
                     }
 
                     #endregion
@@ -370,6 +436,11 @@ namespace WEF.Standard.DevelopTools.Capture
             }
         }
 
+        /// <summary>
+        /// 鼠标抬起：结束绘制或移动选区，根据工具状态执行后续操作
+        /// </summary>
+        /// <param name="sender">图像控件</param>
+        /// <param name="e">鼠标事件参数</param>
         private void imageProcessBox1_MouseUp(object sender, MouseEventArgs e)
         {
             if (this.IsDisposed) return;
@@ -412,6 +483,11 @@ namespace WEF.Standard.DevelopTools.Capture
             this.SetLayer();        //将绘制的图形绘制到历史图层中
         }
         //绘制后期操作
+        /// <summary>
+        /// 图像控件重绘：绘制选区、操作点与工具条预览
+        /// </summary>
+        /// <param name="sender">图像控件</param>
+        /// <param name="e">绘制事件参数</param>
         private void imageProcessBox1_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -424,12 +500,22 @@ namespace WEF.Standard.DevelopTools.Capture
         #endregion
 
         //文本改变时重置文本框大小
+        /// <summary>
+        /// 文本输入变更：更新文字工具的内容并重绘预览
+        /// </summary>
+        /// <param name="sender">文本框</param>
+        /// <param name="e">事件参数</param>
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             Size se = TextRenderer.MeasureText(textBox1.Text, textBox1.Font);
             textBox1.Size = se.IsEmpty ? new Size(50, textBox1.Font.Height) : se;
         }
         //文本框失去焦点时 绘制文本
+        /// <summary>
+        /// 文本框验证：结束文字输入并将文字绘制到图层
+        /// </summary>
+        /// <param name="sender">文本框</param>
+        /// <param name="e">验证事件参数</param>
         private void textBox1_Validating(object sender, CancelEventArgs e)
         {
             textBox1.Visible = false;
@@ -447,6 +533,11 @@ namespace WEF.Standard.DevelopTools.Capture
             }
         }
         //窗体大小改变时重置字体 从控件中获取字体大小
+        /// <summary>
+        /// 文本框大小变更：根据内容调整尺寸并避免越界
+        /// </summary>
+        /// <param name="sender">文本框</param>
+        /// <param name="e">事件参数</param>
         private void textBox1_Resize(object sender, EventArgs e)
         {
             //在三个大小选择的按钮点击中设置字体大小太麻烦 所以Resize中获取设置
@@ -457,6 +548,11 @@ namespace WEF.Standard.DevelopTools.Capture
             textBox1.Font = new Font(this.Font.FontFamily, se);
         }
         //撤销
+        /// <summary>
+        /// 取消并关闭截图窗口（不保存）
+        /// </summary>
+        /// <param name="sender">“取消”工具按钮</param>
+        /// <param name="e">事件参数</param>
         private void tBtn_Cancel_Click(object sender, EventArgs e)
         {
             using (Graphics g = Graphics.FromImage(m_bmpLayerShow))
@@ -483,6 +579,11 @@ namespace WEF.Standard.DevelopTools.Capture
             }
         }
 
+        /// <summary>
+        /// 保存当前截图到文件（弹出保存对话框）
+        /// </summary>
+        /// <param name="sender">“保存”工具按钮</param>
+        /// <param name="e">事件参数</param>
         private void tBtn_Save_Click(object sender, EventArgs e)
         {
             //m_bSave = true;
@@ -522,6 +623,11 @@ namespace WEF.Standard.DevelopTools.Capture
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        /// <summary>
+        /// 完成截取：将结果抛出到回调并关闭窗口
+        /// </summary>
+        /// <param name="sender">“完成”工具按钮</param>
+        /// <param name="e">事件参数</param>
         private void tBtn_Finish_Click(object sender, EventArgs e)
         {
             Clipboard.SetImage(_captureDatas);
@@ -529,12 +635,22 @@ namespace WEF.Standard.DevelopTools.Capture
             this.Close();
         }
 
+        /// <summary>
+        /// 输出当前截图到独立预览窗体，并关闭当前截图会话
+        /// </summary>
+        /// <param name="sender">“输出”工具按钮</param>
+        /// <param name="e">事件参数</param>
         private void tBtn_Out_Click(object sender, EventArgs e)
         {
             new FrmOut(_captureDatas.Clone() as Bitmap).Show();
             this.Close();
         }
 
+        /// <summary>
+        /// 双击图像：将裁剪结果复制到剪贴板并触发Captured回调
+        /// </summary>
+        /// <param name="sender">图像控件</param>
+        /// <param name="e">事件参数</param>
         private void imageProcessBox1_DoubleClick(object sender, EventArgs e)
         {
             if (_captureDatas != null)
@@ -545,6 +661,11 @@ namespace WEF.Standard.DevelopTools.Capture
             }
         }
 
+        /// <summary>
+        /// 定时器：在窗体禁用时更新放大镜信息点（相对虚拟屏幕坐标）
+        /// </summary>
+        /// <param name="sender">定时器组件</param>
+        /// <param name="e">事件参数</param>
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (!this.Enabled)
@@ -672,12 +793,18 @@ namespace WEF.Standard.DevelopTools.Capture
                 || tBtn_Text.IsSelected;
         }
         //清空选中的工具条上的工具
+        /// <summary>
+        /// 清空工具条上的选中状态，避免工具状态冲突
+        /// </summary>
         private void ClearToolBarBtnSelected()
         {
             tBtn_Rect.IsSelected = tBtn_Ellipse.IsSelected = tBtn_Arrow.IsSelected =
                 tBtn_Brush.IsSelected = tBtn_Text.IsSelected = false;
         }
         //设置历史图层
+        /// <summary>
+        /// 将当前叠加层合并到最终位图，并记录历史图层用于撤销
+        /// </summary>
         private void SetLayer()
         {
             if (this.IsDisposed) return;
@@ -689,6 +816,10 @@ namespace WEF.Standard.DevelopTools.Capture
             m_layer.Add(bmpTemp);
         }
         //保存时获取当前时间字符串作文默认文件名
+        /// <summary>
+        /// 获取当前时间的字符串表达（作为默认保存文件名）
+        /// </summary>
+        /// <returns>时间字符串，格式示例：yyyyMMdd_HH:mm:ss</returns>
         private string GetTimeString()
         {
             DateTime time = DateTime.Now;
@@ -766,6 +897,16 @@ namespace WEF.Standard.DevelopTools.Capture
             }
             catch { }
         }
+
+
+        private void InvalidateSelectionBounds(int inflate = 2)
+        {
+            var r = imageProcessBox1.SelectedRectangle;
+            r.Inflate(inflate, inflate);
+            imageProcessBox1.Invalidate(r);
+        }
+
+
 
     }
 }
