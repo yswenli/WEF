@@ -40,9 +40,9 @@
             this.label1.Location = new System.Drawing.Point(30, 104);
             this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(238, 24);
+            this.label1.Size = new System.Drawing.Size(274, 24);
             this.label1.TabIndex = 0;
-            this.label1.Text = "WEF Version:6.3.4.9";
+            this.label1.Text = "WEF Version:6.25.10.22";
             // 
             // label2
             // 
@@ -52,7 +52,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(370, 24);
             this.label2.TabIndex = 1;
-            this.label2.Text = "developed by yswenli 2015-2024";
+            this.label2.Text = "developed by yswenli 2015-2025";
             // 
             // linkLabel1
             // 

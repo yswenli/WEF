@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 
@@ -119,7 +120,7 @@ namespace WEF.Standard.DevelopTools.Capture
 
         // 绘图资源缓存（减少频繁 new Pen 的成本）
         private readonly Dictionary<string, Pen> _penCache = new Dictionary<string, Pen>();
-        private readonly System.Drawing.Drawing2D.AdjustableArrowCap _arrowCap = new System.Drawing.Drawing2D.AdjustableArrowCap(5, 5, true);
+        private readonly AdjustableArrowCap _arrowCap = new AdjustableArrowCap(5, 5, true);
 
         Rectangle _virtualScreenBounds;
 

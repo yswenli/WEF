@@ -73,76 +73,6 @@ namespace WEF.Standard.DevelopTools.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
-        internal static System.Drawing.Bitmap _out {
-            get {
-                object obj = ResourceManager.GetObject("out", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap arrow {
-            get {
-                object obj = ResourceManager.GetObject("arrow", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap brush {
-            get {
-                object obj = ResourceManager.GetObject("brush", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap cancel {
-            get {
-                object obj = ResourceManager.GetObject("cancel", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap close {
-            get {
-                object obj = ResourceManager.GetObject("close", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap color {
-            get {
-                object obj = ResourceManager.GetObject("color", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap ellips {
-            get {
-                object obj = ResourceManager.GetObject("ellips", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
         internal static System.Drawing.Bitmap help {
             get {
                 object obj = ResourceManager.GetObject("help", resourceCulture);
@@ -189,26 +119,6 @@ namespace WEF.Standard.DevelopTools.Properties {
         }
         
         /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap large {
-            get {
-                object obj = ResourceManager.GetObject("large", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap middle {
-            get {
-                object obj = ResourceManager.GetObject("middle", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 SELECT is_broker_enabled FROM sys.databases WHERE name = &apos;OceaniaERP&apos;
         ///
         ///ALTER DATABASE OceaniaERP SET NEW_BROKER WITH ROLLBACK IMMEDIATE; 
@@ -224,39 +134,9 @@ namespace WEF.Standard.DevelopTools.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
-        internal static System.Drawing.Bitmap none {
-            get {
-                object obj = ResourceManager.GetObject("none", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
         internal static System.Drawing.Bitmap ok {
             get {
                 object obj = ResourceManager.GetObject("ok", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap rect {
-            get {
-                object obj = ResourceManager.GetObject("rect", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap save {
-            get {
-                object obj = ResourceManager.GetObject("save", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -268,26 +148,6 @@ namespace WEF.Standard.DevelopTools.Properties {
             get {
                 object obj = ResourceManager.GetObject("ScreenCapture", resourceCulture);
                 return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap separator {
-            get {
-                object obj = ResourceManager.GetObject("separator", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap small {
-            get {
-                object obj = ResourceManager.GetObject("small", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -316,16 +176,6 @@ namespace WEF.Standard.DevelopTools.Properties {
         internal static string SQL执行情况查询 {
             get {
                 return ResourceManager.GetString("SQL执行情况查询", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap text {
-            get {
-                object obj = ResourceManager.GetObject("text", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -569,7 +419,7 @@ namespace WEF.Standard.DevelopTools.Properties {
         /// SUBSTRING (
         ///  st.text,
         ///  ( qs.statement_start_offset / 2 ) + 1,
-        /// ( ( CASE statement_end_offset WHEN - 1 THEN DATALENGTH( st.text ) ELSE qs.statement_end_offset END - qs.statement [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        /// ( ( CASE statement_end_offset WHEN - 1 THEN DATALENGTH( st.text ) ELSE qs.statement_end_offset END -  [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string 慢查询 {
             get {
